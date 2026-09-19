@@ -25,3 +25,4 @@ Automated tests cover malformed/truncated WAD/PAK input, directory bounds, missi
 - Chromium's in-app browser reported a feature initialization error during the Doom import. Save controls now distinguish recoverable operation failures from engine aborts; export reads the in-memory files even if IndexedDB synchronization fails.
 - Cloudflare production endpoints returned HTTP 200 for the catalog and HTTP 206 for an eight-byte WASM range with `application/wasm`. Apex, www, and player hostnames are active with certificates.
 - GitHub CI passed the initial catalog, type, unit-test, build, and internal-link checks.
+- The live Doom backup button was retested after making export independent of IndexedDB. It completed and downloaded a backup despite the browser feature warning. This validates the export recovery path, not a saved campaign round trip.
