@@ -11,7 +11,7 @@
 
 1. Finish Open Cadet high-score/input tests. Its published preload is now restricted to replacement DAT/WAV assets.
 2. Freedoom save/reload and backup export/import passed on September 19; finish audible audio, mouse capture, and representative gameplay checks. Doom local import boots with a free Freedoom IWAD; its own save and network checks remain.
-3. Test the less-restrictive Asyncify OpenTyrian rebuild through menu transitions and saves.
+3. OpenTyrian's unrestricted Asyncify rebuild reached the first mission and a named save slot. Investigate the intermittent black screen on a later menu transition, then verify in-game reload, sustained controls, and audio. Backup files export both before and after restart.
 4. Test OpenTTD with OpenGFX/OpenSFX; keep missing browser music support explicit.
 5. Verify ScummVM support data, intro skips, gameplay input, and saves for BASS, Lure, Queen, and Sołtys.
 6. Test Quake with locally supplied compatible data. Do not publish commercial PAK files.
@@ -20,6 +20,10 @@
 ### September 19 persistence pass
 
 The live Freedoom save and backup round trip passed with distinct pre-import and post-import ammunition counts. Added regression coverage for conflicting backup paths and size/count limits. Fixed `fetch:games` so a fresh clone retrieves the pinned asset tree instead of requiring an untracked local cache. No new catalog entries or coverage claims were added during this integration pass.
+
+### September 19 OpenTyrian / loading pass
+
+Tested live runtime `c398647f17fa-c82432af60`: menu navigation, episode selection, ship menu, first mission, and named save creation observed. A later black-screen menu transition remains reproducible enough to block promotion. The shared loader now downloads at most four assets concurrently, verifies each SHA-256, preserves manifest order, and cancels outstanding requests on failure. Local and live OpenTyrian boot passed with this loader; this is not a controlled startup benchmark. A future asset audit should remove unused DOS utilities from the 106-file Tyrian runtime preload while preserving required data and notices.
 
 ## Next integrations
 

@@ -39,3 +39,15 @@ Tested on the live player origin with runtime `ddf0347a4fc1-c8f4bcf00e`, in the 
 The browser feature initialization warning still occurs, but did not prevent these save checks. This does not establish mouse capture, audible audio, other-browser compatibility, or a full playthrough. The catalog remains labeled as a test build.
 
 Backup validation now rejects file/directory path collisions in either ordering, trailing slashes, overly long paths, excess files, and excess bytes before filesystem mutation. Regression tests cover these cases. Follow-up work remains for rollback after an actual storage-write failure and safe coordination with running engine writes.
+
+## September 19 — OpenTyrian and bounded downloads
+
+Live runtime `c398647f17fa-c82432af60` in the same Windows in-app Chromium environment:
+
+- Exited attract mode; selected Start New Game, 1 Player Full Game, Episode 1, Normal; reached the ship menu and launched the first Tyrian mission. The mission rendered and eventually returned to the ship menu after an unattended death. This does not verify sustained player control or a completed level.
+- Opened Options → Save, selected slot 1, entered `v`, and confirmed. The named slot appeared. The exported backup contains `tyrian.sav` (2,502 bytes), `tyrian.cfg` (28 bytes), and `opentyrian.cfg` (313 bytes).
+- Stopped, reloaded the page, and started again. The title menu appeared but a subsequent navigation attempt left a black canvas and input actions timed out. No fatal engine error was logged; the earlier Chromium feature initialization warning remains. In-game reload is **not verified**.
+- Export after restart still contained the save and both configuration files. Configuration hashes match the earlier export. The save hash changed; do not infer identical restored game state from file presence alone.
+- Shared loading now uses four concurrent requests instead of sequential downloads. The live counter advanced through 106 Tyrian assets and the engine booted. Unit tests cover the concurrency bound, retained ordering, SHA-256 rejection, and cancellation after HTTP failure. No controlled before/after performance figure is claimed.
+
+The black-screen behavior also occurred before this loader change in an earlier test. Its cause remains unresolved; investigate engine/event handling and saved configuration before treating menu transitions as reliable. Audio remains unverified.

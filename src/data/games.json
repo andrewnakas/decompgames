@@ -164,9 +164,9 @@
       "Enter — confirm",
       "Esc — menu"
     ],
-    "saveInstructions": "Save through the in-game menu. Export a backup before clearing browser storage.",
+    "saveInstructions": "Between missions, choose Options, then Save, select an empty slot, type a name, and press Enter. Export a backup from the player toolbar before closing. Save-file export was tested; in-game reload remains under investigation.",
     "limitations": [
-      "Browser integration is undergoing verification."
+      "Intermittent black screen during menu transitions in the tested in-app Chromium browser; save/reload verification remains incomplete."
     ],
     "inputs": [
       "Keyboard",
@@ -178,11 +178,11 @@
     "runtime": "tyrian",
     "verification": {
       "status": "smoke-tested",
-      "date": "2026-09-18",
+      "date": "2026-09-19",
       "browsers": [
         "Chromium-based in-app browser on Windows"
       ],
-      "scope": "Engine startup and rendering observed. Gameplay, audible audio, and save persistence remain unverified.",
+      "scope": "Live test reached episode selection, the ship menu, first mission, and a named save slot. Backup contained tyrian.sav and configuration files, including after restart. A black screen during a later menu transition blocked in-game reload verification. Audible audio and a completed level remain unverified.",
       "playthrough": false
     }
   },

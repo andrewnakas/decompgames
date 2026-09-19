@@ -1,4 +1,5 @@
 import {validateBackup} from '../lib/saves';
+import {loadAssets} from '../lib/assets';
 type FSApi={mkdirTree:(p:string)=>void;writeFile:(p:string,b:Uint8Array)=>void;readFile:(p:string)=>Uint8Array;readdir:(p:string)=>string[];stat:(p:string)=>{mode:number};isDir:(m:number)=>boolean;unlink:(p:string)=>void;mount:(fs:unknown,opts:object,p:string)=>void;syncfs:(populate:boolean,callback:(e:unknown)=>void)=>void;analyzePath:(p:string)=>{exists:boolean};getMounts:(m:unknown)=>{mountpoint:string;type:unknown}[];root:{mount:unknown}};
 type EmscriptenModule={FS:FSApi;IDBFS:{getDB?:(name:string,cb:unknown)=>unknown};[key:string]:any};
 export {};
@@ -14,8 +15,8 @@ function sync(){return new Promise<void>((resolve,reject)=>{const timeout=setTim
 function walk(dir:string):{path:string;data:number[]}[]{const fs=window.Module.FS;if(!fs.analyzePath(dir).exists)return[];return fs.readdir(dir).filter(n=>n!=='.'&&n!=='..').flatMap(n=>{const path=`${dir}/${n}`;return fs.isDir(fs.stat(path).mode)?walk(path):[{path,data:Array.from(fs.readFile(path))}];});}
 async function load(assets:{name:string;bytes:Uint8Array}[]){
  const response=await fetch(`/manifests/${game}.json`);if(!response.ok)throw Error('This runtime has not been released yet. Return to the game guide for its current status.');const config=await response.json();saveVersion=config.saveVersion;saveRoots=config.saveRoots;
- const base=config.base;const loaded:{path:string;bytes:Uint8Array}[]=[];
- for(const entry of config.assets||[]){status(`Downloading ${entry.label||entry.path}…`);const r=await fetch(base+entry.url);if(!r.ok)throw Error(`Download failed (${r.status}). Please try again.`);const bytes=new Uint8Array(await r.arrayBuffer());if(entry.sha256){const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))).map(n=>n.toString(16).padStart(2,'0')).join('');if(hash!==entry.sha256)throw Error('Game data checksum failed.');}loaded.push({path:entry.path,bytes});}
+ const base=config.base;
+ const loaded=await loadAssets(base,config.assets||[],(done,total)=>status(`Downloading game files ${done}/${total}…`));
  const args=[...(config.args||[])];if(config.engine==='doom'&&assets.length){const baseWad=assets.find(a=>new TextDecoder().decode(a.bytes.subarray(0,4))==='IWAD')!;args.push('-iwad',`/${baseWad.name}`);const mods=assets.filter(a=>a!==baseWad);if(mods.length)args.push('-file',...mods.map(a=>`/${a.name}`));}
  const module:any={canvas,arguments:args,locateFile:(name:string)=>base+name,setStatus:status,print:console.log,printErr:console.warn,onAbort:(text:string)=>fail(`Engine stopped: ${text}`),captureMouse:()=>{canvas.focus();},preRun:[()=>{const fs=window.Module.FS;const idb=window.Module.IDBFS;if(idb?.getDB){const original=idb.getDB.bind(idb);idb.getDB=(name:string,cb:unknown)=>original(`decompgames:${game}:${saveVersion}:${name}`,cb);}
  for(const item of loaded){fs.mkdirTree(item.path.slice(0,item.path.lastIndexOf('/'))||'/');fs.writeFile(item.path,item.bytes);}for(const item of assets){const path=config.engine==='quake'?`/id1/${item.name}`:`/${item.name}`;fs.mkdirTree(path.slice(0,path.lastIndexOf('/'))||'/');fs.writeFile(path,item.bytes);}
