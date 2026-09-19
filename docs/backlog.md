@@ -9,12 +9,17 @@
 
 ## Finish before broad expansion
 
-1. Finish Open Cadet high-score/input tests and restrict its preload to replacement assets only.
-2. Verify Freedoom save/reload and local Doom import using freely redistributable test data.
+1. Finish Open Cadet high-score/input tests. Its published preload is now restricted to replacement DAT/WAV assets.
+2. Freedoom save/reload and backup export/import passed on September 19; finish audible audio, mouse capture, and representative gameplay checks. Doom local import boots with a free Freedoom IWAD; its own save and network checks remain.
 3. Test the less-restrictive Asyncify OpenTyrian rebuild through menu transitions and saves.
 4. Test OpenTTD with OpenGFX/OpenSFX; keep missing browser music support explicit.
 5. Verify ScummVM support data, intro skips, gameplay input, and saves for BASS, Lure, Queen, and Sołtys.
 6. Test Quake with locally supplied compatible data. Do not publish commercial PAK files.
+7. Make backup replacement recover from write failures and coordinate mutations with running engine writes; check large saves against the current 8 MiB import limit.
+
+### September 19 persistence pass
+
+The live Freedoom save and backup round trip passed with distinct pre-import and post-import ammunition counts. Added regression coverage for conflicting backup paths and size/count limits. Fixed `fetch:games` so a fresh clone retrieves the pinned asset tree instead of requiring an untracked local cache. No new catalog entries or coverage claims were added during this integration pass.
 
 ## Next integrations
 

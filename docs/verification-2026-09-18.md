@@ -26,3 +26,16 @@ Automated tests cover malformed/truncated WAD/PAK input, directory bounds, missi
 - Cloudflare production endpoints returned HTTP 200 for the catalog and HTTP 206 for an eight-byte WASM range with `application/wasm`. Apex, www, and player hostnames are active with certificates.
 - GitHub CI passed the initial catalog, type, unit-test, build, and internal-link checks.
 - The live Doom backup button was retested after making export independent of IndexedDB. It completed and downloaded a backup despite the browser feature warning. This validates the export recovery path, not a saved campaign round trip.
+
+## September 19 — Freedoom persistence and backup round trip
+
+Tested on the live player origin with runtime `ddf0347a4fc1-c8f4bcf00e`, in the Chromium-based in-app browser on Windows:
+
+1. Started a new Phase 2 level, fired once (50 to 49 ammunition), opened F2, and saved slot 1 as MAP01. The game reported `GAME SAVED`.
+2. Exported the backup. It contains a 70,469-byte `prboomX-savegame0.dsg`, a 112-byte save index, and a 66,305-byte color-map cache. This is an actual campaign save, unlike the previous cache-only Doom test.
+3. Stopped the game, reloaded the page, started again, and used F3 to load MAP01. The same location, 49 ammunition, 100% health, and 0% armor were restored.
+4. Fired again, saved the changed state with 48 ammunition, then imported the earlier exported backup. After restarting and loading MAP01, ammunition returned to 49 at the original location. This verifies that the imported backup replaced the newer state.
+
+The browser feature initialization warning still occurs, but did not prevent these save checks. This does not establish mouse capture, audible audio, other-browser compatibility, or a full playthrough. The catalog remains labeled as a test build.
+
+Backup validation now rejects file/directory path collisions in either ordering, trailing slashes, overly long paths, excess files, and excess bytes before filesystem mutation. Regression tests cover these cases. Follow-up work remains for rollback after an actual storage-write failure and safe coordination with running engine writes.

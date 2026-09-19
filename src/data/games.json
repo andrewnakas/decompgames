@@ -113,9 +113,12 @@
       "WASD — move",
       "Mouse — look and fire",
       "E — use",
-      "Esc — menu"
+      "Esc — menu",
+      "Ctrl — fire (keyboard)",
+      "F2 — save game",
+      "F3 — load game"
     ],
-    "saveInstructions": "Save through the in-game menu. Export a backup before clearing browser storage.",
+    "saveInstructions": "Press F2, select a slot, and confirm its name to save. Use F3 to load it. Local save/reload and toolbar backup export/import passed the September 19 in-app Chromium test. Export a backup before clearing browser storage.",
     "limitations": [
       "Browser integration is undergoing verification."
     ],
@@ -129,11 +132,11 @@
     "runtime": "doom",
     "verification": {
       "status": "smoke-tested",
-      "date": "2026-09-18",
+      "date": "2026-09-19",
       "browsers": [
         "Chromium-based in-app browser on Windows"
       ],
-      "scope": "New-game menu, level start, firing, and save menu observed. Mouse capture, audible audio, and save round trip remain unverified.",
+      "scope": "September 19 live test: level start, keyboard firing, campaign save, reload after a fresh page load, and exported-backup import verified. Mouse capture, audible audio, and a complete playthrough remain unverified.",
       "playthrough": false
     },
     "image": "/images/freedoom.png"
