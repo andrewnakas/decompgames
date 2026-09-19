@@ -1,2 +1,3 @@
 https://www.decompgames.com/* https://decompgames.com/:splat 301
 https://play.decompgames.com/ https://decompgames.com/games/ 302
+https://play.decompgames.com/games/* https://decompgames.com/games/:splat 302

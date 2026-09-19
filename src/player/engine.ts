@@ -10,7 +10,7 @@ const origins=new Set([location.origin]);let started=false,saveRoots:string[]=[]
 function send(type:string,props:Record<string,unknown>={}){parent.postMessage({type,...props},location.origin);}
 function status(text:string){if(text){message.textContent=text;send('status',{message:text});}}
 function fail(error:unknown){const text=error instanceof Error?error.message:String(error);message.textContent=text;send('error',{message:text});}
-function sync(){return new Promise<void>((resolve,reject)=>window.Module.FS.syncfs(false,e=>e?reject(Error('Browser storage could not save your progress. Export a backup.')):resolve()));}
+function sync(){return new Promise<void>((resolve,reject)=>{const timeout=setTimeout(()=>reject(Error('Browser storage did not respond. Export a backup before closing.')),10000);window.Module.FS.syncfs(false,e=>{clearTimeout(timeout);e?reject(Error('Browser storage could not save your progress. Export a backup.')):resolve();});});}
 function walk(dir:string):{path:string;data:number[]}[]{const fs=window.Module.FS;if(!fs.analyzePath(dir).exists)return[];return fs.readdir(dir).filter(n=>n!=='.'&&n!=='..').flatMap(n=>{const path=`${dir}/${n}`;return fs.isDir(fs.stat(path).mode)?walk(path):[{path,data:Array.from(fs.readFile(path))}];});}
 async function load(assets:{name:string;bytes:Uint8Array}[]){
  const response=await fetch(`/manifests/${game}.json`);if(!response.ok)throw Error('This runtime has not been released yet. Return to the game guide for its current status.');const config=await response.json();saveVersion=config.saveVersion;saveRoots=config.saveRoots;
@@ -24,13 +24,16 @@ async function load(assets:{name:string;bytes:Uint8Array}[]){
  module.onBootstrap=(done:number,total:number)=>status(`Preparing game files ${done}/${total}…`);
  module.onBootstrapFailed=()=>fail('Game setup failed. Check browser storage and try again.');
  module.onBootstrapReload=()=>send('stopped',{message:'Game files prepared. Start again to finish setup.'});
- module.onWarningFs=()=>status('Browser storage is unavailable. Export saves before closing.');
+ module.onWarningFs=()=>status('Progress is stored in this browser. Export a backup before clearing site data.');
+ module.onExit=()=>send('stopped',{message:'Game exited. Start again when you are ready.'});
+ // Emscripten prepends preRun callbacks. Keep our namespace setup before upstream mounts.
+ module.preRun.push=function(...callbacks:unknown[]){return Array.prototype.unshift.apply(this,callbacks);};
  window.Module=module;
  window.addEventListener('error',e=>fail(e.message));
- window.addEventListener('unhandledrejection',e=>fail(e.reason));
+ window.addEventListener('unhandledrejection',e=>{if(e.reason instanceof DOMException){send('status',{message:'A browser feature could not initialize. Gameplay may continue; export a backup before closing.'});}else fail(e.reason);});
  const script=document.createElement('script');script.src=base+config.script;script.onerror=()=>fail('Engine download failed. Check your connection and retry.');document.body.append(script);
- setInterval(()=>{if(module.FS)sync().catch(fail);},15000);
+ setInterval(()=>{if(module.FS)sync().catch(()=>send('status',{message:'Browser storage could not retain progress. Export saves before closing.'}));},15000);
 }
-window.addEventListener('message',async event=>{if(event.source!==parent||!origins.has(event.origin))return;try{const msg=event.data;if(msg?.type==='start'&&!started&&msg.game===game){started=true;await load(msg.assets||[]);}else if(msg?.type==='stop'){await sync();send('stopped');}else if(msg?.type==='export'){await sync();send('save-export',{backup:{format:1,game,version:saveVersion,files:saveRoots.flatMap(walk)}});}else if(msg?.type==='delete'||msg?.type==='import'){if(msg.type==='import')validateBackup(msg.backup,game,saveVersion,saveRoots);const fs=window.Module.FS;for(const f of saveRoots.flatMap(walk))fs.unlink(f.path);if(msg.type==='import')for(const f of msg.backup.files){fs.mkdirTree(f.path.slice(0,f.path.lastIndexOf('/')));fs.writeFile(f.path,new Uint8Array(f.data));}await sync();send('stopped',{message:'Saved data updated. Start the game to reload it.'});}}catch(error){fail(error);}});
+window.addEventListener('message',async event=>{if(event.source!==parent||!origins.has(event.origin))return;try{const msg=event.data;if(msg?.type==='start'&&!started&&msg.game===game){started=true;await load(msg.assets||[]);}else if(msg?.type==='stop'){await sync();send('stopped');}else if(msg?.type==='export'){send('save-export',{backup:{format:1,game,version:saveVersion,files:saveRoots.flatMap(walk)}});}else if(msg?.type==='delete'||msg?.type==='import'){if(msg.type==='import')validateBackup(msg.backup,game,saveVersion,saveRoots);const fs=window.Module.FS;for(const f of saveRoots.flatMap(walk))fs.unlink(f.path);if(msg.type==='import')for(const f of msg.backup.files){fs.mkdirTree(f.path.slice(0,f.path.lastIndexOf('/')));fs.writeFile(f.path,new Uint8Array(f.data));}await sync();send('stopped',{message:'Saved data updated. Start the game to reload it.'});}}catch(error){if(event.data?.type==='start')fail(error);else send('operation-error',{message:error instanceof Error?error.message:'Save operation failed. Export a backup before closing.'});}});
 canvas.addEventListener('click',()=>{canvas.focus();const ctx=window.Module?.SDL2?.audioContext;ctx?.resume?.();});
 send('shell-ready');

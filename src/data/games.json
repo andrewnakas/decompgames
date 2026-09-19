@@ -82,10 +82,12 @@
     "color": "#50bb9b",
     "runtime": "openttd",
     "verification": {
-      "status": "unverified",
-      "date": null,
-      "browsers": [],
-      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "status": "smoke-tested",
+      "date": "2026-09-19",
+      "browsers": [
+        "Chromium-based in-app browser on Windows"
+      ],
+      "scope": "Menu interaction, generated world, save dialog, and backup export observed. Save/reload and audible audio are not yet verified.",
       "playthrough": false
     },
     "image": "/images/openttd.png"
@@ -101,7 +103,7 @@
     "kind": "Source port",
     "mode": "instant",
     "engine": "Dwasm / PrBoom",
-    "description": "Two original campaigns built for the Doom engine. Every map, sound, and sprite is free.",
+    "description": "Play Freedoom Phase 2: original levels, artwork, and sounds running on an open Doom engine.",
     "overview": "Freedoom provides original artwork, levels, sounds, and music for open Doom engines. This player currently loads Phase 2 through Dwasm, using a software renderer. It does not require a commercial Doom WAD. Phase 1 is a separate campaign and is not selected by this player. The engine can also accept local WADs through the separate Doom entry.",
     "source": "https://github.com/freedoom/freedoom",
     "engineLicense": "GPL-2.0-or-later (engine)",
@@ -218,10 +220,12 @@
     "runtime": "scummvm",
     "dataKey": "bass",
     "verification": {
-      "status": "unverified",
-      "date": null,
-      "browsers": [],
-      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "status": "smoke-tested",
+      "date": "2026-09-19",
+      "browsers": [
+        "Chromium-based in-app browser on Windows"
+      ],
+      "scope": "Game launch and animated introduction observed with engine support data. Gameplay, saves, and audible audio remain unverified.",
       "playthrough": false
     },
     "image": "/images/beneath-a-steel-sky.png"
@@ -388,10 +392,12 @@
     "color": "#d2a766",
     "runtime": "doom",
     "verification": {
-      "status": "unverified",
-      "date": null,
-      "browsers": [],
-      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "status": "smoke-tested",
+      "date": "2026-09-19",
+      "browsers": [
+        "Chromium-based in-app browser on Windows"
+      ],
+      "scope": "Local file picker accepted Freedoom Phase 2 IWAD; live engine rendered its attract sequence. Commercial Doom content, gameplay, audio, save persistence, and network inspection remain unverified.",
       "playthrough": false
     }
   },

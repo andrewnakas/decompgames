@@ -8,3 +8,5 @@
 /runtime/*
   X-Robots-Tag: noindex
   Cross-Origin-Resource-Policy: same-site
+https://play.decompgames.com/*
+  X-Robots-Tag: noindex, follow
