@@ -1,12 +1,12 @@
 {
   "id": "cadet",
   "engine": "cadet",
-  "packageRevision": "0bc12d3ca97a-f10d9a8d4a",
+  "packageRevision": "0bc12d3ca97a-8d0f687e47",
   "sourceRevision": "0bc12d3ca97a30a61e1e325cfde1eeec379bb9b9",
   "repository": "https://github.com/alula/SpaceCadetPinball",
   "toolchain": "Emscripten 4.0.10",
   "recipe": "scripts/build-engines.sh",
-  "sourceArchive": "/sources/cadet-0bc12d3ca97a-f10d9a8d4a.tar.gz",
+  "sourceArchive": "/sources/cadet-0bc12d3ca97a-8d0f687e47.tar.gz",
   "requirements": [
     "WebAssembly",
     "Keyboard and mouse"
@@ -14,8 +14,8 @@
   "files": [
     {
       "path": "SpaceCadetPinball.js",
-      "sha256": "9620eb3d6a72bbd2f62a3c5976e48886f286d68dce2906d4e8667f118e07cddf",
-      "bytes": 206809
+      "sha256": "562d69a21ae7c6a4990219a860865334ba06105d783d7a50c1f7ffd1f72708d7",
+      "bytes": 203190
     },
     {
       "path": "SpaceCadetPinball.wasm",
@@ -24,11 +24,11 @@
     },
     {
       "path": "SpaceCadetPinball.data",
-      "sha256": "4afbad88bf4d0be358041fdcca10919e6e37c2b89c7c887769694984f2d48939",
-      "bytes": 2541559
+      "sha256": "a26a18eee2ddc07d28a80ac4acb6e8693046733d17fd0dfcea54fcc51001fad8",
+      "bytes": 1431942
     }
   ],
-  "base": "/runtime/cadet/0bc12d3ca97a-f10d9a8d4a/",
+  "base": "/runtime/cadet/0bc12d3ca97a-8d0f687e47/",
   "script": "SpaceCadetPinball.js",
   "saveVersion": "1",
   "saveRoots": [
