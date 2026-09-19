@@ -1,0 +1,56 @@
+{
+  "id": "openttd",
+  "engine": "openttd",
+  "packageRevision": "5b513abef070-84e6bf25cf",
+  "sourceRevision": "5b513abef07026400c92144d3ebbce5e22e8c423",
+  "repository": "https://github.com/OpenTTD/OpenTTD",
+  "toolchain": "Emscripten 6.0.1",
+  "recipe": "scripts/build-engines.sh",
+  "sourceArchive": "/sources/openttd-5b513abef070-84e6bf25cf.tar.gz",
+  "requirements": [
+    "WebAssembly",
+    "Keyboard and mouse"
+  ],
+  "files": [
+    {
+      "path": "openttd.js",
+      "sha256": "f46f115fe45ef4f6c08442234e2b5897a230ce9ec4af405353d9fa303ee3501e",
+      "bytes": 240333
+    },
+    {
+      "path": "openttd.wasm",
+      "sha256": "0a77eaef8236f8641cbb6fe2a95c9bfe448a91c9c26aa2b5b3a8285cfc1fb5c3",
+      "bytes": 10361098
+    },
+    {
+      "path": "openttd.data",
+      "sha256": "ef07008ba731adf2135ebd2fe3549372781180e8f6029423b0948860f510b816",
+      "bytes": 2644880
+    }
+  ],
+  "base": "/runtime/openttd/5b513abef070-84e6bf25cf/",
+  "script": "openttd.js",
+  "saveVersion": "1",
+  "saveRoots": [
+    "/home/web_user/.openttd"
+  ],
+  "mountSave": false,
+  "assets": [
+    {
+      "path": "/baseset/opengfx-8.0.tar",
+      "url": "../../../data/openttd/opengfx-8.0.tar",
+      "sha256": "9389bcb0807058c80bd95121e978f05d9ef86b4b1bc3ac2da8da8bb02456043c"
+    },
+    {
+      "path": "/baseset/opensfx-1.0.3.tar",
+      "url": "../../../data/openttd/opensfx-1.0.3.tar",
+      "sha256": "531a243c5f0742e34d53704263302bbb847a3dc1e618831097ee940088b7b879"
+    },
+    {
+      "path": "/baseset/openmsx-0.4.2.tar",
+      "url": "../../../data/openttd/openmsx-0.4.2.tar",
+      "sha256": "d8c8062d1c1cc7df2a89e7ce3bdaceab58d966a86142b09c788aa38940223191"
+    }
+  ],
+  "args": []
+}

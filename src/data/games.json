@@ -1,0 +1,1173 @@
+[
+  {
+    "id": "open-cadet",
+    "title": "Open Cadet",
+    "aliases": [
+      "SpaceCadetPinball"
+    ],
+    "year": 1995,
+    "genre": "Arcade",
+    "kind": "Decompilation",
+    "mode": "instant",
+    "engine": "SpaceCadetPinball",
+    "description": "Your next high score starts here. Classic space pinball, rebuilt with original open assets.",
+    "overview": "Open Cadet pairs the reverse-engineered SpaceCadetPinball engine with an original neon playfield and synthesized sounds. It recreates the familiar table’s behavior without distributing Microsoft’s PINBALL.DAT. The replacement artwork is intentionally different from the Windows original.",
+    "source": "https://github.com/andrewnakas/open-cadet",
+    "engineLicense": "MIT",
+    "assetLicense": "CC0-1.0",
+    "assetRequirements": "No original game files needed.",
+    "controls": [
+      "Z — left flipper",
+      "/ — right flipper",
+      "Space — launch the ball",
+      "F2 — new game"
+    ],
+    "saveInstructions": "High scores and table settings are saved locally. A ball in progress is not a portable save state.",
+    "limitations": [
+      "Browser integration is undergoing verification."
+    ],
+    "inputs": [
+      "Keyboard",
+      "Mouse"
+    ],
+    "downloadMB": 6.2,
+    "complete": true,
+    "color": "#427fff",
+    "runtime": "cadet",
+    "verification": {
+      "status": "smoke-tested",
+      "date": "2026-09-18",
+      "browsers": [
+        "Chromium-based in-app browser on Windows"
+      ],
+      "scope": "Engine startup and rendering observed. Gameplay, audible audio, and save persistence remain unverified.",
+      "playthrough": false
+    },
+    "image": "/images/open-cadet.png"
+  },
+  {
+    "id": "openttd",
+    "title": "OpenTTD",
+    "aliases": [
+      "OpenTTD"
+    ],
+    "year": 2004,
+    "genre": "Strategy",
+    "kind": "Engine recreation",
+    "mode": "instant",
+    "engine": "OpenTTD",
+    "description": "Build a transport empire. Connect towns with trains, roads, ships, and aircraft.",
+    "overview": "Lay a railway, schedule trains, and grow a transport network over decades. This build uses community replacement graphics and music, so no Transport Tycoon Deluxe files are needed. Start with a small map while learning the interface.",
+    "source": "https://github.com/OpenTTD/OpenTTD",
+    "engineLicense": "GPL-2.0-only",
+    "assetLicense": "OpenGFX/OpenMSX: GPL-2.0; OpenSFX: CC-BY-SA-3.0",
+    "assetRequirements": "No original game files needed.",
+    "controls": [
+      "Mouse — build and manage",
+      "Right drag — move the map",
+      "Mouse wheel — zoom"
+    ],
+    "saveInstructions": "Use the in-game Save menu, then export a backup from the player toolbar.",
+    "limitations": [
+      "Large maps require more memory.",
+      "Network multiplayer is not provided by this site.",
+      "Music synthesis is not enabled in the current browser build."
+    ],
+    "inputs": [
+      "Keyboard",
+      "Mouse"
+    ],
+    "downloadMB": 19,
+    "complete": true,
+    "color": "#50bb9b",
+    "runtime": "openttd",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    },
+    "image": "/images/openttd.png"
+  },
+  {
+    "id": "freedoom",
+    "title": "Freedoom",
+    "aliases": [
+      "Dwasm / PrBoom"
+    ],
+    "year": 2019,
+    "genre": "Shooter",
+    "kind": "Source port",
+    "mode": "instant",
+    "engine": "Dwasm / PrBoom",
+    "description": "Two original campaigns built for the Doom engine. Every map, sound, and sprite is free.",
+    "overview": "Freedoom provides original artwork, levels, sounds, and music for open Doom engines. This player currently loads Phase 2 through Dwasm, using a software renderer. It does not require a commercial Doom WAD. Phase 1 is a separate campaign and is not selected by this player. The engine can also accept local WADs through the separate Doom entry.",
+    "source": "https://github.com/freedoom/freedoom",
+    "engineLicense": "GPL-2.0-or-later (engine)",
+    "assetLicense": "BSD-3-Clause (Freedoom)",
+    "assetRequirements": "No original game files needed.",
+    "controls": [
+      "WASD — move",
+      "Mouse — look and fire",
+      "E — use",
+      "Esc — menu"
+    ],
+    "saveInstructions": "Save through the in-game menu. Export a backup before clearing browser storage.",
+    "limitations": [
+      "Browser integration is undergoing verification."
+    ],
+    "inputs": [
+      "Keyboard",
+      "Mouse"
+    ],
+    "downloadMB": 35,
+    "complete": true,
+    "color": "#c15c45",
+    "runtime": "doom",
+    "verification": {
+      "status": "smoke-tested",
+      "date": "2026-09-18",
+      "browsers": [
+        "Chromium-based in-app browser on Windows"
+      ],
+      "scope": "New-game menu, level start, firing, and save menu observed. Mouse capture, audible audio, and save round trip remain unverified.",
+      "playthrough": false
+    },
+    "image": "/images/freedoom.png"
+  },
+  {
+    "id": "opentyrian",
+    "title": "OpenTyrian",
+    "aliases": [
+      "OpenTyrian"
+    ],
+    "year": 1995,
+    "genre": "Shooter",
+    "kind": "Engine recreation",
+    "mode": "instant",
+    "engine": "OpenTyrian",
+    "description": "A vertical shooter with branching routes, ship upgrades, and a galaxy worth saving.",
+    "overview": "OpenTyrian recreates the Tyrian 2.1 engine, using the freeware release of the original data. Campaign progress includes your ship equipment and upgrades. This is the classic Tyrian content, not a claim to include every Tyrian 2000 addition.",
+    "source": "https://github.com/opentyrian/opentyrian",
+    "engineLicense": "GPL-2.0-or-later",
+    "assetLicense": "Tyrian 2.1 freeware; original assets retain their license",
+    "assetRequirements": "No original game files needed.",
+    "controls": [
+      "Arrow keys — move",
+      "Space — fire",
+      "Enter — confirm",
+      "Esc — menu"
+    ],
+    "saveInstructions": "Save through the in-game menu. Export a backup before clearing browser storage.",
+    "limitations": [
+      "Browser integration is undergoing verification."
+    ],
+    "inputs": [
+      "Keyboard",
+      "Mouse"
+    ],
+    "downloadMB": 15,
+    "complete": true,
+    "color": "#ac7ee6",
+    "runtime": "tyrian",
+    "verification": {
+      "status": "smoke-tested",
+      "date": "2026-09-18",
+      "browsers": [
+        "Chromium-based in-app browser on Windows"
+      ],
+      "scope": "Engine startup and rendering observed. Gameplay, audible audio, and save persistence remain unverified.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "beneath-a-steel-sky",
+    "title": "Beneath a Steel Sky",
+    "aliases": [
+      "ScummVM"
+    ],
+    "year": 1994,
+    "genre": "Adventure",
+    "kind": "Engine recreation",
+    "mode": "instant",
+    "engine": "ScummVM",
+    "description": "Escape a dystopian city with a sharp-tongued robot and a very questionable plan.",
+    "overview": "Robert Foster is taken from the wasteland to Union City, where a connected computer system controls everyday life. This is the freeware floppy edition, with text dialogue rather than CD speech. Use ScummVM’s menu to save before closing the player.",
+    "source": "https://github.com/scummvm/scummvm",
+    "engineLicense": "GPL-3.0-or-later",
+    "assetLicense": "Revolution Software freeware license",
+    "assetRequirements": "No original game files needed.",
+    "controls": [
+      "Left click — interact",
+      "Right click — alternate action",
+      "Ctrl + F5 — ScummVM menu"
+    ],
+    "saveInstructions": "Save through the in-game menu. Export a backup before clearing browser storage.",
+    "limitations": [
+      "Browser integration is undergoing verification.",
+      "This package is the floppy edition; spoken CD dialogue is not included."
+    ],
+    "inputs": [
+      "Keyboard",
+      "Mouse"
+    ],
+    "downloadMB": 21,
+    "complete": true,
+    "color": "#ce9a60",
+    "runtime": "scummvm",
+    "dataKey": "bass",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    },
+    "image": "/images/beneath-a-steel-sky.png"
+  },
+  {
+    "id": "lure-of-the-temptress",
+    "title": "Lure of the Temptress",
+    "aliases": [
+      "ScummVM"
+    ],
+    "year": 1992,
+    "genre": "Adventure",
+    "kind": "Engine recreation",
+    "mode": "instant",
+    "engine": "ScummVM",
+    "description": "An unlikely hero, a village under siege, and characters with lives of their own.",
+    "overview": "Diermot wakes in captivity after a rebellion goes wrong. The adventure’s Virtual Theatre system lets other characters move through the village independently. The hosted release is Revolution’s freeware edition for ScummVM.",
+    "source": "https://github.com/scummvm/scummvm",
+    "engineLicense": "GPL-3.0-or-later",
+    "assetLicense": "Revolution Software freeware license",
+    "assetRequirements": "No original game files needed.",
+    "controls": [
+      "Left click — interact",
+      "Right click — alternate action",
+      "Ctrl + F5 — ScummVM menu"
+    ],
+    "saveInstructions": "Save through the in-game menu. Export a backup before clearing browser storage.",
+    "limitations": [
+      "Browser integration is undergoing verification."
+    ],
+    "inputs": [
+      "Keyboard",
+      "Mouse"
+    ],
+    "downloadMB": 18,
+    "complete": true,
+    "color": "#77a174",
+    "runtime": "scummvm",
+    "dataKey": "lure",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "flight-of-the-amazon-queen",
+    "title": "Flight of the Amazon Queen",
+    "aliases": [
+      "ScummVM"
+    ],
+    "year": 1995,
+    "genre": "Adventure",
+    "kind": "Engine recreation",
+    "mode": "instant",
+    "engine": "ScummVM",
+    "description": "A crash landing sends pilot Joe King into a wonderfully improbable jungle adventure.",
+    "overview": "Pilot Joe King crash-lands in the Amazon and becomes entangled in a pulp adventure. The floppy edition keeps the initial download smaller; it uses text dialogue rather than the CD version’s voice acting.",
+    "source": "https://github.com/scummvm/scummvm",
+    "engineLicense": "GPL-3.0-or-later",
+    "assetLicense": "Flight of the Amazon Queen freeware license",
+    "assetRequirements": "No original game files needed.",
+    "controls": [
+      "Left click — interact",
+      "Right click — alternate action",
+      "Ctrl + F5 — ScummVM menu"
+    ],
+    "saveInstructions": "Save through the in-game menu. Export a backup before clearing browser storage.",
+    "limitations": [
+      "Browser integration is undergoing verification."
+    ],
+    "inputs": [
+      "Keyboard",
+      "Mouse"
+    ],
+    "downloadMB": 35,
+    "complete": true,
+    "color": "#d4a853",
+    "runtime": "scummvm",
+    "dataKey": "queen",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "soltys",
+    "title": "Sołtys",
+    "aliases": [
+      "ScummVM"
+    ],
+    "year": 1995,
+    "genre": "Adventure",
+    "kind": "Engine recreation",
+    "mode": "instant",
+    "engine": "ScummVM",
+    "description": "Explore a mischievous Polish village in this hand-drawn point-and-click adventure.",
+    "overview": "An eccentric village is the setting for this comic adventure by L.K. Avalon. The English freeware edition runs through ScummVM’s CGE engine. Save from the game menu and keep an exported backup before clearing browser storage.",
+    "source": "https://github.com/scummvm/scummvm",
+    "engineLicense": "GPL-3.0-or-later",
+    "assetLicense": "L.K. Avalon freeware license",
+    "assetRequirements": "No original game files needed.",
+    "controls": [
+      "Left click — interact",
+      "Right click — alternate action",
+      "Ctrl + F5 — ScummVM menu"
+    ],
+    "saveInstructions": "Save through the in-game menu. Export a backup before clearing browser storage.",
+    "limitations": [
+      "Browser integration is undergoing verification."
+    ],
+    "inputs": [
+      "Keyboard",
+      "Mouse"
+    ],
+    "downloadMB": 21,
+    "complete": true,
+    "color": "#7596d2",
+    "runtime": "scummvm",
+    "dataKey": "soltys",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "doom",
+    "title": "Doom",
+    "aliases": [
+      "Dwasm / PrBoom"
+    ],
+    "year": 1993,
+    "genre": "Shooter",
+    "kind": "Source port",
+    "mode": "files",
+    "engine": "Dwasm / PrBoom",
+    "description": "Bring your original WAD and return to the corridors that defined the first-person shooter.",
+    "overview": "Dwasm runs the Doom engine directly as WebAssembly. Import your own IWAD to select the campaign. Start without mods; a working base game is easier to troubleshoot. Files are read locally and never uploaded.",
+    "source": "https://github.com/GMH-Code/Dwasm",
+    "engineLicense": "GPL-2.0-or-later",
+    "assetLicense": "Original game data required",
+    "assetRequirements": "Choose a compatible Doom IWAD (.wad), such as DOOM.WAD from your own installation. The commercial WAD is not supplied.",
+    "controls": [
+      "See the upstream project’s control documentation."
+    ],
+    "saveInstructions": "Save through the in-game menu. Export a backup before clearing browser storage.",
+    "limitations": [
+      "Browser integration is undergoing verification."
+    ],
+    "inputs": [
+      "Keyboard",
+      "Mouse"
+    ],
+    "downloadMB": 3,
+    "complete": true,
+    "color": "#d2a766",
+    "runtime": "doom",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "quake",
+    "title": "Quake",
+    "aliases": [
+      "Qwasm"
+    ],
+    "year": 1996,
+    "genre": "Shooter",
+    "kind": "Source port",
+    "mode": "files",
+    "engine": "Qwasm",
+    "description": "Slip through the slipgate. Play the original campaign with your own Quake PAK files.",
+    "overview": "Qwasm brings the original Quake engine to WebAssembly. Use the original game’s id1 packages, not an arbitrary remaster archive. The player accepts your local files and keeps save backups separate from copyrighted game data.",
+    "source": "https://github.com/GMH-Code/Qwasm",
+    "engineLicense": "GPL-2.0-or-later",
+    "assetLicense": "Original game data required",
+    "assetRequirements": "Choose PAK0.PAK and, for the registered campaign, PAK1.PAK from your original Quake installation. Remaster-specific packages are not assumed compatible.",
+    "controls": [
+      "WASD — move",
+      "Mouse — look and fire",
+      "Space — jump",
+      "Esc — menu"
+    ],
+    "saveInstructions": "Save through the in-game menu. Export a backup before clearing browser storage.",
+    "limitations": [
+      "Browser integration is undergoing verification."
+    ],
+    "inputs": [
+      "Keyboard",
+      "Mouse"
+    ],
+    "downloadMB": 4,
+    "complete": true,
+    "color": "#ad8762",
+    "runtime": "quake",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "drascula",
+    "title": "Drascula: The Vampire Strikes Back",
+    "aliases": [
+      "ScummVM"
+    ],
+    "year": 1996,
+    "genre": "Adventure",
+    "kind": "Engine recreation",
+    "mode": "project",
+    "engine": "ScummVM",
+    "description": "A comic vampire adventure whose freeware release lives on through ScummVM.",
+    "overview": "A comic vampire adventure whose freeware release lives on through ScummVM. This entry links to the upstream project so you can check supported releases, current compatibility, and installation instructions. A native desktop release does not establish browser compatibility.",
+    "source": "https://github.com/scummvm/scummvm",
+    "engineLicense": "GPL-3.0-or-later",
+    "assetLicense": "Alcachofa Soft freeware license",
+    "assetRequirements": "Alcachofa Soft freeware license",
+    "controls": [
+      "Left click — interact",
+      "Right click — alternate action",
+      "Ctrl + F5 — ScummVM menu"
+    ],
+    "saveInstructions": "Follow the upstream project’s save instructions. There is no hosted player for this entry.",
+    "limitations": [
+      "Directory entry; browser gameplay has not been verified here."
+    ],
+    "inputs": [],
+    "downloadMB": null,
+    "complete": false,
+    "color": "#a782af",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "dreamweb",
+    "title": "DreamWeb",
+    "aliases": [
+      "ScummVM"
+    ],
+    "year": 1994,
+    "genre": "Adventure",
+    "kind": "Engine recreation",
+    "mode": "project",
+    "engine": "ScummVM",
+    "description": "A dark, top-down cyberpunk story with a distinctive inventory and exploration system.",
+    "overview": "A dark, top-down cyberpunk story with a distinctive inventory and exploration system. This entry links to the upstream project so you can check supported releases, current compatibility, and installation instructions. A native desktop release does not establish browser compatibility.",
+    "source": "https://github.com/scummvm/scummvm",
+    "engineLicense": "GPL-3.0-or-later",
+    "assetLicense": "DreamWeb freeware release",
+    "assetRequirements": "DreamWeb freeware release",
+    "controls": [
+      "Left click — interact",
+      "Right click — alternate action",
+      "Ctrl + F5 — ScummVM menu"
+    ],
+    "saveInstructions": "Follow the upstream project’s save instructions. There is no hosted player for this entry.",
+    "limitations": [
+      "Directory entry; browser gameplay has not been verified here."
+    ],
+    "inputs": [],
+    "downloadMB": null,
+    "complete": false,
+    "color": "#8586bb",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "sfinx",
+    "title": "Sfinx",
+    "aliases": [
+      "ScummVM"
+    ],
+    "year": 1997,
+    "genre": "Adventure",
+    "kind": "Engine recreation",
+    "mode": "project",
+    "engine": "ScummVM",
+    "description": "Two young heroes investigate an alien arrival in this Polish adventure.",
+    "overview": "Two young heroes investigate an alien arrival in this Polish adventure. This entry links to the upstream project so you can check supported releases, current compatibility, and installation instructions. A native desktop release does not establish browser compatibility.",
+    "source": "https://github.com/scummvm/scummvm",
+    "engineLicense": "GPL-3.0-or-later",
+    "assetLicense": "L.K. Avalon freeware license",
+    "assetRequirements": "L.K. Avalon freeware license",
+    "controls": [
+      "Left click — interact",
+      "Right click — alternate action",
+      "Ctrl + F5 — ScummVM menu"
+    ],
+    "saveInstructions": "Follow the upstream project’s save instructions. There is no hosted player for this entry.",
+    "limitations": [
+      "Directory entry; browser gameplay has not been verified here."
+    ],
+    "inputs": [],
+    "downloadMB": null,
+    "complete": false,
+    "color": "#62b5af",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "the-griffon-legend",
+    "title": "The Griffon Legend",
+    "aliases": [
+      "ScummVM"
+    ],
+    "year": 2005,
+    "genre": "Adventure",
+    "kind": "Engine recreation",
+    "mode": "project",
+    "engine": "ScummVM",
+    "description": "A compact action adventure with exploration, swordplay, and hand-drawn pixel art.",
+    "overview": "A compact action adventure with exploration, swordplay, and hand-drawn pixel art. This entry links to the upstream project so you can check supported releases, current compatibility, and installation instructions. A native desktop release does not establish browser compatibility.",
+    "source": "https://github.com/scummvm/scummvm",
+    "engineLicense": "GPL-3.0-or-later",
+    "assetLicense": "Freeware release; see distribution terms",
+    "assetRequirements": "Freeware release; see distribution terms",
+    "controls": [
+      "Left click — interact",
+      "Right click — alternate action",
+      "Ctrl + F5 — ScummVM menu"
+    ],
+    "saveInstructions": "Follow the upstream project’s save instructions. There is no hosted player for this entry.",
+    "limitations": [
+      "Directory entry; browser gameplay has not been verified here."
+    ],
+    "inputs": [],
+    "downloadMB": null,
+    "complete": false,
+    "color": "#b58a68",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "tomb-raider",
+    "title": "Tomb Raider",
+    "aliases": [
+      "OpenLara"
+    ],
+    "year": 1996,
+    "genre": "Action",
+    "kind": "Engine recreation",
+    "mode": "project",
+    "engine": "OpenLara",
+    "description": "Explore the OpenLara engine, its browser demonstration, and original-data requirements.",
+    "overview": "OpenLara rebuilds the original Tomb Raider engine. Its browser technology is a useful starting point, but an upstream browser demo does not prove that a complete campaign works in this player. Keep level, audio, and video files from one supported game edition together. A single level file may omit music or cinematics. This catalog entry currently directs you to upstream setup instructions; local folder import and save compatibility still need an adapter here.",
+    "source": "https://github.com/XProger/OpenLara",
+    "engineLicense": "BSD-2-Clause",
+    "assetLicense": "Original game data required",
+    "assetRequirements": "Original game data required",
+    "controls": [
+      "See the upstream project’s control documentation."
+    ],
+    "saveInstructions": "Follow the upstream project’s save instructions. There is no hosted player for this entry.",
+    "limitations": [
+      "Directory entry; browser gameplay has not been verified here."
+    ],
+    "inputs": [],
+    "downloadMB": null,
+    "complete": false,
+    "color": "#8baf8a",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "duke-nukem-ii",
+    "title": "Duke Nukem II",
+    "aliases": [
+      "RigelEngine"
+    ],
+    "year": 1993,
+    "genre": "Platformer",
+    "kind": "Engine recreation",
+    "mode": "project",
+    "engine": "RigelEngine",
+    "description": "A modern engine for all four episodes of the side-scrolling Duke Nukem adventure.",
+    "overview": "RigelEngine concentrates on Duke Nukem II rather than Duke Nukem 3D. It supports the original episodes and adds options such as widescreen presentation and quicksaves. Shareware contains only part of the campaign. Supply the data from the edition you own when following the upstream installation guide, and keep shareware and registered files separate. Our planned browser adapter will need to preserve the game directory and its save files; we have not certified that integration.",
+    "source": "https://github.com/lethal-guitar/RigelEngine",
+    "engineLicense": "GPL-2.0-or-later",
+    "assetLicense": "Original game data or separately licensed shareware required",
+    "assetRequirements": "Original game data or separately licensed shareware required",
+    "controls": [
+      "See the upstream project’s control documentation."
+    ],
+    "saveInstructions": "Follow the upstream project’s save instructions. There is no hosted player for this entry.",
+    "limitations": [
+      "Directory entry; browser gameplay has not been verified here."
+    ],
+    "inputs": [],
+    "downloadMB": null,
+    "complete": false,
+    "color": "#db8f56",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "rollercoaster-tycoon-2",
+    "title": "RollerCoaster Tycoon 2",
+    "aliases": [
+      "OpenRCT2"
+    ],
+    "year": 2002,
+    "genre": "Strategy",
+    "kind": "Engine recreation",
+    "mode": "project",
+    "engine": "OpenRCT2",
+    "description": "Build and manage a theme park through an actively developed recreation of the original engine.",
+    "overview": "Build and manage a theme park through an actively developed recreation of the original engine. This entry links to the upstream project so you can check supported releases, current compatibility, and installation instructions. A native desktop release does not establish browser compatibility.",
+    "source": "https://github.com/OpenRCT2/OpenRCT2",
+    "engineLicense": "GPL-3.0-or-later",
+    "assetLicense": "Original game data required",
+    "assetRequirements": "Original game data required",
+    "controls": [
+      "See the upstream project’s control documentation."
+    ],
+    "saveInstructions": "Follow the upstream project’s save instructions. There is no hosted player for this entry.",
+    "limitations": [
+      "Directory entry; browser gameplay has not been verified here."
+    ],
+    "inputs": [],
+    "downloadMB": null,
+    "complete": false,
+    "color": "#8cc57e",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "jazz-jackrabbit",
+    "title": "Jazz Jackrabbit",
+    "aliases": [
+      "OpenJazz"
+    ],
+    "year": 1994,
+    "genre": "Platformer",
+    "kind": "Engine recreation",
+    "mode": "project",
+    "engine": "OpenJazz",
+    "description": "A portable engine for the fast-moving original Jazz Jackrabbit, using your game data.",
+    "overview": "OpenJazz targets the original Jazz Jackrabbit, not Jazz Jackrabbit 2. Levels, graphics, and sound remain separate from its open engine. Different original releases contain different episodes, so a shareware installation should not be described as the full registered game. Follow the project’s file-layout instructions for your edition. A browser port needs more than a title-screen test: level transitions, movement timing, audio, and retained progress must also be checked.",
+    "source": "https://github.com/AlisterT/openjazz",
+    "engineLicense": "GPL-2.0-or-later",
+    "assetLicense": "Original game data required",
+    "assetRequirements": "Original game data required",
+    "controls": [
+      "See the upstream project’s control documentation."
+    ],
+    "saveInstructions": "Follow the upstream project’s save instructions. There is no hosted player for this entry.",
+    "limitations": [
+      "Directory entry; browser gameplay has not been verified here."
+    ],
+    "inputs": [],
+    "downloadMB": null,
+    "complete": false,
+    "color": "#76bb60",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "super-mario-64",
+    "title": "Super Mario 64",
+    "aliases": [
+      "sm64"
+    ],
+    "year": 1996,
+    "genre": "Platformer",
+    "kind": "Decompilation",
+    "mode": "project",
+    "engine": "sm64",
+    "description": "Discover the landmark matching decompilation and the ports built on its reconstructed code.",
+    "overview": "The sm64 project reconstructs the Nintendo 64 program from a supported original ROM. Its repository is a source and research project rather than a ready-to-play browser release. Building it involves a matching base ROM and the toolchain described upstream. ROM region and revision matter; a renamed or modified file is not interchangeable. We do not distribute Nintendo game assets. A future browser integration would need its own open-source port, local extraction, and documented controller and save tests.",
+    "source": "https://github.com/n64decomp/sm64",
+    "engineLicense": "CC0-1.0",
+    "assetLicense": "Original ROM required",
+    "assetRequirements": "Original ROM required",
+    "controls": [
+      "See the upstream project’s control documentation."
+    ],
+    "saveInstructions": "Follow the upstream project’s save instructions. There is no hosted player for this entry.",
+    "limitations": [
+      "Directory entry; browser gameplay has not been verified here."
+    ],
+    "inputs": [],
+    "downloadMB": null,
+    "complete": false,
+    "color": "#e78371",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "ocarina-of-time",
+    "title": "The Legend of Zelda: Ocarina of Time",
+    "aliases": [
+      "Ship of Harkinian"
+    ],
+    "year": 1998,
+    "genre": "Adventure",
+    "kind": "Decompilation",
+    "mode": "project",
+    "engine": "Ship of Harkinian",
+    "description": "A native port with extensive controls, graphics options, and quality-of-life improvements.",
+    "overview": "Ship of Harkinian builds on Ocarina of Time decompilation work and provides a modern port. Its asset extraction depends on supported original game versions; consult the current upstream list before preparing files. A port release, a source checkout, and an extracted asset archive serve different purposes. This page currently links to the project rather than accepting a ROM in the browser. Browser graphics, controller mapping, and save-file interchange have not been verified by Decomp Games.",
+    "source": "https://github.com/HarbourMasters/Shipwright",
+    "engineLicense": "See upstream component licenses",
+    "assetLicense": "Supported original ROM required",
+    "assetRequirements": "Supported original ROM required",
+    "controls": [
+      "Left click — interact",
+      "Right click — alternate action",
+      "Ctrl + F5 — ScummVM menu"
+    ],
+    "saveInstructions": "Follow the upstream project’s save instructions. There is no hosted player for this entry.",
+    "limitations": [
+      "Directory entry; browser gameplay has not been verified here."
+    ],
+    "inputs": [],
+    "downloadMB": null,
+    "complete": false,
+    "color": "#93b57c",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "majoras-mask",
+    "title": "The Legend of Zelda: Majora’s Mask",
+    "aliases": [
+      "2Ship2Harkinian"
+    ],
+    "year": 2000,
+    "genre": "Adventure",
+    "kind": "Decompilation",
+    "mode": "project",
+    "engine": "2Ship2Harkinian",
+    "description": "A native Majora’s Mask port built on the community decompilation.",
+    "overview": "2 Ship 2 Harkinian brings Majora’s Mask to a modern source port. It is a separate project from Ship of Harkinian and requires its own supported game data. Ocarina of Time assets cannot substitute for it. Upstream extraction and release instructions are the authority for supported editions. This is a discovery listing, with no hosted Nintendo assets and no claim that desktop compatibility establishes browser support.",
+    "source": "https://github.com/HarbourMasters/2ship2harkinian",
+    "engineLicense": "CC0-1.0 and dependency licenses",
+    "assetLicense": "Supported original ROM required",
+    "assetRequirements": "Supported original ROM required",
+    "controls": [
+      "Left click — interact",
+      "Right click — alternate action",
+      "Ctrl + F5 — ScummVM menu"
+    ],
+    "saveInstructions": "Follow the upstream project’s save instructions. There is no hosted player for this entry.",
+    "limitations": [
+      "Directory entry; browser gameplay has not been verified here."
+    ],
+    "inputs": [],
+    "downloadMB": null,
+    "complete": false,
+    "color": "#a08bbd",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "star-fox-64",
+    "title": "Star Fox 64",
+    "aliases": [
+      "Starship"
+    ],
+    "year": 1997,
+    "genre": "Shooter",
+    "kind": "Decompilation",
+    "mode": "project",
+    "engine": "Starship",
+    "description": "Return to the Lylat system through the community’s native Star Fox 64 port.",
+    "overview": "Starship is a source port of Star Fox 64. The open project and the original game’s models, textures, music, and levels are separate. Use the exact game versions listed by its extraction instructions rather than assuming every regional release works. A browser integration would need sustained flight gameplay, controller calibration, audio, and persistent progress tests. Until those exist, this listing takes you to the upstream project.",
+    "source": "https://github.com/HarbourMasters/Starship",
+    "engineLicense": "CC0-1.0 and dependency licenses",
+    "assetLicense": "Supported original ROM required",
+    "assetRequirements": "Supported original ROM required",
+    "controls": [
+      "See the upstream project’s control documentation."
+    ],
+    "saveInstructions": "Follow the upstream project’s save instructions. There is no hosted player for this entry.",
+    "limitations": [
+      "Directory entry; browser gameplay has not been verified here."
+    ],
+    "inputs": [],
+    "downloadMB": null,
+    "complete": false,
+    "color": "#729eaa",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "perfect-dark",
+    "title": "Perfect Dark",
+    "aliases": [
+      "Perfect Dark PC"
+    ],
+    "year": 2000,
+    "genre": "Shooter",
+    "kind": "Decompilation",
+    "mode": "project",
+    "engine": "Perfect Dark PC",
+    "description": "A work-in-progress native port of the Nintendo 64 shooter with modern platform support.",
+    "overview": "The Perfect Dark PC port is based on decompilation work and uses separately supplied original game data. Its native platform support is distinct from a browser build. Check the project’s supported ROM revisions and installation layout before extracting assets. We have not validated browser rendering, mission completion, controller behavior, or saves, and this listing does not serve a ROM or engine binary.",
+    "source": "https://github.com/perfect-dark-pc-port/perfect_dark",
+    "engineLicense": "MIT and dependency licenses",
+    "assetLicense": "Supported original ROM required",
+    "assetRequirements": "Supported original ROM required",
+    "controls": [
+      "See the upstream project’s control documentation."
+    ],
+    "saveInstructions": "Follow the upstream project’s save instructions. There is no hosted player for this entry.",
+    "limitations": [
+      "Directory entry; browser gameplay has not been verified here."
+    ],
+    "inputs": [],
+    "downloadMB": null,
+    "complete": false,
+    "color": "#b65c61",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "sonic-1",
+    "title": "Sonic the Hedgehog",
+    "aliases": [
+      "RSDKv4"
+    ],
+    "year": 2013,
+    "genre": "Platformer",
+    "kind": "Decompilation",
+    "mode": "project",
+    "engine": "RSDKv4",
+    "description": "Explore the reconstruction of Sonic’s 2013 version and the community ports it enables.",
+    "overview": "This listing concerns the Retro Engine version of Sonic the Hedgehog, rather than an emulator for the Mega Drive cartridge. It requires the matching release’s data archive. The project’s custom license is a separate question from whether its source can be read. Under this site’s hosting policy it remains a discovery entry while its license and any proposed hosted engine are reviewed. No Sega assets are bundled here.",
+    "source": "https://github.com/RSDKModding/RSDKv4-Decompilation",
+    "engineLicense": "Source-available: noncommercial RSDK license",
+    "assetLicense": "Official release assets required",
+    "assetRequirements": "Official release assets required",
+    "controls": [
+      "See the upstream project’s control documentation."
+    ],
+    "saveInstructions": "Follow the upstream project’s save instructions. There is no hosted player for this entry.",
+    "limitations": [
+      "Directory entry; browser gameplay has not been verified here."
+    ],
+    "inputs": [],
+    "downloadMB": null,
+    "complete": false,
+    "color": "#6e9be3",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "sonic-2",
+    "title": "Sonic the Hedgehog 2",
+    "aliases": [
+      "RSDKv4"
+    ],
+    "year": 2013,
+    "genre": "Platformer",
+    "kind": "Decompilation",
+    "mode": "project",
+    "engine": "RSDKv4",
+    "description": "The 2013 Sonic 2 engine reconstruction, with original game assets supplied separately.",
+    "overview": "The Sonic 2 Retro Engine decompilation uses assets from the supported Retro Engine release. Original console ROM files are not a drop-in replacement for that data. Keep Sonic 1 and Sonic 2 data archives separate even where they use related engine code. The custom engine terms and the proprietary game data have separate requirements. This page links to upstream instructions and does not offer a hosted browser build.",
+    "source": "https://github.com/RSDKModding/RSDKv4-Decompilation",
+    "engineLicense": "Source-available: noncommercial RSDK license",
+    "assetLicense": "Official release assets required",
+    "assetRequirements": "Official release assets required",
+    "controls": [
+      "See the upstream project’s control documentation."
+    ],
+    "saveInstructions": "Follow the upstream project’s save instructions. There is no hosted player for this entry.",
+    "limitations": [
+      "Directory entry; browser gameplay has not been verified here."
+    ],
+    "inputs": [],
+    "downloadMB": null,
+    "complete": false,
+    "color": "#e5bb65",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "sonic-cd",
+    "title": "Sonic CD",
+    "aliases": [
+      "RSDKv3"
+    ],
+    "year": 2011,
+    "genre": "Platformer",
+    "kind": "Decompilation",
+    "mode": "project",
+    "engine": "RSDKv3",
+    "description": "Find the Sonic CD 2011 decompilation and its documented asset requirements.",
+    "overview": "The RSDKv3 project relates to the Retro Engine edition of Sonic CD. Its expected data format differs from the original console disc and later RSDK engine versions. Follow upstream edition and data-file requirements. Source visibility alone is not an open-source hosting approval under this catalog’s policy. Browser controls, audio, and save behavior are untested here, so this is a project listing.",
+    "source": "https://github.com/RSDKModding/RSDKv3-Decompilation",
+    "engineLicense": "Source-available: noncommercial RSDK license",
+    "assetLicense": "Official release assets required",
+    "assetRequirements": "Official release assets required",
+    "controls": [
+      "See the upstream project’s control documentation."
+    ],
+    "saveInstructions": "Follow the upstream project’s save instructions. There is no hosted player for this entry.",
+    "limitations": [
+      "Directory entry; browser gameplay has not been verified here."
+    ],
+    "inputs": [],
+    "downloadMB": null,
+    "complete": false,
+    "color": "#77bcd4",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "sonic-mania",
+    "title": "Sonic Mania",
+    "aliases": [
+      "RSDKv5"
+    ],
+    "year": 2017,
+    "genre": "Platformer",
+    "kind": "Decompilation",
+    "mode": "project",
+    "engine": "RSDKv5",
+    "description": "A complete reconstruction of Sonic Mania’s game logic alongside the Retro Engine project.",
+    "overview": "Sonic Mania uses its own game logic alongside the Retro Engine. The engine and game-logic repositories, their dependencies, and the retail data are separate pieces of an installation. Having one source checkout does not produce a complete redistributable game. Follow the upstream build and data instructions for your release. This catalog keeps the project discoverable while withholding hosted play under the current license policy.",
+    "source": "https://github.com/RSDKModding/Sonic-Mania-Decompilation",
+    "engineLicense": "Source-available: see upstream restrictions",
+    "assetLicense": "Official release assets required",
+    "assetRequirements": "Official release assets required",
+    "controls": [
+      "See the upstream project’s control documentation."
+    ],
+    "saveInstructions": "Follow the upstream project’s save instructions. There is no hosted player for this entry.",
+    "limitations": [
+      "Directory entry; browser gameplay has not been verified here."
+    ],
+    "inputs": [],
+    "downloadMB": null,
+    "complete": false,
+    "color": "#e58aa9",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "diablo",
+    "title": "Diablo",
+    "aliases": [
+      "DevilutionX"
+    ],
+    "year": 1996,
+    "genre": "RPG",
+    "kind": "Decompilation",
+    "mode": "project",
+    "engine": "DevilutionX",
+    "description": "A modern Diablo and Hellfire port with accessibility and quality-of-life improvements.",
+    "overview": "DevilutionX reimplements and extends Diablo and Hellfire. The retail MPQ archives remain separate from the engine, and Hellfire content requires its own files. Shareware support should not be confused with a complete retail campaign. The project’s current licensing requires individual review for this site’s open-source hosting policy. We link to its installation guide while browser asset import, saves, and a hosting decision remain pending.",
+    "source": "https://github.com/diasurgical/DevilutionX",
+    "engineLicense": "Source-available: Sustainable Use License",
+    "assetLicense": "DIABDAT.MPQ required for the full game",
+    "assetRequirements": "DIABDAT.MPQ required for the full game",
+    "controls": [
+      "See the upstream project’s control documentation."
+    ],
+    "saveInstructions": "Follow the upstream project’s save instructions. There is no hosted player for this entry.",
+    "limitations": [
+      "Directory entry; browser gameplay has not been verified here."
+    ],
+    "inputs": [],
+    "downloadMB": null,
+    "complete": false,
+    "color": "#ba7163",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "dune-ii",
+    "title": "Dune II",
+    "aliases": [
+      "OpenDUNE"
+    ],
+    "year": 1992,
+    "genre": "Strategy",
+    "kind": "Engine recreation",
+    "mode": "project",
+    "engine": "OpenDUNE",
+    "description": "An open recreation of the strategy game that helped define base-building RTS games.",
+    "overview": "OpenDUNE recreates Dune II and expects data from the supported 1.07 release. The original executable can also be needed during preparation; simply copying a few PAK files may not satisfy the upstream instructions. Its GPL engine does not grant redistribution rights to the original artwork or audio. Start with the project’s native setup instructions. We have not tested a browser build, campaign progression, or save conversion.",
+    "source": "https://github.com/OpenDUNE/OpenDUNE",
+    "engineLicense": "GPL-2.0",
+    "assetLicense": "Original game data required",
+    "assetRequirements": "Original game data required",
+    "controls": [
+      "See the upstream project’s control documentation."
+    ],
+    "saveInstructions": "Follow the upstream project’s save instructions. There is no hosted player for this entry.",
+    "limitations": [
+      "Directory entry; browser gameplay has not been verified here."
+    ],
+    "inputs": [],
+    "downloadMB": null,
+    "complete": false,
+    "color": "#c9a369",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  },
+  {
+    "id": "banjo-kazooie",
+    "title": "Banjo-Kazooie",
+    "aliases": [
+      "Banjo: Recompiled"
+    ],
+    "year": 1998,
+    "genre": "Platformer",
+    "kind": "Recompilation",
+    "mode": "project",
+    "engine": "Banjo: Recompiled",
+    "description": "A native recompilation that brings the bear-and-bird adventure to modern computers.",
+    "overview": "BanjoRecomp uses recompilation technology to run Banjo-Kazooie with modern platform support. Recompilation is listed separately from hand-reconstructed decompilation work so the catalog does not blur the two. Supported original game data is still required, with exact versions determined upstream. Native performance and controller support do not establish browser compatibility. We currently provide a source-project guide and no ROM download.",
+    "source": "https://github.com/BanjoRecomp/BanjoRecomp",
+    "engineLicense": "GPL-3.0",
+    "assetLicense": "Supported original ROM required",
+    "assetRequirements": "Supported original ROM required",
+    "controls": [
+      "See the upstream project’s control documentation."
+    ],
+    "saveInstructions": "Follow the upstream project’s save instructions. There is no hosted player for this entry.",
+    "limitations": [
+      "Directory entry; browser gameplay has not been verified here."
+    ],
+    "inputs": [],
+    "downloadMB": null,
+    "complete": false,
+    "color": "#d0ad78",
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "playthrough": false
+    }
+  }
+]

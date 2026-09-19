@@ -1,0 +1,97 @@
+{
+  "id": "lure-of-the-temptress",
+  "engine": "scummvm",
+  "packageRevision": "b603fb5f8e60-00d75e7331",
+  "sourceRevision": "b603fb5f8e606e6c77040741ccc2020f6ce6bf9e",
+  "repository": "https://github.com/scummvm/scummvm",
+  "toolchain": "Emscripten 4.0.10",
+  "recipe": "scripts/build-engines.sh",
+  "sourceArchive": "/sources/scummvm-b603fb5f8e60-00d75e7331.tar.gz",
+  "requirements": [
+    "WebAssembly",
+    "Keyboard and mouse"
+  ],
+  "files": [
+    {
+      "path": "scummvm.js",
+      "sha256": "92375fbdeda25833bc69ffb85142da26943a262e1cb099a0b05e4039df8bc93e",
+      "bytes": 230502
+    },
+    {
+      "path": "scummvm.wasm",
+      "sha256": "236412bef4f244229e0943a8c3d4b0f1f85c8b94f8938feff22e2b00ed278651",
+      "bytes": 11404792
+    }
+  ],
+  "base": "/runtime/scummvm/b603fb5f8e60-00d75e7331/",
+  "script": "scummvm.js",
+  "saveVersion": "1",
+  "saveRoots": [
+    "/home/web_user"
+  ],
+  "mountSave": false,
+  "assets": [
+    {
+      "path": "/games/lure/Disk1.vga",
+      "url": "../../../data/games/lure/Disk1.vga",
+      "sha256": "7475e38373dcf62b6101e0008bdb939d4b42717b610d6f7553400cd588131c45"
+    },
+    {
+      "path": "/games/lure/Disk2.vga",
+      "url": "../../../data/games/lure/Disk2.vga",
+      "sha256": "c2e37bae781e89b77f565980900e2cf21c558ed1d681e6a6940de07e7e3aba85"
+    },
+    {
+      "path": "/games/lure/Disk3.vga",
+      "url": "../../../data/games/lure/Disk3.vga",
+      "sha256": "81678a2d90dd07a7e959e309bde17a664562d0a7c490d636a3e37f77d61ffa85"
+    },
+    {
+      "path": "/games/lure/Disk4.vga",
+      "url": "../../../data/games/lure/Disk4.vga",
+      "sha256": "a3bcf4026a5fc47e36d665e321d78ee3a6c14bc6fcd81bca6706be5a0d9fcb17"
+    },
+    {
+      "path": "/games/lure/README",
+      "url": "../../../data/games/lure/README",
+      "sha256": "25d3c1bb4a9e91b89d66474527054b27bc0f55b050127cb3845ab35cf8dc5ebf"
+    },
+    {
+      "path": "/games/lure/disk1.ega",
+      "url": "../../../data/games/lure/disk1.ega",
+      "sha256": "eb69e8b3ca34790abd2ceedf6ebb14cc640b205f3285ef114a00589b2ebe7108"
+    },
+    {
+      "path": "/games/lure/disk2.ega",
+      "url": "../../../data/games/lure/disk2.ega",
+      "sha256": "751b562a0386ecc8d468a20d6c31ce7bee1b3f117dd4bd818179b2d9ec34fac4"
+    },
+    {
+      "path": "/games/lure/disk3.ega",
+      "url": "../../../data/games/lure/disk3.ega",
+      "sha256": "657193bcc383b6c52dd15a25111c3504085d7d228dcd0e9231bfc13f37dc1ab3"
+    },
+    {
+      "path": "/games/lure/disk4.ega",
+      "url": "../../../data/games/lure/disk4.ega",
+      "sha256": "c4c24f101ac7e42006947836bb8b1647b0efc3dabc528765a4df813b2ad4ac55"
+    },
+    {
+      "path": "/extras/sky.cpt",
+      "url": "../../../data/scummvm/b603fb5f8e60/sky.cpt",
+      "sha256": "4c457373415325ea039d7a3d4f1211f7bbedd83d5bf85b94afd14cb4bdd263d2"
+    },
+    {
+      "path": "/extras/lure.dat",
+      "url": "../../../data/scummvm/b603fb5f8e60/lure.dat",
+      "sha256": "9c17cfb5349c4bd13e56b0652f81fd2bdec849de7bd875bfedf654a08916b568"
+    }
+  ],
+  "args": [
+    "--extrapath=/extras",
+    "--auto-detect",
+    "--path=/games/lure",
+    "--no-filtering",
+    "--no-aspect-ratio"
+  ]
+}

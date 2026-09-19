@@ -1,0 +1,5 @@
+import {createServer} from 'node:http';
+import {stat,readFile} from 'node:fs/promises';
+import {resolve,extname,sep} from 'node:path';
+const root=resolve('dist');const mime={'.html':'text/html','.js':'text/javascript','.css':'text/css','.wasm':'application/wasm','.json':'application/json','.svg':'image/svg+xml','.png':'image/png','.xml':'application/xml'};
+createServer(async(req,res)=>{try{const url=new URL(req.url,'http://localhost');const binary=/^\/(runtime|data|sources)\//.test(url.pathname);const base=binary?resolve('public'):root;let path=resolve(base,decodeURIComponent(url.pathname).replace(/^\//,''));if(path!==base&&!path.startsWith(base+sep))throw Error('Invalid path');if((await stat(path)).isDirectory())path=resolve(path,'index.html');res.setHeader('Content-Type',mime[extname(path)]||'application/octet-stream');res.setHeader('Cache-Control','no-cache');res.end(await readFile(path));}catch{res.writeHead(404);res.end('Not found');}}).listen(4322,'127.0.0.1',()=>console.log('Preview: http://127.0.0.1:4322'));

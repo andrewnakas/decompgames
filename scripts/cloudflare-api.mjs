@@ -1,0 +1,11 @@
+import {readFile} from 'node:fs/promises';
+import {join} from 'node:path';
+const config=await readFile(join(process.env.APPDATA,'xdg.config/.wrangler/config/default.toml'),'utf8');
+const token=config.match(/oauth_token\s*=\s*"([^"]+)"/)?.[1];
+if(!token)throw new Error('Run wrangler login first');
+const [path,method='GET',body]=process.argv.slice(2);
+if(!path?.startsWith('/'))throw new Error('API path required');
+const response=await fetch(`https://api.cloudflare.com/client/v4${path}`,{method,headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},body:body?await readFile(body,'utf8'):undefined});
+const result=await response.json();
+console.log(JSON.stringify(result,null,2));
+if(!result.success)process.exitCode=1;

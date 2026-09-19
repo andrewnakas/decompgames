@@ -1,0 +1,40 @@
+{
+  "id": "doom",
+  "engine": "doom",
+  "packageRevision": "ddf0347a4fc1-c8f4bcf00e",
+  "sourceRevision": "ddf0347a4fc115b11ffb1c5710768b7c47c46698",
+  "repository": "https://github.com/GMH-Code/Dwasm",
+  "toolchain": "Emscripten 4.0.10",
+  "recipe": "scripts/build-engines.sh",
+  "sourceArchive": "/sources/doom-ddf0347a4fc1-c8f4bcf00e.tar.gz",
+  "requirements": [
+    "WebAssembly",
+    "Keyboard and mouse"
+  ],
+  "files": [
+    {
+      "path": "index.js",
+      "sha256": "5eec76cdab865850484bff3d64e5d794d01abce176a84c37bfce128bf09201d3",
+      "bytes": 211079
+    },
+    {
+      "path": "index.wasm",
+      "sha256": "6273174384c9a9e3c08748581024c0a700ace1401bb8db1b0279d0ae497c0c7f",
+      "bytes": 1998975
+    },
+    {
+      "path": "index.data",
+      "sha256": "5643fb92207c8c10721293dddd29f7b50e7c531d6d3463f278419e830f137946",
+      "bytes": 471655
+    }
+  ],
+  "base": "/runtime/doom/ddf0347a4fc1-c8f4bcf00e/",
+  "script": "index.js",
+  "saveVersion": "1",
+  "saveRoots": [
+    "/dwasm"
+  ],
+  "mountSave": false,
+  "assets": [],
+  "args": []
+}

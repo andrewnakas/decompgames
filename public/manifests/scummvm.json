@@ -1,0 +1,35 @@
+{
+  "id": "scummvm",
+  "engine": "scummvm",
+  "packageRevision": "b603fb5f8e60-00d75e7331",
+  "sourceRevision": "b603fb5f8e606e6c77040741ccc2020f6ce6bf9e",
+  "repository": "https://github.com/scummvm/scummvm",
+  "toolchain": "Emscripten 4.0.10",
+  "recipe": "scripts/build-engines.sh",
+  "sourceArchive": "/sources/scummvm-b603fb5f8e60-00d75e7331.tar.gz",
+  "requirements": [
+    "WebAssembly",
+    "Keyboard and mouse"
+  ],
+  "files": [
+    {
+      "path": "scummvm.js",
+      "sha256": "92375fbdeda25833bc69ffb85142da26943a262e1cb099a0b05e4039df8bc93e",
+      "bytes": 230502
+    },
+    {
+      "path": "scummvm.wasm",
+      "sha256": "236412bef4f244229e0943a8c3d4b0f1f85c8b94f8938feff22e2b00ed278651",
+      "bytes": 11404792
+    }
+  ],
+  "base": "/runtime/scummvm/b603fb5f8e60-00d75e7331/",
+  "script": "scummvm.js",
+  "saveVersion": "1",
+  "saveRoots": [
+    "/home/web_user"
+  ],
+  "mountSave": false,
+  "assets": [],
+  "args": []
+}

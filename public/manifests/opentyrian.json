@@ -1,0 +1,566 @@
+{
+  "id": "tyrian",
+  "engine": "tyrian",
+  "packageRevision": "c398647f17fa-c82432af60",
+  "sourceRevision": "c398647f17fac82475a17e16964dfae30f3a1f1b",
+  "repository": "https://github.com/midzer/opentyrian",
+  "toolchain": "Emscripten 4.0.10",
+  "recipe": "scripts/build-engines.sh",
+  "sourceArchive": "/sources/tyrian-c398647f17fa-c82432af60.tar.gz",
+  "requirements": [
+    "WebAssembly",
+    "Keyboard and mouse"
+  ],
+  "files": [
+    {
+      "path": "index.js",
+      "sha256": "f135868369555d02a5bc8d52cc0cb8d7f5e38f7d51688f9fe8a0c39bf724226f",
+      "bytes": 189946
+    },
+    {
+      "path": "index.wasm",
+      "sha256": "1379facac38dfed36fee5b5081cecce41a6713ab03df3fdc596ac1b933a45ce4",
+      "bytes": 1719110
+    }
+  ],
+  "base": "/runtime/tyrian/c398647f17fa-c82432af60/",
+  "script": "index.js",
+  "saveVersion": "1",
+  "saveRoots": [
+    "/home/web_user/.config/opentyrian"
+  ],
+  "mountSave": true,
+  "assets": [
+    {
+      "path": "/data/levels2.dat",
+      "url": "../../../data/tyrian/tyrian21/levels2.dat",
+      "sha256": "9aa94b70aae2b24b16c295ed86e392ac16873306012bdd89e0cf995d605178ea"
+    },
+    {
+      "path": "/data/levels1.dat",
+      "url": "../../../data/tyrian/tyrian21/levels1.dat",
+      "sha256": "e82164c96abb994450d416a3ab0e5fe6479fd4db831cd0f203a60dfe4aa78dcb"
+    },
+    {
+      "path": "/data/newshn.shp",
+      "url": "../../../data/tyrian/tyrian21/newshn.shp",
+      "sha256": "612c38b9d93220d9fb0228594d9597a0637f52fcdf789e9ffc15b0a362a70341"
+    },
+    {
+      "path": "/data/newshc.shp",
+      "url": "../../../data/tyrian/tyrian21/newshc.shp",
+      "sha256": "16db0d5faa13c935da700f3bd25ce539bdd37336fa164d23f5fa3405a315f31a"
+    },
+    {
+      "path": "/data/newshr.shp",
+      "url": "../../../data/tyrian/tyrian21/newshr.shp",
+      "sha256": "7869a88236e46deaf6e051d4d7d38830865bc0047f09879fc8afd68ab7f30d94"
+    },
+    {
+      "path": "/data/newshs.shp",
+      "url": "../../../data/tyrian/tyrian21/newshs.shp",
+      "sha256": "f0bccf154a436ba46834a00b934e7cb8a77d8585b175a39c1270ad7888411c88"
+    },
+    {
+      "path": "/data/newsh2.shp",
+      "url": "../../../data/tyrian/tyrian21/newsh2.shp",
+      "sha256": "8773ebcae4be992ecfbb476c0797b0bef4d43faa4c99449890bfaa28c8d9cbcc"
+    },
+    {
+      "path": "/data/newsh5.shp",
+      "url": "../../../data/tyrian/tyrian21/newsh5.shp",
+      "sha256": "1e6854ccde0e6b0e0789afadd52f6d8b7d264a61f59185635c5ed119f29d4bad"
+    },
+    {
+      "path": "/data/newsh^.shp",
+      "url": "../../../data/tyrian/tyrian21/newsh%5E.shp",
+      "sha256": "e9884ec4debe73f00c51cca5112dd2e2b0d2c57d1d5953d2902947df36471f23"
+    },
+    {
+      "path": "/data/license.doc",
+      "url": "../../../data/tyrian/tyrian21/license.doc",
+      "sha256": "a81955ec129cac3b2a52300e1352be142d12cdd919789d6dda41a211caa8e162"
+    },
+    {
+      "path": "/data/netfont1.pcx",
+      "url": "../../../data/tyrian/tyrian21/netfont1.pcx",
+      "sha256": "13cecff9b2bb01c472ca42a6d4081bfb54ef182e086130fc1d82530ea2ed5cda"
+    },
+    {
+      "path": "/data/file_id.diz",
+      "url": "../../../data/tyrian/tyrian21/file_id.diz",
+      "sha256": "b7a987e1c335c3130e08cae2e98f85fde4b759f7e48ac1d6ac9bdd97a3ef9062"
+    },
+    {
+      "path": "/data/shapesx.dat",
+      "url": "../../../data/tyrian/tyrian21/shapesx.dat",
+      "sha256": "53530149c27573244fead5f8325f5a4c9f5108c95a666998140656436aaa8f2a"
+    },
+    {
+      "path": "/data/tyrian1.lvl",
+      "url": "../../../data/tyrian/tyrian21/tyrian1.lvl",
+      "sha256": "b41e532214fa8cea36e37fed6512b357c6ac9c8c3267899ceb4a258fcb1bf0b9"
+    },
+    {
+      "path": "/data/setup.exe",
+      "url": "../../../data/tyrian/tyrian21/setup.exe",
+      "sha256": "010fff01150ef7b7d8ff9df53426f4cbe51d925e9b50b6d8f27f712d3ac64868"
+    },
+    {
+      "path": "/data/helpme.exe",
+      "url": "../../../data/tyrian/tyrian21/helpme.exe",
+      "sha256": "b4da7bab01b03a49fbd20a567ebb3dfc332a1f12e33832d7e4ca98676fa381e3"
+    },
+    {
+      "path": "/data/newshe.shp",
+      "url": "../../../data/tyrian/tyrian21/newshe.shp",
+      "sha256": "4be2df495007fc211eeeedf3fe07a0d3eb4fdca4174e1adccb2918967c3f7c7b"
+    },
+    {
+      "path": "/data/user1.shp",
+      "url": "../../../data/tyrian/tyrian21/user1.shp",
+      "sha256": "d78f5d084f3a2a087c48810476743434b5eddd144038164deee284a51b9d1913"
+    },
+    {
+      "path": "/data/newsh8.shp",
+      "url": "../../../data/tyrian/tyrian21/newsh8.shp",
+      "sha256": "1fb3f52d36bf3d05c4e5867f8fa34035fc8eace8fd27b55b41df1abba7ef41ee"
+    },
+    {
+      "path": "/data/levels3.dat",
+      "url": "../../../data/tyrian/tyrian21/levels3.dat",
+      "sha256": "0d935cd7bb3c84451d9f57dbcd31a8d515205b18fb050070a416e9b7411dfbd3"
+    },
+    {
+      "path": "/data/loudness.awe",
+      "url": "../../../data/tyrian/tyrian21/loudness.awe",
+      "sha256": "fae838f0dad4894b41b4f1f094203152f5a1cf9a74b9fe24024b12f494d92c6b"
+    },
+    {
+      "path": "/data/order.doc",
+      "url": "../../../data/tyrian/tyrian21/order.doc",
+      "sha256": "283347e26fc1b760e82994863005845631c4d438ecca99453c011a6fd4a2476e"
+    },
+    {
+      "path": "/data/newsh7.shp",
+      "url": "../../../data/tyrian/tyrian21/newsh7.shp",
+      "sha256": "52c40a2438373f9fc9a7cd2d338ec149f4e81dda56d9c05061ee2264408f0b1a"
+    },
+    {
+      "path": "/data/newsh1.shp",
+      "url": "../../../data/tyrian/tyrian21/newsh1.shp",
+      "sha256": "77827c137462ebaa53ad9c6d190224a6e0e1d00bf36cff2c7c66f82b00b7026a"
+    },
+    {
+      "path": "/data/tyrian2.lvl",
+      "url": "../../../data/tyrian/tyrian21/tyrian2.lvl",
+      "sha256": "3e18b124cd4ff5f766e5bf2e833eb79d3118010a253a30dc4c0ae6f483ae50e9"
+    },
+    {
+      "path": "/data/tyrian.cdt",
+      "url": "../../../data/tyrian/tyrian21/tyrian.cdt",
+      "sha256": "deb2c35297d89a1b2801ae21132d242121d9dee2a794a84b58dbd212f11f04fe"
+    },
+    {
+      "path": "/data/rtm.exe",
+      "url": "../../../data/tyrian/tyrian21/rtm.exe",
+      "sha256": "10acd85af3767634450a793f2af1e057de888621cbfc578d35d3fa91abc09661"
+    },
+    {
+      "path": "/data/newsha.shp",
+      "url": "../../../data/tyrian/tyrian21/newsha.shp",
+      "sha256": "6fee07e22d028831ee0c54a21982a1e6c8ec8efba94e7576670ea0dfc617c6b9"
+    },
+    {
+      "path": "/data/newsh3.shp",
+      "url": "../../../data/tyrian/tyrian21/newsh3.shp",
+      "sha256": "f5ac183f489079505908f3cb431b516a54b24fdf312f2702725abf83732e9c6d"
+    },
+    {
+      "path": "/data/music.mus",
+      "url": "../../../data/tyrian/tyrian21/music.mus",
+      "sha256": "b06a509bd8576f63c61859e3a2c59482c4035d79f21725f9ec10479377044a74"
+    },
+    {
+      "path": "/data/user2.shp",
+      "url": "../../../data/tyrian/tyrian21/user2.shp",
+      "sha256": "7ac900995a588386ffc70d66ed67bd501e15bf3a8847ad33363bb67cbbc00d1d"
+    },
+    {
+      "path": "/data/newshu.shp",
+      "url": "../../../data/tyrian/tyrian21/newshu.shp",
+      "sha256": "762c328b99a824942005e66a4567d3c1d45a680527584367a962eeb4bf4e8c45"
+    },
+    {
+      "path": "/data/netarena.pcx",
+      "url": "../../../data/tyrian/tyrian21/netarena.pcx",
+      "sha256": "1b8dffbb1d17af08d9e4dd265c7146b6a5f1dfb49bee1462ebd80ad63cba2fac"
+    },
+    {
+      "path": "/data/netipx.exe",
+      "url": "../../../data/tyrian/tyrian21/netipx.exe",
+      "sha256": "e92b1f1a57c48527d3480b95dd8ac801a7d3df5a36a4c94b9510b0e8e47e0de1"
+    },
+    {
+      "path": "/data/shapes).dat",
+      "url": "../../../data/tyrian/tyrian21/shapes).dat",
+      "sha256": "36173a95248ed1f60c499122b4b17450af2bc9ddcb958215ed9c400429ae37eb"
+    },
+    {
+      "path": "/data/dpmi16bi.ovl",
+      "url": "../../../data/tyrian/tyrian21/dpmi16bi.ovl",
+      "sha256": "afea669e007ff79c8c02b2ae8b3fc908c51b6a86c49f9cef1a9cd3f5ce9635ba"
+    },
+    {
+      "path": "/data/tyrend.anm",
+      "url": "../../../data/tyrian/tyrian21/tyrend.anm",
+      "sha256": "0477bb711d2373c3889da0a792505fff158a0fb9817932c3fb78976424a1c752"
+    },
+    {
+      "path": "/data/tyrian.snd",
+      "url": "../../../data/tyrian/tyrian21/tyrian.snd",
+      "sha256": "0f5c37f97f0992026f1736f178bccc64746bc931daf23adbdc82553c140c80b8"
+    },
+    {
+      "path": "/data/shapesw.dat",
+      "url": "../../../data/tyrian/tyrian21/shapesw.dat",
+      "sha256": "d06514348982ad364c4b77c4ed4f2f3dbccd8a390e180435a82484bdca5d9c7a"
+    },
+    {
+      "path": "/data/cubetxt1.dat",
+      "url": "../../../data/tyrian/tyrian21/cubetxt1.dat",
+      "sha256": "2a0bc26ac4a8cdcbe7a145c9b1868a87ecb4335e9787f2f1e5713c965372df2b"
+    },
+    {
+      "path": "/data/tyrian.shp",
+      "url": "../../../data/tyrian/tyrian21/tyrian.shp",
+      "sha256": "b9602b6dd42c1bf4716bdccbe5ab40495fcd064fcc55fd0f8d4436d640c4b450"
+    },
+    {
+      "path": "/data/newsh~.shp",
+      "url": "../../../data/tyrian/tyrian21/newsh~.shp",
+      "sha256": "17519efb2aec555a83f0c1406e7d513641440e0b1c12e0832ad4c70ee54023f0"
+    },
+    {
+      "path": "/data/palette.dat",
+      "url": "../../../data/tyrian/tyrian21/palette.dat",
+      "sha256": "6f0be74cb1b0026e46029d98d9ade41b8283bad849208543330b717fe5c365fc"
+    },
+    {
+      "path": "/data/netterm.int",
+      "url": "../../../data/tyrian/tyrian21/netterm.int",
+      "sha256": "58fec99ab9512c588e8f4375e1d17ea9c052f9be8cd74fd1ea411ca00519f300"
+    },
+    {
+      "path": "/data/order.tfp",
+      "url": "../../../data/tyrian/tyrian21/order.tfp",
+      "sha256": "26f5f3d8e403676f5f2080fe45285c5a5118780e90b37cfee891c0ee385ccc18"
+    },
+    {
+      "path": "/data/newshg.shp",
+      "url": "../../../data/tyrian/tyrian21/newshg.shp",
+      "sha256": "3d4cb3d7e3b6547b637ecf02e8d284abc1e240809cc648d836dfa99afd45f416"
+    },
+    {
+      "path": "/data/newsh6.shp",
+      "url": "../../../data/tyrian/tyrian21/newsh6.shp",
+      "sha256": "79098b156a9a1cc1af16a3a03156d58cf45b9a830217d362c3c9935798afe62d"
+    },
+    {
+      "path": "/data/shapesy.dat",
+      "url": "../../../data/tyrian/tyrian21/shapesy.dat",
+      "sha256": "cff7f670d85ea73594092966b23b9ec697500ece148cbf65a8131e4e92412990"
+    },
+    {
+      "path": "/data/order.exe",
+      "url": "../../../data/tyrian/tyrian21/order.exe",
+      "sha256": "3648ae05c9963b847c3de3adaac556a012af82d7a5d1421e72ae134ca6288e99"
+    },
+    {
+      "path": "/data/modems.txt",
+      "url": "../../../data/tyrian/tyrian21/modems.txt",
+      "sha256": "9544cb45be8b5d6907431e4496e56ccb0c2b9b7d2e621f89316761de81106e68"
+    },
+    {
+      "path": "/data/newshj.shp",
+      "url": "../../../data/tyrian/tyrian21/newshj.shp",
+      "sha256": "013fbc96bfba79bec9b07d37ec477e7d3ea9d22aab3f9efd392c6253ae5721dd"
+    },
+    {
+      "path": "/data/demo.3",
+      "url": "../../../data/tyrian/tyrian21/demo.3",
+      "sha256": "b742a1acf9b64d9d55ee824cf94a335d62495ee4b0a1dafbe5adcadce5c40f29"
+    },
+    {
+      "path": "/data/estsc.shp",
+      "url": "../../../data/tyrian/tyrian21/estsc.shp",
+      "sha256": "d4368490c9191442c1255b4feb447bc0265236126bed11c9442cef5338a146df"
+    },
+    {
+      "path": "/data/file0001.exe",
+      "url": "../../../data/tyrian/tyrian21/file0001.exe",
+      "sha256": "0f51a58732e47a8a6f1f786788be9925cbf78fc9f086f9b5339030f85dacdf93"
+    },
+    {
+      "path": "/data/tyrian3.lvl",
+      "url": "../../../data/tyrian/tyrian21/tyrian3.lvl",
+      "sha256": "0995c7e2279995485576e02b21ac8599b4924c35af5afffdede69c01994b9937"
+    },
+    {
+      "path": "/data/netarena.exe",
+      "url": "../../../data/tyrian/tyrian21/netarena.exe",
+      "sha256": "2af257308e67bbe0a6593fb8be0bfb3820901c1afb52e3ae3b181131d4f4c36d"
+    },
+    {
+      "path": "/data/helpme.doc",
+      "url": "../../../data/tyrian/tyrian21/helpme.doc",
+      "sha256": "bfa40668e083cb44ead8e0c6176b8ec382f9291c489efdcba8d474d3bf79035b"
+    },
+    {
+      "path": "/data/newshb.shp",
+      "url": "../../../data/tyrian/tyrian21/newshb.shp",
+      "sha256": "9bae3eccd4e8793d42553c9798581f0ef77d829fe30d16afa29cf45261ed3c08"
+    },
+    {
+      "path": "/data/tyrian.pic",
+      "url": "../../../data/tyrian/tyrian21/tyrian.pic",
+      "sha256": "5bda2ba46511f835e402188f1608b4398ae36303edfaef14304ad08b55bb5684"
+    },
+    {
+      "path": "/data/demo.5",
+      "url": "../../../data/tyrian/tyrian21/demo.5",
+      "sha256": "0c708cc80abdf8bd0a62bf1d41e3e96af29e79458be4426c259b84c0b6000f5d"
+    },
+    {
+      "path": "/data/levels4.dat",
+      "url": "../../../data/tyrian/tyrian21/levels4.dat",
+      "sha256": "891b9ecbdd223df291077fd95626f37ac03b527ca6fd50f76198067a5edebdb4"
+    },
+    {
+      "path": "/data/file0002.exe",
+      "url": "../../../data/tyrian/tyrian21/file0002.exe",
+      "sha256": "4941c19d2b366cdef7414cacf9b6a4a72086ff1f4f7b90a465c7aae8d415543f"
+    },
+    {
+      "path": "/data/shipedit.doc",
+      "url": "../../../data/tyrian/tyrian21/shipedit.doc",
+      "sha256": "31d1bb057ccb7a20c4a5175c3e2ff40c37d6d1d3391b162ed700ad502b74ad93"
+    },
+    {
+      "path": "/data/newshi.shp",
+      "url": "../../../data/tyrian/tyrian21/newshi.shp",
+      "sha256": "226da9b33b9b16f7a4212b9cc785fbd82c9517172b3a15a7f58798a38b0a12e4"
+    },
+    {
+      "path": "/data/newshv.shp",
+      "url": "../../../data/tyrian/tyrian21/newshv.shp",
+      "sha256": "b23f634db62c1db5efe6766368b76ec1700f7b96ecfe054cac308f9742c60075"
+    },
+    {
+      "path": "/data/newshp.shp",
+      "url": "../../../data/tyrian/tyrian21/newshp.shp",
+      "sha256": "4bd9a72339e30440c172e385f258c8895b516ff84026a9a6b5a65ada4cf0ab90"
+    },
+    {
+      "path": "/data/manual.doc",
+      "url": "../../../data/tyrian/tyrian21/manual.doc",
+      "sha256": "6d61e5b4ddb5af6a510c0b2bd408680134d8a9eaa272dbb5e367b20aa8e6a92e"
+    },
+    {
+      "path": "/data/netterm.exe",
+      "url": "../../../data/tyrian/tyrian21/netterm.exe",
+      "sha256": "42926dcfdefd7f02a3a036b8e830b4a2836fd62d5fd08a52058efe19cd2784f5"
+    },
+    {
+      "path": "/data/newshk.shp",
+      "url": "../../../data/tyrian/tyrian21/newshk.shp",
+      "sha256": "cc61abb548a4015d71bac98bc0091217660c1146adcac8b15e3d2bc7e5598d73"
+    },
+    {
+      "path": "/data/shapesz.dat",
+      "url": "../../../data/tyrian/tyrian21/shapesz.dat",
+      "sha256": "26aa6ab954391714255f368368261d991025e97d852a7403289bab6ded47da4d"
+    },
+    {
+      "path": "/data/voices.snd",
+      "url": "../../../data/tyrian/tyrian21/voices.snd",
+      "sha256": "c709ca1e74be6bd4b7917d258d81824d33c38a1a9a0287ec693b6459f58fc27a"
+    },
+    {
+      "path": "/data/shipedit.exe",
+      "url": "../../../data/tyrian/tyrian21/shipedit.exe",
+      "sha256": "9be5f168ee0e0743c0e9a541b8620820b6d53b6d8458fdc8d3c50727ee9c3181"
+    },
+    {
+      "path": "/data/tyrianc.shp",
+      "url": "../../../data/tyrian/tyrian21/tyrianc.shp",
+      "sha256": "7c1666a748f7b8f7662eff342529c453253cce5c11cbd667de912a9f41bbc02b"
+    },
+    {
+      "path": "/data/newshl.shp",
+      "url": "../../../data/tyrian/tyrian21/newshl.shp",
+      "sha256": "9c8ee60bc111a9eb4fb33c7b2528a2f6217c57dc77ec8ee1f2104e8c1f20a34d"
+    },
+    {
+      "path": "/data/newshd.shp",
+      "url": "../../../data/tyrian/tyrian21/newshd.shp",
+      "sha256": "08c7c81b4ed590609f97347b1a4ec60aba56925ecc7193a6718c34cb8d698adf"
+    },
+    {
+      "path": "/data/netmodem.exe",
+      "url": "../../../data/tyrian/tyrian21/netmodem.exe",
+      "sha256": "24329b1c3278f192897e022c2a2046984f3a1b7cf39a715bc0c15d9b13a42f4d"
+    },
+    {
+      "path": "/data/tyrian4.lvl",
+      "url": "../../../data/tyrian/tyrian21/tyrian4.lvl",
+      "sha256": "181fde04387ba47e6b49a7f27010ac92fe00566a5f9fef075d74e4c4b2ebef75"
+    },
+    {
+      "path": "/data/cubetxt3.dat",
+      "url": "../../../data/tyrian/tyrian21/cubetxt3.dat",
+      "sha256": "fcfc9762cd4cfad42feb12d975929de86851b216d4491252c701527e22b55539"
+    },
+    {
+      "path": "/data/newsh9.shp",
+      "url": "../../../data/tyrian/tyrian21/newsh9.shp",
+      "sha256": "371650303f8b93ae17b76d7c27df202bf6a3f6bb482ffabb7b6b1e16e2774d30"
+    },
+    {
+      "path": "/data/tyrian.ico",
+      "url": "../../../data/tyrian/tyrian21/tyrian.ico",
+      "sha256": "5aa58773ef65ac7503f102aa65e8e6f34ccf52d59ffbde84fe93e69b6bafdf12"
+    },
+    {
+      "path": "/data/newshh.shp",
+      "url": "../../../data/tyrian/tyrian21/newshh.shp",
+      "sha256": "d5bc9e5a6f8a2098f95284a9e675cf6d5b15a29baf8ff8a0fa72943801f351db"
+    },
+    {
+      "path": "/data/demo.4",
+      "url": "../../../data/tyrian/tyrian21/demo.4",
+      "sha256": "68acfd9f1078cbc5798472ce5168b111cca1b5a8384f0386c572ca878e402aa2"
+    },
+    {
+      "path": "/data/setup.box",
+      "url": "../../../data/tyrian/tyrian21/setup.box",
+      "sha256": "f87854991cd8ba82d9b99c86f07932fe079089a4d49fd7aeb85b44b409107bf2"
+    },
+    {
+      "path": "/data/setup.ini",
+      "url": "../../../data/tyrian/tyrian21/setup.ini",
+      "sha256": "06b9345543385b2b7249b45e50236dcb5f718ba688992038bbabafee92b6839d"
+    },
+    {
+      "path": "/data/netmega.pcx",
+      "url": "../../../data/tyrian/tyrian21/netmega.pcx",
+      "sha256": "275291eaf4666aba50869adefbf21b3314bc72b951a38b962f26713ef159b8eb"
+    },
+    {
+      "path": "/data/newsh#.shp",
+      "url": "../../../data/tyrian/tyrian21/newsh%23.shp",
+      "sha256": "45c9e26a7742ce3e9340638349ab6b1b4c834c1ed6dd5d69cc32dd4e481a706d"
+    },
+    {
+      "path": "/data/newsht.shp",
+      "url": "../../../data/tyrian/tyrian21/newsht.shp",
+      "sha256": "133fe424165eacbe3f05a8be838c5b962791855e3afff184123209e8f1cc118f"
+    },
+    {
+      "path": "/data/demo.2",
+      "url": "../../../data/tyrian/tyrian21/demo.2",
+      "sha256": "516be02853d416e8719f7a895343c055ea079f793fcc97e4d678975dce616f7d"
+    },
+    {
+      "path": "/data/newshf.shp",
+      "url": "../../../data/tyrian/tyrian21/newshf.shp",
+      "sha256": "852c2fb552c9077a198be7902d8f58699ed070dabcd36c6e3acfe80dd3804cce"
+    },
+    {
+      "path": "/data/netfont2.pcx",
+      "url": "../../../data/tyrian/tyrian21/netfont2.pcx",
+      "sha256": "9d99299c4b224b6489d252c63cca08850f525c7ac4548cfb55241fc36902dc42"
+    },
+    {
+      "path": "/data/tyrset.pcx",
+      "url": "../../../data/tyrian/tyrian21/tyrset.pcx",
+      "sha256": "bcb12dff1a6b845fdf26d3eb1f347c5d9d90248365f5113a67a371883f4c2a4a"
+    },
+    {
+      "path": "/data/tshp2.pcx",
+      "url": "../../../data/tyrian/tyrian21/tshp2.pcx",
+      "sha256": "1a7b841ce799fac196e136c8dd90e6a0e9184bfdd05fa036cbb5e97d651e6327"
+    },
+    {
+      "path": "/data/setup.int",
+      "url": "../../../data/tyrian/tyrian21/setup.int",
+      "sha256": "a972a5253a3c3ce56b00f72e04f77f3bd2b38f946793370f144b3b5b6ff66262"
+    },
+    {
+      "path": "/data/cubetxt2.dat",
+      "url": "../../../data/tyrian/tyrian21/cubetxt2.dat",
+      "sha256": "6604a1dcc264e8b8e98f036a8bc35579e9b90b92eccbc4d7c1effee9785d1580"
+    },
+    {
+      "path": "/data/shipedit.pcx",
+      "url": "../../../data/tyrian/tyrian21/shipedit.pcx",
+      "sha256": "29caa6ad955f63819dd06ded886a991208a590ee68b88e2b8beb2f55e2e31bb5"
+    },
+    {
+      "path": "/data/exitmsg.bin",
+      "url": "../../../data/tyrian/tyrian21/exitmsg.bin",
+      "sha256": "5e09eccbdc6eef0a20715db1eb59dc336401642ed4afa8f4d506e5a1934557a3"
+    },
+    {
+      "path": "/data/newshm.shp",
+      "url": "../../../data/tyrian/tyrian21/newshm.shp",
+      "sha256": "ba6998cb74ba122812bacb714c81b8c309af073b5464645eee2856233f37e7c2"
+    },
+    {
+      "path": "/data/cubetxt4.dat",
+      "url": "../../../data/tyrian/tyrian21/cubetxt4.dat",
+      "sha256": "f77ac5509d7d644515bccb8e3733d5ea047e22bd03465c75526fb199e91b1b46"
+    },
+    {
+      "path": "/data/demo.1",
+      "url": "../../../data/tyrian/tyrian21/demo.1",
+      "sha256": "9128c9276325191acd617d7ff9c520524fb55a286cb25a1c39c78bb6cadc5ecf"
+    },
+    {
+      "path": "/data/tyrian.exe",
+      "url": "../../../data/tyrian/tyrian21/tyrian.exe",
+      "sha256": "a7e3075d5b18b917b12478515e60e36c380bae9117515baf12ede48389e46174"
+    },
+    {
+      "path": "/data/newsh4.shp",
+      "url": "../../../data/tyrian/tyrian21/newsh4.shp",
+      "sha256": "05fd4174fa1041dbccccf16fffc18b574b9c3c3ca3e2678ba0ba977c9b288fca"
+    },
+    {
+      "path": "/data/voicesc.snd",
+      "url": "../../../data/tyrian/tyrian21/voicesc.snd",
+      "sha256": "949d2a2131d230c345397d8f1f6953115166271aeeccb28d8c6009c81a744dbe"
+    },
+    {
+      "path": "/data/newsh0.shp",
+      "url": "../../../data/tyrian/tyrian21/newsh0.shp",
+      "sha256": "c443ec4e268205e6a843c1ba783e84cce9d710e3226ddd03b8bfc869bcafbf10"
+    },
+    {
+      "path": "/data/netset.pcx",
+      "url": "../../../data/tyrian/tyrian21/netset.pcx",
+      "sha256": "bcb12dff1a6b845fdf26d3eb1f347c5d9d90248365f5113a67a371883f4c2a4a"
+    },
+    {
+      "path": "/data/tyrian.hdt",
+      "url": "../../../data/tyrian/tyrian21/tyrian.hdt",
+      "sha256": "c816055863eb91d28ac10b4acc1e312f433deff553f08926e698c9a9ba68daa7"
+    },
+    {
+      "path": "/data/newsho.shp",
+      "url": "../../../data/tyrian/tyrian21/newsho.shp",
+      "sha256": "47dbee09f4c94660c42503d721e82ec50627faa241f458f7bfe3835d88cd250a"
+    }
+  ],
+  "args": []
+}

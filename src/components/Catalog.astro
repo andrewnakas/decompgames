@@ -1,0 +1,20 @@
+---
+import GameCard from './GameCard.astro';
+import {games,counts} from '../lib/catalog';
+const {featured=false}=Astro.props;
+---
+<section class="catalog-intro"><div><span class="eyebrow">REBUILT. REDISCOVERED. REPLAYED.</span><h1>{featured?<>Great games.<br/><span>Another life.</span></>:'Find your next game.'}</h1><p>Decompiled classics and open-source ports.<br class="desktop-break"/> Find a favorite. See how it runs. Get back to playing.</p></div><div class="intro-stats"><strong>{counts.all}<span>games to discover</span></strong><span class="stat-rule"></span><strong>{counts.instant+counts.files}<span>integrations in testing</span></strong></div></section>
+<div class="catalog-toolbar"><div class="search-field"><span aria-hidden="true">⌕</span><input id="game-search" type="search" placeholder="Search games, engines, or a favorite memory…" aria-label="Search games" autocomplete="off"/><kbd>/</kbd></div><label class="select-field"><span class="sr-only">Filter by genre</span><select id="genre-filter"><option value="">All genres</option>{[...new Set(games.map(g=>g.genre))].sort().map(g=><option>{g}</option>)}</select></label></div>
+<div class="filter-line"><div class="filter-buttons" role="group" aria-label="Play availability"><button class="active" data-filter="" aria-pressed="true">All games <span>{counts.all}</span></button><button data-filter="instant" aria-pressed="false">Instant play <span>{counts.instant}</span></button><button data-filter="files" aria-pressed="false">Your files <span>{counts.files}</span></button><button data-filter="project" aria-pressed="false">Projects <span>{counts.project}</span></button></div><span id="result-count" class="result-count" role="status">{counts.all} games</span></div>
+{featured&&<a class="featured-strip" href="/games/open-cadet/"><div><span class="eyebrow">FEATURED PROJECT</span><h2>A familiar table.<br/>An entirely open game.</h2><p>Meet Open Cadet. Original assets, classic pinball.</p><span class="button primary">Explore Open Cadet <span aria-hidden="true">↗</span></span></div><img src="/images/open-cadet.png" alt="Open Cadet’s neon space pinball table" width="640" height="400"/><span class="feature-label">OPEN CADET / 01</span></a>}
+<div class="section-heading"><h2>{featured?'The collection':'All games'}</h2><span>Original projects. Clear requirements.</span></div><div class="game-grid">{games.map((game,index)=><GameCard game={game} index={index}/>)}</div><div id="empty-state" class="empty-state" hidden><h2>No games found.</h2><p>Try a game title, engine, or another genre.</p><button id="reset-filters" class="button">Reset filters</button></div>
+<script>
+const search=document.querySelector<HTMLInputElement>('#game-search')!;
+const genre=document.querySelector<HTMLSelectElement>('#genre-filter')!;
+let mode='';
+const buttons=[...document.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+function filter(){let count=0;for(const card of document.querySelectorAll<HTMLElement>('[data-card]')){const visible=(!mode||card.dataset.mode===mode)&&(!genre.value||card.dataset.genre===genre.value)&&search.value.toLowerCase().trim().split(/\s+/).every(word=>card.dataset.title!.includes(word));card.hidden=!visible;if(visible)count++;}document.querySelector('#result-count')!.textContent=`${count} ${count===1?'game':'games'}`;document.querySelector<HTMLElement>('#empty-state')!.hidden=count>0;const feature=document.querySelector<HTMLElement>('.featured-strip');if(feature)feature.hidden=!!(mode||genre.value||search.value);}
+search.addEventListener('input',filter);genre.addEventListener('change',filter);buttons.forEach(button=>button.addEventListener('click',()=>{mode=button.dataset.filter!;buttons.forEach(b=>{b.classList.toggle('active',b===button);b.setAttribute('aria-pressed',String(b===button));});filter();}));
+document.querySelector('#reset-filters')?.addEventListener('click',()=>{search.value='';genre.value='';buttons[0].click();search.focus();});
+document.addEventListener('keydown',e=>{if(e.key==='/'&&!(e.target instanceof HTMLInputElement)&&!(e.target instanceof HTMLTextAreaElement)){e.preventDefault();search.focus();}});
+</script>

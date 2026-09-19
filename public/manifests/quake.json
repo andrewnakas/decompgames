@@ -1,0 +1,40 @@
+{
+  "id": "quake",
+  "engine": "quake",
+  "packageRevision": "f56b5e71e4be-5666cfc486",
+  "sourceRevision": "f56b5e71e4be8effede29bae1785a5306dcc0249",
+  "repository": "https://github.com/GMH-Code/Qwasm",
+  "toolchain": "Emscripten 4.0.10",
+  "recipe": "scripts/build-engines.sh",
+  "sourceArchive": "/sources/quake-f56b5e71e4be-5666cfc486.tar.gz",
+  "requirements": [
+    "WebAssembly",
+    "Keyboard and mouse"
+  ],
+  "files": [
+    {
+      "path": "index.js",
+      "sha256": "bc52dca780b43fc589b59fd8a92bab25a1e85934e6ebe2029d8f0d0325ef7f90",
+      "bytes": 206550
+    },
+    {
+      "path": "index.wasm",
+      "sha256": "00730d923296b03ee233c9ba2cdf3f8e62f316f1074a803a7fdd887d84ec04d1",
+      "bytes": 1056184
+    },
+    {
+      "path": "index.data",
+      "sha256": "31d3fc22156d98a4bdc6f11b8479e37a0c9adc1efea0b46965ad84aa86eebdba",
+      "bytes": 1607
+    }
+  ],
+  "base": "/runtime/quake/f56b5e71e4be-5666cfc486/",
+  "script": "index.js",
+  "saveVersion": "1",
+  "saveRoots": [
+    "/qwasm"
+  ],
+  "mountSave": false,
+  "assets": [],
+  "args": []
+}

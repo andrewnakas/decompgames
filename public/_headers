@@ -1,0 +1,10 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), midi=()
+  Content-Security-Policy: frame-ancestors 'self' https://decompgames.com https://play.decompgames.com
+/play/*
+  X-Robots-Tag: noindex, follow
+/runtime/*
+  X-Robots-Tag: noindex
+  Cross-Origin-Resource-Policy: same-site

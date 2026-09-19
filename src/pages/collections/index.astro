@@ -1,0 +1,5 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import {collections} from '../../data/collections';
+---
+<Layout title="Collections of decompiled games & source ports"><span class="eyebrow">A DIFFERENT WAY IN</span><h1 class="page-title">Follow your curiosity.</h1><p>Thoughtful starting points for a very big world of games.</p><div class="collection-grid">{collections.map((c,i)=><a class="collection-tile" href={`/collections/${c.id}/`}><span class="eyebrow">COLLECTION / 0{i+1}</span><h2>{c.title}</h2><p>{c.description}</p><span>Explore collection ↗</span></a>)}</div></Layout>

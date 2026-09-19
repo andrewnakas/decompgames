@@ -1,0 +1,836 @@
+[
+  {
+    "path": "data/games/bass/index.json",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/bass/index.json",
+    "bytes": 58,
+    "sha256": "6901080a6a89c718feb3a73949da26d4bd2538c7a4dd5389d75f527c696c768b"
+  },
+  {
+    "path": "data/games/bass/readme.txt",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/bass/readme.txt",
+    "bytes": 5769,
+    "sha256": "be53b2fac67a29afa45886a2aab9e5c83bbfcc3c031954bf16953c97d5b786fc"
+  },
+  {
+    "path": "data/games/bass/sky.dnr",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/bass/sky.dnr",
+    "bytes": 11564,
+    "sha256": "e1ea726858bfa024b9696856c32cd2f525d0e33b5fb0e0284ad2e6ce943115c8"
+  },
+  {
+    "path": "data/games/bass/sky.dsk",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/bass/sky.dsk",
+    "bytes": 8830435,
+    "sha256": "355a6782b9741d0e9eb5e202343c944577e7d78ad36b4c8c7b83965526b1d2aa"
+  },
+  {
+    "path": "data/games/lure/Disk1.vga",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/lure/Disk1.vga",
+    "bytes": 618944,
+    "sha256": "7475e38373dcf62b6101e0008bdb939d4b42717b610d6f7553400cd588131c45"
+  },
+  {
+    "path": "data/games/lure/Disk2.vga",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/lure/Disk2.vga",
+    "bytes": 659616,
+    "sha256": "c2e37bae781e89b77f565980900e2cf21c558ed1d681e6a6940de07e7e3aba85"
+  },
+  {
+    "path": "data/games/lure/Disk3.vga",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/lure/Disk3.vga",
+    "bytes": 699072,
+    "sha256": "81678a2d90dd07a7e959e309bde17a664562d0a7c490d636a3e37f77d61ffa85"
+  },
+  {
+    "path": "data/games/lure/Disk4.vga",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/lure/Disk4.vga",
+    "bytes": 618208,
+    "sha256": "a3bcf4026a5fc47e36d665e321d78ee3a6c14bc6fcd81bca6706be5a0d9fcb17"
+  },
+  {
+    "path": "data/games/lure/LICENSE.txt",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/lure/LICENSE.txt",
+    "bytes": 1285,
+    "sha256": "f546a2370e353f3cca922129aab031f1f8c3c2a8be9d8c235f4298d3062e1eed"
+  },
+  {
+    "path": "data/games/lure/Lure.exe",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/lure/Lure.exe",
+    "bytes": 136956,
+    "sha256": "fdbc000347ca7ccf45f8db664d20fb821894a6902ee54cae17eed84fa9c9c87b"
+  },
+  {
+    "path": "data/games/lure/Manual.pdf",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/lure/Manual.pdf",
+    "bytes": 2207929,
+    "sha256": "fc9d0d75e6425ea7caa6689241f7dd2e2e998492722a2c6334524976abce7f05"
+  },
+  {
+    "path": "data/games/lure/PROTECT.PDF",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/lure/PROTECT.PDF",
+    "bytes": 138359,
+    "sha256": "d07d55f794fa2723a319c5a38495be98b16961803043813932dd5a02c6cdea2b"
+  },
+  {
+    "path": "data/games/lure/README",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/lure/README",
+    "bytes": 692,
+    "sha256": "25d3c1bb4a9e91b89d66474527054b27bc0f55b050127cb3845ab35cf8dc5ebf"
+  },
+  {
+    "path": "data/games/lure/disk1.ega",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/lure/disk1.ega",
+    "bytes": 599904,
+    "sha256": "eb69e8b3ca34790abd2ceedf6ebb14cc640b205f3285ef114a00589b2ebe7108"
+  },
+  {
+    "path": "data/games/lure/disk2.ega",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/lure/disk2.ega",
+    "bytes": 551680,
+    "sha256": "751b562a0386ecc8d468a20d6c31ce7bee1b3f117dd4bd818179b2d9ec34fac4"
+  },
+  {
+    "path": "data/games/lure/disk3.ega",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/lure/disk3.ega",
+    "bytes": 447264,
+    "sha256": "657193bcc383b6c52dd15a25111c3504085d7d228dcd0e9231bfc13f37dc1ab3"
+  },
+  {
+    "path": "data/games/lure/disk4.ega",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/lure/disk4.ega",
+    "bytes": 534912,
+    "sha256": "c4c24f101ac7e42006947836bb8b1647b0efc3dabc528765a4df813b2ad4ac55"
+  },
+  {
+    "path": "data/games/lure/index.json",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/lure/index.json",
+    "bytes": 288,
+    "sha256": "4f1414cfce6378ce39e8c5ffdbfa0a537d0b2b3b2973b4d042c66ec6919e9fb7"
+  },
+  {
+    "path": "data/games/lure/notes.txt",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/lure/notes.txt",
+    "bytes": 222,
+    "sha256": "ed8d4e71dad5cdb1b1be8f7c8aaa34a08dbc5de342218ab39e5ebddbe6c7a386"
+  },
+  {
+    "path": "data/games/queen/index.json",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/queen/index.json",
+    "bytes": 38,
+    "sha256": "dff905d6f81dfc8384c812e4043673290e36aac22dda5d4b0d3663987c2bf2f2"
+  },
+  {
+    "path": "data/games/queen/queen.1",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/queen/queen.1",
+    "bytes": 22677657,
+    "sha256": "fefa653808b36376dfa0ea2fcb821a81240e6fdbce018100543e1d040c18f4b4"
+  },
+  {
+    "path": "data/games/queen/readme.txt",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/queen/readme.txt",
+    "bytes": 5351,
+    "sha256": "6d58b2d8cadb5297f92e3ac75b787210d9fbc94f9a75950abee16c1fd3421df5"
+  },
+  {
+    "path": "data/games/soltys/index.json",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/soltys/index.json",
+    "bytes": 59,
+    "sha256": "b7f7bd2c6547450972da30bdbbdbd5e61ddc5627981d01b144abe928e6625859"
+  },
+  {
+    "path": "data/games/soltys/license.txt",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/soltys/license.txt",
+    "bytes": 1324,
+    "sha256": "e76d910ee2b24ab80e410e1381ff5e14b3b9b478f808ce024eea85223ae5b1af"
+  },
+  {
+    "path": "data/games/soltys/vol.cat",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/soltys/vol.cat",
+    "bytes": 50176,
+    "sha256": "e394b8ab19ffb808555fa1bbe1fc578f1123927230c1744e273f5e91ca3b14ef"
+  },
+  {
+    "path": "data/games/soltys/vol.dat",
+    "url": "https://raw.githubusercontent.com/andrewnakas/exebrowser/c6049f9684f3c6895c8f31f361a0a29462793f41/public/data/games/soltys/vol.dat",
+    "bytes": 8430868,
+    "sha256": "4c34d82d1c0f9456f970578ae7a96398019f11b41f45dcfef72592e6de833994"
+  },
+  {
+    "path": "data/freedoom/freedoom1.wad",
+    "url": "https://github.com/freedoom/freedoom/releases/tag/v0.13.0",
+    "bytes": 28795076,
+    "sha256": "7323bcc168c5a45ff10749b339960e98314740a734c30d4b9f3337001f9e703d"
+  },
+  {
+    "path": "data/freedoom/freedoom2.wad",
+    "url": "https://github.com/freedoom/freedoom/releases/tag/v0.13.0",
+    "bytes": 28787748,
+    "sha256": "a8772e088847032510d97ba2312406a6998f21cbab44d4ff10696faa9c0ecd4b"
+  },
+  {
+    "path": "data/tyrian/tyrian21/levels2.dat",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 5534,
+    "sha256": "9aa94b70aae2b24b16c295ed86e392ac16873306012bdd89e0cf995d605178ea"
+  },
+  {
+    "path": "data/tyrian/tyrian21/levels1.dat",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 9359,
+    "sha256": "e82164c96abb994450d416a3ab0e5fe6479fd4db831cd0f203a60dfe4aa78dcb"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newshn.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 41201,
+    "sha256": "612c38b9d93220d9fb0228594d9597a0637f52fcdf789e9ffc15b0a362a70341"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newshc.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 40714,
+    "sha256": "16db0d5faa13c935da700f3bd25ce539bdd37336fa164d23f5fa3405a315f31a"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newshr.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 28249,
+    "sha256": "7869a88236e46deaf6e051d4d7d38830865bc0047f09879fc8afd68ab7f30d94"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newshs.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 46566,
+    "sha256": "f0bccf154a436ba46834a00b934e7cb8a77d8585b175a39c1270ad7888411c88"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newsh2.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 35236,
+    "sha256": "8773ebcae4be992ecfbb476c0797b0bef4d43faa4c99449890bfaa28c8d9cbcc"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newsh5.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 35813,
+    "sha256": "1e6854ccde0e6b0e0789afadd52f6d8b7d264a61f59185635c5ed119f29d4bad"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newsh^.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 34888,
+    "sha256": "e9884ec4debe73f00c51cca5112dd2e2b0d2c57d1d5953d2902947df36471f23"
+  },
+  {
+    "path": "data/tyrian/tyrian21/license.doc",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 7869,
+    "sha256": "a81955ec129cac3b2a52300e1352be142d12cdd919789d6dda41a211caa8e162"
+  },
+  {
+    "path": "data/tyrian/tyrian21/netfont1.pcx",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 8692,
+    "sha256": "13cecff9b2bb01c472ca42a6d4081bfb54ef182e086130fc1d82530ea2ed5cda"
+  },
+  {
+    "path": "data/tyrian/tyrian21/file_id.diz",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 304,
+    "sha256": "b7a987e1c335c3130e08cae2e98f85fde4b759f7e48ac1d6ac9bdd97a3ef9062"
+  },
+  {
+    "path": "data/tyrian/tyrian21/shapesx.dat",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 217504,
+    "sha256": "53530149c27573244fead5f8325f5a4c9f5108c95a666998140656436aaa8f2a"
+  },
+  {
+    "path": "data/tyrian/tyrian21/tyrian1.lvl",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 538262,
+    "sha256": "b41e532214fa8cea36e37fed6512b357c6ac9c8c3267899ceb4a258fcb1bf0b9"
+  },
+  {
+    "path": "data/tyrian/tyrian21/setup.exe",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 62720,
+    "sha256": "010fff01150ef7b7d8ff9df53426f4cbe51d925e9b50b6d8f27f712d3ac64868"
+  },
+  {
+    "path": "data/tyrian/tyrian21/helpme.exe",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 15372,
+    "sha256": "b4da7bab01b03a49fbd20a567ebb3dfc332a1f12e33832d7e4ca98676fa381e3"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newshe.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 28945,
+    "sha256": "4be2df495007fc211eeeedf3fe07a0d3eb4fdca4174e1adccb2918967c3f7c7b"
+  },
+  {
+    "path": "data/tyrian/tyrian21/user1.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 27674,
+    "sha256": "d78f5d084f3a2a087c48810476743434b5eddd144038164deee284a51b9d1913"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newsh8.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 35152,
+    "sha256": "1fb3f52d36bf3d05c4e5867f8fa34035fc8eace8fd27b55b41df1abba7ef41ee"
+  },
+  {
+    "path": "data/tyrian/tyrian21/levels3.dat",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 6052,
+    "sha256": "0d935cd7bb3c84451d9f57dbcd31a8d515205b18fb050070a416e9b7411dfbd3"
+  },
+  {
+    "path": "data/tyrian/tyrian21/loudness.awe",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 34382,
+    "sha256": "fae838f0dad4894b41b4f1f094203152f5a1cf9a74b9fe24024b12f494d92c6b"
+  },
+  {
+    "path": "data/tyrian/tyrian21/order.doc",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 6334,
+    "sha256": "283347e26fc1b760e82994863005845631c4d438ecca99453c011a6fd4a2476e"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newsh7.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 44079,
+    "sha256": "52c40a2438373f9fc9a7cd2d338ec149f4e81dda56d9c05061ee2264408f0b1a"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newsh1.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 29941,
+    "sha256": "77827c137462ebaa53ad9c6d190224a6e0e1d00bf36cff2c7c66f82b00b7026a"
+  },
+  {
+    "path": "data/tyrian/tyrian21/tyrian2.lvl",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 381242,
+    "sha256": "3e18b124cd4ff5f766e5bf2e833eb79d3118010a253a30dc4c0ae6f483ae50e9"
+  },
+  {
+    "path": "data/tyrian/tyrian21/tyrian.cdt",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 1125,
+    "sha256": "deb2c35297d89a1b2801ae21132d242121d9dee2a794a84b58dbd212f11f04fe"
+  },
+  {
+    "path": "data/tyrian/tyrian21/rtm.exe",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 120853,
+    "sha256": "10acd85af3767634450a793f2af1e057de888621cbfc578d35d3fa91abc09661"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newsha.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 25622,
+    "sha256": "6fee07e22d028831ee0c54a21982a1e6c8ec8efba94e7576670ea0dfc617c6b9"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newsh3.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 37130,
+    "sha256": "f5ac183f489079505908f3cb431b516a54b24fdf312f2702725abf83732e9c6d"
+  },
+  {
+    "path": "data/tyrian/tyrian21/music.mus",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 153482,
+    "sha256": "b06a509bd8576f63c61859e3a2c59482c4035d79f21725f9ec10479377044a74"
+  },
+  {
+    "path": "data/tyrian/tyrian21/user2.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 27674,
+    "sha256": "7ac900995a588386ffc70d66ed67bd501e15bf3a8847ad33363bb67cbbc00d1d"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newshu.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 35657,
+    "sha256": "762c328b99a824942005e66a4567d3c1d45a680527584367a962eeb4bf4e8c45"
+  },
+  {
+    "path": "data/tyrian/tyrian21/netarena.pcx",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 22826,
+    "sha256": "1b8dffbb1d17af08d9e4dd265c7146b6a5f1dfb49bee1462ebd80ad63cba2fac"
+  },
+  {
+    "path": "data/tyrian/tyrian21/netipx.exe",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 27124,
+    "sha256": "e92b1f1a57c48527d3480b95dd8ac801a7d3df5a36a4c94b9510b0e8e47e0de1"
+  },
+  {
+    "path": "data/tyrian/tyrian21/shapes).dat",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 118720,
+    "sha256": "36173a95248ed1f60c499122b4b17450af2bc9ddcb958215ed9c400429ae37eb"
+  },
+  {
+    "path": "data/tyrian/tyrian21/dpmi16bi.ovl",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 50544,
+    "sha256": "afea669e007ff79c8c02b2ae8b3fc908c51b6a86c49f9cef1a9cd3f5ce9635ba"
+  },
+  {
+    "path": "data/tyrian/tyrian21/tyrend.anm",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 3315848,
+    "sha256": "0477bb711d2373c3889da0a792505fff158a0fb9817932c3fb78976424a1c752"
+  },
+  {
+    "path": "data/tyrian/tyrian21/tyrian.snd",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 264512,
+    "sha256": "0f5c37f97f0992026f1736f178bccc64746bc931daf23adbdc82553c140c80b8"
+  },
+  {
+    "path": "data/tyrian/tyrian21/shapesw.dat",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 172480,
+    "sha256": "d06514348982ad364c4b77c4ed4f2f3dbccd8a390e180435a82484bdca5d9c7a"
+  },
+  {
+    "path": "data/tyrian/tyrian21/cubetxt1.dat",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 36169,
+    "sha256": "2a0bc26ac4a8cdcbe7a145c9b1868a87ecb4335e9787f2f1e5713c965372df2b"
+  },
+  {
+    "path": "data/tyrian/tyrian21/tyrian.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 443871,
+    "sha256": "b9602b6dd42c1bf4716bdccbe5ab40495fcd064fcc55fd0f8d4436d640c4b450"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newsh~.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 16219,
+    "sha256": "17519efb2aec555a83f0c1406e7d513641440e0b1c12e0832ad4c70ee54023f0"
+  },
+  {
+    "path": "data/tyrian/tyrian21/palette.dat",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 17664,
+    "sha256": "6f0be74cb1b0026e46029d98d9ade41b8283bad849208543330b717fe5c365fc"
+  },
+  {
+    "path": "data/tyrian/tyrian21/netterm.int",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 633,
+    "sha256": "58fec99ab9512c588e8f4375e1d17ea9c052f9be8cd74fd1ea411ca00519f300"
+  },
+  {
+    "path": "data/tyrian/tyrian21/order.tfp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 272703,
+    "sha256": "26f5f3d8e403676f5f2080fe45285c5a5118780e90b37cfee891c0ee385ccc18"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newshg.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 36643,
+    "sha256": "3d4cb3d7e3b6547b637ecf02e8d284abc1e240809cc648d836dfa99afd45f416"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newsh6.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 17578,
+    "sha256": "79098b156a9a1cc1af16a3a03156d58cf45b9a830217d362c3c9935798afe62d"
+  },
+  {
+    "path": "data/tyrian/tyrian21/shapesy.dat",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 152992,
+    "sha256": "cff7f670d85ea73594092966b23b9ec697500ece148cbf65a8131e4e92412990"
+  },
+  {
+    "path": "data/tyrian/tyrian21/order.exe",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 20557,
+    "sha256": "3648ae05c9963b847c3de3adaac556a012af82d7a5d1421e72ae134ca6288e99"
+  },
+  {
+    "path": "data/tyrian/tyrian21/modems.txt",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 3082,
+    "sha256": "9544cb45be8b5d6907431e4496e56ccb0c2b9b7d2e621f89316761de81106e68"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newshj.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 43999,
+    "sha256": "013fbc96bfba79bec9b07d37ec477e7d3ea9d22aab3f9efd392c6253ae5721dd"
+  },
+  {
+    "path": "data/tyrian/tyrian21/demo.3",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 1974,
+    "sha256": "b742a1acf9b64d9d55ee824cf94a335d62495ee4b0a1dafbe5adcadce5c40f29"
+  },
+  {
+    "path": "data/tyrian/tyrian21/estsc.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 115338,
+    "sha256": "d4368490c9191442c1255b4feb447bc0265236126bed11c9442cef5338a146df"
+  },
+  {
+    "path": "data/tyrian/tyrian21/file0001.exe",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 236032,
+    "sha256": "0f51a58732e47a8a6f1f786788be9925cbf78fc9f086f9b5339030f85dacdf93"
+  },
+  {
+    "path": "data/tyrian/tyrian21/tyrian3.lvl",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 393398,
+    "sha256": "0995c7e2279995485576e02b21ac8599b4924c35af5afffdede69c01994b9937"
+  },
+  {
+    "path": "data/tyrian/tyrian21/netarena.exe",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 74678,
+    "sha256": "2af257308e67bbe0a6593fb8be0bfb3820901c1afb52e3ae3b181131d4f4c36d"
+  },
+  {
+    "path": "data/tyrian/tyrian21/helpme.doc",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 13083,
+    "sha256": "bfa40668e083cb44ead8e0c6176b8ec382f9291c489efdcba8d474d3bf79035b"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newshb.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 39025,
+    "sha256": "9bae3eccd4e8793d42553c9798581f0ef77d829fe30d16afa29cf45261ed3c08"
+  },
+  {
+    "path": "data/tyrian/tyrian21/tyrian.pic",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 365969,
+    "sha256": "5bda2ba46511f835e402188f1608b4398ae36303edfaef14304ad08b55bb5684"
+  },
+  {
+    "path": "data/tyrian/tyrian21/demo.5",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 1122,
+    "sha256": "0c708cc80abdf8bd0a62bf1d41e3e96af29e79458be4426c259b84c0b6000f5d"
+  },
+  {
+    "path": "data/tyrian/tyrian21/levels4.dat",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 11103,
+    "sha256": "891b9ecbdd223df291077fd95626f37ac03b527ca6fd50f76198067a5edebdb4"
+  },
+  {
+    "path": "data/tyrian/tyrian21/file0002.exe",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 84810,
+    "sha256": "4941c19d2b366cdef7414cacf9b6a4a72086ff1f4f7b90a465c7aae8d415543f"
+  },
+  {
+    "path": "data/tyrian/tyrian21/shipedit.doc",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 17174,
+    "sha256": "31d1bb057ccb7a20c4a5175c3e2ff40c37d6d1d3391b162ed700ad502b74ad93"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newshi.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 30860,
+    "sha256": "226da9b33b9b16f7a4212b9cc785fbd82c9517172b3a15a7f58798a38b0a12e4"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newshv.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 23343,
+    "sha256": "b23f634db62c1db5efe6766368b76ec1700f7b96ecfe054cac308f9742c60075"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newshp.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 46204,
+    "sha256": "4bd9a72339e30440c172e385f258c8895b516ff84026a9a6b5a65ada4cf0ab90"
+  },
+  {
+    "path": "data/tyrian/tyrian21/manual.doc",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 32318,
+    "sha256": "6d61e5b4ddb5af6a510c0b2bd408680134d8a9eaa272dbb5e367b20aa8e6a92e"
+  },
+  {
+    "path": "data/tyrian/tyrian21/netterm.exe",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 98336,
+    "sha256": "42926dcfdefd7f02a3a036b8e830b4a2836fd62d5fd08a52058efe19cd2784f5"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newshk.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 22913,
+    "sha256": "cc61abb548a4015d71bac98bc0091217660c1146adcac8b15e3d2bc7e5598d73"
+  },
+  {
+    "path": "data/tyrian/tyrian21/shapesz.dat",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 243712,
+    "sha256": "26aa6ab954391714255f368368261d991025e97d852a7403289bab6ded47da4d"
+  },
+  {
+    "path": "data/tyrian/tyrian21/voices.snd",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 132767,
+    "sha256": "c709ca1e74be6bd4b7917d258d81824d33c38a1a9a0287ec693b6459f58fc27a"
+  },
+  {
+    "path": "data/tyrian/tyrian21/shipedit.exe",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 82944,
+    "sha256": "9be5f168ee0e0743c0e9a541b8620820b6d53b6d8458fdc8d3c50727ee9c3181"
+  },
+  {
+    "path": "data/tyrian/tyrian21/tyrianc.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 444862,
+    "sha256": "7c1666a748f7b8f7662eff342529c453253cce5c11cbd667de912a9f41bbc02b"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newshl.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 14846,
+    "sha256": "9c8ee60bc111a9eb4fb33c7b2528a2f6217c57dc77ec8ee1f2104e8c1f20a34d"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newshd.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 42012,
+    "sha256": "08c7c81b4ed590609f97347b1a4ec60aba56925ecc7193a6718c34cb8d698adf"
+  },
+  {
+    "path": "data/tyrian/tyrian21/netmodem.exe",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 41982,
+    "sha256": "24329b1c3278f192897e022c2a2046984f3a1b7cf39a715bc0c15d9b13a42f4d"
+  },
+  {
+    "path": "data/tyrian/tyrian21/tyrian4.lvl",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 800006,
+    "sha256": "181fde04387ba47e6b49a7f27010ac92fe00566a5f9fef075d74e4c4b2ebef75"
+  },
+  {
+    "path": "data/tyrian/tyrian21/cubetxt3.dat",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 12294,
+    "sha256": "fcfc9762cd4cfad42feb12d975929de86851b216d4491252c701527e22b55539"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newsh9.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 38831,
+    "sha256": "371650303f8b93ae17b76d7c27df202bf6a3f6bb482ffabb7b6b1e16e2774d30"
+  },
+  {
+    "path": "data/tyrian/tyrian21/tyrian.ico",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 766,
+    "sha256": "5aa58773ef65ac7503f102aa65e8e6f34ccf52d59ffbde84fe93e69b6bafdf12"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newshh.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 46639,
+    "sha256": "d5bc9e5a6f8a2098f95284a9e675cf6d5b15a29baf8ff8a0fa72943801f351db"
+  },
+  {
+    "path": "data/tyrian/tyrian21/demo.4",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 699,
+    "sha256": "68acfd9f1078cbc5798472ce5168b111cca1b5a8384f0386c572ca878e402aa2"
+  },
+  {
+    "path": "data/tyrian/tyrian21/setup.box",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 24,
+    "sha256": "f87854991cd8ba82d9b99c86f07932fe079089a4d49fd7aeb85b44b409107bf2"
+  },
+  {
+    "path": "data/tyrian/tyrian21/setup.ini",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 77,
+    "sha256": "06b9345543385b2b7249b45e50236dcb5f718ba688992038bbabafee92b6839d"
+  },
+  {
+    "path": "data/tyrian/tyrian21/netmega.pcx",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 33221,
+    "sha256": "275291eaf4666aba50869adefbf21b3314bc72b951a38b962f26713ef159b8eb"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newsh#.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 17750,
+    "sha256": "45c9e26a7742ce3e9340638349ab6b1b4c834c1ed6dd5d69cc32dd4e481a706d"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newsht.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 14187,
+    "sha256": "133fe424165eacbe3f05a8be838c5b962791855e3afff184123209e8f1cc118f"
+  },
+  {
+    "path": "data/tyrian/tyrian21/demo.2",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 2193,
+    "sha256": "516be02853d416e8719f7a895343c055ea079f793fcc97e4d678975dce616f7d"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newshf.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 33543,
+    "sha256": "852c2fb552c9077a198be7902d8f58699ed070dabcd36c6e3acfe80dd3804cce"
+  },
+  {
+    "path": "data/tyrian/tyrian21/netfont2.pcx",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 10327,
+    "sha256": "9d99299c4b224b6489d252c63cca08850f525c7ac4548cfb55241fc36902dc42"
+  },
+  {
+    "path": "data/tyrian/tyrian21/tyrset.pcx",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 53766,
+    "sha256": "bcb12dff1a6b845fdf26d3eb1f347c5d9d90248365f5113a67a371883f4c2a4a"
+  },
+  {
+    "path": "data/tyrian/tyrian21/tshp2.pcx",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 62168,
+    "sha256": "1a7b841ce799fac196e136c8dd90e6a0e9184bfdd05fa036cbb5e97d651e6327"
+  },
+  {
+    "path": "data/tyrian/tyrian21/setup.int",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 7451,
+    "sha256": "a972a5253a3c3ce56b00f72e04f77f3bd2b38f946793370f144b3b5b6ff66262"
+  },
+  {
+    "path": "data/tyrian/tyrian21/cubetxt2.dat",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 8108,
+    "sha256": "6604a1dcc264e8b8e98f036a8bc35579e9b90b92eccbc4d7c1effee9785d1580"
+  },
+  {
+    "path": "data/tyrian/tyrian21/shipedit.pcx",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 13450,
+    "sha256": "29caa6ad955f63819dd06ded886a991208a590ee68b88e2b8beb2f55e2e31bb5"
+  },
+  {
+    "path": "data/tyrian/tyrian21/exitmsg.bin",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 4000,
+    "sha256": "5e09eccbdc6eef0a20715db1eb59dc336401642ed4afa8f4d506e5a1934557a3"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newshm.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 22378,
+    "sha256": "ba6998cb74ba122812bacb714c81b8c309af073b5464645eee2856233f37e7c2"
+  },
+  {
+    "path": "data/tyrian/tyrian21/cubetxt4.dat",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 62424,
+    "sha256": "f77ac5509d7d644515bccb8e3733d5ea047e22bd03465c75526fb199e91b1b46"
+  },
+  {
+    "path": "data/tyrian/tyrian21/demo.1",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 2745,
+    "sha256": "9128c9276325191acd617d7ff9c520524fb55a286cb25a1c39c78bb6cadc5ecf"
+  },
+  {
+    "path": "data/tyrian/tyrian21/tyrian.exe",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 4336,
+    "sha256": "a7e3075d5b18b917b12478515e60e36c380bae9117515baf12ede48389e46174"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newsh4.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 29449,
+    "sha256": "05fd4174fa1041dbccccf16fffc18b574b9c3c3ca3e2678ba0ba977c9b288fca"
+  },
+  {
+    "path": "data/tyrian/tyrian21/voicesc.snd",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 188275,
+    "sha256": "949d2a2131d230c345397d8f1f6953115166271aeeccb28d8c6009c81a744dbe"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newsh0.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 14096,
+    "sha256": "c443ec4e268205e6a843c1ba783e84cce9d710e3226ddd03b8bfc869bcafbf10"
+  },
+  {
+    "path": "data/tyrian/tyrian21/netset.pcx",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 53766,
+    "sha256": "bcb12dff1a6b845fdf26d3eb1f347c5d9d90248365f5113a67a371883f4c2a4a"
+  },
+  {
+    "path": "data/tyrian/tyrian21/tyrian.hdt",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 153657,
+    "sha256": "c816055863eb91d28ac10b4acc1e312f433deff553f08926e698c9a9ba68daa7"
+  },
+  {
+    "path": "data/tyrian/tyrian21/newsho.shp",
+    "url": "https://www.camanis.net/tyrian/tyrian21.zip",
+    "bytes": 24478,
+    "sha256": "47dbee09f4c94660c42503d721e82ec50627faa241f458f7bfe3835d88cd250a"
+  },
+  {
+    "path": "data/openttd/opengfx-8.0.tar",
+    "url": "https://cdn.openttd.org/opengfx-releases/8.0/opengfx-8.0-all.zip",
+    "bytes": 5396480,
+    "sha256": "9389bcb0807058c80bd95121e978f05d9ef86b4b1bc3ac2da8da8bb02456043c"
+  },
+  {
+    "path": "data/openttd/opensfx-1.0.3.tar",
+    "url": "https://cdn.openttd.org/opensfx-releases/1.0.3/opensfx-1.0.3-all.zip",
+    "bytes": 13291520,
+    "sha256": "531a243c5f0742e34d53704263302bbb847a3dc1e618831097ee940088b7b879"
+  },
+  {
+    "path": "data/openttd/openmsx-0.4.2.tar",
+    "url": "https://cdn.openttd.org/openmsx-releases/0.4.2/openmsx-0.4.2-all.zip",
+    "bytes": 798720,
+    "sha256": "d8c8062d1c1cc7df2a89e7ce3bdaceab58d966a86142b09c788aa38940223191"
+  },
+  {
+    "path": "data/scummvm/b603fb5f8e60/sky.cpt",
+    "url": "https://github.com/scummvm/scummvm/blob/b603fb5f8e606e6c77040741ccc2020f6ce6bf9e/dists/engine-data/sky.cpt",
+    "bytes": 419427,
+    "sha256": "4c457373415325ea039d7a3d4f1211f7bbedd83d5bf85b94afd14cb4bdd263d2"
+  },
+  {
+    "path": "data/scummvm/b603fb5f8e60/lure.dat",
+    "url": "https://github.com/scummvm/scummvm/blob/b603fb5f8e606e6c77040741ccc2020f6ce6bf9e/dists/engine-data/lure.dat",
+    "bytes": 768832,
+    "sha256": "9c17cfb5349c4bd13e56b0652f81fd2bdec849de7bd875bfedf654a08916b568"
+  }
+]

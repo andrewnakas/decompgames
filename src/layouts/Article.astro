@@ -1,0 +1,5 @@
+---
+import Layout from './Layout.astro';
+const {title,description}=Astro.props;
+---
+<Layout title={title} description={description}><article class="prose"><span class="eyebrow">DECOMP GAMES / FIELD NOTES</span><h1 class="page-title">{title}</h1><slot/></article></Layout>

@@ -1,0 +1,57 @@
+{
+  "id": "flight-of-the-amazon-queen",
+  "engine": "scummvm",
+  "packageRevision": "b603fb5f8e60-00d75e7331",
+  "sourceRevision": "b603fb5f8e606e6c77040741ccc2020f6ce6bf9e",
+  "repository": "https://github.com/scummvm/scummvm",
+  "toolchain": "Emscripten 4.0.10",
+  "recipe": "scripts/build-engines.sh",
+  "sourceArchive": "/sources/scummvm-b603fb5f8e60-00d75e7331.tar.gz",
+  "requirements": [
+    "WebAssembly",
+    "Keyboard and mouse"
+  ],
+  "files": [
+    {
+      "path": "scummvm.js",
+      "sha256": "92375fbdeda25833bc69ffb85142da26943a262e1cb099a0b05e4039df8bc93e",
+      "bytes": 230502
+    },
+    {
+      "path": "scummvm.wasm",
+      "sha256": "236412bef4f244229e0943a8c3d4b0f1f85c8b94f8938feff22e2b00ed278651",
+      "bytes": 11404792
+    }
+  ],
+  "base": "/runtime/scummvm/b603fb5f8e60-00d75e7331/",
+  "script": "scummvm.js",
+  "saveVersion": "1",
+  "saveRoots": [
+    "/home/web_user"
+  ],
+  "mountSave": false,
+  "assets": [
+    {
+      "path": "/games/queen/queen.1",
+      "url": "../../../data/games/queen/queen.1",
+      "sha256": "fefa653808b36376dfa0ea2fcb821a81240e6fdbce018100543e1d040c18f4b4"
+    },
+    {
+      "path": "/extras/sky.cpt",
+      "url": "../../../data/scummvm/b603fb5f8e60/sky.cpt",
+      "sha256": "4c457373415325ea039d7a3d4f1211f7bbedd83d5bf85b94afd14cb4bdd263d2"
+    },
+    {
+      "path": "/extras/lure.dat",
+      "url": "../../../data/scummvm/b603fb5f8e60/lure.dat",
+      "sha256": "9c17cfb5349c4bd13e56b0652f81fd2bdec849de7bd875bfedf654a08916b568"
+    }
+  ],
+  "args": [
+    "--extrapath=/extras",
+    "--auto-detect",
+    "--path=/games/queen",
+    "--no-filtering",
+    "--no-aspect-ratio"
+  ]
+}

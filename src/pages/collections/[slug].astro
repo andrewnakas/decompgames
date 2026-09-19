@@ -1,0 +1,10 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import GameCard from '../../components/GameCard.astro';
+import {games} from '../../lib/catalog';
+import {collections} from '../../data/collections';
+export function getStaticPaths(){return collections.map(collection=>({params:{slug:collection.id},props:{collection}}));}
+const {collection:c}=Astro.props;
+const selected=games.filter(g=>[g.mode,g.kind,g.genre].includes(c.filter));
+---
+<Layout title={c.title} description={c.description}><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/collections/">Collections</a><span>/</span><span>{c.id.replaceAll('-',' ')}</span></nav><span class="eyebrow">{selected.length} GAMES TO EXPLORE</span><h1 class="page-title">{c.title}</h1><p>{c.description}</p><div class="game-grid">{selected.map(game=><GameCard game={game}/>)}</div></Layout>

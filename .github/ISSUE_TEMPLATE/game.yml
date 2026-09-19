@@ -1,0 +1,16 @@
+name: Add or correct a game
+description: Suggest a source project, report compatibility, or correct catalog facts.
+body:
+  - type: input
+    id: game
+    attributes:
+      label: Game and upstream source URL
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: What should change?
+      description: Include license sources, required files, browser/version, and reproducible steps where relevant. Do not attach proprietary game files.
+    validations:
+      required: true

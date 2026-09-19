@@ -1,0 +1,15 @@
+node_modules/
+static/
+dist/
+.astro/
+.wrangler/
+.cache/
+.env
+.env.*
+!.env.example
+test-results/
+playwright-report/
+public/runtime/
+public/data/
+public/sources/
+runtime-dist/
