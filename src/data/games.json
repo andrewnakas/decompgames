@@ -162,11 +162,12 @@
       "Arrow keys — move",
       "Space — fire",
       "Enter — confirm",
-      "Esc — menu"
+      "Esc — back; exits the game at the title menu"
     ],
-    "saveInstructions": "Between missions, choose Options, then Save, select an empty slot, type a name, and press Enter. Export a backup from the player toolbar before closing. Save-file export was tested; in-game reload remains under investigation.",
+    "saveInstructions": "Between missions, choose Options, then Save, select an empty slot, type a name, and press Enter. Export a backup from the player toolbar before closing. The saved slot persists after restart; restoring the full gameplay state is still being tested.",
     "limitations": [
-      "Intermittent black screen during menu transitions in the tested in-app Chromium browser; save/reload verification remains incomplete."
+      "Browser integration remains under test. A completed level and full save/backup round trip are not yet verified.",
+      "Sound starts off; use the Sound control to enable it."
     ],
     "inputs": [
       "Keyboard",
@@ -178,11 +179,11 @@
     "runtime": "tyrian",
     "verification": {
       "status": "smoke-tested",
-      "date": "2026-09-19",
+      "date": "2026-09-20",
       "browsers": [
         "Chromium-based in-app browser on Windows"
       ],
-      "scope": "Live test reached episode selection, the ship menu, first mission, and a named save slot. Backup contained tyrian.sav and configuration files, including after restart. A black screen during a later menu transition blocked in-game reload verification. Audible audio and a completed level remain unverified.",
+      "scope": "Campaign menus, first-mission rendering, named save creation, backup export, and a persisted save slot after restart observed. The quit-to-black issue was traced to missing exit notification and corrected. Returning from the loaded slot to gameplay, sustained controls, and audible audio remain unverified.",
       "playthrough": false
     }
   },

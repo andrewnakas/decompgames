@@ -51,3 +51,13 @@ Live runtime `c398647f17fa-c82432af60` in the same Windows in-app Chromium envir
 - Shared loading now uses four concurrent requests instead of sequential downloads. The live counter advanced through 106 Tyrian assets and the engine booted. Unit tests cover the concurrency bound, retained ordering, SHA-256 rejection, and cancellation after HTTP failure. No controlled before/after performance figure is claimed.
 
 The black-screen behavior also occurred before this loader change in an earlier test. Its cause remains unresolved; investigate engine/event handling and saved configuration before treating menu transitions as reliable. Audio remains unverified.
+
+## September 20 — exit diagnosis and silent testing
+
+The earlier interpretation of the black canvas as a menu freeze was incomplete. DOM inspection found a 0 × 0 canvas. In the pinned OpenTyrian source, Escape in `titleScreen()` sets the quit flag; `JE_tyrianHalt()` destroys SDL video before exiting. SDL's Emscripten backend implements window destruction by resizing the canvas to zero. The prior build kept the runtime alive and did not notify the shell of this exit.
+
+Rebuilt the same upstream revision with `-sEXIT_RUNTIME=1`, producing package `c398647f17fa-4ccedff7db`. The shell now synchronizes browser storage before handling engine exit. In local testing, Escape at the settled title menu returned to the launch screen with “Game exited. Local saves synchronized. Start again when you are ready.” The old named save also appeared in the live new runtime's Load Game list after a fresh start. Loading that slot into gameplay is still pending; do not claim a completed save round trip.
+
+Published corresponding source archive SHA-256: `7e7ced946559125813beed576e1e0ae1ec3adc6bb40692a5c95a10ec3663b494`. Downloaded bytes matched the manifest's hash and size. Earlier source revisions remain available for rollback.
+
+After the user requested silence, all open test players were closed. A Web Audio master gain is now installed before engine loading and defaults to zero. The Sound control requires explicit opt-in, and each game start resets it to off. Automated tests verify muted initial output, future contexts, toggles, preserved internal connections, and disconnection routing. These are routing tests, not audible audio certification. All subsequent development must remain muted.

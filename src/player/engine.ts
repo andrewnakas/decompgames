@@ -1,5 +1,7 @@
 import {validateBackup} from '../lib/saves';
 import {loadAssets} from '../lib/assets';
+import {installAudioGate} from '../lib/audio';
+const audioGate=installAudioGate(AudioNode.prototype);
 type FSApi={mkdirTree:(p:string)=>void;writeFile:(p:string,b:Uint8Array)=>void;readFile:(p:string)=>Uint8Array;readdir:(p:string)=>string[];stat:(p:string)=>{mode:number};isDir:(m:number)=>boolean;unlink:(p:string)=>void;mount:(fs:unknown,opts:object,p:string)=>void;syncfs:(populate:boolean,callback:(e:unknown)=>void)=>void;analyzePath:(p:string)=>{exists:boolean};getMounts:(m:unknown)=>{mountpoint:string;type:unknown}[];root:{mount:unknown}};
 type EmscriptenModule={FS:FSApi;IDBFS:{getDB?:(name:string,cb:unknown)=>unknown};[key:string]:any};
 export {};
@@ -26,7 +28,7 @@ async function load(assets:{name:string;bytes:Uint8Array}[]){
  module.onBootstrapFailed=()=>fail('Game setup failed. Check browser storage and try again.');
  module.onBootstrapReload=()=>send('stopped',{message:'Game files prepared. Start again to finish setup.'});
  module.onWarningFs=()=>status('Progress is stored in this browser. Export a backup before clearing site data.');
- module.onExit=()=>send('stopped',{message:'Game exited. Start again when you are ready.'});
+ module.onExit=async()=>{try{await sync();send('stopped',{message:'Game exited. Local saves synchronized. Start again when you are ready.'});}catch{send('operation-error',{message:'Game exited, but browser storage did not save. Export a backup before closing.'});}};
  // Emscripten prepends preRun callbacks. Keep our namespace setup before upstream mounts.
  module.preRun.push=function(...callbacks:unknown[]){return Array.prototype.unshift.apply(this,callbacks);};
  window.Module=module;
@@ -35,6 +37,6 @@ async function load(assets:{name:string;bytes:Uint8Array}[]){
  const script=document.createElement('script');script.src=base+config.script;script.onerror=()=>fail('Engine download failed. Check your connection and retry.');document.body.append(script);
  setInterval(()=>{if(module.FS)sync().catch(()=>send('status',{message:'Browser storage could not retain progress. Export saves before closing.'}));},15000);
 }
-window.addEventListener('message',async event=>{if(event.source!==parent||!origins.has(event.origin))return;try{const msg=event.data;if(msg?.type==='start'&&!started&&msg.game===game){started=true;await load(msg.assets||[]);}else if(msg?.type==='stop'){await sync();send('stopped');}else if(msg?.type==='export'){send('save-export',{backup:{format:1,game,version:saveVersion,files:saveRoots.flatMap(walk)}});}else if(msg?.type==='delete'||msg?.type==='import'){if(msg.type==='import')validateBackup(msg.backup,game,saveVersion,saveRoots);const fs=window.Module.FS;for(const f of saveRoots.flatMap(walk))fs.unlink(f.path);if(msg.type==='import')for(const f of msg.backup.files){fs.mkdirTree(f.path.slice(0,f.path.lastIndexOf('/')));fs.writeFile(f.path,new Uint8Array(f.data));}await sync();send('stopped',{message:'Saved data updated. Start the game to reload it.'});}}catch(error){if(event.data?.type==='start')fail(error);else send('operation-error',{message:error instanceof Error?error.message:'Save operation failed. Export a backup before closing.'});}});
+window.addEventListener('message',async event=>{if(event.source!==parent||!origins.has(event.origin))return;try{const msg=event.data;if(msg?.type==='audio'){audioGate.setMuted(msg.muted!==false);return;}if(msg?.type==='start'&&!started&&msg.game===game){started=true;await load(msg.assets||[]);}else if(msg?.type==='stop'){await sync();send('stopped');}else if(msg?.type==='export'){send('save-export',{backup:{format:1,game,version:saveVersion,files:saveRoots.flatMap(walk)}});}else if(msg?.type==='delete'||msg?.type==='import'){if(msg.type==='import')validateBackup(msg.backup,game,saveVersion,saveRoots);const fs=window.Module.FS;for(const f of saveRoots.flatMap(walk))fs.unlink(f.path);if(msg.type==='import')for(const f of msg.backup.files){fs.mkdirTree(f.path.slice(0,f.path.lastIndexOf('/')));fs.writeFile(f.path,new Uint8Array(f.data));}await sync();send('stopped',{message:'Saved data updated. Start the game to reload it.'});}}catch(error){if(event.data?.type==='start')fail(error);else send('operation-error',{message:error instanceof Error?error.message:'Save operation failed. Export a backup before closing.'});}});
 canvas.addEventListener('click',()=>{canvas.focus();const ctx=window.Module?.SDL2?.audioContext;ctx?.resume?.();});
 send('shell-ready');

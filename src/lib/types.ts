@@ -9,5 +9,5 @@ export interface GameEntry {
   complete: boolean; image?: string; color: string; runtime?: string; dataKey?: string;
   verification: Verification;
 }
-export interface RuntimeManifest { id: string; packageRevision: string; sourceRevision: string | null; repository: string; toolchain: string; recipe: string; sourceArchive: string; requirements: string[]; files: { path: string; sha256: string; bytes: number }[]; }
+export interface RuntimeManifest { id: string; packageRevision: string; sourceRevision: string | null; repository: string; toolchain: string; recipe: string; sourceArchive: string; sourceArchiveSha256?: string; sourceArchiveBytes?: number; requirements: string[]; files: { path: string; sha256: string; bytes: number }[]; }
 export interface GameAdapter { start(files?: File[]): Promise<void>; stop(): void; exportSave(): Promise<Blob>; importSave(file: File): Promise<void>; deleteSave(): Promise<void>; }

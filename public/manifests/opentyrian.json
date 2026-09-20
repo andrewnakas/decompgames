@@ -1,12 +1,12 @@
 {
   "id": "tyrian",
   "engine": "tyrian",
-  "packageRevision": "c398647f17fa-c82432af60",
+  "packageRevision": "c398647f17fa-4ccedff7db",
   "sourceRevision": "c398647f17fac82475a17e16964dfae30f3a1f1b",
   "repository": "https://github.com/midzer/opentyrian",
   "toolchain": "Emscripten 4.0.10",
   "recipe": "scripts/build-engines.sh",
-  "sourceArchive": "/sources/tyrian-c398647f17fa-c82432af60.tar.gz",
+  "sourceArchive": "/sources/tyrian-c398647f17fa-4ccedff7db.tar.gz",
   "requirements": [
     "WebAssembly",
     "Keyboard and mouse"
@@ -14,16 +14,16 @@
   "files": [
     {
       "path": "index.js",
-      "sha256": "f135868369555d02a5bc8d52cc0cb8d7f5e38f7d51688f9fe8a0c39bf724226f",
-      "bytes": 189946
+      "sha256": "6344a16ec2e4f6a7e82ce9c9b3c5db06a6396af97ac8046b6a03e507fcf483ba",
+      "bytes": 190791
     },
     {
       "path": "index.wasm",
-      "sha256": "1379facac38dfed36fee5b5081cecce41a6713ab03df3fdc596ac1b933a45ce4",
-      "bytes": 1719110
+      "sha256": "0dc01ec0f347e42c188a9a784ca5a8a065b57ceb3daaf59d224beeede6527de4",
+      "bytes": 1719534
     }
   ],
-  "base": "/runtime/tyrian/c398647f17fa-c82432af60/",
+  "base": "/runtime/tyrian/c398647f17fa-4ccedff7db/",
   "script": "index.js",
   "saveVersion": "1",
   "saveRoots": [
@@ -562,5 +562,7 @@
       "sha256": "47dbee09f4c94660c42503d721e82ec50627faa241f458f7bfe3835d88cd250a"
     }
   ],
-  "args": []
+  "args": [],
+  "sourceArchiveSha256": "7e7ced946559125813beed576e1e0ae1ec3adc6bb40692a5c95a10ec3663b494",
+  "sourceArchiveBytes": 300185
 }

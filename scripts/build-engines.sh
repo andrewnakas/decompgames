@@ -22,7 +22,7 @@ case "${1:-}" in
   cd "$ROOT/tyrian"
   objects=(); for source_file in src/*.c; do objects+=("obj/$(basename "${source_file%.c}").o"); done
   emmake make -j4 CC=emcc "${objects[@]}"
-  emcc -flto -O3 obj/*.o -o index.js -sUSE_SDL=2 -sASYNCIFY -sENVIRONMENT=web -sSTACK_SIZE=262144 -sALLOW_MEMORY_GROWTH -sEXPORTED_RUNTIME_METHODS=FS,IDBFS,addRunDependency,removeRunDependency -lidbfs.js
+  emcc -flto -O3 obj/*.o -o index.js -sUSE_SDL=2 -sASYNCIFY -sEXIT_RUNTIME=1 -sENVIRONMENT=web -sSTACK_SIZE=262144 -sALLOW_MEMORY_GROWTH -sEXPORTED_RUNTIME_METHODS=FS,IDBFS,addRunDependency,removeRunDependency -lidbfs.js
   ;;
  cadet)
   mkdir -p "$ROOT/cadet-runtime"

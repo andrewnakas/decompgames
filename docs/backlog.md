@@ -11,7 +11,7 @@
 
 1. Finish Open Cadet high-score/input tests. Its published preload is now restricted to replacement DAT/WAV assets.
 2. Freedoom save/reload and backup export/import passed on September 19; finish audible audio, mouse capture, and representative gameplay checks. Doom local import boots with a free Freedoom IWAD; its own save and network checks remain.
-3. OpenTyrian's unrestricted Asyncify rebuild reached the first mission and a named save slot. Investigate the intermittent black screen on a later menu transition, then verify in-game reload, sustained controls, and audio. Backup files export both before and after restart.
+3. OpenTyrian reached the first mission and a named save slot. The zero-size black canvas was traced to the game's normal quit path without runtime exit notification; the new build returns to Start and synchronizes saves. The saved slot appears after restart and runtime upgrade. Finish loading it into gameplay, backup import, and sustained controls. Keep testing muted; audible audio remains unverified.
 4. Test OpenTTD with OpenGFX/OpenSFX; keep missing browser music support explicit.
 5. Verify ScummVM support data, intro skips, gameplay input, and saves for BASS, Lure, Queen, and Sołtys.
 6. Test Quake with locally supplied compatible data. Do not publish commercial PAK files.
@@ -24,6 +24,12 @@ The live Freedoom save and backup round trip passed with distinct pre-import and
 ### September 19 OpenTyrian / loading pass
 
 Tested live runtime `c398647f17fa-c82432af60`: menu navigation, episode selection, ship menu, first mission, and named save creation observed. A later black-screen menu transition remains reproducible enough to block promotion. The shared loader now downloads at most four assets concurrently, verifies each SHA-256, preserves manifest order, and cancels outstanding requests on failure. Local and live OpenTyrian boot passed with this loader; this is not a controlled startup benchmark. A future asset audit should remove unused DOS utilities from the 106-file Tyrian runtime preload while preserving required data and notices.
+
+### September 20 exit handling and silent development
+
+OpenTyrian now uses `EXIT_RUNTIME=1` so the shell receives its exit notification. Local testing confirmed Escape at the title menu returns to Start with synchronized-save confirmation. Runtime `c398647f17fa-4ccedff7db` includes a matching source archive and its SHA-256. The old save slot appeared in the new live runtime's Load Game list; loading back into gameplay remains unverified.
+
+The user explicitly requested no audible development tests. Follow `AGENTS.md`: keep sound off, do not toggle it on, and close test players afterward. The player now installs a muted Web Audio output before loading the engine; every start resets the control to Sound: off. Unit tests cover existing/new contexts and graph connection behavior. Audible testing is deferred until explicitly authorized.
 
 ## Next integrations
 

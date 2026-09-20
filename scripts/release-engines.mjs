@@ -25,5 +25,7 @@ for(const key of process.argv.slice(2)){
  await copyFile('scripts/build-engines.sh',`${root}/build-engines.sh`);await copyFile('scripts/patch-engines.py',`${root}/patch-engines.py`);
  command('tar',['-rf',archive,'-C',linuxRoot,'decompgames.patch','BUILD-DECOMPGAMES.txt','build-engines.sh','patch-engines.py']);command('gzip',['-f',archive]);await copyFile(`${root}/${sourceName}.tar.gz`,`public/sources/${sourceName}.tar.gz`);
  const manifest={id:key,engine:key,packageRevision,sourceRevision:rev,repository:`https://github.com/${t.upstream}`,toolchain:`Emscripten ${t.toolchain||'4.0.10'}`,recipe:'scripts/build-engines.sh',sourceArchive:`/sources/${sourceName}.tar.gz`,requirements:['WebAssembly','Keyboard and mouse'],files,base,script:`${t.stem}.js`,saveVersion:'1',saveRoots:t.saveRoots,mountSave:!!t.mountSave,assets:[],args:[]};
- await writeFile(`public/manifests/${t.game}.json`,JSON.stringify(manifest,null,2));console.log(`${t.game}: ${packageRevision} (${files.reduce((n,f)=>n+f.bytes,0)} bytes)`);
+ const sourceBytes=await readFile(`public${manifest.sourceArchive}`);
+ const releaseManifest={...manifest,sourceArchiveSha256:createHash('sha256').update(sourceBytes).digest('hex'),sourceArchiveBytes:sourceBytes.length};
+ await writeFile(`public/manifests/${t.game}.json`,JSON.stringify(releaseManifest,null,2));console.log(`${t.game}: ${packageRevision} (${files.reduce((n,f)=>n+f.bytes,0)} bytes)`);
 }
