@@ -1180,5 +1180,81 @@
       "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
       "playthrough": false
     }
+  },
+  {
+    "kind": "Decompilation",
+    "mode": "project",
+    "saveInstructions": "No hosted player yet. Keep backups of the upstream port’s save files before switching versions.",
+    "inputs": [],
+    "downloadMB": null,
+    "complete": false,
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Primary source and license reviewed September 20, 2026. No browser gameplay or save/reload verification.",
+      "playthrough": false
+    },
+    "id": "supaplex",
+    "title": "Supaplex",
+    "aliases": [
+      "OpenSupaplex"
+    ],
+    "year": 1991,
+    "genre": "Puzzle",
+    "engine": "OpenSupaplex",
+    "description": "Murphy’s circuit-board puzzles, rebuilt in C from the original game’s disassembly.",
+    "overview": "OpenSupaplex preserves the original puzzle rules while translating reverse-engineered assembly into portable C. The source retains references to the original instructions, making its lineage different from a new engine designed only to resemble Supaplex. Upstream includes a WebAssembly Makefile, but that recipe still needs a working browser event loop, persistent player progress, and a tested save adapter here. Additional level packs are separate content, not separate games in this catalog.",
+    "source": "https://github.com/sergiou87/open-supaplex",
+    "engineLicense": "GPL-3.0-only (C implementation); MIT disassembly",
+    "assetLicense": "Original freeware assets; redistribution terms under review",
+    "assetRequirements": "Upstream includes original data and additional level packs. Their inclusion is not treated as blanket permission to host every asset; no game data is served by this entry.",
+    "controls": [
+      "Upstream documents directional movement and an action button; browser mappings are not yet tested."
+    ],
+    "limitations": [
+      "Directory entry: the upstream WebAssembly recipe is under investigation, not a verified player.",
+      "Source-code licensing and original game-data permissions are separate.",
+      "Audio, progress persistence, gamepad support, and level completion remain unverified."
+    ],
+    "color": "#f29350"
+  },
+  {
+    "kind": "Decompilation",
+    "mode": "project",
+    "saveInstructions": "No hosted player yet. Keep backups of the upstream port’s save files before switching versions.",
+    "inputs": [],
+    "downloadMB": null,
+    "complete": false,
+    "verification": {
+      "status": "unverified",
+      "date": null,
+      "browsers": [],
+      "scope": "Primary source and license reviewed September 20, 2026. No browser gameplay or save/reload verification.",
+      "playthrough": false
+    },
+    "id": "outrun",
+    "title": "OutRun",
+    "aliases": [
+      "CannonBall"
+    ],
+    "year": 1986,
+    "genre": "Racing",
+    "engine": "CannonBall",
+    "description": "The arcade driving game’s assembly translated into C++, with widescreen and higher frame-rate options.",
+    "overview": "CannonBall rewrites OutRun’s original 68000 and Z80 code in C++ rather than emulating an arcade machine. It loads the graphics and audio from a specific arcade ROM set. The standard setup expects Revision B; upstream lists the required filenames and separate optional Japanese-track files. Console conversions and an arbitrary OutRun archive are not substitutes. Its source is available under noncommercial terms, so this entry offers project discovery rather than a hosted engine under our open-source policy.",
+    "source": "https://github.com/djyt/cannonball",
+    "engineLicense": "Source-available: noncommercial CannonBall license",
+    "assetLicense": "Original Sega ROM data required; not distributed here",
+    "assetRequirements": "Locally obtained OutRun Revision B ROM files matching upstream roms/roms.txt. Optional Japanese-track files are listed separately.",
+    "controls": [
+      "Configure steering, accelerator, brake, and gear controls in the upstream port. Browser input has not been tested."
+    ],
+    "limitations": [
+      "Directory only: no hosted binary or Sega assets.",
+      "Noncommercial source terms do not meet this site’s open-source hosting policy.",
+      "Native SDL2 support does not establish WebAssembly compatibility."
+    ],
+    "color": "#ef6688"
   }
 ]

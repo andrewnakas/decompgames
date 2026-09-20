@@ -61,3 +61,7 @@ Rebuilt the same upstream revision with `-sEXIT_RUNTIME=1`, producing package `c
 Published corresponding source archive SHA-256: `7e7ced946559125813beed576e1e0ae1ec3adc6bb40692a5c95a10ec3663b494`. Downloaded bytes matched the manifest's hash and size. Earlier source revisions remain available for rollback.
 
 After the user requested silence, all open test players were closed. A Web Audio master gain is now installed before engine loading and defaults to zero. The Sound control requires explicit opt-in, and each game start resets it to off. Automated tests verify muted initial output, future contexts, toggles, preserved internal connections, and disconnection routing. These are routing tests, not audible audio certification. All subsequent development must remain muted.
+
+## September 20 — Lure test stopped after priority change
+
+Live ScummVM package `b603fb5f8e60-00d75e7331`, Windows in-app Chromium, Sound: off throughout: startup reached the cell scene, clicking moved Diermot toward the straw pile, and F5 opened the native Save game dialog. No named save or restored state was verified. The user then requested actual decompilations instead of further ScummVM work. Stopped the player (the shell reported saves synchronized) and closed the test tab. No verification-status promotion is justified by this partial test.

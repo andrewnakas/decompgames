@@ -1,5 +1,11 @@
 # Persistent expansion backlog
 
+## September 20 user priority change
+
+Focus upcoming work on actual decompilations. Additional ScummVM integration and broad engine-recreation expansion are paused at the user's request. Existing launch-gate work remains recorded below but no longer determines the order of expansion. Keep all tests muted.
+
+Next: Open Cadet gameplay checks; OpenSupaplex's existing WebAssembly recipe and assembly-to-C provenance; local-file browser adapters for documented decomps. CannonBall is a researched decompilation-derived directory candidate, but its noncommercial license excludes hosting under the current open-source policy. See `docs/decompilation-research-2026-09-20.md`.
+
 ## Current release gate
 
 - [ ] Eight complete instant-play games with documented gameplay/audio/save checks.
