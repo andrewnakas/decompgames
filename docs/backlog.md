@@ -33,6 +33,8 @@ The user explicitly requested no audible development tests. Follow `AGENTS.md`: 
 
 ## Next integrations
 
+- OpenRCT2: pinned upstream browser-source review and local-folder validator completed; see `docs/openrct2-integration.md`. Blockers are its modular/threaded runtime, cross-origin isolation, dependency pinning, resource-budget changes, and end-to-end testing with original files. Do not expose a Play action yet.
+
 - ScummVM freeware: Dráscula, DreamWeb, Sfinx, The Griffon Legend; then God of Thunder and other current freeware candidates. Review each engine and data license separately.
 - Local adapters: OpenLara, RigelEngine, OpenRCT2, OpenJazz.
 - Consider additional open-data games on existing runtimes only when they are genuinely distinct games. Do not count editions, demos, or repeated engine builds as extra games.

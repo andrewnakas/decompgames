@@ -684,17 +684,18 @@
     "mode": "project",
     "engine": "OpenRCT2",
     "description": "Build and manage a theme park through an actively developed recreation of the original engine.",
-    "overview": "Build and manage a theme park through an actively developed recreation of the original engine. This entry links to the upstream project so you can check supported releases, current compatibility, and installation instructions. A native desktop release does not establish browser compatibility.",
+    "overview": "OpenRCT2 rebuilds the theme-park simulation around an open engine while using data from your own RollerCoaster Tycoon 2 installation. Upstream maintains browser-specific loading and save code, but that does not make this catalog entry browser-playable. Our integration is being prepared around local folder selection, with installation data kept separate from park saves. Keep the Data, ObjData, and Scenarios directories intact rather than flattening their files.",
     "source": "https://github.com/OpenRCT2/OpenRCT2",
     "engineLicense": "GPL-3.0-or-later",
     "assetLicense": "Original game data required",
-    "assetRequirements": "Original game data required",
+    "assetRequirements": "A compatible installed copy of RollerCoaster Tycoon 2 is required. The upstream browser loader identifies an installation using Data/ch.dat; that marker alone is not the complete game data.",
     "controls": [
       "See the upstream project’s control documentation."
     ],
     "saveInstructions": "Follow the upstream project’s save instructions. There is no hosted player for this entry.",
     "limitations": [
-      "Directory entry; browser gameplay has not been verified here."
+      "Discovery entry: no supported browser player is currently provided by Decomp Games.",
+      "The folder-import foundation is implemented, but runtime loading, original-data compatibility, saves, and gameplay remain unverified."
     ],
     "inputs": [],
     "downloadMB": null,
@@ -704,7 +705,7 @@
       "status": "unverified",
       "date": null,
       "browsers": [],
-      "scope": "Upstream documentation reviewed. No browser playthrough claimed.",
+      "scope": "Upstream browser bootstrap, build recipe, save hooks, and license documentation reviewed at revision bf7695b6e3e6a9e1673d79cec22acbfafa90b74d on September 20, 2026. Synthetic folder-validation tests pass; no game assets or browser gameplay tested.",
       "playthrough": false
     }
   },
