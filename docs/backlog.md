@@ -47,6 +47,8 @@ The user explicitly requested no audible development tests. Follow `AGENTS.md`: 
 
 ## Discovery coverage to research
 
+- r/decomps: initial scan and primary checks recorded in `docs/reddit-opportunities-2026-09-20.md`. Prioritize Mario Kart 64 / SpaghettiKart license and browser feasibility; watch OpenPete for public source. Use community requests for clear project status and mod links to inform game pages. Do not confuse wishlist threads with available decomps.
+
 - decomp.dev and its upstream directory; preserve progress-vs-playability distinctions.
 - Reverse engineering and source-port indexes, then primary source repositories.
 - ScummVM supported engine/game tables and authorized freeware collection.
