@@ -29,6 +29,8 @@ Artifacts remain local. Before distribution, package the exact corresponding sou
 
 ## Adapter backlog
 
+September 21 follow-up: added the pinned-format validator and controller import branch, plus a local-only harness (`node scripts/preview-zelda3.mjs BUILD` after `pnpm build`). It accepts one DAT, checks size before reading, checks signature/count/table/ranges, supplies a software-renderer config, and declares `/saves` for the existing IDBFS mount. Three automated cases cover bounds, wrong selections, revision mismatch, and byte views. All 21 tests, Astro checks, and the static build pass. Harness syntax checked; actual launch/save persistence still unverified without game data. The user's replacement-assets priority now takes precedence over further work on this adapter.
+
 1. Import local `zelda3_assets.dat`. Validate the 48-byte signature, asset count, header/table bounds, aligned asset ranges, and a size ceiling against the pinned engine. Never upload the file.
 2. Place assets in the working directory and persist its `saves/` directory. Upstream uses `saves/save%d.sav`, `saves/sram.dat`, and `saves/sram.bak`; confirm actual behavior before claiming persistence.
 3. Choose a browser-compatible renderer and launch with the shared muted audio gate. Check timing and input polling rather than assuming existing engine patches apply.

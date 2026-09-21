@@ -101,3 +101,9 @@ WASM: 1,660,365 bytes, SHA-256 `8a51062f631e9a875092cce31f59a46ddf0ce295a2a2dd37
 ### September 21 UTC: Zelda3 compilation experiment
 
 Pinned snesrev/zelda3 at fbbb3f967a51fafe642e6140d0753979e73b4090 and built its C engine with Emscripten 4.0.10, SDL2, Asyncify, and filesystem support. Corrected two ppu_init call signatures after the initial linker warning. Final compilation passed; an upstream VWF_RenderSingle prototype warning remains. No ROM/assets were downloaded, no browser player was opened, and no gameplay, sound, or save verification is claimed. Exact artifact hashes and adapter blockers are recorded in docs/zelda3-browser-integration.md. No public runtime or catalog promotion in this pass.
+
+### September 21: local import validation and independent data prototype
+
+Zelda's DAT validator and controller integration pass all 21 tests; Astro reports zero errors/warnings/hints and the 63-page build passes. Local harness syntax checked, with --config pointing at a software-renderer INI and /saves declared for IDBFS. No game data or browser runtime test; persistence remains unverified.
+
+Following the user's new instant-play replacement-assets priority, generated six original Supaplex-format navigation levels without reading upstream assets. The generator verifies a path from the single player to the exit and emits hashes. This is structural/graph verification only, not a game completion test or a complete asset replacement. No browser players were started and no audio was played. Research and remaining asset work are in docs/replacement-assets.md.

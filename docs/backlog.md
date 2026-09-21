@@ -1,5 +1,9 @@
 # Persistent expansion backlog
 
+## September 21 replacement-assets priority
+
+The user now requests more playable decomps with fully independent replacement assets. Prioritize Open Cadet verification and a new OpenSupaplex replacement pack. `docs/replacement-assets.md` records the evidence and asset inventory. Six independently generated navigation-level prototypes pass static reachability checks; they have not been played in-engine and do not form a complete asset pack. Artwork, UI, fonts, sound policy, campaign handling, and gameplay testing remain. Preserve Zelda's experimental local-file adapter but pause further expansion there for this priority.
+
 ## September 20 user priority change
 
 Focus upcoming work on actual decompilations. Additional ScummVM integration and broad engine-recreation expansion are paused at the user's request. Existing launch-gate work remains recorded below but no longer determines the order of expansion. Keep all tests muted.
