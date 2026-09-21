@@ -107,3 +107,7 @@ Pinned snesrev/zelda3 at fbbb3f967a51fafe642e6140d0753979e73b4090 and built its 
 Zelda's DAT validator and controller integration pass all 21 tests; Astro reports zero errors/warnings/hints and the 63-page build passes. Local harness syntax checked, with --config pointing at a software-renderer INI and /saves declared for IDBFS. No game data or browser runtime test; persistence remains unverified.
 
 Following the user's new instant-play replacement-assets priority, generated six original Supaplex-format navigation levels without reading upstream assets. The generator verifies a path from the single player to the exit and emits hashes. This is structural/graph verification only, not a game completion test or a complete asset replacement. No browser players were started and no audio was played. Research and remaining asset work are in docs/replacement-assets.md.
+
+### September 21: original font/static tile tools
+
+Generated two 512-byte fonts and a 5120-byte static tile sheet from new geometric definitions, without original asset inputs. Tile IDs 0–7 have designs; other slots intentionally show diagnostic crosses. The palette is preview-only and moving sprites remain missing. Planar conversion tests use independently calculated plane/row fixtures rather than only round trips. All 23 repository tests pass. No browser, audio, integrated visual, or gameplay test occurred in this pass. Hashes and remaining gates are recorded in docs/replacement-assets.md.

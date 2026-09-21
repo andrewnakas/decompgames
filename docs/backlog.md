@@ -2,6 +2,8 @@
 
 ## September 21 replacement-assets priority
 
+Asset authoring follow-up: original font generators and static tiles 0–7 are implemented with manifests and vector previews. A tested planar encoder creates the engine's DAT format. All 23 tests pass. Next: runtime palette, moving-sprite coordinates/animations, menu/panel artwork, six-level campaign handling, then muted visual/gameplay tests using only the replacement pack. The generated files remain local and unverified in-engine; no public promotion.
+
 The user now requests more playable decomps with fully independent replacement assets. Prioritize Open Cadet verification and a new OpenSupaplex replacement pack. `docs/replacement-assets.md` records the evidence and asset inventory. Six independently generated navigation-level prototypes pass static reachability checks; they have not been played in-engine and do not form a complete asset pack. Artwork, UI, fonts, sound policy, campaign handling, and gameplay testing remain. Preserve Zelda's experimental local-file adapter but pause further expansion there for this priority.
 
 ## September 20 user priority change
