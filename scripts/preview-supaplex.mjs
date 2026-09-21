@@ -4,6 +4,7 @@ import {readFile, readdir, stat} from 'node:fs/promises';
 import {resolve, sep, extname} from 'node:path';
 import {createHash} from 'node:crypto';
 const [checkout, build] = process.argv.slice(2).map(p => resolve(p));
+const replacementPack=process.argv.includes('--replacement-pack');
 if (!checkout || !build) throw Error('Usage: node scripts/preview-supaplex.mjs CHECKOUT BUILD');
 const dataRoot=resolve(checkout,'resources'), dist=resolve('dist');
 const assets=[];
@@ -15,8 +16,8 @@ async function scan(dir, prefix='') {
   }
 }
 await scan(dataRoot);
-const manifest={engine:'supaplex',saveVersion:'experimental-1',saveRoots:['/home/web_user/.local/share/OpenSupaplex'],mountSave:true,base:'/runtime/supaplex/experiment/',script:'supaplex.js',assets,args:[]};
-const page=(await readFile(resolve(dist,'play/opentyrian/index.html'),'utf8')).replaceAll('opentyrian','supaplex').replaceAll('OpenTyrian','OpenSupaplex (local test)').replace('No original game files needed.','Local developer data only. Not a public release.').replace('Approximately 15 MB. Keyboard and mouse recommended.','Experimental engine: controls, timing and saves need verification.');
+const manifest={engine:'supaplex',saveVersion:replacementPack?'open-paths-experimental-1':'experimental-1',saveRoots:['/home/web_user/.local/share/OpenSupaplex'],mountSave:true,base:'/runtime/supaplex/experiment/',script:'supaplex.js',assets,args:[]};
+const page=(await readFile(resolve(dist,'play/opentyrian/index.html'),'utf8')).replaceAll('opentyrian','supaplex').replaceAll('OpenTyrian',replacementPack?'Open Paths (replacement test)':'OpenSupaplex (local test)').replace('No original game files needed.','Local developer data only. Not a public release.').replace('Approximately 15 MB. Keyboard and mouse recommended.','Experimental engine: controls, timing and saves need verification.').replace(/<details class="player-help">[\s\S]*?<\/details>/,'<p>Experimental Supaplex engine. Use Enter for the title and arrow keys to move. This asset pack is incomplete. Keep sound off.</p>');
 const mime={'.html':'text/html','.js':'text/javascript','.css':'text/css','.wasm':'application/wasm','.json':'application/json','.svg':'image/svg+xml'};
 createServer(async(req,res)=>{
   try {

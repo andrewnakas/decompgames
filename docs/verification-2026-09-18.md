@@ -115,3 +115,9 @@ Generated two 512-byte fonts and a 5120-byte static tile sheet from new geometri
 ### September 21: strict five-game milestone and screen assets
 
 The user confirmed only decompiled games with replacement assets qualify. Recorded 0/5 completed additions and primary-source candidate exclusions in docs/five-playable-decomps.md. Generated original screen/palette files from our own font and code; native-format lengths match expected loaders. Generator completed without upstream asset input. No in-engine screen rendering, animation test, gameplay test, or public deployment occurred; hardcoded title palettes still need replacement. No audio played.
+# September 21 replacement-build follow-up
+
+- Open Paths replacement-only package: generated title/menu and first puzzle rendered in the in-app browser with sound remaining off.
+- Existing player `P` persisted into the replacement namespace. Right and left movement were exercised after regenerating all multi-tile player frames from pinned descriptor metadata. The final visual check showed one rover and cleared prior positions; the earlier duplicate-rover defect no longer reproduced.
+- Scope limit: no hazard, collectible, exit, completed puzzle, save export/import, or runtime-upgrade claim was established in this pass. Audio remains unverified. The player was stopped, its temporary tab closed, and the local server terminated.
+- Digger Remastered revision `e85cab1164f0304b3e66f371a5997d83f7a0090a` compiled to WebAssembly with eight generated CC0 layouts. This build is deliberately withheld because upstream graphics, title and icon data remain embedded. See `docs/digger-replacement-integration.md`.
