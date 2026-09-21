@@ -6,6 +6,8 @@ Focus upcoming work on actual decompilations. Additional ScummVM integration and
 
 Next: Open Cadet gameplay checks; OpenSupaplex's existing WebAssembly recipe and assembly-to-C provenance; local-file browser adapters for documented decomps. CannonBall is a researched decompilation-derived directory candidate, but its noncommercial license excludes hosting under the current open-source policy. See `docs/decompilation-research-2026-09-20.md`.
 
+OpenSupaplex build progress: the data-free Asyncify engine now compiles using `scripts/build-supaplex-browser.py`; source patch, artifact hashes, and proposed save mount are recorded in the research document. Browser launch, input/timing, save persistence, and asset permissions remain open. Keep the public entry discovery-only.
+
 ## Current release gate
 
 - [ ] Eight complete instant-play games with documented gameplay/audio/save checks.
