@@ -1,5 +1,9 @@
 # Persistent expansion backlog
 
+## Active milestone: five additional playable decomps
+
+User explicitly confirmed strict decomps with replacement assets. Track actual releases in `docs/five-playable-decomps.md`; current completion is 0/5. Do not count released-source games, current hosted titles, editions, or asset prototypes. Supaplex now also has generated original menu/title/control/panel screen prototypes and four palettes; animation assets, replacement-only packaging and in-engine checks remain.
+
 ## September 21 replacement-assets priority
 
 Asset authoring follow-up: original font generators and static tiles 0–7 are implemented with manifests and vector previews. A tested planar encoder creates the engine's DAT format. All 23 tests pass. Next: runtime palette, moving-sprite coordinates/animations, menu/panel artwork, six-level campaign handling, then muted visual/gameplay tests using only the replacement pack. The generated files remain local and unverified in-engine; no public promotion.

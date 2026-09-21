@@ -111,3 +111,7 @@ Following the user's new instant-play replacement-assets priority, generated six
 ### September 21: original font/static tile tools
 
 Generated two 512-byte fonts and a 5120-byte static tile sheet from new geometric definitions, without original asset inputs. Tile IDs 0–7 have designs; other slots intentionally show diagnostic crosses. The palette is preview-only and moving sprites remain missing. Planar conversion tests use independently calculated plane/row fixtures rather than only round trips. All 23 repository tests pass. No browser, audio, integrated visual, or gameplay test occurred in this pass. Hashes and remaining gates are recorded in docs/replacement-assets.md.
+
+### September 21: strict five-game milestone and screen assets
+
+The user confirmed only decompiled games with replacement assets qualify. Recorded 0/5 completed additions and primary-source candidate exclusions in docs/five-playable-decomps.md. Generated original screen/palette files from our own font and code; native-format lengths match expected loaders. Generator completed without upstream asset input. No in-engine screen rendering, animation test, gameplay test, or public deployment occurred; hardcoded title palettes still need replacement. No audio played.
