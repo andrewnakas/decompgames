@@ -121,3 +121,9 @@ The user confirmed only decompiled games with replacement assets qualify. Record
 - Existing player `P` persisted into the replacement namespace. Right and left movement were exercised after regenerating all multi-tile player frames from pinned descriptor metadata. The final visual check showed one rover and cleared prior positions; the earlier duplicate-rover defect no longer reproduced.
 - Scope limit: no hazard, collectible, exit, completed puzzle, save export/import, or runtime-upgrade claim was established in this pass. Audio remains unverified. The player was stopped, its temporary tab closed, and the local server terminated.
 - Digger Remastered revision `e85cab1164f0304b3e66f371a5997d83f7a0090a` compiled to WebAssembly with eight generated CC0 layouts. This build is deliberately withheld because upstream graphics, title and icon data remain embedded. See `docs/digger-replacement-integration.md`.
+
+## September 21: Digger independent visual and no-audio build
+
+Generated independent CGA/VGA tables, font, title, and icon sources and compiled them with the eight CC0 layouts at the pinned engine revision. The build removes `_SDL_SOUND`, so the upstream tune tables are preprocessed out, also forces `/Q`, replaces the shell branding, and removes sound controls. Artifact hashes and generator-source hashes are recorded in `docs/digger-replacement-integration.md`.
+
+The preceding muted browser pass reached the first generated level and observed directional input with the independent graphics and font. This does not establish readable representative play, a completed level, death/restart, persistence, or a complete remaining-data audit. The result stays private and the milestone remains 0/5. The test player and loopback server were stopped afterward; no audio played.

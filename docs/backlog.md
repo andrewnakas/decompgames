@@ -2,7 +2,7 @@
 
 ## Active milestone: five additional playable decomps
 
-User explicitly confirmed strict decomps with replacement assets. Track actual releases in `docs/five-playable-decomps.md`; current completion is 0/5. Do not count released-source games, current hosted titles, editions, or asset prototypes. Supaplex has a 14-file replacement-only package and muted launch/horizontal-movement evidence. Finish interaction sprites, exit/completion, a full puzzle, and save restoration before release. Digger now has eight generated CC0 layouts and a reproducible WASM build, but its embedded upstream graphics/title/icon files still block distribution.
+User explicitly confirmed strict decomps with replacement assets. Track actual releases in `docs/five-playable-decomps.md`; current completion is 0/5. Do not count released-source games, current hosted titles, editions, or asset prototypes. Supaplex has a 14-file replacement-only package and muted launch/horizontal-movement evidence. Finish interaction sprites, exit/completion, a full puzzle, and save restoration before release. Digger now has eight generated CC0 layouts, independent graphics/font/title/icon sources, and a reproducible no-audio WASM build. Finish its remaining static-data audit, replacement-art readability, a complete level, death/restart, and persistence before release.
 
 ## September 21 replacement-assets priority
 
