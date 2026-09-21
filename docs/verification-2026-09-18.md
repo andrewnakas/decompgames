@@ -75,3 +75,11 @@ Tested the experimental engine with WASM SHA-256 `d5b31863a26b3b1b33686f7e708601
 - SDL_mixer reported MOD support unavailable. This build cannot claim working music, even apart from the deliberate output mute. Advanced-config read warnings occurred on the fresh save namespace.
 - Export returned a valid experimental-1 envelope with zero files. This confirms only an empty export, not game-save creation or reload.
 - Stop returned synchronized-save confirmation. Closed the test tab and stopped the harness server afterward. No engine or game data was published and the catalog verification status remains unchanged.
+
+### Follow-up — input sampling and MOD decoding
+
+Built an experimental revision with `SDL2_MIXER_FORMATS=mod` (Emscripten's pinned libmodplug port) and a keyboard tap latch. Key-down events are retained until the next keyboard-state sample, then cleared; held keys still come from SDL state. This addresses a possible missed-tap path without claiming all input is fixed.
+
+Muted local test reached the main menu after Enter, unlike the preceding attempt. The log now reported audio initialized at 48 kHz without the MOD-support failure. This verifies initialization only, not audible output or music correctness. A click on New player and further Enter/ArrowDown inputs did not visibly establish player creation or gameplay. Investigate `getMouseStatus` and its polling before broadening input claims. Saves were not retested. Stop succeeded, test tab closed, server stopped.
+
+Output remains local at `/home/nakas/decompgames-build/supaplex-browser-input`. WASM: 1,660,211 bytes, SHA-256 `1d163045a19d7066791561894c23dd8260a7e9302a9c651ec7d3af3af8ab18a5`; JS: 198,994 bytes, SHA-256 `265b01e26ae95153796b191312806d37f2c6f40ade9569e41c65c0ee769ff99d`. Generated system patch SHA-256 `c2ba295721b000246fc2734d2cec3684131dd3c592aa5fc82d871269b5852ac2`; keyboard patch SHA-256 `4a571353073b27d3ed9e5f19b4efabae9f500b9f8b7ba8db94fc64aff0da2d43`. The recipe and build record capture all generated changes. No binaries or game assets published.

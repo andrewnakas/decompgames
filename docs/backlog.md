@@ -10,6 +10,8 @@ OpenSupaplex build progress: the data-free Asyncify engine now compiles using `s
 
 OpenSupaplex local test: `scripts/preview-supaplex.mjs` reached the rendered title screen while muted. Enter/ArrowDown automation did not advance it; investigate keyboard-state polling and delivery next. MOD decoding is missing from this build. Export contained zero files, so saves remain unverified. Full evidence and the corrected harness URL failure are in the test log. The test player and local server were stopped.
 
+Follow-up: a key-tap latch and MOD-enabled build reached the main menu after Enter, and SDL audio initialization now succeeds while output remains muted. New-player/menu activation is still unresolved; inspect mouse-button sampling and `getMouseStatus` next. Do not mark complete gameplay, music, or saves verified. Exact new hashes and remaining limitations are in the test log.
+
 ## Current release gate
 
 - [ ] Eight complete instant-play games with documented gameplay/audio/save checks.
