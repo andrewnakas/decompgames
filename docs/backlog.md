@@ -8,6 +8,8 @@ Next: Open Cadet gameplay checks; OpenSupaplex's existing WebAssembly recipe and
 
 OpenSupaplex build progress: the data-free Asyncify engine now compiles using `scripts/build-supaplex-browser.py`; source patch, artifact hashes, and proposed save mount are recorded in the research document. Browser launch, input/timing, save persistence, and asset permissions remain open. Keep the public entry discovery-only.
 
+OpenSupaplex local test: `scripts/preview-supaplex.mjs` reached the rendered title screen while muted. Enter/ArrowDown automation did not advance it; investigate keyboard-state polling and delivery next. MOD decoding is missing from this build. Export contained zero files, so saves remain unverified. Full evidence and the corrected harness URL failure are in the test log. The test player and local server were stopped.
+
 ## Current release gate
 
 - [ ] Eight complete instant-play games with documented gameplay/audio/save checks.

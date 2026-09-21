@@ -65,3 +65,13 @@ After the user requested silence, all open test players were closed. A Web Audio
 ## September 20 — Lure test stopped after priority change
 
 Live ScummVM package `b603fb5f8e60-00d75e7331`, Windows in-app Chromium, Sound: off throughout: startup reached the cell scene, clicking moved Diermot toward the straw pile, and F5 opened the native Save game dialog. No named save or restored state was verified. The user then requested actual decompilations instead of further ScummVM work. Stopped the player (the shell reported saves synchronized) and closed the test tab. No verification-status promotion is justified by this partial test.
+
+## September 20 local / September 21 UTC — OpenSupaplex startup
+
+Tested the experimental engine with WASM SHA-256 `d5b31863a26b3b1b33686f7e7086016df9078144ef4d0e246e33ab68ad07424a` using `scripts/preview-supaplex.mjs` on loopback port 4323, Windows in-app Chromium. The harness serves upstream resources directly from the local checkout, never from public deployment storage. The shared player audio gate stayed muted throughout.
+
+- Initial harness asset URLs failed with 404 because the shared loader concatenates the runtime base. Corrected them to relative URLs; subsequent load reached OpenSupaplex's rendered 7.2.2 credits/title screen and enabled shell controls.
+- Enter and ArrowDown via browser automation did not advance the title screen. No fatal runtime error was reported. The cause is unresolved: inspect key-down/up delivery and the engine's SDL keyboard-state polling before claiming controls work. No gameplay was observed.
+- SDL_mixer reported MOD support unavailable. This build cannot claim working music, even apart from the deliberate output mute. Advanced-config read warnings occurred on the fresh save namespace.
+- Export returned a valid experimental-1 envelope with zero files. This confirms only an empty export, not game-save creation or reload.
+- Stop returned synchronized-save confirmation. Closed the test tab and stopped the harness server afterward. No engine or game data was published and the catalog verification status remains unchanged.
