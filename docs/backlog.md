@@ -12,6 +12,8 @@ OpenSupaplex local test: `scripts/preview-supaplex.mjs` reached the rendered tit
 
 Follow-up: a key-tap latch and MOD-enabled build reached the main menu after Enter, and SDL audio initialization now succeeds while output remains muted. New-player/menu activation is still unresolved; inspect mouse-button sampling and `getMouseStatus` next. Do not mark complete gameplay, music, or saves verified. Exact new hashes and remaining limitations are in the test log.
 
+Latest Supaplex result: retained mouse clicks allow player creation and first-level launch. Two Up taps collected an Infotron (019 → 018), and player V survived a full page reload. Profile export contains PLAYER.LST and HALLFAME.LST. Next: in-level snapshot round trip, one completed puzzle, held input and focus-loss behavior, then asset/source release prerequisites. Public entry stays discovery-only; no hosted build yet.
+
 ## Current release gate
 
 - [ ] Eight complete instant-play games with documented gameplay/audio/save checks.

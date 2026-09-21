@@ -83,3 +83,17 @@ Built an experimental revision with `SDL2_MIXER_FORMATS=mod` (Emscripten's pinne
 Muted local test reached the main menu after Enter, unlike the preceding attempt. The log now reported audio initialized at 48 kHz without the MOD-support failure. This verifies initialization only, not audible output or music correctness. A click on New player and further Enter/ArrowDown inputs did not visibly establish player creation or gameplay. Investigate `getMouseStatus` and its polling before broadening input claims. Saves were not retested. Stop succeeded, test tab closed, server stopped.
 
 Output remains local at `/home/nakas/decompgames-build/supaplex-browser-input`. WASM: 1,660,211 bytes, SHA-256 `1d163045a19d7066791561894c23dd8260a7e9302a9c651ec7d3af3af8ab18a5`; JS: 198,994 bytes, SHA-256 `265b01e26ae95153796b191312806d37f2c6f40ade9569e41c65c0ee769ff99d`. Generated system patch SHA-256 `c2ba295721b000246fc2734d2cec3684131dd3c592aa5fc82d871269b5852ac2`; keyboard patch SHA-256 `4a571353073b27d3ed9e5f19b4efabae9f500b9f8b7ba8db94fc64aff0da2d43`. The recipe and build record capture all generated changes. No binaries or game assets published.
+
+### September 21 UTC — mouse clicks, first gameplay, profile persistence
+
+The menu's mouse polling can miss a quick down/up pair just as keyboard-state polling can. The experimental patch now retains left/right button-down events and their coordinates until `getMouseState` samples them, then clears the retained press. Held-button state remains supplied by SDL. Multiple clicks within one sample can still coalesce; this is not a complete queued-input system.
+
+Muted local Chromium test using `/home/nakas/decompgames-build/supaplex-browser-mouse`:
+
+1. Enter advanced the title to the menu. Clicking New player opened YOUR NAME. Typed V and pressed Enter; V appeared as current player.
+2. Export contained `/home/web_user/.local/share/OpenSupaplex/PLAYER.LST` (2,560 bytes) and `HALLFAME.LST` (36 bytes).
+3. Clicked OK with Warm Up selected. The first level rendered. Two separate ArrowUp taps moved Murphy through base tiles and collected an Infotron; the remaining count changed from 019 to 018.
+4. Stopped, reloaded the entire page, started again, and dismissed the title. V remained the selected player. This verifies profile persistence, not restoration of an in-progress puzzle or completed-level progress.
+5. Stopped the player, closed its tab, and stopped the local server. Sound remained off throughout.
+
+WASM: 1,660,365 bytes, SHA-256 `8a51062f631e9a875092cce31f59a46ddf0ce295a2a2dd378dfedd4a18f6722d`. JS unchanged from the MOD build. Generated system patch SHA-256 `478936441150d9361cca534eb6816d3881c313c450ca4883ef1e5f482db2e8b0`; video patch SHA-256 `22c125456b3e1d22f2278fa7683c2fe014296299f1c9a31869812b0d48a6925e`; keyboard patch unchanged. All are recorded by the build recipe. Still pending: puzzle completion, snapshot export/import and reload, held-input/focus-loss checks, data permissions, source packaging, and any public deployment. No full-game verification claim or catalog promotion.

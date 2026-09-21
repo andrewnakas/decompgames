@@ -34,12 +34,18 @@ event_needle = '        while (SDL_PollEvent(&event))\n        {'
 if patched.count(event_needle) != 1:
     raise SystemExit('Upstream SDL event polling no longer matches')
 patched = patched.replace('void initializeSystem(void)',
-    'Uint8 browserKeyPresses[SDL_NUM_SCANCODES] = {0};\n\nvoid initializeSystem(void)')
+    'Uint8 browserKeyPresses[SDL_NUM_SCANCODES] = {0};\nUint32 browserMousePresses = 0;\nint browserMouseX = 0, browserMouseY = 0;\n\nvoid initializeSystem(void)')
 patched = patched.replace(event_needle, event_needle + '''
             // Retain taps whose key-up arrives before the next state sample.
             if (event.type == SDL_KEYDOWN && event.key.keysym.scancode > SDL_SCANCODE_UNKNOWN
                 && event.key.keysym.scancode < SDL_NUM_SCANCODES)
-                browserKeyPresses[event.key.keysym.scancode] = 1;''')
+                browserKeyPresses[event.key.keysym.scancode] = 1;
+            if (event.type == SDL_MOUSEBUTTONDOWN &&
+                (event.button.button == SDL_BUTTON_LEFT || event.button.button == SDL_BUTTON_RIGHT)) {
+                browserMousePresses |= SDL_BUTTON(event.button.button);
+                browserMouseX = event.button.x;
+                browserMouseY = event.button.y;
+            }''')
 patch_path = output / 'system-browser.c'
 patch_path.write_text(patched)
 keyboard = repo / 'src/sdl2/keyboard.c'
@@ -57,10 +63,26 @@ keyboard_source = keyboard_source.replace(key_needle, '''    const Uint8 *held =
     }''')
 keyboard_patch = output / 'keyboard-browser.c'
 keyboard_patch.write_text(keyboard_source)
+video = repo / 'src/sdl2/video.c'
+video_source = video.read_text()
+mouse_needle = '    Uint32 state = SDL_GetMouseState(x, y);'
+if video_source.count(mouse_needle) != 1:
+    raise SystemExit('Upstream mouse state sampling no longer matches')
+video_source = video_source.replace(mouse_needle, mouse_needle + '''
+    extern Uint32 browserMousePresses;
+    extern int browserMouseX, browserMouseY;
+    if (browserMousePresses) {
+        state |= browserMousePresses;
+        if (x) *x = browserMouseX;
+        if (y) *y = browserMouseY;
+        browserMousePresses = 0;
+    }''')
+video_patch = output / 'video-browser.c'
+video_patch.write_text(video_source)
 sources = sorted((repo / 'src').glob('*.c'))
-sources += [p for p in sorted((repo / 'src/sdl2').glob('*.c')) if p != keyboard]
+sources += [p for p in sorted((repo / 'src/sdl2').glob('*.c')) if p not in (keyboard, video)]
 sources += [p for p in sorted((repo / 'src/sdl_common').glob('*.c')) if p != system]
-sources += [repo / 'src/null/virtualKeyboard.c', repo / 'src/lib/ini/ini.c', patch_path, keyboard_patch]
+sources += [repo / 'src/null/virtualKeyboard.c', repo / 'src/lib/ini/ini.c', patch_path, keyboard_patch, video_patch]
 flags = ['-O2', '-DHAVE_SDL2', '-DFILE_FHS_XDG_DIRS', '-DFILE_DATA_PATH=/games/supaplex',
          '-iquote', str(system.parent), '-sUSE_SDL=2', '-sUSE_SDL_MIXER=2',
          '-sSDL2_MIXER_FORMATS=mod',
@@ -70,7 +92,7 @@ flags = ['-O2', '-DHAVE_SDL2', '-DFILE_FHS_XDG_DIRS', '-DFILE_DATA_PATH=/games/s
 command = ['emcc', *map(str, sources), *flags, '-o', str(output / 'supaplex.js')]
 subprocess.run(command, check=True)
 files = []
-for name in ['supaplex.js', 'supaplex.wasm', 'system-browser.c', 'keyboard-browser.c']:
+for name in ['supaplex.js', 'supaplex.wasm', 'system-browser.c', 'keyboard-browser.c', 'video-browser.c']:
     data = (output / name).read_bytes()
     files.append({'path': name, 'bytes': len(data), 'sha256': hashlib.sha256(data).hexdigest()})
 (output / 'build-record.json').write_text(json.dumps({
