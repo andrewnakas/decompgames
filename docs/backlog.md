@@ -14,6 +14,10 @@ Follow-up: a key-tap latch and MOD-enabled build reached the main menu after Ent
 
 Latest Supaplex result: retained mouse clicks allow player creation and first-level launch. Two Up taps collected an Infotron (019 → 018), and player V survived a full page reload. Profile export contains PLAYER.LST and HALLFAME.LST. Next: in-level snapshot round trip, one completed puzzle, held input and focus-loss behavior, then asset/source release prerequisites. Public entry stays discovery-only; no hosted build yet.
 
+## New port experiment: Zelda3
+
+A Link to the Past's C reconstruction now compiles into a data-free 2.22 MB WASM engine using `scripts/build-zelda3-browser.py`. Asyncify yielding and two function-signature fixes are included. No browser test or proprietary data was used, and no public playable claim was added. Next: validated local asset import, save mount, rendering/input checks, and muted gameplay/save tests. See `docs/zelda3-browser-integration.md` for the exact revision, recipe, hashes, and remaining gates. Fire & Forget II is another WASM lead blocked on a clear engine license grant.
+
 ## Current release gate
 
 - [ ] Eight complete instant-play games with documented gameplay/audio/save checks.

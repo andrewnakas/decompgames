@@ -97,3 +97,7 @@ Muted local Chromium test using `/home/nakas/decompgames-build/supaplex-browser-
 5. Stopped the player, closed its tab, and stopped the local server. Sound remained off throughout.
 
 WASM: 1,660,365 bytes, SHA-256 `8a51062f631e9a875092cce31f59a46ddf0ce295a2a2dd378dfedd4a18f6722d`. JS unchanged from the MOD build. Generated system patch SHA-256 `478936441150d9361cca534eb6816d3881c313c450ca4883ef1e5f482db2e8b0`; video patch SHA-256 `22c125456b3e1d22f2278fa7683c2fe014296299f1c9a31869812b0d48a6925e`; keyboard patch unchanged. All are recorded by the build recipe. Still pending: puzzle completion, snapshot export/import and reload, held-input/focus-loss checks, data permissions, source packaging, and any public deployment. No full-game verification claim or catalog promotion.
+
+### September 21 UTC: Zelda3 compilation experiment
+
+Pinned snesrev/zelda3 at fbbb3f967a51fafe642e6140d0753979e73b4090 and built its C engine with Emscripten 4.0.10, SDL2, Asyncify, and filesystem support. Corrected two ppu_init call signatures after the initial linker warning. Final compilation passed; an upstream VWF_RenderSingle prototype warning remains. No ROM/assets were downloaded, no browser player was opened, and no gameplay, sound, or save verification is claimed. Exact artifact hashes and adapter blockers are recorded in docs/zelda3-browser-integration.md. No public runtime or catalog promotion in this pass.
