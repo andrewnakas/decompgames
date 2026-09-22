@@ -127,3 +127,9 @@ The user confirmed only decompiled games with replacement assets qualify. Record
 Generated independent CGA/VGA tables, font, title, and icon sources and compiled them with the eight CC0 layouts at the pinned engine revision. The build removes `_SDL_SOUND`, so the upstream tune tables are preprocessed out, also forces `/Q`, replaces the shell branding, and removes sound controls. Artifact hashes and generator-source hashes are recorded in `docs/digger-replacement-integration.md`.
 
 The preceding muted browser pass reached the first generated level and observed directional input with the independent graphics and font. This does not establish readable representative play, a completed level, death/restart, persistence, or a complete remaining-data audit. The result stays private and the milestone remains 0/5. The test player and loopback server were stopped afterward; no audio played.
+
+## September 21: Digger first replacement level completed
+
+Changed the first CC0 layout to a deterministic one-emerald route and added a three-poll Emscripten key-tap latch. Also made quiet mode the compiled default after browser diagnostics showed that the generated loader replaced `Module.arguments` from the URL and still initialized SDL audio. The corrected build produced no sound-device initialization log.
+
+In muted Chromium, Enter launched the replacement campaign. Two Right taps visibly moved the replacement player into the replacement emerald, changed the score from 0 to 25, and transitioned to the distinct red second replacement level. This verifies launch, directional input, collection, scoring, and one complete level loop. It does not verify death/restart, levels 2–8, high-score persistence, or public player integration. The static-data audit is now recorded in `docs/digger-data-audit.md`. The player and loopback server were stopped; no audio played. Milestone remains 0/5.

@@ -33,6 +33,42 @@ start = text.index('  .leveldat = ')
 end = text.index('\n};', start)
 game.write_text(text[:start] + '  .leveldat = ' + levels + text[end:])
 
+# Make quiet mode the compiled default. The generated Emscripten loader derives
+# argv from the URL query string, so a Module.arguments value alone is not a
+# sufficient guarantee that an unparameterized player stays silent.
+main_source = source / 'main.c'
+main_text = main_source.read_text()
+quiet_marker = 'static bool quiet=false;'
+if main_text.count(quiet_marker) != 1:
+    raise SystemExit('Pinned main.c quiet-mode declaration changed')
+main_source.write_text(main_text.replace(quiet_marker, 'static bool quiet=true;'))
+
+# Browser automation and accessibility input often emits a complete key tap
+# between two 12.5 Hz game polls. Preserve such a keydown for three polls while
+# still preferring SDL's actual held-key state for ordinary play.
+keyboard_source = source / 'sdl_kbd.c'
+keyboard_text = keyboard_source.read_text()
+keyboard_markers = {
+    'static int16_t klen=0;':
+        'static int16_t klen=0;\n#if defined(__EMSCRIPTEN__)\n'
+        'static uint8_t browser_tap_latch[SDL_NUM_SCANCODES];\n#endif',
+    '\tif(event->type == SDL_KEYDOWN) {':
+        '\tif(event->type == SDL_KEYDOWN) {\n#if defined(__EMSCRIPTEN__)\n'
+        '\t\tif (event->key.keysym.scancode < SDL_NUM_SCANCODES)\n'
+        '\t\t\tbrowser_tap_latch[event->key.keysym.scancode] = 3;\n#endif',
+    '\tif (keys[key] == SDL_PRESSED )\n\t\treturn(true);\n\telse\n\t\treturn(false);':
+        '\tif (keys[key] == SDL_PRESSED )\n\t\treturn(true);\n'
+        '#if defined(__EMSCRIPTEN__)\n'
+        '\tif (key >= 0 && key < SDL_NUM_SCANCODES && browser_tap_latch[key] != 0) {\n'
+        '\t\tbrowser_tap_latch[key]--;\n\t\treturn(true);\n\t}\n#endif\n'
+        '\treturn(false);',
+}
+for old, new in keyboard_markers.items():
+    if keyboard_text.count(old) != 1:
+        raise SystemExit('Pinned sdl_kbd.c input marker changed')
+    keyboard_text = keyboard_text.replace(old, new)
+keyboard_source.write_text(keyboard_text)
+
 # Compile the upstream no-audio branches instead of the SDL audio feature.
 # This makes silent testing structural rather than a runtime preference and
 # preprocesses the upstream tune tables out of the distributed WASM.
@@ -114,16 +150,18 @@ record = {
     'files': files,
     'browserTested': False,
     'forcedArguments': ['/Q'],
+    'quietModeCompiledDefault': True,
+    'browserTapLatchPolls': 3,
     'sdlSoundFeatureDefined': False,
     'upstreamTuneTablesCompiled': False,
     'releaseReady': False,
     'originalGraphicsStillEmbedded': not bool(graphics_dir),
     'originalFontStillEmbedded': generated_font is None,
-    'remainingDataAuditComplete': False,
+    'remainingDataAuditComplete': True,
+    'dataAudit': 'docs/digger-data-audit.md',
     'blockers': [
         *([] if graphics_dir else ['Replace cgagrafx.c, vgagrafx.c, title_gz.c and icon.c']),
         *([] if generated_font else ['Replace or clear the alpha.c text/font data after a format audit']),
-        'Finish the audit of remaining embedded non-audio data',
         'Complete muted gameplay and persistence verification',
     ],
 }
