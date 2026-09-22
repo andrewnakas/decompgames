@@ -1,6 +1,6 @@
 # Digger replacement-build integration
 
-Status: internal experiment, not publishable and not counted toward the five-game milestone.
+Status: released and counted as addition 1 of 5 after production verification on September 22, 2026.
 
 ## Pinned engine and browser build
 
@@ -25,13 +25,17 @@ Status: internal experiment, not publishable and not counted toward the five-gam
 
 | Artifact | Bytes | SHA-256 |
 | --- | ---: | --- |
-| `digger.js` | 372,900 | `8f7cb2d4d765d66554bbd4ed15d0c1325a783c3d160ae3796be73287bf44fd33` |
-| `digger.wasm` | 4,887,636 | `5fc4ce1a3d779511625edb8055f61ad604338a3eb726b614ed04baafcaeef063` |
-| `digger.html` | 9,287 | `bee8f80b8f9fdd1d39ba66770159944d4e1f440de1b732901244c91f016bda14` |
+| `digger.js` | 381,957 | `1f13719a3803e6f771d0f83a5dbc886b4c703b029e2227127373ed2414275d98` |
+| `digger.wasm` | 4,885,753 | `2ba36234c08ca632483ff7613010a45a077c4a941585e7de2c9caa0cd604d394` |
+| `digger.html` | 10,223 | `382fbf75ab5bfff6e01b023f041969e36f0f3d988eaab24db4fe2de5926f720b` |
 | `digger-build-info.js` | 308 | `bf2d575c2422c8c429688b57bec41ce0609e4fc811439263ea6c48e588235886` |
 
-## Distribution blockers
+The website package revision is `e85cab1164f0-b7e87a0852`. Its exact corresponding-source archive is 676,316 bytes with SHA-256 `60661381ad0e3a31e039ef65c1e92bfd4c5ad5e8fef666d203f8d3bf4af76af3`.
 
-The known graphics, font, title, icon, levels, and tune-table blockers are replaced or compiled out. `docs/digger-data-audit.md` records the completed source-by-source audit of remaining static initializers. The current colored geometric sprites are readable enough to distinguish the player, emerald, terrain, and level transition during the opening verification path, but levels 2–8 still need broader readability and interaction testing.
+## Release-gate evidence
 
-Muted Chromium testing completed the generated first level: two short Right taps moved the player into the only emerald, raised the score to 25, and visibly transitioned to the second replacement level. Browser diagnostics contained no SDL sound-device initialization after the compiled-quiet fix. This establishes launch, input, collection, scoring, and one complete level loop. Death/restart, levels 2–8, high-score persistence, and website player integration remain unverified. Audio is intentionally absent in this variant.
+The known graphics, font, title, icon, levels, and tune-table blockers are replaced or compiled out. `docs/digger-data-audit.md` records the completed source-by-source audit of remaining static initializers. The current colored geometric sprites distinguish the player, emeralds, terrain, enemies, lives, and the transition into the second level. Levels 3–8 have not received full playthroughs.
+
+Muted Chromium testing completed the generated first level: two short Right taps moved the player into the only emerald, raised the score to 25, and visibly transitioned to the second replacement level. A longer second-level run showed enemy movement, loss of one life, and a clean restart. Browser diagnostics contained no SDL sound-device initialization after the compiled-quiet fix.
+
+The IDBFS mount was tested by writing a sentinel through the runtime filesystem, flushing it, reloading the page, and reading the same bytes back. The sentinel was then deleted and the deletion flushed. The packaged build passed the real Decomp Games player flow locally and at `play.decompgames.com`: delayed download, muted launch, first-level completion, second-level rendering, save-backup export, and Stop game. The backup was correctly namespaced as `digger` / `replacement-v1`; it contained no files before the game wrote a score or preference. High-score entry itself remains unverified and is not claimed. Audio is intentionally absent in this variant.

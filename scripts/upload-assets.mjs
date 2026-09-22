@@ -1,10 +1,7 @@
 import {readFile,readdir,stat,writeFile,mkdir} from 'node:fs/promises';
-import {join} from 'node:path';
 import {createHash} from 'node:crypto';
-const account='ea509cdff27d40d5e3e4cb92dec2473f', bucket='decompgames-assets';
-const config=await readFile(join(process.env.APPDATA,'xdg.config/.wrangler/config/default.toml'),'utf8');
-const token=config.match(/oauth_token\s*=\s*"([^"]+)"/)?.[1];
-if(!token)throw Error('Run wrangler whoami to refresh authentication.');
+import {execFileSync} from 'node:child_process';
+const bucket='decompgames-assets';
 const keys=new Set();
 for(const file of await readdir('public/manifests')){
  const manifest=JSON.parse(await readFile(`public/manifests/${file}`,'utf8'));
@@ -22,9 +19,7 @@ for(const key of keys){
  const path=`public/${key}`;const size=(await stat(path)).size;
  const bytes=await readFile(path);const digest=createHash('sha256').update(bytes).digest('hex');
  if(done[key]===digest)continue;
- const url=`https://api.cloudflare.com/client/v4/accounts/${account}/r2/buckets/${bucket}/objects/${key.split('/').map(encodeURIComponent).join('/')}`;
- const response=await fetch(url,{method:'PUT',headers:{Authorization:`Bearer ${token}`,'Content-Type':types[key.split('.').pop()]||'application/octet-stream'},body:bytes});
- if(!response.ok)throw Error(`Upload failed for ${key}: ${response.status} ${await response.text()}`);
+ execFileSync(process.execPath,['node_modules/wrangler/bin/wrangler.js','r2','object','put',`${bucket}/${key}`,'--file',path,'--content-type',types[key.split('.').pop()]||'application/octet-stream','--remote','--force'],{stdio:'inherit'});
  done[key]=digest;await writeFile('.cache/uploads.json',JSON.stringify(done,null,2));
  console.log(`${key} (${(size/1048576).toFixed(1)} MiB)`);
 }

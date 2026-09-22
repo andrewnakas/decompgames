@@ -77,6 +77,13 @@ make_text = makefile.read_text()
 if make_text.count('-D_SDL_SOUND') != 1:
     raise SystemExit('Pinned GNUmakefile sound flag changed')
 make_text = make_text.replace('-D_SDL_SOUND ', '')
+wasm_lib_marker = 'LIBS    += -s ASYNCIFY \\\n\t--emrun -lm --shell-file shell.html'
+if make_text.count(wasm_lib_marker) != 1:
+    raise SystemExit('Pinned GNUmakefile WASM library block changed')
+make_text = make_text.replace(
+    wasm_lib_marker,
+    'LIBS    += -s ASYNCIFY \\\n\t-s EXPORTED_RUNTIME_METHODS=FS,IDBFS,addRunDependency,removeRunDependency \\\n\t-lidbfs.js -lm --shell-file shell.html',
+)
 makefile.write_text(make_text)
 
 # Replace upstream-facing shell branding and remove audio controls that cannot
@@ -96,6 +103,71 @@ for old, new in shell_replacements.items():
         raise SystemExit('Pinned shell branding or controls changed')
     shell_text = shell_text.replace(old, new)
 shell.write_text(shell_text)
+
+# Load the game's score and preference files from origin-local IndexedDB before
+# main starts. The score writer below flushes the mount after each update.
+shell_text = shell.read_text()
+module_marker = '    var Module = {\n'
+if shell_text.count(module_marker) != 1:
+    raise SystemExit('Pinned shell Module initializer changed before persistence patch')
+pre_run = """    var Module = {
+      preRun: [function() {
+        FS.mkdirTree('/home/web_user');
+        FS.mount(IDBFS, {}, '/home/web_user');
+        addRunDependency('open-digger-saves');
+        FS.syncfs(true, function(error) {
+          if (error) console.error('Unable to load local Digger saves:', error);
+          removeRunDependency('open-digger-saves');
+        });
+      }],
+      postRun: [function() {
+        var syncing = false;
+        Module.persistDiggerFiles = function() {
+          if (syncing) return;
+          syncing = true;
+          FS.syncfs(false, function(error) {
+            syncing = false;
+            if (error) console.error('Unable to save local Digger data:', error);
+          });
+        };
+        window.setInterval(Module.persistDiggerFiles, 3000);
+        document.addEventListener('visibilitychange', function() {
+          if (document.visibilityState === 'hidden') Module.persistDiggerFiles();
+        });
+      }],
+"""
+shell.write_text(shell_text.replace(module_marker, pre_run))
+
+scores_source = source / 'scores.c'
+scores_text = scores_source.read_text()
+writer_marker = 'static void\nwritescores(void)\n'
+if scores_text.count(writer_marker) != 1:
+    raise SystemExit('Pinned scores.c writer changed')
+persist_helper = """#if defined(__EMSCRIPTEN__)
+#include <emscripten/emscripten.h>
+static void
+persist_scores(void)
+{
+  EM_ASM({
+    if (Module.persistDiggerFiles) Module.persistDiggerFiles();
+  });
+}
+#else
+static void persist_scores(void) {}
+#endif
+
+static void
+writescores(void)
+"""
+scores_text = scores_text.replace(writer_marker, persist_helper)
+score_close_marker = 'fwrite(scorebuf,512,1,out);\n      fclose(out);\n'
+if scores_text.count(score_close_marker) != 2:
+    raise SystemExit('Pinned scores.c score write blocks changed')
+scores_text = scores_text.replace(
+    score_close_marker,
+    score_close_marker + '      persist_scores();\n',
+)
+scores_source.write_text(scores_text)
 generated_visuals = []
 generated_font = None
 if graphics_dir:
@@ -152,6 +224,13 @@ record = {
     'forcedArguments': ['/Q'],
     'quietModeCompiledDefault': True,
     'browserTapLatchPolls': 3,
+    'persistence': {
+        'backend': 'IDBFS',
+        'mount': '/home/web_user',
+        'files': ['DIGGER.SCO', 'DIGGER.INI'],
+        'scoreFlush': 'after successful score-file write',
+        'generalFlush': 'every 3 seconds and when the page becomes hidden',
+    },
     'sdlSoundFeatureDefined': False,
     'upstreamTuneTablesCompiled': False,
     'releaseReady': False,
@@ -162,7 +241,7 @@ record = {
     'blockers': [
         *([] if graphics_dir else ['Replace cgagrafx.c, vgagrafx.c, title_gz.c and icon.c']),
         *([] if generated_font else ['Replace or clear the alpha.c text/font data after a format audit']),
-        'Complete muted gameplay and persistence verification',
+        'Complete death/restart, persistence reload and website integration verification',
     ],
 }
 output.mkdir(parents=True, exist_ok=True)

@@ -1,0 +1,73 @@
+{
+  "id": "digger",
+  "engine": "digger",
+  "packageRevision": "e85cab1164f0-b7e87a0852",
+  "sourceRevision": "e85cab1164f0304b3e66f371a5997d83f7a0090a",
+  "repository": "https://github.com/sobomax/digger",
+  "toolchain": "emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 6.0.1 (25e4e8d6550d392ba9e0c2936bce7cf41ee47cc0)",
+  "recipe": "scripts/build-digger-browser.py",
+  "sourceArchive": "/sources/digger-e85cab1164f0-b7e87a0852.tar.gz",
+  "sourceArchiveSha256": "60661381ad0e3a31e039ef65c1e92bfd4c5ad5e8fef666d203f8d3bf4af76af3",
+  "sourceArchiveBytes": 676316,
+  "requirements": [
+    "WebAssembly",
+    "Keyboard"
+  ],
+  "files": [
+    {
+      "path": "digger.js",
+      "bytes": 381957,
+      "sha256": "1f13719a3803e6f771d0f83a5dbc886b4c703b029e2227127373ed2414275d98"
+    },
+    {
+      "path": "digger.wasm",
+      "bytes": 4885753,
+      "sha256": "2ba36234c08ca632483ff7613010a45a077c4a941585e7de2c9caa0cd604d394"
+    }
+  ],
+  "base": "/runtime/digger/e85cab1164f0-b7e87a0852/",
+  "script": "digger.js",
+  "saveVersion": "replacement-v1",
+  "saveRoots": [
+    "/home/web_user"
+  ],
+  "mountSave": true,
+  "assets": [],
+  "args": [
+    "/Q"
+  ],
+  "replacementData": {
+    "license": "CC0-1.0",
+    "levels": {
+      "bytes": 1778,
+      "sha256": "656907a1eae16f95dd5471fc08de0aaeec84d61f8f5c91e4e2642efec129f9bf"
+    },
+    "visualSources": [
+      {
+        "name": "cgagrafx.c",
+        "bytes": 66210,
+        "sha256": "d1f4c0b354ca6649561d8f91fa8792f262276d30c8514a8e9286d65afc1bf900"
+      },
+      {
+        "name": "vgagrafx.c",
+        "bytes": 859537,
+        "sha256": "b09cfcf39b9fafa968b84cd8e3d9e1aece93a7ef8602e552eb8e4ff3564595f5"
+      },
+      {
+        "name": "title_gz.c",
+        "bytes": 4913,
+        "sha256": "8312f5e3e9e183d1693ea99d68b062e030c3ea961ae25c6bf7457774da5b1a2a"
+      },
+      {
+        "name": "icon.c",
+        "bytes": 61510,
+        "sha256": "5e53e0dedf75ed5a63016bbd5abb3d6f4bffe62852d8298ce5654f08855c51ac"
+      }
+    ],
+    "fontSource": {
+      "name": "alpha.c",
+      "bytes": 127269,
+      "sha256": "8bebe6c24b2638f7227373e3b7d81a1556dbe79650185717f82f4fe774d43b80"
+    }
+  }
+}

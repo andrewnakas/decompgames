@@ -46,6 +46,55 @@
     "image": "/images/open-cadet.png"
   },
   {
+    "id": "digger",
+    "title": "Open Digger",
+    "aliases": [
+      "Digger Remastered",
+      "Digger Reloaded"
+    ],
+    "year": 1983,
+    "genre": "Arcade",
+    "kind": "Decompilation",
+    "mode": "instant",
+    "engine": "Digger Remastered",
+    "description": "Dig through eight new geometric mazes, collect every emerald, and avoid roaming enemies.",
+    "overview": "Open Digger pairs the documented Digger Remastered decompilation with eight independently designed levels and a complete CC0 visual set. The browser build contains no original maps, graphics, title, icon, font, or tune data. Its deliberately simple geometric artwork makes the replacement campaign visually distinct.",
+    "source": "https://github.com/sobomax/digger",
+    "engineLicense": "Mixed: Public Domain, Beer-Ware, BSD-2-Clause, and GPL-2.0; see individual source files",
+    "assetLicense": "CC0-1.0 replacement levels, graphics, font, title, and icon",
+    "assetRequirements": "No original game files needed.",
+    "controls": [
+      "Enter — start game",
+      "Arrow keys — move and dig",
+      "F1 — fire",
+      "Space — pause",
+      "F10 — exit game"
+    ],
+    "saveInstructions": "High scores and settings are stored in this browser. Use Export saves in the player toolbar before clearing browser data.",
+    "limitations": [
+      "Audio is intentionally absent from this replacement build.",
+      "The opening level and representative second-level play have been tested; a complete eight-level playthrough has not been verified."
+    ],
+    "inputs": [
+      "Keyboard"
+    ],
+    "downloadMB": 5.1,
+    "complete": true,
+    "color": "#ff334f",
+    "runtime": "digger",
+    "verification": {
+      "status": "gameplay-tested",
+      "date": "2026-09-22",
+      "browsers": [
+        "Headless Microsoft Edge on Windows",
+        "Chromium-based in-app browser on Windows"
+      ],
+      "scope": "Muted tests verified launch, short-tap directional input, emerald collection, scoring, completion of the replacement first level, transition into the second level, enemy movement, one death and restart, and IndexedDB persistence across reload. Audio is structurally disabled. A complete eight-level playthrough remains unverified.",
+      "playthrough": false
+    },
+    "image": "/images/digger.png"
+  },
+  {
     "id": "openttd",
     "title": "OpenTTD",
     "aliases": [
