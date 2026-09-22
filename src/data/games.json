@@ -1280,6 +1280,44 @@
     }
   },
   {
+    "id": "shortline",
+    "title": "ShortLine",
+    "aliases": [
+      "reSL"
+    ],
+    "year": 1992,
+    "genre": "Simulation",
+    "kind": "Decompilation",
+    "mode": "project",
+    "engine": "reSL",
+    "description": "Explore a fully restored rail-dispatch simulation reconstructed from the 1992 DOS executable.",
+    "overview": "reSL reconstructs ShortLine 1.1 in portable C++ and retains address-level provenance to the DOS executable in its original branch. Its upstream Emscripten target already establishes browser feasibility. The repository also identifies its bundled resource directory as original game data, so Decomp Games does not redistribute that build. An Open Junction replacement-data experiment is underway, but embedded visual tables still require a complete audit and replacement before it can become an instant-play entry.",
+    "source": "https://github.com/konovalov-aleks/reSL",
+    "engineLicense": "GPL-3.0",
+    "assetLicense": "Original upstream resources excluded; independent CC0 replacement prototype in progress",
+    "assetRequirements": "The upstream build includes original ShortLine resources. Decomp Games currently provides project research only and serves none of those files.",
+    "controls": [
+      "Upstream supports mouse and touch rail construction; browser mappings have not been verified by Decomp Games."
+    ],
+    "saveInstructions": "Follow upstream save instructions. No supported Decomp Games player or save namespace exists yet.",
+    "limitations": [
+      "Directory entry only; the private feasibility build embeds original data and is not distributed.",
+      "Independent external screens and icons exist as a prototype, but embedded fonts and gameplay glyphs remain under audit.",
+      "No Decomp Games browser launch, gameplay-loop, audio, or persistence claim."
+    ],
+    "inputs": [],
+    "downloadMB": null,
+    "complete": false,
+    "color": "#5ab4ac",
+    "verification": {
+      "status": "unverified",
+      "date": "2026-09-22",
+      "browsers": [],
+      "scope": "Primary source and license reviewed at revision 470cca330ee9abcf6173c843f4c89686c0c7e525. The upstream Emscripten target compiled privately; it was not browser-tested or published because it embeds original resources.",
+      "playthrough": false
+    }
+  },
+  {
     "kind": "Decompilation",
     "mode": "project",
     "saveInstructions": "No hosted player yet. Keep backups of the upstream port’s save files before switching versions.",

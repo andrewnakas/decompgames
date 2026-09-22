@@ -4,6 +4,10 @@
 
 User explicitly confirmed strict decomps with replacement assets. Track actual releases in `docs/five-playable-decomps.md`; current completion is 2/5 after Open Digger and Open Paths passed production verification. Do not count released-source games, current hosted titles, editions, or asset prototypes. Open Paths has an immutable runtime, exact-source archive, 14-file CC0 replacement package, null audio backend, completed first-level loop, fresh-start progress, and export/delete/import restoration. Its complete six-level playthrough remains unverified. Open Digger's full eight-level playthrough and high-score-entry flow also remain unverified and are not claimed.
 
+### Addition 3 candidate: reSL / Open Junction
+
+Pinned reSL revision `470cca330ee9abcf6173c843f4c89686c0c7e525` is a GPL-3.0 ShortLine decompilation with an upstream Emscripten target. Its private feasibility build completed, but the resulting WASM embeds original upstream resources and is not publishable. `scripts/generate-open-junction-assets.py` now generates the external screen, icon, and manual files under CC0 and verifies its planar encoding. The embedded C++ fonts, train, track, signal, entrance, and object glyphs remain the main replacement audit. See `docs/resl-replacement-integration.md`; do not deploy or count it yet.
+
 ## September 21 replacement-assets priority
 
 Asset authoring follow-up: original font generators and static tiles 0–7 are implemented with manifests and vector previews. A tested planar encoder creates the engine's DAT format. All 23 tests pass. Next: runtime palette, moving-sprite coordinates/animations, menu/panel artwork, six-level campaign handling, then muted visual/gameplay tests using only the replacement pack. The generated files remain local and unverified in-engine; no public promotion.
