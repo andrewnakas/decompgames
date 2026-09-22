@@ -2,7 +2,7 @@
 
 User confirmed September 21: strictly decompiled games with independent replacement assets. Released-source games, ordinary emulation, existing hosted games, asset prototypes, and alternate editions do not satisfy this milestone.
 
-**Completed additions: 1 / 5.** Open Digger passed the strict release gate and production verification on September 22, 2026.
+**Completed additions: 2 / 5.** Open Digger and Open Paths passed the strict release gate and production verification on September 22, 2026.
 
 Each counted addition needs documented decompilation provenance, an open-source engine license, a complete independently authored asset package, exact source/build/checksum records, deployment, and muted launch/input/representative gameplay/save verification. Full-game content availability and full-playthrough verification remain separate claims. Audio remains unverified.
 
@@ -10,7 +10,7 @@ Each counted addition needs documented decompilation provenance, an open-source 
 
 | Candidate | Evidence | Current decision |
 | --- | --- | --- |
-| Supaplex / OpenSupaplex | Pinned GPL decompilation builds to WASM; a replacement-only package now reaches a generated puzzle | First replacement-pack target. Muted tests now show profile persistence and single-rover horizontal movement using generated levels, fonts, tiles, screens, palettes and an experimental atlas. Hazards, exit/completion and save restoration remain. |
+| Supaplex / OpenSupaplex | Pinned GPL decompilation builds to WASM; the Open Paths package contains only independently generated CC0 data | **Released as Open Paths; addition 2/5.** Its six-level navigation campaign has a null audio backend. Muted local and production tests passed title/menu input, player creation, movement, first-level completion, fresh-start progress, backup export, deletion, import, and restoration. |
 | Prince of Persia / SDLPoP | https://github.com/NagyD/SDLPoP describes its DOS disassembly basis and GPL code | Eligible engine lead, not a ready addition. No complete independent graphics/levels/music pack established. Do not assume repository data shares the engine license. |
 | Digger Remastered | https://github.com/sobomax/digger and https://www.digger.org/faq.html document remaster/source rights; its upstream WASM target builds at the pinned revision | **Released as Open Digger; addition 1/5.** Eight CC0 layouts plus independent graphics, font, title, and icon compile in a no-audio WASM variant. Static-data audit, a full level loop, death/restart, storage reload, exact-source packaging, local integration, and production play all pass; see `docs/digger-replacement-integration.md`. |
 | SkiFree | https://github.com/yuv422/skifree_decomp reconstructs C code; https://github.com/jeff-1amstudios/skifree_sdl ports it | No clear engine open-source grant established in inspected material. Excluded from hosting pending evidence; replacement pictures alone would not resolve this. |
@@ -20,10 +20,10 @@ Each counted addition needs documented decompilation provenance, an open-source 
 
 This is a research queue, not five promised or verified releases. Continue searching smaller documented C/SDL decomps and recording license/data blockers. Do not invent an eligible fifth project to fill a table.
 
-## Current Supaplex artifact step
+## Open Paths release record
 
-`node scripts/generate-open-screens.mjs` generates new MENU/BACK/CONTROLS/GFX/TITLE/TITLE1/TITLE2/PANEL data and four palettes, using only our generated font. Menu labels align with the pinned engine's button regions. Output includes per-file checksums and vector previews. Screen file lengths match the loaders (32000 bytes for full screens; 3840 for panel; 256 for palettes), but rendering is not yet tested. Engine title palettes are hardcoded and need explicit replacement in a source patch.
+Open Paths uses OpenSupaplex revision `bad56a4e174e628643995284ea55d4c49af3137c` and immutable package `bad56a4e174e-026301f2dd`. The published corresponding-source archive includes the patched pinned source, generated browser patches, build record, replacement-data generators, planar codec, package manifest, and build instructions. The browser build uses the null audio backend and contains no upstream resource directory.
 
-The replacement-only package contains 14 explicitly allowlisted files. Muted browser testing reached the generated first puzzle and verified right/left movement without the earlier duplicate-rover trail. `MOVING.DAT` is 73,920 bytes with SHA-256 `5562a6f00c7dddf3d347379dea107aa7aca5f23c51e5ead5b41b8d84621aa3e4`. This is still a partial atlas: non-horizontal interactions, hazards, exit/completion, a complete puzzle and save restoration remain release blockers.
+The replacement-only package contains 14 explicitly allowlisted files: generated fonts, fixed and moving graphics, palettes, screens, panel, and six levels. The first level is an intentionally short deterministic release-gate puzzle; the remaining five are generated perfect mazes. Muted production testing completed level one and verified saved completed-level progress and a two-file export/delete/import restoration. The complete six-level playthrough remains unverified and is stated on the game page.
 
-Next: finish the Supaplex moving atlas, complete one puzzle, and verify completion and save restoration. Continue researching documented decomps with independent replacement packs for additions 3–5. No unsafe shortcut is implied by the five-game target.
+Next: research and build eligible additions 3–5. No unsafe shortcut is implied by the five-game target.

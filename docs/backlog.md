@@ -2,13 +2,13 @@
 
 ## Active milestone: five additional playable decomps
 
-User explicitly confirmed strict decomps with replacement assets. Track actual releases in `docs/five-playable-decomps.md`; current completion is 1/5 after Open Digger passed production verification. Do not count released-source games, current hosted titles, editions, or asset prototypes. Supaplex has a 14-file replacement-only package and muted launch/horizontal-movement evidence. Finish interaction sprites, exit/completion, a full puzzle, and save restoration before release. Open Digger's immutable runtime, exact-source archive, replacement-data checksums, local storage, complete first-level loop, death/restart, shared-player flow, and muted production launch are verified. Its full eight-level playthrough and high-score-entry flow remain unverified and are not claimed.
+User explicitly confirmed strict decomps with replacement assets. Track actual releases in `docs/five-playable-decomps.md`; current completion is 2/5 after Open Digger and Open Paths passed production verification. Do not count released-source games, current hosted titles, editions, or asset prototypes. Open Paths has an immutable runtime, exact-source archive, 14-file CC0 replacement package, null audio backend, completed first-level loop, fresh-start progress, and export/delete/import restoration. Its complete six-level playthrough remains unverified. Open Digger's full eight-level playthrough and high-score-entry flow also remain unverified and are not claimed.
 
 ## September 21 replacement-assets priority
 
 Asset authoring follow-up: original font generators and static tiles 0–7 are implemented with manifests and vector previews. A tested planar encoder creates the engine's DAT format. All 23 tests pass. Next: runtime palette, moving-sprite coordinates/animations, menu/panel artwork, six-level campaign handling, then muted visual/gameplay tests using only the replacement pack. The generated files remain local and unverified in-engine; no public promotion.
 
-The user now requests more playable decomps with fully independent replacement assets. Prioritize Open Cadet verification and a new OpenSupaplex replacement pack. `docs/replacement-assets.md` records the evidence and asset inventory. Six independently generated navigation-level prototypes pass static reachability checks; they have not been played in-engine and do not form a complete asset pack. Artwork, UI, fonts, sound policy, campaign handling, and gameplay testing remain. Preserve Zelda's experimental local-file adapter but pause further expansion there for this priority.
+The user now requests more playable decomps with fully independent replacement assets. Open Paths is released; prioritize finding and building eligible additions 3–5, including Open Cadet only if it represents a distinct new qualifying release rather than recounting the existing hosted title. Preserve Zelda's experimental local-file adapter but pause further expansion there for this priority.
 
 ## September 20 user priority change
 

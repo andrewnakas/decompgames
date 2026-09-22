@@ -111,14 +111,18 @@ video_patch = output / 'video-browser.c'
 video_patch.write_text(video_source)
 sources = sorted((repo / 'src').glob('*.c'))
 sources += [p for p in sorted((repo / 'src/sdl2').glob('*.c')) if p not in (keyboard, video)]
-sources += [p for p in sorted((repo / 'src/sdl_common').glob('*.c')) if p != system]
+sources += [p for p in sorted((repo / 'src/sdl_common').glob('*.c'))
+            if p != system and (not replacement_pack or p.name != 'audio.c')]
 sources += [repo / 'src/null/virtualKeyboard.c', repo / 'src/lib/ini/ini.c', patch_path, keyboard_patch, video_patch]
+if replacement_pack:
+    sources += [repo / 'src/null/audio.c']
 flags = ['-O2', '-DHAVE_SDL2', '-DFILE_FHS_XDG_DIRS', '-DFILE_DATA_PATH=/games/supaplex',
-         '-iquote', str(system.parent), '-sUSE_SDL=2', '-sUSE_SDL_MIXER=2',
-         '-sSDL2_MIXER_FORMATS=mod',
+         '-iquote', str(system.parent), '-sUSE_SDL=2',
          '-sASYNCIFY=1', '-sALLOW_MEMORY_GROWTH=1', '-sEXIT_RUNTIME=1',
          '-sFORCE_FILESYSTEM=1',
          '-sEXPORTED_RUNTIME_METHODS=FS,IDBFS,addRunDependency,removeRunDependency', '-lidbfs.js']
+if not replacement_pack:
+    flags += ['-sUSE_SDL_MIXER=2', '-sSDL2_MIXER_FORMATS=mod']
 command = ['emcc', *map(str, sources), *flags, '-o', str(output / 'supaplex.js')]
 subprocess.run(command, check=True)
 files = []
@@ -132,5 +136,6 @@ for name in record_paths:
     'sourceRevision': REVISION, 'toolchain': version, 'flags': flags,
     'assetsBundled': False, 'browserTested': False, 'files': files,
     'replacementPack': replacement_pack, 'campaignLevels': 6 if replacement_pack else 111,
+    'audioBackend': 'null' if replacement_pack else 'SDL2_mixer',
 }, indent=2) + '\n')
 print(json.dumps(files, indent=2))

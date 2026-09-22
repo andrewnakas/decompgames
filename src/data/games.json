@@ -1231,42 +1231,53 @@
     }
   },
   {
-    "kind": "Decompilation",
-    "mode": "project",
-    "saveInstructions": "No hosted player yet. Keep backups of the upstream port’s save files before switching versions.",
-    "inputs": [],
-    "downloadMB": null,
-    "complete": false,
-    "verification": {
-      "status": "unverified",
-      "date": null,
-      "browsers": [],
-      "scope": "Primary source and license reviewed September 20, 2026. No browser gameplay or save/reload verification.",
-      "playthrough": false
-    },
     "id": "supaplex",
-    "title": "Supaplex",
+    "title": "Open Paths",
     "aliases": [
+      "Supaplex",
       "OpenSupaplex"
     ],
-    "year": 1991,
+    "year": 2026,
     "genre": "Puzzle",
+    "kind": "Decompilation",
+    "mode": "instant",
     "engine": "OpenSupaplex",
-    "description": "Murphy’s circuit-board puzzles, rebuilt in C from the original game’s disassembly.",
-    "overview": "OpenSupaplex preserves the original puzzle rules while translating reverse-engineered assembly into portable C. The source retains references to the original instructions, making its lineage different from a new engine designed only to resemble Supaplex. Upstream includes a WebAssembly Makefile, but that recipe still needs a working browser event loop, persistent player progress, and a tested save adapter here. Additional level packs are separate content, not separate games in this catalog.",
+    "description": "Guide a geometric rover through six independently designed circuit mazes and reach each exit.",
+    "overview": "Open Paths pairs the decompilation-derived OpenSupaplex engine with a new six-level navigation campaign. Every distributed level, screen, tile, sprite, font, palette, and panel is independently generated and released under CC0. The campaign intentionally focuses on maze navigation and exits, without the original game’s collectibles, hazards, enemies, music, or sound effects.",
     "source": "https://github.com/sergiou87/open-supaplex",
     "engineLicense": "GPL-3.0-only (C implementation); MIT disassembly",
-    "assetLicense": "Original freeware assets; redistribution terms under review",
-    "assetRequirements": "Upstream includes original data and additional level packs. Their inclusion is not treated as blanket permission to host every asset; no game data is served by this entry.",
+    "assetLicense": "CC0-1.0 Open Paths replacement campaign",
+    "assetRequirements": "No original game files needed.",
     "controls": [
-      "Upstream documents directional movement and an action button; browser mappings are not yet tested."
+      "Enter — leave the title screen and confirm a player name",
+      "Mouse — choose menu actions",
+      "Arrow keys — move the rover",
+      "Escape — return to the menu"
     ],
+    "saveInstructions": "Player progress is stored locally in this browser. Use Export saves for a portable backup before clearing browser data; export/delete/import restoration passed the September 22 test.",
     "limitations": [
-      "Directory entry: the upstream WebAssembly recipe is under investigation, not a verified player.",
-      "Source-code licensing and original game-data permissions are separate.",
-      "Audio, progress persistence, gamepad support, and level completion remain unverified."
+      "Six navigation-and-exit puzzles; this campaign intentionally has no collectibles, hazards, enemies, music, or sound effects.",
+      "The first level and persistence flow are tested. A complete six-level playthrough has not been verified.",
+      "Mouse is currently required for menu buttons."
     ],
-    "color": "#f29350"
+    "inputs": [
+      "Keyboard",
+      "Mouse"
+    ],
+    "downloadMB": 1.4,
+    "complete": true,
+    "color": "#51c4d5",
+    "runtime": "supaplex",
+    "image": "/images/open-paths.png",
+    "verification": {
+      "status": "gameplay-tested",
+      "date": "2026-09-22",
+      "browsers": [
+        "Headless Microsoft Edge on Windows"
+      ],
+      "scope": "Muted local and production testing verified title/menu input, player creation, rover movement, completion of the two-step first replacement level, completed-level progress after a fresh engine start, a two-file backup export, namespace deletion, backup import, and restored progress. The build uses the null audio backend. A full six-level playthrough remains unverified.",
+      "playthrough": false
+    }
   },
   {
     "kind": "Decompilation",
