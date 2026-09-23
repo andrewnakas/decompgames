@@ -106,7 +106,7 @@ The first actual-player fixture [run 35870845347](https://github.com/andrewnakas
 1. The initial idle hang was caused by incompatible entrance spacing in the independent scenario and has been corrected. Confirm the demo fallback cannot reach original data. The silent audio backend is in place.
 2. Inspect the compiled fonts, signals, erase mask, rails, trains, and colors across dynamic gameplay. Audit remaining non-glyph source data before deciding the replacement build is redistributable.
 3. Rebuild from the pinned Emscripten revision and publish the exact replacement sources, generator, manifest, and checksums only after the asset audit passes.
-4. Run muted browser tests for train delivery, a complete success/failure gameplay loop, and save/export/delete/import restoration; loading, menu input, rail construction, train dispatch, and movement already passed the narrower private smoke.
+4. Run muted browser tests for a level transition or game-over path and the shared player's save/export/delete/import restoration; one train delivery, loading, menu input, rail construction, train dispatch, and movement already passed narrower private smokes. The pinned [`main_loop.cpp`](https://github.com/konovalov-aleks/reSL/blob/470cca330ee9abcf6173c843f4c89686c0c7e525/src/game/main_loop.cpp) advances the level at year 2000, then resets the year to 1800 and increments the level; this is the concrete completion branch to exercise. Its repeatable levels are not a finite campaign, so avoid promising a full-campaign playthrough.
 5. Do not count or deploy Open Junction until those checks pass. A successful compile or title screen is insufficient.
 
 ## Negative candidate findings from this pass

@@ -84,18 +84,29 @@ try {
       if (event.data?.type) window.__ojPlayerMessages.push(event.data.type);
     });
   });
-  const downloadPromise = page.waitForEvent('download', { timeout: 8_000 });
-  await page.locator('#export-save').click();
-  const download = await downloadPromise.catch(async error => {
+  console.log('Shared-player export control before click:', await page.evaluate(() => ({
+    status: document.querySelector('#player-status')?.textContent,
+    disabled: document.querySelector('#export-save')?.disabled,
+    visible: Boolean(document.querySelector('#export-save')?.getBoundingClientRect().width),
+  })));
+  const downloadPromise = page.waitForEvent('download', { timeout: 8_000 })
+    .then(download => ({ download }), error => ({ error }));
+  let clickError;
+  try { await page.locator('#export-save').click({ timeout: 5_000 }); }
+  catch (error) { clickError = error.message; }
+  const result = await downloadPromise;
+  if (result.error || clickError) {
     const diagnostic = await page.evaluate(() => ({
       status: document.querySelector('#player-status')?.textContent,
       buttonDisabled: document.querySelector('#export-save')?.disabled,
       messages: window.__ojPlayerMessages,
     }));
     throw new Error(`Shared player export did not download: ${JSON.stringify({
-      diagnostic, errors, remoteRequests, engineLogs: engineLogs.slice(-6), original: error.message,
+      diagnostic, errors, remoteRequests, engineLogs: engineLogs.slice(-6),
+      clickError, downloadError: result.error?.message,
     })}`);
-  });
+  }
+  const download = result.download;
   const backup = JSON.parse(await readFile(await download.path(), 'utf8'));
   if (backup.game !== 'shortline' || backup.version !== 'open-junction-private-1' ||
       !backup.files.some(file => saved.some(item => item.path === file.path && item.size === file.data.length)))
