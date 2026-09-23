@@ -105,6 +105,17 @@ if (not isinstance(entrance_choices, list) or len(entrance_choices) != 6
             for slot, value in enumerate(entrance_choices)
         )):
     raise SystemExit("Independent entrance schedule is invalid")
+starter_route = scenario_manifest.get("starterRoute")
+if (not isinstance(starter_route, list) or len(starter_route) != 3
+        or any(not isinstance(rail, dict) or set(rail) != {"x", "y", "type"}
+               or any(not isinstance(rail[key], int) for key in ("x", "y", "type"))
+               or not (1 <= rail["x"] <= 9 and 1 <= rail["y"] <= 9
+                       and abs(rail["x"] - rail["y"]) <= 3
+                       and 4 <= rail["x"] + rail["y"] <= 16
+                       and 0 <= rail["type"] < 6)
+               for rail in starter_route)
+        or len({(rail["x"], rail["y"], rail["type"]) for rail in starter_route}) != 3):
+    raise SystemExit("Independent starter route is invalid")
 
 source = output / "replacement-source"
 def ignore_original_resources(directory: str, names: list[str]) -> set[str]:
@@ -136,6 +147,28 @@ selection_cpp = (
 init_text, count = re.subn(selection_pattern, selection_cpp, init_text, count=1, flags=re.S)
 if count != 1:
     raise SystemExit("Pinned entrance selection changed")
+route_marker = "    generateEntrances();\n    generateForest();\n"
+if init_text.count(route_marker) != 1:
+    raise SystemExit("Pinned starter-route insertion changed")
+route_cpp = "".join(
+    f"        {{0, {rail['x']}, {rail['y']}, {rail['type']}, 0}},\n"
+    for rail in starter_route
+)
+init_text = init_text.replace(
+    route_marker,
+    route_marker
+    + "    // Independent Open Junction starter track between the first stations.\n"
+    + "    static constexpr RailInfo starterRoute[] = {\n"
+    + route_cpp
+    + "    };\n"
+    + "    for (const RailInfo& ri : starterRoute) {\n"
+    + "        destroyStaticObjectsForRailConstruction(g_rails[ri.tileX][ri.tileY][ri.railType]);\n"
+    + "        connectRail(ri);\n"
+    + "        g_railRoad[g_railRoadCount++] = ri;\n"
+    + "        updateSemaphores(ri);\n"
+    + "    }\n",
+    1,
+)
 init.write_text(init_text)
 
 mouse = source / "src/system/driver/sdl/mouse.cpp"
@@ -467,6 +500,7 @@ record = {
     "replacementCursor": cursor_record,
     "replacementScenario": scenario_manifest["files"],
     "replacementEntranceSchedule": entrance_choices,
+    "replacementStarterRoute": starter_route,
     "replacementPaletteRGB": palette,
     "originalExternalResourcesBundled": False,
     "listedEmbeddedGlyphTablesReplaced": True,

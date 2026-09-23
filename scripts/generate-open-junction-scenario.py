@@ -64,6 +64,17 @@ def generate(output: Path) -> None:
     assert len(set(initial_entrances)) == 6
     assert all((index < 23) == (slot % 2 == 0) for slot, index in enumerate(initial_entrances))
     assert all(rail_sites[index][2] == (0 if index < 23 else 1) for index in initial_entrances)
+    # A small original starter route links the first two stations. Later
+    # stations still require the player to extend and manage the network.
+    starter_route = [
+        {"x": 3, "y": 1, "type": 5},
+        {"x": 2, "y": 2, "type": 3},
+        {"x": 1, "y": 3, "type": 5},
+    ]
+    assert len({(r["x"], r["y"], r["type"]) for r in starter_route}) == 3
+    assert all(1 <= r["x"] <= 9 and 1 <= r["y"] <= 9 and
+               abs(r["x"] - r["y"]) <= 3 and 4 <= r["x"] + r["y"] <= 16 and
+               0 <= r["type"] < 6 for r in starter_route)
     rails = [f"    {{0, {x}, {y}, {kind}, 0}}" for x, y, kind in rail_sites]
     files["entrance_rails.cpp"] = cpp(
         "entrance_rails.h",
@@ -132,6 +143,7 @@ def generate(output: Path) -> None:
     manifest = {
         "license": "CC0-1.0", "originalAssetsRead": False,
         "initialEntranceIndices": initial_entrances,
+        "starterRoute": starter_route,
         "files": [],
     }
     for name, source in sorted(files.items()):
