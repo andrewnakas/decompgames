@@ -154,6 +154,16 @@ mouse.write_text(mouse_text)
 
 video = source / "src/system/driver/sdl/video.cpp"
 video_text = video.read_text()
+clear_color = "SDL_SetRenderDrawColor(m_renderer, 0x55, 0xAA, 0x00, 0xFF);"
+if video_text.count(clear_color) != 1:
+    raise SystemExit("Pinned SDL board-clear color changed")
+video_text = video_text.replace(
+    clear_color,
+    "SDL_SetRenderDrawColor(m_renderer, "
+    + ", ".join(f"0x{value:02X}" for value in palette[0])
+    + ", 0xFF);",
+    1,
+)
 runtime_colors = [
     (0 if index == 0 else 255) << 24 | red << 16 | green << 8 | blue
     for index, (red, green, blue) in enumerate(palette)
@@ -169,6 +179,17 @@ video_text, count = re.subn(
 if count != 1:
     raise SystemExit("Pinned runtime palette changed")
 video.write_text(video_text)
+
+status_bar = source / "src/ui/components/status_bar.cpp"
+status_text = status_bar.read_text()
+original_footer = '" * SHORTLINE * Game by Andrei Snegov * (c) DOKA 1992 Moscow * Version 1.1 *"'
+if status_text.count(original_footer) != 1:
+    raise SystemExit("Pinned footer credit changed")
+status_bar.write_text(status_text.replace(
+    original_footer,
+    '"OPEN JUNCTION * RESL ENGINE * INDEPENDENT ART * LICENSES IN ABOUT"',
+    1,
+))
 
 cmake = source / "CMakeLists.txt"
 cmake_text = cmake.read_text()
@@ -387,7 +408,7 @@ files = []
 for name in ("resl.js", "resl.wasm"):
     data = (build / name).read_bytes()
     files.append({"path": name, "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
-for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/game/melody.cpp", "src/game/init.cpp", "src/game/main_loop.cpp", "src/game/mouse/mouse.cpp", "src/game/road_construction.cpp", "src/ui/components/dialog.cpp", "src/ui/main_menu.cpp", "src/ui/loading_screen.cpp"):
+for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/game/melody.cpp", "src/game/init.cpp", "src/game/main_loop.cpp", "src/game/mouse/mouse.cpp", "src/game/road_construction.cpp", "src/ui/components/dialog.cpp", "src/ui/components/status_bar.cpp", "src/ui/main_menu.cpp", "src/ui/loading_screen.cpp"):
     data = (source / relative).read_bytes()
     files.append({"path": f"replacement-source/{relative}", "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
 
