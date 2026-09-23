@@ -349,7 +349,37 @@ def generate(output: Path) -> None:
         + ",\n".join(train_rows) + "\n};",
     )
 
-    manifest = {"license": "CC0-1.0", "originalAssetsRead": False, "files": []}
+    # SDL's cursor decoder reads the two bytes in each row in reverse order.
+    # Draw a simple outlined pointer independently and serialize for patching
+    # the non-resource source table in src/system/driver/sdl/mouse.cpp.
+    def cursor_plane(pixel) -> list[int]:
+        packed = mask(16, 16, pixel)
+        return [value for row in range(16) for value in (packed[row * 2 + 1], packed[row * 2])]
+
+    cursor = {
+        "black": cursor_plane(lambda x, y: (
+            (x == 1 and 1 <= y <= 13)
+            or (y == 1 and 1 <= x <= 3)
+            or (2 <= y <= 12 and x == min(12, 2 + y // 2))
+            or (y == 13 and 1 <= x <= 9)
+            or (x in (5, 6) and 11 <= y <= 15)
+        )),
+        "white": cursor_plane(lambda x, y: (
+            2 <= y <= 11 and 2 <= x < min(12, 2 + y // 2)
+        )),
+    }
+    cursor_data = (json.dumps(cursor, indent=2) + "\n").encode("utf-8")
+    (output / "cursor.json").write_bytes(cursor_data)
+
+    manifest = {
+        "license": "CC0-1.0",
+        "originalAssetsRead": False,
+        "files": [],
+        "cursor": {
+            "name": "cursor.json", "bytes": len(cursor_data),
+            "sha256": hashlib.sha256(cursor_data).hexdigest(),
+        },
+    }
     for name, source in sorted(files.items()):
         data = source.encode("utf-8")
         (output / name).write_bytes(data)

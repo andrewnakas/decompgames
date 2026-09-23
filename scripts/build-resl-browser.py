@@ -63,6 +63,18 @@ for item in glyph_manifest["files"]:
     data = (generated_glyphs / item["name"]).read_bytes()
     if len(data) != item["bytes"] or hashlib.sha256(data).hexdigest() != item["sha256"]:
         raise SystemExit(f"Generated glyph checksum mismatch: {item['name']}")
+cursor_record = glyph_manifest["cursor"]
+cursor_data = (generated_glyphs / cursor_record["name"]).read_bytes()
+if (cursor_record["name"] != "cursor.json"
+        or len(cursor_data) != cursor_record["bytes"]
+        or hashlib.sha256(cursor_data).hexdigest() != cursor_record["sha256"]):
+    raise SystemExit("Generated cursor checksum mismatch")
+cursor = json.loads(cursor_data)
+if set(cursor) != {"black", "white"} or any(
+    len(cursor[layer]) != 32 or any(not isinstance(value, int) or not 0 <= value <= 255 for value in cursor[layer])
+    for layer in ("black", "white")
+):
+    raise SystemExit("Invalid generated cursor dimensions")
 
 source = output / "replacement-source"
 def ignore_original_resources(directory: str, names: list[str]) -> set[str]:
@@ -79,6 +91,20 @@ for item in asset_manifest["files"]:
     shutil.copyfile(generated / item["name"], asset_dir / item["name"])
 for item in glyph_manifest["files"]:
     shutil.copyfile(generated_glyphs / item["name"], source / "src/game/resources" / item["name"])
+
+mouse = source / "src/system/driver/sdl/mouse.cpp"
+mouse_text = mouse.read_text()
+for number, layer in ((1, "black"), (2, "white")):
+    pattern = rf"const std::uint8_t g_cursorGlyph{number}\[\] = \{{.*?\}};"
+    new_array = (
+        f"const std::uint8_t g_cursorGlyph{number}[] = {{\n        "
+        + ", ".join(f"0x{value:02X}" for value in cursor[layer])
+        + "\n    };"
+    )
+    mouse_text, count = re.subn(pattern, new_array, mouse_text, count=1, flags=re.S)
+    if count != 1:
+        raise SystemExit(f"Pinned SDL cursor table {number} changed")
+mouse.write_text(mouse_text)
 
 cmake = source / "CMakeLists.txt"
 cmake_text = cmake.read_text()
@@ -129,7 +155,7 @@ files = []
 for name in ("resl.js", "resl.wasm"):
     data = (build / name).read_bytes()
     files.append({"path": name, "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
-for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp"):
+for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp"):
     data = (source / relative).read_bytes()
     files.append({"path": f"replacement-source/{relative}", "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
 
@@ -152,6 +178,7 @@ record = {
     "files": files,
     "replacementAssets": asset_manifest["files"],
     "replacementGlyphs": glyph_manifest["files"],
+    "replacementCursor": cursor_record,
     "originalExternalResourcesBundled": False,
     "listedEmbeddedGlyphTablesReplaced": True,
     "embeddedVisualsReplaced": False,
@@ -162,8 +189,8 @@ record = {
     "browserTested": False,
     "releaseReady": False,
     "blockers": [
-        "Compile and inspect every generated visual table in a private browser build",
-        "Audit non-glyph source files and remaining gameplay tables separately from presentation data",
+        "Inspect generated artwork and alignment in a private muted browser build",
+        "Audit remaining non-glyph source files and gameplay tables separately from presentation data",
         "Confirm menu, rail and train legibility and placement through muted gameplay tests",
         "Complete a gameplay loop and persistence round trip before release",
     ],

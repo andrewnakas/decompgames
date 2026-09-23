@@ -41,6 +41,7 @@ jobs:
           assert record['originalExternalResourcesBundled'] is False
           assert record['audioBackend'] == 'null'
           assert len(record['replacementGlyphs']) == 10
+          assert record['replacementCursor']['name'] == 'cursor.json'
           assert record['unreplacedEmbeddedVisuals'] == []
           assert record['browserTested'] is False
           assert record['releaseReady'] is False
