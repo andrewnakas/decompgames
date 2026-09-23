@@ -313,6 +313,25 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
         )
     loop.write_text(loop_text[:task_start] + startup + loop_text[task_end:])
     loop_text = loop.read_text()
+    game_start = loop_text.find("        mainMenu();\n", task_start)
+    game_end = loop_text.find("            bool needRestartGame = false;\n", game_start)
+    if game_start < 0 or game_end < 0:
+        raise SystemExit("Pinned gameplay-stage scope changed")
+    game_segment = loop_text[game_start:game_end]
+    for marker, message in (
+        ("        menuButton.enable();\n", "menu enabled"),
+        ("            resetTasks();\n", "tasks reset"),
+        ("            mouse::g_state.mode->drawFn();\n", "mode drawn"),
+        ("            enableTimer();\n", "timer enabled"),
+    ):
+        if game_segment.count(marker) != 1:
+            raise SystemExit(f"Pinned gameplay stage changed: {message}")
+        game_segment = game_segment.replace(
+            marker,
+            marker + f'            std::fprintf(stderr, "OJ stage: {message}\\n");\n',
+            1,
+        )
+    loop_text = loop_text[:game_start] + game_segment + loop_text[game_end:]
     tick_marker = "                co_await sleep(50);\n"
     if loop_text.count(tick_marker) != 1:
         raise SystemExit("Pinned gameplay tick marker changed")
@@ -320,7 +339,7 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
         tick_marker,
         tick_marker
         + '                static int ojGameTicks = 0;\n'
-        + '                if ((++ojGameTicks % 20) == 0)\n'
+        + '                if (++ojGameTicks == 1 || (ojGameTicks % 10) == 0)\n'
         + '                    std::fprintf(stderr, "OJ game tick %d rails %u year %d entrances %d\\n",\n'
         + '                        ojGameTicks, g_railRoadCount,\n'
         + '                        g_headers[static_cast<int>(HeaderFieldId::Year)].value,\n'
