@@ -107,7 +107,7 @@ jobs:
           catalog.write_text(json.dumps(games))
           PY
           pnpm build
-          timeout 80s node scripts/test-open-junction-player-private.mjs
+          timeout 150s node scripts/test-open-junction-player-private.mjs
       - name: Retain replacement-only screenshot for visual audit
         if: always()
         uses: actions/upload-artifact@v4

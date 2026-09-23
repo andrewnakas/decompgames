@@ -97,6 +97,8 @@ The first actual-player fixture [run 35870845347](https://github.com/andrewnakas
 
 [Run 35871381411](https://github.com/andrewnakas/decompgames/actions/runs/35871381411) waited for the menu and observed Go reach the actual player's gameplay loop with sound still off. Its final assertion incorrectly required a fixed 640×480 canvas; the SDL player resized its drawing buffer to the preview's 1100×900 viewport. The next test accepts a responsive canvas and captures a temporary screenshot for aspect and legibility review. That earlier test did not finish all shell checks, so it is not a release pass.
 
+[Run 35871972101](https://github.com/andrewnakas/decompgames/actions/runs/35871972101) passed the real player-shell launch in an ephemeral preview. The shared iframe downloaded the private replacement build, kept Sound: off, waited for the menu input loop, accepted Go, and entered the gameplay loop. It reported a responsive 1100×900 canvas, no page errors, and no off-origin requests. The temporary screenshot was visually inspected: the blue board, stations, starter track, sparse trees, and Open Junction credit are visible; the small rail-control counters and bottom credit are hard to read at that size. This is a launch and visual spot check, not proof of save controls or complete play. The next private run will exercise the parent page's export, delete, and import controls against the engine's IDBFS volume.
+
 ## Remaining release gate
 
 1. The initial idle hang was caused by incompatible entrance spacing in the independent scenario and has been corrected. Confirm the demo fallback cannot reach original data. The silent audio backend is in place.

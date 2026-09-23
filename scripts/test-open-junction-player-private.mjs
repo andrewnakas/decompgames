@@ -1,7 +1,7 @@
 // CI-only exercise of the real Decomp Games player against an ephemeral,
 // replacement-only Open Junction build. The fixture is never deployed.
 import { spawn } from 'node:child_process';
-import { writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { setTimeout as delay } from 'node:timers/promises';
 import { chromium } from '@playwright/test';
 
@@ -63,9 +63,61 @@ try {
   if (process.env.OPEN_JUNCTION_PLAYER_SCREENSHOT)
     await writeFile(process.env.OPEN_JUNCTION_PLAYER_SCREENSHOT,
       await frame.locator('canvas').screenshot({ timeout: 5_000 }));
+  // Exercise the user-facing backup controls across the parent/iframe boundary.
+  await page.keyboard.press('p');
+  await delay(1_000);
+  await page.keyboard.press('s');
+  const saveFiles = () => frame.evaluate(() => window.Module.FS.readdir('/persistent')
+    .filter(name => /^[0-9]{3}[a-z]{2}[0-9]{3}\.[0-9]{2}_$/.test(name))
+    .map(name => ({ path: `/persistent/${name}`, size: window.Module.FS.stat(`/persistent/${name}`).size })));
+  let saved = [];
+  for (let attempt = 0; attempt < 10; ++attempt) {
+    saved = await saveFiles();
+    if (saved.some(file => file.size > 0)) break;
+    await delay(1_000);
+  }
+  if (!saved.some(file => file.size > 0))
+    throw new Error('Shared player Save did not create a nonempty local file');
+  const downloadPromise = page.waitForEvent('download');
+  await page.locator('#export-save').click();
+  const download = await downloadPromise;
+  const backup = JSON.parse(await readFile(await download.path(), 'utf8'));
+  if (backup.game !== 'shortline' || backup.version !== 'open-junction-private-1' ||
+      !backup.files.some(file => saved.some(item => item.path === file.path && item.size === file.data.length)))
+    throw new Error('Shared player exported an incomplete or mismatched save backup');
+  page.once('dialog', dialog => dialog.accept());
+  await page.locator('#delete-save').click();
+  await page.locator('#start-game').waitFor({ state: 'visible', timeout: 15_000 });
+  await page.locator('#start-game').click();
+  await page.waitForFunction(() =>
+    document.querySelector('#player-status')?.textContent?.includes('Engine running'),
+  null, { timeout: 35_000 });
+  const emptyFrame = page.frame({ url: /\/engine\/\?game=shortline/ });
+  if (!emptyFrame || (await emptyFrame.evaluate(() => window.Module.FS.readdir('/persistent')))
+    .some(name => /^[0-9]{3}[a-z]{2}[0-9]{3}\.[0-9]{2}_$/.test(name)))
+    throw new Error('Shared player did not delete local saved data');
+  page.once('dialog', dialog => dialog.accept());
+  await page.locator('#import-save').setInputFiles({
+    name: 'decompgames-shortline-saves.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify(backup)),
+  });
+  await page.locator('#start-game').waitFor({ state: 'visible', timeout: 15_000 });
+  await page.locator('#start-game').click();
+  await page.waitForFunction(() =>
+    document.querySelector('#player-status')?.textContent?.includes('Engine running'),
+  null, { timeout: 35_000 });
+  const restoredFrame = page.frame({ url: /\/engine\/\?game=shortline/ });
+  const restored = await restoredFrame?.evaluate(() => window.Module.FS.readdir('/persistent')
+    .filter(name => /^[0-9]{3}[a-z]{2}[0-9]{3}\.[0-9]{2}_$/.test(name))
+    .map(name => ({ path: `/persistent/${name}`, size: window.Module.FS.stat(`/persistent/${name}`).size })));
+  if (!restored?.some(file => saved.some(item => item.path === file.path && item.size === file.size)))
+    throw new Error('Shared player did not restore the imported backup');
   if (errors.length || remoteRequests.length)
     throw new Error(`Private shared-player errors: ${JSON.stringify({ errors, remoteRequests })}`);
-  console.log('Private shared-player launch passed with sound off and no remote requests.');
+  if (await page.locator('#toggle-sound').textContent() !== 'Sound: off')
+    throw new Error('Private shared player enabled audible output during save round trip');
+  console.log('Private shared-player launch and backup round trip passed with sound off and no remote requests.');
 } finally {
   await browser?.close();
   server.kill('SIGTERM');
