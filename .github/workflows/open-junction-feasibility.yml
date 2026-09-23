@@ -52,3 +52,15 @@ jobs:
           for item in record['files'][:2]:
               print(item['path'], item['bytes'], item['sha256'])
           PY
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - name: Start privately in muted Chromium
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm exec playwright install chromium --with-deps
+          node scripts/test-open-junction-private.mjs /tmp/open-junction-build/build

@@ -55,6 +55,8 @@ The new rail sprites use a 192×43 canvas. The pinned `g_chunkBoundingBoxes` ran
 
 See [the provisional source-data audit](resl-source-data-audit.md) for every identified table, its likely role, and the remaining review work.
 
+The manual CI workflow now also includes a **private browser smoke test** with the null audio driver and Chromium's mute flag. It checks runtime initialization, canvas size, page errors, and off-origin requests, then records before/after Enter screenshot hashes without uploading images. Even if it passes, those observations establish only browser startup and input delivery; they cannot certify menu progression, gameplay, persistence, or redistribution readiness.
+
 ## Remaining release gate
 
 1. Confirm demo fallback cannot reach any original-data path. The private build recipe and silent audio backend are in place.
