@@ -107,6 +107,8 @@ The first actual-player fixture [run 35870845347](https://github.com/andrewnakas
 
 [Run 35875177871](https://github.com/andrewnakas/decompgames/actions/runs/35875177871) resolved the misleading overlap diagnosis: the engine had requested browser fullscreen for `#game-frame`. The browser correctly displayed it fixed across the entire 1100×900 viewport, covering the player tools until fullscreen is exited. The static layout rule was not responsible and has been reverted. The private test now sends Escape to leave fullscreen before using the parent page's Export control, matching what a player would have to do. Export/delete/import still require a passing test; no private binary was published.
 
+[Run 35875740511](https://github.com/andrewnakas/decompgames/actions/runs/35875740511) showed that sending Escape to the page did not exit engine-requested iframe fullscreen in headless Chromium. Source inspection found the pinned engine defaults to fullscreen in `src/main.cpp` and already accepts `--windowed`. The ephemeral site manifest now passes that existing argument, so the player should start within its stage while the site's own Fullscreen button remains available. The next private run must verify the geometry and finish backup controls; this is not yet a release.
+
 ## Remaining release gate
 
 1. The initial idle hang was caused by incompatible entrance spacing in the independent scenario and has been corrected. Confirm the demo fallback cannot reach original data. The silent audio backend is in place.

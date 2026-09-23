@@ -106,12 +106,8 @@ try {
   });
   let layout = await readLayout();
   console.log('Shared-player layout after Save:', layout);
-  if (layout.fullscreen === 'game-frame') {
-    await page.keyboard.press('Escape');
-    await page.waitForFunction(() => !document.fullscreenElement, null, { timeout: 5_000 });
-    layout = await readLayout();
-    console.log('Shared-player layout after leaving fullscreen:', layout);
-  }
+  if (layout.fullscreen)
+    throw new Error(`Open Junction unexpectedly entered fullscreen: ${JSON.stringify(layout)}`);
   if (process.env.OPEN_JUNCTION_PLAYER_SCREENSHOT)
     await writeFile(process.env.OPEN_JUNCTION_PLAYER_SCREENSHOT.replace('.png', '-page.png'),
       await page.screenshot({ fullPage: true, timeout: 5_000 }));

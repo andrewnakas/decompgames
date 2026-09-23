@@ -94,7 +94,7 @@ jobs:
               'base': '/runtime/shortline/private/', 'script': 'resl.js',
               'saveVersion': 'open-junction-private-1',
               'saveRoots': ['/persistent'], 'mountSave': True,
-              'assets': [], 'args': [], 'audioBackend': 'null',
+              'assets': [], 'args': ['--windowed'], 'audioBackend': 'null',
           }
           Path('public/manifests/shortline.json').write_text(json.dumps(manifest))
           catalog = Path('src/data/games.json')
