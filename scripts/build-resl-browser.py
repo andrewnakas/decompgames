@@ -28,7 +28,7 @@ REPLACEMENT_GLYPHS = {
     "train_glyph.cpp",
 }
 RETAINED_ENGINE_GEOMETRY_TABLES = {
-    "carriage_bias.cpp", "movement_paths.cpp",
+    "movement_paths.cpp",
     "rail_connection_bias.cpp", "rail_connection_rule.cpp",
     "rail_type_meta.cpp", "semaphore_glyph_bias.cpp",
 }
@@ -92,7 +92,7 @@ if set(cursor) != {"black", "white"} or any(
 scenario_manifest = json.loads((generated_scenario / "manifest.json").read_text())
 expected_scenario = {
     "allowed_cursor_rail_types.cpp", "entrance_rails.cpp", "entrance.cpp",
-    "chunk_bounding_boxes.cpp", "train_specification.cpp",
+    "chunk_bounding_boxes.cpp", "train_specification.cpp", "carriage_bias.cpp",
 }
 source_tables = {path.name for path in (checkout / "src/game/resources").glob("*.cpp")}
 if source_tables != REPLACEMENT_GLYPHS | expected_scenario | RETAINED_ENGINE_GEOMETRY_TABLES:

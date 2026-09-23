@@ -54,7 +54,7 @@ jobs:
           assert record['replacementForest'] == {'maximumTrees': 32, 'minimumSpacingPixels': 36}
           assert len(record['replacementPaletteRGB']) == 16
           assert record['unreplacedEmbeddedVisuals'] == []
-          assert len(record['retainedEngineGeometryTables']) == 6
+          assert len(record['retainedEngineGeometryTables']) == 5
           assert record['browserTested'] is False
           assert record['releaseReady'] is False
           assert record['privateTraceEnabled'] is True

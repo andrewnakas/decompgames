@@ -140,6 +140,17 @@ def generate(output: Path) -> None:
         "#include <game/train.h>\n",
     )
 
+    # Every replacement carriage uses the same 16-pixel high side-view art,
+    # regardless of rail angle. Its wheels end on row 15, so a one-pixel
+    # baseline offset seats the wheels at the engine's path coordinate.
+    carriage_rows = ["    {1, 1, 1, 1, 1}" for _ in range(15)]
+    files["carriage_bias.cpp"] = cpp(
+        "carriage_bias.h",
+        "const std::int8_t g_carriageYBiases[15][5] = {\n"
+        + ",\n".join(carriage_rows) + "\n};",
+        "#include <cstdint>\n",
+    )
+
     manifest = {
         "license": "CC0-1.0", "originalAssetsRead": False,
         "initialEntranceIndices": initial_entrances,

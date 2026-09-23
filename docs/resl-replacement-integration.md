@@ -133,6 +133,8 @@ The independent glyph generator now draws numerals at 16-pixel width for the hea
 
 [Run 35927618949](https://github.com/andrewnakas/decompgames/actions/runs/35927618949) passed a trace-only insolvency test after the level transition. The engine entered its game-over branch with generated `GAMEOVER.7` present; it also repeated the train delivery, save/backup checks, and source-package inventory in muted Chromium. This establishes the loss branch, not an organic defeat or a complete campaign. The trace hook is excluded from distributable builds.
 
+The private scenario generator now replaces the recovered `carriage_bias.cpp` sprite offsets with a uniform wheel baseline derived from its new 16-pixel vehicle art. The resource guard expects six generated scenario/alignment tables and five retained geometry tables. A compiled gameplay and visual run is required before accepting the alignment; the recovered semaphore-placement offsets remain under review.
+
 1. The initial idle hang was caused by incompatible entrance spacing in the independent scenario and has been corrected. Confirm the demo fallback cannot reach original data. The silent audio backend is in place.
 2. Inspect the compiled fonts, signals, erase mask, rails, trains, and colors across dynamic gameplay. Audit remaining non-glyph source data before deciding the replacement build is redistributable.
 3. Rebuild from the pinned Emscripten revision and publish the exact replacement sources, generator, manifest, and checksums only after the asset audit passes.
