@@ -169,7 +169,7 @@ init_text = init_text.replace(
     + "    }\n",
     1,
 )
-forest_pattern = r"static void generateForest\(\)\n\{.*?\n\}\n\n/\* 16a6:0973 \*/"
+forest_pattern = r"static void generateForest\(\)\n\{.*?\n\}\n\n/\* 16a6:0963 \*/"
 forest_cpp = """static void generateForest()
 {
     // Open Junction's sparse scenery layout is independent of ShortLine's
@@ -211,7 +211,7 @@ forest_cpp = """static void generateForest()
                compareStaticObjByY);
 }
 
-/* 16a6:0973 */"""
+/* 16a6:0963 */"""
 init_text, count = re.subn(forest_pattern, forest_cpp, init_text, count=1, flags=re.S)
 if count != 1:
     raise SystemExit("Pinned forest generator changed")

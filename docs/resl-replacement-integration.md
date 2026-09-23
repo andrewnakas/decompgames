@@ -87,6 +87,8 @@ Visual review now uses a private 640×480 Chromium viewport and a one-day screen
 
 Visual review of the temporary 640×480 screenshots showed that the original random-walk forest still produced a dense, nearly black cluster despite independent tree glyphs. The next private build replaces that layout with a sparse 32-tree distribution and a 36-pixel minimum spacing. This is a presentation change awaiting a new screenshot and gameplay regression test; the rail route and train delivery must still pass after it.
 
+The first sparse-forest workflow [run 35865993114](https://github.com/andrewnakas/decompgames/actions/runs/35865993114) failed at linking because the patch matched past `generateForest()` and removed `createNewWorld()`. It produced no new browser evidence or binary. The patch boundary is now anchored to the source marker directly after `generateForest()`; the following build must confirm the correction.
+
 ## Remaining release gate
 
 1. The initial idle hang was caused by incompatible entrance spacing in the independent scenario and has been corrected. Confirm the demo fallback cannot reach original data. The silent audio backend is in place.
