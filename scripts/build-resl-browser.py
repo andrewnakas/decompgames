@@ -27,6 +27,11 @@ REPLACEMENT_GLYPHS = {
     "rail_glyph.cpp",
     "train_glyph.cpp",
 }
+RETAINED_ENGINE_GEOMETRY_TABLES = {
+    "carriage_bias.cpp", "movement_paths.cpp",
+    "rail_connection_bias.cpp", "rail_connection_rule.cpp",
+    "rail_type_meta.cpp", "semaphore_glyph_bias.cpp",
+}
 if len(sys.argv) != 6:
     raise SystemExit("Usage: build-resl-browser.py CHECKOUT OUTPUT GENERATED_ASSETS GENERATED_GLYPHS GENERATED_SCENARIO")
 
@@ -89,6 +94,9 @@ expected_scenario = {
     "allowed_cursor_rail_types.cpp", "entrance_rails.cpp", "entrance.cpp",
     "chunk_bounding_boxes.cpp", "train_specification.cpp",
 }
+source_tables = {path.name for path in (checkout / "src/game/resources").glob("*.cpp")}
+if source_tables != REPLACEMENT_GLYPHS | expected_scenario | RETAINED_ENGINE_GEOMETRY_TABLES:
+    raise SystemExit(f"Unclassified pinned resource tables: {sorted(source_tables ^ (REPLACEMENT_GLYPHS | expected_scenario | RETAINED_ENGINE_GEOMETRY_TABLES))}")
 if scenario_manifest.get("license") != "CC0-1.0" or scenario_manifest.get("originalAssetsRead") is not False:
     raise SystemExit("Independent scenario provenance check failed")
 if {item["name"] for item in scenario_manifest["files"]} != expected_scenario:
@@ -615,6 +623,15 @@ for name in UNREPLACED_VISUAL_TABLES:
         "sha256": hashlib.sha256(data).hexdigest(),
         "provenance": "upstream reconstruction; replacement pending",
     })
+retained_geometry = []
+for name in sorted(RETAINED_ENGINE_GEOMETRY_TABLES):
+    data = (checkout / "src/game/resources" / name).read_bytes()
+    retained_geometry.append({
+        "path": f"src/game/resources/{name}",
+        "bytes": len(data),
+        "sha256": hashlib.sha256(data).hexdigest(),
+        "classification": "provisional GPL engine geometry, not independent presentation art",
+    })
 
 record = {
     "sourceRevision": REVISION,
@@ -632,6 +649,7 @@ record = {
     "listedEmbeddedGlyphTablesReplaced": True,
     "embeddedVisualsReplaced": False,
     "unreplacedEmbeddedVisuals": embedded_visuals,
+    "retainedEngineGeometryTables": retained_geometry,
     "audioBackend": "null",
     "classicModuleForSharedPlayer": True,
     "saveRoot": "/persistent",
