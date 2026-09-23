@@ -59,10 +59,10 @@ try {
     const canvas = document.querySelector('canvas');
     return { ...window.__oj, canvas: { width: canvas?.width, height: canvas?.height } };
   });
-  // A previous read at 12 seconds succeeded but a later read after input
-  // stalled. First isolate whether the idle runtime remains responsive.
+  // The independent six-station schedule passed an 18-second idle run. Now
+  // test whether the Go shortcut exits the menu without claiming gameplay.
   let elapsed = 0;
-  for (const delay of [3_000, 5_000, 5_000, 5_000]) {
+  for (const delay of [3_000]) {
     await page.waitForTimeout(delay);
     elapsed += delay;
     const state = await readState();
@@ -71,6 +71,19 @@ try {
       throw new Error('Private browser boot failed');
     if (state.canvas.width < 320 || state.canvas.height < 200)
       throw new Error('Game canvas has an unexpected size');
+  }
+  await page.locator('canvas').focus();
+  await page.keyboard.press('g', { timeout: 5_000 });
+  console.log('Go key delivered to focused game canvas.');
+  for (const delay of [3_000, 5_000]) {
+    await page.waitForTimeout(delay);
+    elapsed += delay;
+    const state = await readState();
+    console.log(`After Go ${elapsed}ms:`, JSON.stringify({ state, pageErrors, remoteRequests }));
+    if (state.abort || pageErrors.length || remoteRequests.length)
+      throw new Error('Private browser encountered an error after Go');
+    if (!state.stderr.some((message) => message.includes('OJ stage: after main menu')))
+      throw new Error('Go did not exit the main menu in the private smoke');
   }
 } finally {
   await browser?.close();
