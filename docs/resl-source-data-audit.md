@@ -13,8 +13,8 @@ Pinned reSL revision: `470cca330ee9abcf6173c843f4c89686c0c7e525` ([upstream](htt
 | `train_specification.cpp` | Train availability, speed, and composition | Independent candidate roster generated; private compile passed, gameplay balance pending. |
 | `chunk_bounding_boxes.cpp` | Incremental redraw regions | Candidate bounds enlarged for new rail sprites; private compile passed, ghosting checks pending. |
 | `carriage_bias.cpp`, `semaphore_glyph_bias.cpp` | Sprite placement offsets | Functional geometry coupled to new art. Keep under review; adjust after visual tests. |
-| `src/game/resources/entrance.cpp` | Entrance state and color combinations | Nine independent candidate color pairs are generated; private compile and in-game contrast review pending. |
-| `src/system/driver/sdl/video.cpp` palette | 16 rendered ARGB colors | A patch now derives runtime ARGB colors from the independent asset generator's recorded RGB palette; private compile and UI contrast review pending. |
+| `src/game/resources/entrance.cpp` | Entrance state and color combinations | Nine independent candidate color pairs are generated; private compile passed, in-game contrast review pending. |
+| `src/system/driver/sdl/video.cpp` palette | 16 rendered ARGB colors | A patch derives runtime ARGB colors from the independent asset generator's recorded RGB palette; private compile passed, UI contrast review pending. |
 | `movement_paths.cpp` | Discrete motion paths | Likely reconstructed engine movement data. Review whether new rail geometry needs paths changed; test collisions. |
 | `rail_connection_bias.cpp`, `rail_connection_rule.cpp`, `rail_type_meta.cpp` | Routing, connection, and signal rules | Treat as engine logic pending gameplay/provenance review. |
 | `src/system/driver/sdl/mouse.cpp` cursor planes | Custom pointer artwork | Independent CC0 cursor generated and patched; private compile passed. Appearance pending. |
