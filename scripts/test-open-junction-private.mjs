@@ -51,16 +51,12 @@ try {
     return route.abort();
   });
   await page.goto(base, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+  console.log('Private page navigation completed.');
   await page.waitForTimeout(12_000);
+  console.log('Private runtime observation window completed.');
   const readState = () => page.evaluate(() => {
     const canvas = document.querySelector('canvas');
-    const context = canvas?.getContext('2d');
-    let sample = null;
-    if (context) {
-      const bytes = context.getImageData(0, 0, 64, 64).data;
-      sample = bytes.reduce((hash, value) => (Math.imul(hash, 33) ^ value) >>> 0, 5381);
-    }
-    return { ...window.__oj, canvas: { width: canvas?.width, height: canvas?.height }, sample };
+    return { ...window.__oj, canvas: { width: canvas?.width, height: canvas?.height } };
   });
   const state = await readState();
   console.log('Before Enter:', JSON.stringify({ state, pageErrors, remoteRequests }));
