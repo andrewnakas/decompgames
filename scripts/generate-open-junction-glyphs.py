@@ -105,6 +105,12 @@ def font_rows(character: str) -> list[int]:
     return [int(row, 2) << 2 for row in rows for _ in range(2)]
 
 
+def header_digit_rows(character: str) -> list[int]:
+    """Draw a wider independent numeral for the 16-pixel header slots."""
+    rows = FONT[character].split("/")
+    return mask(16, 14, lambda x, y: 2 <= x < 12 and rows[y // 2][(x - 2) // 2] == "1")
+
+
 def generate(output: Path) -> None:
     output.mkdir(parents=True, exist_ok=True)
     files: dict[str, str] = {}
@@ -195,15 +201,22 @@ def generate(output: Path) -> None:
         "small_font.h",
         "const std::uint8_t g_font14Data[] = " + values(small_font) + ";",
     )
-    text_glyphs = [font_rows(chr(code)) for code in range(32, 179)]
-    assert len(text_glyphs) == 147 and all(len(glyph) == 14 for glyph in text_glyphs)
+    text_glyphs = [
+        header_digit_rows(chr(code)) if 48 <= code <= 57 else font_rows(chr(code))
+        for code in range(32, 179)
+    ]
+    assert len(text_glyphs) == 147 and all(
+        len(glyph) == (28 if 48 <= code <= 57 else 14)
+        for code, glyph in zip(range(32, 179), text_glyphs)
+    )
     text_body = "\n".join(
-        f"static const std::uint8_t glyph{index}[14] = {values(rows)};"
+        f"static const std::uint8_t glyph{index}[{len(rows)}] = {values(rows)};"
         for index, rows in enumerate(text_glyphs)
     )
     text_body += "\nconst TextGlyph g_textGlyphs[147] = {\n"
     text_body += ",\n".join(
-        f"    {{0, 14, 8, glyph{index}}}" for index in range(147)
+        f"    {{0, 14, {16 if 48 <= code <= 57 else 8}, glyph{code - 32}}}"
+        for code in range(32, 179)
     ) + "\n};"
     files["text_glyphs.cpp"] = document("text_glyphs.h", text_body)
 
