@@ -78,9 +78,24 @@ try {
   }
   if (!saved.some(file => file.size > 0))
     throw new Error('Shared player Save did not create a nonempty local file');
-  const downloadPromise = page.waitForEvent('download');
+  await page.evaluate(() => {
+    window.__ojPlayerMessages = [];
+    window.addEventListener('message', event => {
+      if (event.data?.type) window.__ojPlayerMessages.push(event.data.type);
+    });
+  });
+  const downloadPromise = page.waitForEvent('download', { timeout: 8_000 });
   await page.locator('#export-save').click();
-  const download = await downloadPromise;
+  const download = await downloadPromise.catch(async error => {
+    const diagnostic = await page.evaluate(() => ({
+      status: document.querySelector('#player-status')?.textContent,
+      buttonDisabled: document.querySelector('#export-save')?.disabled,
+      messages: window.__ojPlayerMessages,
+    }));
+    throw new Error(`Shared player export did not download: ${JSON.stringify({
+      diagnostic, errors, remoteRequests, engineLogs: engineLogs.slice(-6), original: error.message,
+    })}`);
+  });
   const backup = JSON.parse(await readFile(await download.path(), 'utf8'));
   if (backup.game !== 'shortline' || backup.version !== 'open-junction-private-1' ||
       !backup.files.some(file => saved.some(item => item.path === file.path && item.size === file.data.length)))
