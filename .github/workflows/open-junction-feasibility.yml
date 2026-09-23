@@ -75,7 +75,7 @@ jobs:
         run: |
           pnpm install --frozen-lockfile
           pnpm exec playwright install chromium --with-deps
-          timeout 150s node scripts/test-open-junction-private.mjs /tmp/open-junction-build/build
+          timeout 180s node scripts/test-open-junction-private.mjs /tmp/open-junction-build/build
       - name: Retain replacement-only screenshot for visual audit
         if: always()
         uses: actions/upload-artifact@v4

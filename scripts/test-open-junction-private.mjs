@@ -238,6 +238,44 @@ try {
   if (Number(loadedTick?.match(/year (\d+)/)?.[1]) < 1805 ||
       Number(loadedTick?.match(/rails (\d+)/)?.[1]) < 6)
     throw new Error('Archive did not restore the saved year and constructed rails');
+  const backupBytes = await page.evaluate((name) =>
+    Array.from(window.Module.FS.readFile(`/persistent/${name}`)), savedFile.name);
+  const backupHash = createHash('sha256').update(Buffer.from(backupBytes)).digest('hex');
+  console.log('Private saved-game backup SHA-256:', backupHash);
+  await page.evaluate((name) => new Promise((resolve, reject) => {
+    const fs = window.Module.FS;
+    fs.unlink(`/persistent/${name}`);
+    fs.syncfs(false, (error) => error ? reject(error) : resolve());
+  }), savedFile.name);
+  await page.reload({ waitUntil: 'domcontentloaded', timeout: 20_000 });
+  await page.waitForFunction(() => window.__oj?.ready === true, null, { timeout: 20_000 });
+  await page.waitForTimeout(2_000);
+  if ((await readSaveFiles()).files.length)
+    throw new Error('Deleted saved game reappeared after browser reload');
+  await page.evaluate(({ name, bytes }) => new Promise((resolve, reject) => {
+    const fs = window.Module.FS;
+    fs.writeFile(`/persistent/${name}`, new Uint8Array(bytes));
+    fs.syncfs(false, (error) => error ? reject(error) : resolve());
+  }), { name: savedFile.name, bytes: backupBytes });
+  await page.reload({ waitUntil: 'domcontentloaded', timeout: 20_000 });
+  await page.waitForFunction(() => window.__oj?.ready === true, null, { timeout: 20_000 });
+  await page.waitForTimeout(2_000);
+  const importedBytes = await page.evaluate((name) =>
+    Array.from(window.Module.FS.readFile(`/persistent/${name}`)), savedFile.name);
+  if (createHash('sha256').update(Buffer.from(importedBytes)).digest('hex') !== backupHash)
+    throw new Error('Imported saved game differs from exported backup');
+  await page.locator('canvas').focus();
+  await page.keyboard.press('a');
+  await page.waitForTimeout(2_000);
+  await page.keyboard.press('g');
+  await page.waitForTimeout(2_000);
+  const importedTick = gameTicks(await readState());
+  console.log('After backup import and Archive Go:', importedTick);
+  if (Number(importedTick?.match(/year (\d+)/)?.[1]) < 1805 ||
+      Number(importedTick?.match(/rails (\d+)/)?.[1]) < 6)
+    throw new Error('Imported backup did not restore gameplay state');
+  if (pageErrors.length || remoteRequests.length)
+    throw new Error('Private browser encountered an error during backup round trip');
 } finally {
   await browser?.close();
   await new Promise((done) => server.close(done));
