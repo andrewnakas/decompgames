@@ -27,7 +27,7 @@ jobs:
       - name: Compile private candidate without audio
         run: |
           source /tmp/emsdk/emsdk_env.sh
-          python3 scripts/build-resl-browser.py \
+          OPEN_JUNCTION_TRACE=1 python3 scripts/build-resl-browser.py \
             /tmp/resl /tmp/open-junction-build \
             /tmp/open-junction-assets /tmp/open-junction-glyphs \
             /tmp/open-junction-scenario \
@@ -49,6 +49,7 @@ jobs:
           assert record['unreplacedEmbeddedVisuals'] == []
           assert record['browserTested'] is False
           assert record['releaseReady'] is False
+          assert record['privateTraceEnabled'] is True
           print('Private compile passed; release gate remains closed.')
           for item in record['files'][:2]:
               print(item['path'], item['bytes'], item['sha256'])

@@ -14,7 +14,7 @@ var Module = {
   canvas: document.getElementById('canvas'),
   onRuntimeInitialized() { window.__oj.ready = true; },
   onAbort(reason) { window.__oj.abort = String(reason); },
-  printErr(message) { window.__oj.stderr.push(String(message)); }
+  printErr(message) { window.__oj.stderr.push(String(message)); console.log('engine: ' + message); }
 };
 </script><script src="/resl.js"></script></body></html>`;
 
@@ -45,6 +45,9 @@ try {
   const pageErrors = [];
   const remoteRequests = [];
   page.on('pageerror', (error) => pageErrors.push(error.message));
+  page.on('console', (message) => {
+    if (message.text().startsWith('engine: OJ ')) console.log(message.text());
+  });
   await page.route('**/*', (route) => {
     if (route.request().url().startsWith(base)) return route.continue();
     remoteRequests.push(route.request().url());

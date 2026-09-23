@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import shutil
@@ -209,6 +210,24 @@ dialog.write_text(dialog_text.replace(
     "if (type != DialogType::MainMenu && timeout-- == 0)\n"
     "                    return -1;",
 ))
+if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
+    dialog_text = dialog.read_text()
+    dialog_text = dialog_text.replace("#include <optional>\n", "#include <optional>\n#include <iostream>\n", 1)
+    marker = "    const Dialog& dlg = g_dialogs[static_cast<int>(type)];"
+    if dialog_text.count(marker) != 1:
+        raise SystemExit("Pinned dialog entry changed")
+    dialog_text = dialog_text.replace(marker, "    static int ojTraceFrame = 0;\n" + marker, 1)
+    wait_line = "                vga::waitVerticalRetrace();"
+    if dialog_text.count(wait_line) != 1:
+        raise SystemExit("Pinned dialog wait loop changed")
+    dialog_text = dialog_text.replace(
+        wait_line,
+        "                if (type == DialogType::MainMenu && (++ojTraceFrame % 120) == 0)\n"
+        '                    std::cerr << "OJ menu frame " << ojTraceFrame << std::endl;\n'
+        + wait_line,
+        1,
+    )
+    dialog.write_text(dialog_text)
 
 menu = source / "src/ui/main_menu.cpp"
 menu_text = menu.read_text()
@@ -266,6 +285,7 @@ record = {
     "classicModuleForSharedPlayer": True,
     "saveRoot": "/persistent",
     "browserTested": False,
+    "privateTraceEnabled": os.environ.get("OPEN_JUNCTION_TRACE") == "1",
     "releaseReady": False,
     "blockers": [
         "Inspect generated artwork and alignment in a private muted browser build",
