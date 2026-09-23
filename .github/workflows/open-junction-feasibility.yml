@@ -63,6 +63,13 @@ jobs:
           for item in record['files'][:2]:
               print(item['path'], item['bytes'], item['sha256'])
           PY
+      - name: Check private corresponding-source package
+        run: |
+          python3 scripts/package-open-junction-private-source.py /tmp/open-junction-build
+          tar -tzf /tmp/open-junction-build/open-junction-private-source.tar.gz \
+            | grep -qx 'open-junction/engine/src/graphics/text.cpp'
+          tar -tzf /tmp/open-junction-build/open-junction-private-source.tar.gz \
+            | grep -qx 'open-junction/engine/resources/open-junction/play.7'
       - uses: pnpm/action-setup@v4
         with:
           version: 11.19.0
