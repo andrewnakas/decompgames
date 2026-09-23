@@ -165,6 +165,48 @@ try {
     if (delivered) break;
   }
   if (!delivered) throw new Error('A complete train delivery was not observed on the starter route');
+  await page.keyboard.press('p');
+  await page.waitForTimeout(1_000);
+  await page.keyboard.press('s');
+  console.log('Pause and Save keys delivered after a completed train delivery.');
+  const readSaveFiles = () => page.evaluate(() => {
+    const fs = window.Module?.FS;
+    if (!fs) return { fsAvailable: false, files: [] };
+    return {
+      fsAvailable: true,
+      files: fs.readdir('/persistent')
+        .filter((name) => /^[0-9]{3}[a-z]{2}[0-9]{3}\.[0-9]{2}_$/.test(name))
+        .map((name) => ({ name, bytes: fs.stat(`/persistent/${name}`).size })),
+    };
+  });
+  let saved;
+  for (const seconds of [2, 4, 6, 8, 10]) {
+    await page.waitForTimeout(2_000);
+    saved = await readSaveFiles();
+    console.log(`After Save ${seconds}s:`, JSON.stringify({ saved, pageErrors, remoteRequests }));
+    if (pageErrors.length || remoteRequests.length)
+      throw new Error('Private browser encountered an error during Save');
+    if (saved.files.some((file) => file.bytes > 0)) break;
+  }
+  const savedFile = saved.files.find((file) => file.bytes > 0);
+  if (!savedFile) throw new Error('Pause-menu Save did not write a nonempty persistent file');
+  await page.evaluate(() => new Promise((resolve, reject) => {
+    window.Module.FS.syncfs(false, (error) => error ? reject(error) : resolve());
+  }));
+  await page.reload({ waitUntil: 'domcontentloaded', timeout: 20_000 });
+  await page.waitForFunction(() => window.__oj?.ready === true, null, { timeout: 20_000 });
+  let restored;
+  for (const seconds of [2, 4, 6, 8, 10]) {
+    await page.waitForTimeout(2_000);
+    restored = await readSaveFiles();
+    console.log(`After reload ${seconds}s:`, JSON.stringify({ restored, pageErrors, remoteRequests }));
+    if (restored.files.some((file) => file.name === savedFile.name && file.bytes === savedFile.bytes))
+      break;
+  }
+  if (!restored.files.some((file) => file.name === savedFile.name && file.bytes === savedFile.bytes))
+    throw new Error('Saved game file did not survive a browser reload');
+  if (pageErrors.length || remoteRequests.length)
+    throw new Error('Private browser encountered an error after save-file reload');
 } finally {
   await browser?.close();
   await new Promise((done) => server.close(done));
