@@ -77,6 +77,35 @@ jobs:
           pnpm install --frozen-lockfile
           pnpm exec playwright install chromium --with-deps
           timeout 180s node scripts/test-open-junction-private.mjs /tmp/open-junction-build/build
+      - name: Exercise the actual player in an ephemeral private preview
+        run: |
+          python3 - <<'PY'
+          import json
+          import shutil
+          from pathlib import Path
+          runtime = Path('public/runtime/shortline/private')
+          runtime.mkdir(parents=True)
+          for name in ('resl.js', 'resl.wasm'):
+              shutil.copyfile(Path('/tmp/open-junction-build/build') / name, runtime / name)
+          manifest = {
+              'id': 'shortline', 'engine': 'resl',
+              'base': '/runtime/shortline/private/', 'script': 'resl.js',
+              'saveVersion': 'open-junction-private-1',
+              'saveRoots': ['/persistent'], 'mountSave': True,
+              'assets': [], 'args': [], 'audioBackend': 'null',
+          }
+          Path('public/manifests/shortline.json').write_text(json.dumps(manifest))
+          catalog = Path('src/data/games.json')
+          games = json.loads(catalog.read_text())
+          candidate = next(game for game in games if game['id'] == 'shortline')
+          assert candidate['mode'] == 'project'
+          candidate['mode'] = 'instant'
+          candidate['runtime'] = 'shortline'
+          candidate['downloadMB'] = 1.8
+          catalog.write_text(json.dumps(games))
+          PY
+          pnpm build
+          timeout 80s node scripts/test-open-junction-player-private.mjs
       - name: Retain replacement-only screenshot for visual audit
         if: always()
         uses: actions/upload-artifact@v4
