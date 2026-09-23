@@ -143,6 +143,15 @@ try {
   }
   if (!after.stderr.some((line) => line.startsWith('OJ train spawned from ')))
     throw new Error('Train dispatch was not observed after pause and Go');
+  const positions = new Set(after.stderr
+    .filter((line) => /^OJ game tick .* trains [1-9]/.test(line))
+    .map((line) => line.match(/head (-?\d+,-?\d+:\d+)/)?.[1])
+    .filter(Boolean));
+  console.log('Observed active-train head positions:', [...positions]);
+  const trainImage = await page.locator('canvas').screenshot({ timeout: 5_000 });
+  console.log('Private train canvas PNG SHA-256:', createHash('sha256').update(trainImage).digest('hex'));
+  if (process.env.OPEN_JUNCTION_TRAIN_SCREENSHOT)
+    await writeFile(process.env.OPEN_JUNCTION_TRAIN_SCREENSHOT, trainImage);
 } finally {
   await browser?.close();
   await new Promise((done) => server.close(done));
