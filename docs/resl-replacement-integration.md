@@ -39,7 +39,9 @@ This first generator covers the external presentation files needed for a replace
 
 The September 23 private build succeeded. Its `resl.js` is 189,490 bytes (SHA-256 `00dd6d4e2dc7a0989b4ba4e3b5d825f4511359217d703dac5ce00960d9295a66`) and `resl.wasm` is 1,593,111 bytes (SHA-256 `702ff647db819b872dec50a06f25d434f1b5088803f2a6a9f12696e34772772d`). These are **not release artifacts**. They have not been copied into the website, uploaded, or browser tested. The binary still contains upstream-derived presentation tables.
 
-Visual-table inventory that must be redrawn or replaced before distribution: `dispatcher_glyph`, `glyph_empty_background`, `impasse_glyph`, `rail_glyph`, `semaphore_glyph`, `small_font`, `static_object_glyph`, `text_glyphs`, `train_finished_exclamation_glyph`, and `train_glyph`. The pinned source's other tables represent positions, connections, movement, and train specifications; these need a separate provenance review before release. The detailed hash inventory is produced by the build recipe rather than hand-copied here.
+`scripts/generate-open-junction-glyphs.py` now draws four CC0 replacement source tables from independent geometric primitives: dispatcher, impasse, static objects, and train-completion flags. Its manifest records file hashes and confirms it reads no original asset data. A new private build compiled successfully with these four replacements; `resl.wasm` is SHA-256 `4dfc12d23843396d512370de390602650769e386a0ed075d7ae32f3e34c16a0e`. This candidate is also not published or browser tested.
+
+Six tables still require replacement or a documented functional-data decision: `glyph_empty_background`, `rail_glyph`, `semaphore_glyph`, `small_font`, `text_glyphs`, and `train_glyph`. The pinned source's other tables represent positions, connections, movement, and train specifications; these need a separate provenance review before release. The detailed hash inventory is produced by the build recipe rather than hand-copied here.
 
 ## Remaining release gate
 

@@ -3,7 +3,7 @@
 
 The result is not release-ready until the embedded visual tables are replaced.
 Run under an activated Emscripten 6.0.1 environment:
-  python3 build-resl-browser.py CHECKOUT OUTPUT GENERATED_ASSETS
+  python3 build-resl-browser.py CHECKOUT OUTPUT GENERATED_ASSETS GENERATED_GLYPHS
 """
 from __future__ import annotations
 
@@ -17,21 +17,21 @@ import sys
 
 REVISION = "470cca330ee9abcf6173c843f4c89686c0c7e525"
 UNREPLACED_VISUAL_TABLES = (
-    "dispatcher_glyph.cpp",
     "glyph_empty_background.cpp",
-    "impasse_glyph.cpp",
     "rail_glyph.cpp",
     "semaphore_glyph.cpp",
     "small_font.cpp",
-    "static_object_glyph.cpp",
     "text_glyphs.cpp",
-    "train_finished_exclamation_glyph.cpp",
     "train_glyph.cpp",
 )
-if len(sys.argv) != 4:
-    raise SystemExit("Usage: build-resl-browser.py CHECKOUT OUTPUT GENERATED_ASSETS")
+REPLACEMENT_GLYPHS = {
+    "dispatcher_glyph.cpp", "impasse_glyph.cpp",
+    "static_object_glyph.cpp", "train_finished_exclamation_glyph.cpp",
+}
+if len(sys.argv) != 5:
+    raise SystemExit("Usage: build-resl-browser.py CHECKOUT OUTPUT GENERATED_ASSETS GENERATED_GLYPHS")
 
-checkout, output, generated = (Path(value).resolve() for value in sys.argv[1:])
+checkout, output, generated, generated_glyphs = (Path(value).resolve() for value in sys.argv[1:])
 revision = subprocess.check_output(["git", "-C", str(checkout), "rev-parse", "HEAD"], text=True).strip()
 if revision != REVISION:
     raise SystemExit("Unexpected reSL source revision")
@@ -56,6 +56,16 @@ for item in asset_manifest["files"]:
     if len(data) != item["bytes"] or hashlib.sha256(data).hexdigest() != item["sha256"]:
         raise SystemExit(f"Generated asset checksum mismatch: {item['name']}")
 
+glyph_manifest = json.loads((generated_glyphs / "manifest.json").read_text())
+if glyph_manifest.get("license") != "CC0-1.0" or glyph_manifest.get("originalAssetsRead") is not False:
+    raise SystemExit("Independent glyph provenance check failed")
+if {item["name"] for item in glyph_manifest["files"]} != REPLACEMENT_GLYPHS:
+    raise SystemExit("Unexpected generated glyph inventory")
+for item in glyph_manifest["files"]:
+    data = (generated_glyphs / item["name"]).read_bytes()
+    if len(data) != item["bytes"] or hashlib.sha256(data).hexdigest() != item["sha256"]:
+        raise SystemExit(f"Generated glyph checksum mismatch: {item['name']}")
+
 source = output / "replacement-source"
 def ignore_original_resources(directory: str, names: list[str]) -> set[str]:
     # Ignore only the repository's top-level original-data directory. The
@@ -69,6 +79,8 @@ asset_dir = source / "resources" / "open-junction"
 asset_dir.mkdir(parents=True)
 for item in asset_manifest["files"]:
     shutil.copyfile(generated / item["name"], asset_dir / item["name"])
+for item in glyph_manifest["files"]:
+    shutil.copyfile(generated_glyphs / item["name"], source / "src/game/resources" / item["name"])
 
 cmake = source / "CMakeLists.txt"
 cmake_text = cmake.read_text()
@@ -142,6 +154,7 @@ record = {
     "toolchain": toolchain,
     "files": files,
     "replacementAssets": asset_manifest["files"],
+    "replacementGlyphs": glyph_manifest["files"],
     "originalExternalResourcesBundled": False,
     "embeddedVisualsReplaced": False,
     "unreplacedEmbeddedVisuals": embedded_visuals,
