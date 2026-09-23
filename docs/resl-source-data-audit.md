@@ -14,12 +14,14 @@ Pinned reSL revision: `470cca330ee9abcf6173c843f4c89686c0c7e525` ([upstream](htt
 | `chunk_bounding_boxes.cpp` | Incremental redraw regions | Candidate bounds enlarged for new rail sprites; private compile passed, ghosting checks pending. |
 | `carriage_bias.cpp`, `semaphore_glyph_bias.cpp` | Sprite placement offsets | Functional geometry coupled to new art. Keep under review; adjust after visual tests. |
 | `src/game/resources/entrance.cpp` | Entrance state and color combinations | Nine independent candidate color pairs are generated; private compile passed, in-game contrast review pending. |
-| `src/system/driver/sdl/video.cpp` palette | 16 rendered ARGB colors | A patch derives runtime ARGB colors from the independent asset generator's recorded RGB palette; private compile passed, UI contrast review pending. |
+| `src/system/driver/sdl/video.cpp` palette | 16 rendered ARGB colors | Runtime ARGB colors and the transparent board-clear color now derive from the independent asset generator's recorded RGB palette. One 640×480 gameplay frame was reviewed; other screens and dynamic contrast remain unverified. |
 | `movement_paths.cpp` | Discrete motion paths | Likely reconstructed engine movement data. Review whether new rail geometry needs paths changed; test collisions. |
 | `rail_connection_bias.cpp`, `rail_connection_rule.cpp`, `rail_type_meta.cpp` | Routing, connection, and signal rules | Treat as engine logic pending gameplay/provenance review. |
 | `src/system/driver/sdl/mouse.cpp` cursor planes | Custom pointer artwork | Independent CC0 cursor generated and patched; private compile passed. Appearance pending. |
 | `src/graphics/text.cpp` character traits | Width/spacing logic | Functional table. Check readability with replacement fonts. |
 
 The top-level upstream `resources/` directory is excluded from the private build; only generated external files are embedded. A source-wide search for static byte arrays found the SDL cursor outside `src/game/resources`; other matches reviewed so far were control, text, audio, or rendering logic. Re-run this audit after source changes and before distribution. Do not infer that an exhaustive asset clearance has already happened.
+
+The first gameplay screenshot also exposed an inherited original-game footer and a grass routine that scattered original-style presentation pixels. The private recipe now substitutes an Open Junction source credit, uses a clear drafted grid, and retains the independently generated trees and houses. The updated frame is legible at the intended 640×480 SDL size; tree density and numeric counters still need review. The screenshot artifact is temporary and contains no engine binary.
 
 The candidate build is still private. Muted browser tests now establish menu input, entry to the gameplay loop, and one committed player rail. Release still requires broader rail layout and connectivity, train dispatch, a completable objective, save/reload/import, visual review, and the final provenance review. It remains outside the five-release count.
