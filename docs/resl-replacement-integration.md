@@ -127,7 +127,9 @@ The first private, trace-only transition probe [run 35894132421](https://github.
 
 Two more independent CI runs, [35904168089](https://github.com/andrewnakas/decompgames/actions/runs/35904168089) and [35904284981](https://github.com/andrewnakas/decompgames/actions/runs/35904284981), passed the same private build and gameplay path. The latter also asserted that no tick with exactly two stations had more than one active train. This supports the starter-route queue fix but does not test every dispatch order or later multi-station traffic. Its temporary train screenshot still shows hard-to-read header counters and a dense footer at 640×480; visual polish and wider gameplay/provenance review remain release blockers.
 
-The independent glyph generator now draws numerals at 16-pixel width for the header's 16-pixel digit slots. A new private compiled screenshot is required before judging whether that improves the counters; the small-font table used elsewhere is unchanged.
+The independent glyph generator now draws numerals at 16-pixel width for the header's 16-pixel digit slots. The small-font table used elsewhere is unchanged.
+
+[Run 35905040226](https://github.com/andrewnakas/decompgames/actions/runs/35905040226) passed compilation, source-package inventory, the single-track occupancy check, a full train delivery, and the muted player save/backup path with the wider digits. Its temporary train screenshot was inspected at the native 640×480 size: the counters occupy more of each digit slot and are more visible, though they remain visually busy on pale field backgrounds. The footer is still cramped. Keep visual review open rather than treating this screenshot as a complete asset or accessibility audit.
 
 1. The initial idle hang was caused by incompatible entrance spacing in the independent scenario and has been corrected. Confirm the demo fallback cannot reach original data. The silent audio backend is in place.
 2. Inspect the compiled fonts, signals, erase mask, rails, trains, and colors across dynamic gameplay. Audit remaining non-glyph source data before deciding the replacement build is redistributable.
