@@ -3,7 +3,7 @@
 
 The result is not release-ready until the full source audit and gameplay gate pass.
 Run under an activated Emscripten 6.0.1 environment:
-  python3 build-resl-browser.py CHECKOUT OUTPUT GENERATED_ASSETS GENERATED_GLYPHS
+  python3 build-resl-browser.py CHECKOUT OUTPUT GENERATED_ASSETS GENERATED_GLYPHS GENERATED_SCENARIO
 """
 from __future__ import annotations
 
@@ -26,10 +26,10 @@ REPLACEMENT_GLYPHS = {
     "rail_glyph.cpp",
     "train_glyph.cpp",
 }
-if len(sys.argv) != 5:
-    raise SystemExit("Usage: build-resl-browser.py CHECKOUT OUTPUT GENERATED_ASSETS GENERATED_GLYPHS")
+if len(sys.argv) != 6:
+    raise SystemExit("Usage: build-resl-browser.py CHECKOUT OUTPUT GENERATED_ASSETS GENERATED_GLYPHS GENERATED_SCENARIO")
 
-checkout, output, generated, generated_glyphs = (Path(value).resolve() for value in sys.argv[1:])
+checkout, output, generated, generated_glyphs, generated_scenario = (Path(value).resolve() for value in sys.argv[1:])
 revision = subprocess.check_output(["git", "-C", str(checkout), "rev-parse", "HEAD"], text=True).strip()
 if revision != REVISION:
     raise SystemExit("Unexpected reSL source revision")
@@ -76,6 +76,20 @@ if set(cursor) != {"black", "white"} or any(
 ):
     raise SystemExit("Invalid generated cursor dimensions")
 
+scenario_manifest = json.loads((generated_scenario / "manifest.json").read_text())
+expected_scenario = {
+    "allowed_cursor_rail_types.cpp", "entrance_rails.cpp",
+    "chunk_bounding_boxes.cpp", "train_specification.cpp",
+}
+if scenario_manifest.get("license") != "CC0-1.0" or scenario_manifest.get("originalAssetsRead") is not False:
+    raise SystemExit("Independent scenario provenance check failed")
+if {item["name"] for item in scenario_manifest["files"]} != expected_scenario:
+    raise SystemExit("Unexpected generated scenario inventory")
+for item in scenario_manifest["files"]:
+    data = (generated_scenario / item["name"]).read_bytes()
+    if len(data) != item["bytes"] or hashlib.sha256(data).hexdigest() != item["sha256"]:
+        raise SystemExit(f"Generated scenario checksum mismatch: {item['name']}")
+
 source = output / "replacement-source"
 def ignore_original_resources(directory: str, names: list[str]) -> set[str]:
     # Ignore only the repository's top-level original-data directory. The
@@ -91,6 +105,8 @@ for item in asset_manifest["files"]:
     shutil.copyfile(generated / item["name"], asset_dir / item["name"])
 for item in glyph_manifest["files"]:
     shutil.copyfile(generated_glyphs / item["name"], source / "src/game/resources" / item["name"])
+for item in scenario_manifest["files"]:
+    shutil.copyfile(generated_scenario / item["name"], source / "src/game/resources" / item["name"])
 
 mouse = source / "src/system/driver/sdl/mouse.cpp"
 mouse_text = mouse.read_text()
@@ -179,6 +195,7 @@ record = {
     "replacementAssets": asset_manifest["files"],
     "replacementGlyphs": glyph_manifest["files"],
     "replacementCursor": cursor_record,
+    "replacementScenario": scenario_manifest["files"],
     "originalExternalResourcesBundled": False,
     "listedEmbeddedGlyphTablesReplaced": True,
     "embeddedVisualsReplaced": False,
@@ -191,6 +208,7 @@ record = {
     "blockers": [
         "Inspect generated artwork and alignment in a private muted browser build",
         "Audit remaining non-glyph source files and gameplay tables separately from presentation data",
+        "Test the independent campaign's entrance placement and train roster for a completable loop",
         "Confirm menu, rail and train legibility and placement through muted gameplay tests",
         "Complete a gameplay loop and persistence round trip before release",
     ],

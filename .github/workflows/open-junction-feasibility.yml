@@ -16,6 +16,7 @@ jobs:
         run: |
           python3 scripts/generate-open-junction-assets.py /tmp/open-junction-assets >/dev/null
           python3 scripts/generate-open-junction-glyphs.py /tmp/open-junction-glyphs
+          python3 scripts/generate-open-junction-scenario.py /tmp/open-junction-scenario
       - name: Fetch pinned engine and toolchain
         run: |
           git clone --quiet https://github.com/konovalov-aleks/reSL.git /tmp/resl
@@ -29,6 +30,7 @@ jobs:
           python3 scripts/build-resl-browser.py \
             /tmp/resl /tmp/open-junction-build \
             /tmp/open-junction-assets /tmp/open-junction-glyphs \
+            /tmp/open-junction-scenario \
             >/tmp/open-junction-build.log 2>&1 || {
               tail -n 100 /tmp/open-junction-build.log
               exit 1
@@ -42,6 +44,7 @@ jobs:
           assert record['audioBackend'] == 'null'
           assert len(record['replacementGlyphs']) == 10
           assert record['replacementCursor']['name'] == 'cursor.json'
+          assert len(record['replacementScenario']) == 4
           assert record['unreplacedEmbeddedVisuals'] == []
           assert record['browserTested'] is False
           assert record['releaseReady'] is False
