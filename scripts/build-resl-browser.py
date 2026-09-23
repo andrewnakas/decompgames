@@ -126,14 +126,18 @@ if (not isinstance(starter_route, list) or len(starter_route) != 3
     raise SystemExit("Independent starter route is invalid")
 
 source = output / "replacement-source"
-def ignore_original_resources(directory: str, names: list[str]) -> set[str]:
-    # Ignore only the repository's top-level original-data directory. The
-    # source tree also has src/game/resources, which contains required C++.
-    if Path(directory).resolve() == checkout:
-        return {name for name in (".git", "resources", "build") if name in names}
+source.mkdir(parents=True)
+# Keep only the browser build's corresponding source. The upstream repository
+# also has original game files under resources/ and mobile launcher images;
+# neither belongs in a replacement-only browser source archive.
+for name in ("CMakeLists.txt", "LICENSE", "README.md"):
+    shutil.copyfile(checkout / name, source / name)
+def ignore_source_extraction_tools(directory: str, names: list[str]) -> set[str]:
+    if Path(directory).resolve() == (checkout / "src/game/resources").resolve():
+        return {name for name in ("scripts", "utility") if name in names}
     return set()
 
-shutil.copytree(checkout, source, ignore=ignore_original_resources)
+shutil.copytree(checkout / "src", source / "src", ignore=ignore_source_extraction_tools)
 asset_dir = source / "resources" / "open-junction"
 asset_dir.mkdir(parents=True)
 for item in asset_manifest["files"]:
