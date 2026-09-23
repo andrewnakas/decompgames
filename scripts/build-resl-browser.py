@@ -473,6 +473,19 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
         + '}\n',
         1,
     )
+    insolvency_hook = 'extern "C" EMSCRIPTEN_KEEPALIVE void oj_trace_insolvent() {\n'
+    if insolvency_hook in loop_text:
+        raise SystemExit("Private insolvency hook already exists")
+    loop_text = loop_text.replace(
+        'extern "C" EMSCRIPTEN_KEEPALIVE void oj_trace_jump_to_2000() {\n',
+        insolvency_hook
+        + '    g_headers[static_cast<int>(HeaderFieldId::Money)].value = 0;\n'
+        + '    spendMoney(1);\n'
+        + '    std::fprintf(stderr, "OJ game-over branch prepared\\n");\n'
+        + '}\n\n'
+        + 'extern "C" EMSCRIPTEN_KEEPALIVE void oj_trace_jump_to_2000() {\n',
+        1,
+    )
     transition_marker = "                case 2000:\n"
     if loop_text.count(transition_marker) != 1:
         raise SystemExit("Pinned level-transition marker changed")
@@ -575,6 +588,16 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
         + '                        ojFirstTrain && ojFirstTrain->head.rail ? ojFirstTrain->head.rail->y : -1,\n'
         + '                        ojFirstTrain ? ojFirstTrain->head.pathStep : -1);\n'
         + '                }\n',
+        1,
+    ))
+    game_over = source / "src/ui/game_over.cpp"
+    game_over_text = game_over.read_text()
+    game_over_marker = "    g_gameOver = true;\n"
+    if game_over_text.count(game_over_marker) != 1:
+        raise SystemExit("Pinned game-over marker changed")
+    game_over.write_text(game_over_text.replace(
+        game_over_marker,
+        '    std::cerr << "OJ game over entered" << std::endl;\n' + game_over_marker,
         1,
     ))
     mouse_game = source / "src/game/mouse/mouse.cpp"

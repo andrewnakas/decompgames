@@ -131,6 +131,8 @@ The independent glyph generator now draws numerals at 16-pixel width for the hea
 
 [Run 35905040226](https://github.com/andrewnakas/decompgames/actions/runs/35905040226) passed compilation, source-package inventory, the single-track occupancy check, a full train delivery, and the muted player save/backup path with the wider digits. Its temporary train screenshot was inspected at the native 640×480 size: the counters occupy more of each digit slot and are more visible, though they remain visually busy on pale field backgrounds. The footer is still cramped. Keep visual review open rather than treating this screenshot as a complete asset or accessibility audit.
 
+The next private trace adds an insolvency hook after the already tested level transition, then checks that the game-over branch runs with the generated `GAMEOVER.7` present. This will test that branch, not an organic loss or a complete campaign. The hook and trace are excluded from any distributable build.
+
 1. The initial idle hang was caused by incompatible entrance spacing in the independent scenario and has been corrected. Confirm the demo fallback cannot reach original data. The silent audio backend is in place.
 2. Inspect the compiled fonts, signals, erase mask, rails, trains, and colors across dynamic gameplay. Audit remaining non-glyph source data before deciding the replacement build is redistributable.
 3. Rebuild from the pinned Emscripten revision and publish the exact replacement sources, generator, manifest, and checksums only after the asset audit passes.

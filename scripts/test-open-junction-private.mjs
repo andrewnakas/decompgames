@@ -307,6 +307,24 @@ try {
   if (!transition.stderr.some(line => /OJ level transition completed level \d+ year 1800/.test(line)) ||
       transition.abort || pageErrors.length || remoteRequests.length)
     throw new Error('Private year-2000 transition did not reset the year and advance the level');
+  // Force the loss condition only in the private trace build. This tests the
+  // branch and replacement game-over art, not organic campaign failure.
+  await page.evaluate(() => {
+    if (typeof window.Module._oj_trace_insolvent !== 'function')
+      throw new Error('Private game-over hook is missing');
+    window.Module._oj_trace_insolvent();
+  });
+  let gameOver;
+  for (let attempt = 0; attempt < 15; ++attempt) {
+    await page.waitForTimeout(1_000);
+    gameOver = await readState();
+    if (gameOver.stderr.includes('OJ game over entered')) break;
+  }
+  if (!gameOver.stderr.includes('OJ game-over branch prepared') ||
+      !gameOver.stderr.includes('OJ game over entered') ||
+      gameOver.stderr.some(line => line.includes("unable to read file 'GAMEOVER.7'")) ||
+      gameOver.abort || pageErrors.length || remoteRequests.length)
+    throw new Error('Private game-over branch did not display its replacement art');
 } finally {
   await browser?.close();
   await new Promise((done) => server.close(done));
