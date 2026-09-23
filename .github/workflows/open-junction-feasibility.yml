@@ -45,6 +45,7 @@ jobs:
           assert len(record['replacementGlyphs']) == 10
           assert record['replacementCursor']['name'] == 'cursor.json'
           assert len(record['replacementScenario']) == 5
+          assert record['replacementEntranceSchedule'] == [0, 23, 8, 31, 16, 39]
           assert len(record['replacementPaletteRGB']) == 16
           assert record['unreplacedEmbeddedVisuals'] == []
           assert record['browserTested'] is False

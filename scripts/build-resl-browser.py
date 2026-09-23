@@ -97,6 +97,14 @@ for item in scenario_manifest["files"]:
     data = (generated_scenario / item["name"]).read_bytes()
     if len(data) != item["bytes"] or hashlib.sha256(data).hexdigest() != item["sha256"]:
         raise SystemExit(f"Generated scenario checksum mismatch: {item['name']}")
+entrance_choices = scenario_manifest.get("initialEntranceIndices")
+if (not isinstance(entrance_choices, list) or len(entrance_choices) != 6
+        or len(set(entrance_choices)) != 6 or any(
+            not isinstance(value, int) or not 0 <= value < 46
+            or ((value < 23) != (slot % 2 == 0))
+            for slot, value in enumerate(entrance_choices)
+        )):
+    raise SystemExit("Independent entrance schedule is invalid")
 
 source = output / "replacement-source"
 def ignore_original_resources(directory: str, names: list[str]) -> set[str]:
@@ -115,6 +123,20 @@ for item in glyph_manifest["files"]:
     shutil.copyfile(generated_glyphs / item["name"], source / "src/game/resources" / item["name"])
 for item in scenario_manifest["files"]:
     shutil.copyfile(generated_scenario / item["name"], source / "src/game/resources" / item["name"])
+
+init = source / "src/game/init.cpp"
+init_text = init.read_text()
+selection_pattern = r"        bool suits = false;\n        while \(!suits\) \{.*?\n        \}\n"
+choice_cpp = ", ".join(str(value) for value in entrance_choices)
+selection_cpp = (
+    "        // Independent Open Junction station schedule.\n"
+    f"        static constexpr std::uint8_t stationChoices[6] = {{{choice_cpp}}};\n"
+    "        entrance.entranceRailInfoIdx = stationChoices[i];\n"
+)
+init_text, count = re.subn(selection_pattern, selection_cpp, init_text, count=1, flags=re.S)
+if count != 1:
+    raise SystemExit("Pinned entrance selection changed")
+init.write_text(init_text)
 
 mouse = source / "src/system/driver/sdl/mouse.cpp"
 mouse_text = mouse.read_text()
@@ -300,7 +322,7 @@ files = []
 for name in ("resl.js", "resl.wasm"):
     data = (build / name).read_bytes()
     files.append({"path": name, "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
-for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/game/melody.cpp", "src/game/main_loop.cpp", "src/ui/components/dialog.cpp", "src/ui/main_menu.cpp", "src/ui/loading_screen.cpp"):
+for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/game/melody.cpp", "src/game/init.cpp", "src/game/main_loop.cpp", "src/ui/components/dialog.cpp", "src/ui/main_menu.cpp", "src/ui/loading_screen.cpp"):
     data = (source / relative).read_bytes()
     files.append({"path": f"replacement-source/{relative}", "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
 
@@ -325,6 +347,7 @@ record = {
     "replacementGlyphs": glyph_manifest["files"],
     "replacementCursor": cursor_record,
     "replacementScenario": scenario_manifest["files"],
+    "replacementEntranceSchedule": entrance_choices,
     "replacementPaletteRGB": palette,
     "originalExternalResourcesBundled": False,
     "listedEmbeddedGlyphTablesReplaced": True,

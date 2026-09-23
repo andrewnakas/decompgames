@@ -9,7 +9,7 @@ Pinned reSL revision: `470cca330ee9abcf6173c843f4c89686c0c7e525` ([upstream](htt
 | `small_font.cpp`, `text_glyphs.cpp` | Bitmap fonts | Independently generated CC0 tables; private compile passed. Legibility and localization pending. |
 | `glyph_empty_background.cpp` | Full-bit sprite erase mask | Independently regenerated functional mask; private compile passed. |
 | `allowed_cursor_rail_types.cpp` | Buildable board cells | Independent candidate board generated; private compile passed, gameplay pending. |
-| `entrance_rails.cpp` | Eligible entrance positions | Independent candidate left/right entrance banks generated; private compile passed, placement and routing pending. |
+| `entrance_rails.cpp` and `src/game/init.cpp` selection | Eligible entrance positions and startup selection | Independent candidate left/right banks generated. The original random-spacing rule can loop forever on those banks, so the next private build uses six recorded alternating sites; compile, placement, and routing tests pending. |
 | `train_specification.cpp` | Train availability, speed, and composition | Independent candidate roster generated; private compile passed, gameplay balance pending. |
 | `chunk_bounding_boxes.cpp` | Incremental redraw regions | Candidate bounds enlarged for new rail sprites; private compile passed, ghosting checks pending. |
 | `carriage_bias.cpp`, `semaphore_glyph_bias.cpp` | Sprite placement offsets | Functional geometry coupled to new art. Keep under review; adjust after visual tests. |

@@ -57,6 +57,13 @@ def generate(output: Path) -> None:
     )
     assert all(x > y for x, y, _kind in rail_sites[:23])
     assert all(x < y for x, y, _kind in rail_sites[23:])
+    # The original random selector's spacing rule can loop forever on this
+    # independently drafted two-bank board. These six distinct start sites
+    # provide alternating entrances with straight outward tracks.
+    initial_entrances = [0, 23, 8, 31, 16, 39]
+    assert len(set(initial_entrances)) == 6
+    assert all((index < 23) == (slot % 2 == 0) for slot, index in enumerate(initial_entrances))
+    assert all(rail_sites[index][2] == (0 if index < 23 else 1) for index in initial_entrances)
     rails = [f"    {{0, {x}, {y}, {kind}, 0}}" for x, y, kind in rail_sites]
     files["entrance_rails.cpp"] = cpp(
         "entrance_rails.h",
@@ -122,7 +129,11 @@ def generate(output: Path) -> None:
         "#include <game/train.h>\n",
     )
 
-    manifest = {"license": "CC0-1.0", "originalAssetsRead": False, "files": []}
+    manifest = {
+        "license": "CC0-1.0", "originalAssetsRead": False,
+        "initialEntranceIndices": initial_entrances,
+        "files": [],
+    }
     for name, source in sorted(files.items()):
         data = source.encode("utf-8")
         (output / name).write_bytes(data)
