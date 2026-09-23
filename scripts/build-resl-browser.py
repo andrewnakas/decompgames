@@ -464,6 +464,18 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
         'entranceIdx, dstEntranceIdx, t->year);\n',
         1,
     ))
+    movement = source / "src/game/move_trains.cpp"
+    movement_text = movement.read_text()
+    delivered_marker = "                startHeaderFieldAnimation(HeaderFieldId::Trains, 1);\n"
+    if movement_text.count(delivered_marker) != 1:
+        raise SystemExit("Pinned train-delivery trace marker changed")
+    movement_text = movement_text.replace("#include <cstdlib>\n", "#include <cstdlib>\n#include <cstdio>\n", 1)
+    movement.write_text(movement_text.replace(
+        delivered_marker,
+        '                std::fprintf(stderr, "OJ train delivered\\n");\n'
+        + delivered_marker,
+        1,
+    ))
 
 build = output / "build"
 build.mkdir(parents=True)
@@ -474,7 +486,7 @@ files = []
 for name in ("resl.js", "resl.wasm"):
     data = (build / name).read_bytes()
     files.append({"path": name, "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
-for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/game/melody.cpp", "src/game/init.cpp", "src/game/main_loop.cpp", "src/game/mouse/mouse.cpp", "src/game/road_construction.cpp", "src/game/static_object.cpp", "src/game/train.cpp", "src/ui/components/dialog.cpp", "src/ui/components/status_bar.cpp", "src/ui/main_menu.cpp", "src/ui/loading_screen.cpp"):
+for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/game/melody.cpp", "src/game/init.cpp", "src/game/main_loop.cpp", "src/game/mouse/mouse.cpp", "src/game/move_trains.cpp", "src/game/road_construction.cpp", "src/game/static_object.cpp", "src/game/train.cpp", "src/ui/components/dialog.cpp", "src/ui/components/status_bar.cpp", "src/ui/main_menu.cpp", "src/ui/loading_screen.cpp"):
     data = (source / relative).read_bytes()
     files.append({"path": f"replacement-source/{relative}", "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
 

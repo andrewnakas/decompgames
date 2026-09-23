@@ -152,6 +152,19 @@ try {
   console.log('Private train canvas PNG SHA-256:', createHash('sha256').update(trainImage).digest('hex'));
   if (process.env.OPEN_JUNCTION_TRAIN_SCREENSHOT)
     await writeFile(process.env.OPEN_JUNCTION_TRAIN_SCREENSHOT, trainImage);
+  let delivered = false;
+  for (const seconds of [5, 10, 15, 20, 25, 30, 35, 40, 45]) {
+    await page.waitForTimeout(5_000);
+    after = await readState();
+    delivered = after.stderr.some((line) => line === 'OJ train delivered');
+    console.log(`After train travel ${seconds}s:`, JSON.stringify({
+      delivered, latestTick: gameTicks(after), abort: after.abort, pageErrors, remoteRequests,
+    }));
+    if (after.abort || pageErrors.length || remoteRequests.length)
+      throw new Error('Private browser encountered an error during train travel');
+    if (delivered) break;
+  }
+  if (!delivered) throw new Error('A complete train delivery was not observed on the starter route');
 } finally {
   await browser?.close();
   await new Promise((done) => server.close(done));
