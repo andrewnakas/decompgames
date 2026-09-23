@@ -53,6 +53,8 @@ The next asset boundary is the original-derived scenario data under `src/game/re
 
 The new rail sprites use a 192×43 canvas. The pinned `g_chunkBoundingBoxes` ranges are narrower for some rail types, so incremental redraw can leave stale pixels unless those functional bounds are recomputed. The uniformly sized train glyphs may also change carriage spacing because movement code reads glyph widths. Both issues require a compiled, muted gameplay pass and likely geometry adjustment before release.
 
+See [the provisional source-data audit](resl-source-data-audit.md) for every identified table, its likely role, and the remaining review work.
+
 ## Remaining release gate
 
 1. Confirm demo fallback cannot reach any original-data path. The private build recipe and silent audio backend are in place.
