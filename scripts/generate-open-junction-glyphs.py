@@ -157,11 +157,15 @@ def generate(output: Path) -> None:
     trees = []
     for variant in range(4):
         crown = 3 + variant % 2
+        def tree_radius(y: int) -> int:
+            return (y - crown) // 2 + 1
         fg = mask(16, 16, lambda x, y: (
-            (crown <= y <= 11 and abs(x - 7) <= (y - crown) // 2 + 1)
+            (crown <= y <= 11 and abs(x - 7) == tree_radius(y))
             or (x in (7, 8) and 10 <= y <= 15)
         ))
-        bg = mask(16, 16, lambda x, y: 5 <= x <= 10 and y == 12)
+        bg = mask(16, 16, lambda x, y: (
+            crown <= y <= 11 and abs(x - 7) < tree_radius(y)
+        ))
         trees.append(f"    {{{values(fg)}, {values(bg)}}}")
     files["static_object_glyph.cpp"] = document(
         "static_object_glyph.h",

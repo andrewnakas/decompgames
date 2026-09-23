@@ -89,6 +89,8 @@ Visual review of the temporary 640×480 screenshots showed that the original ran
 
 The first sparse-forest workflow [run 35865993114](https://github.com/andrewnakas/decompgames/actions/runs/35865993114) failed at linking because the patch matched past `generateForest()` and removed `createNewWorld()`. It produced no new browser evidence or binary. The patch boundary is now anchored to the source marker directly after `generateForest()`; the following build must confirm the correction.
 
+[Run 35866296580](https://github.com/andrewnakas/decompgames/actions/runs/35866296580) compiled the scoped patch and passed the same private, silent delivery, Save/reload/Archive, and backup round-trip smoke. The replacement forest distributes up to 32 trees with a 36-pixel spacing rule. Its temporary 640×480 gameplay screenshot is visibly less cluttered than the prior clustered version, but the tree crowns still render mostly black because the foreground mask fills them. The next glyph revision moves the fill to each tree's colored background layer and keeps a narrow dark outline and trunk. Private `resl.js` was 189,627 bytes (SHA-256 `b000d1fc2df2b5e104f8e3e082ca4085859d64ee840d920d813e45405f3af914`) and `resl.wasm` was 1,581,688 bytes (SHA-256 `b3337a8fe43277e7312c7a83582055983ae79e24e0b915edc91c7553d73744dc`); neither was published. Numeric counters and other screens still need visual review.
+
 ## Remaining release gate
 
 1. The initial idle hang was caused by incompatible entrance spacing in the independent scenario and has been corrected. Confirm the demo fallback cannot reach original data. The silent audio backend is in place.
