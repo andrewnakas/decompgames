@@ -44,7 +44,8 @@ jobs:
           assert record['audioBackend'] == 'null'
           assert len(record['replacementGlyphs']) == 10
           assert record['replacementCursor']['name'] == 'cursor.json'
-          assert len(record['replacementScenario']) == 4
+          assert len(record['replacementScenario']) == 5
+          assert len(record['replacementPaletteRGB']) == 16
           assert record['unreplacedEmbeddedVisuals'] == []
           assert record['browserTested'] is False
           assert record['releaseReady'] is False
