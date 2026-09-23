@@ -8,7 +8,7 @@ import { chromium } from '@playwright/test';
 const directory = resolve(process.argv[2] || '');
 if (!process.argv[2]) throw new Error('Usage: node test-open-junction-private.mjs BUILD_DIRECTORY');
 const html = `<!doctype html><html><head><meta charset="utf-8"></head><body style="margin:0;background:#07111b">
-<canvas id="canvas" width="640" height="350" tabindex="0"></canvas>
+<canvas id="canvas" width="640" height="480" tabindex="0"></canvas>
 <script>
 window.__oj = { ready: false, abort: '', stderr: [] };
 var Module = {
@@ -42,7 +42,7 @@ const base = `http://127.0.0.1:${server.address().port}`;
 let browser;
 try {
   browser = await chromium.launch({ headless: true, args: ['--mute-audio'] });
-  const page = await browser.newPage({ viewport: { width: 640, height: 350 } });
+  const page = await browser.newPage({ viewport: { width: 640, height: 480 } });
   const pageErrors = [];
   const remoteRequests = [];
   page.on('pageerror', (error) => pageErrors.push(error.message));
@@ -95,8 +95,9 @@ try {
   if (process.env.OPEN_JUNCTION_SCREENSHOT)
     await writeFile(process.env.OPEN_JUNCTION_SCREENSHOT, image);
   // The independently drafted board permits rails on center tile (5,5).
-  await page.mouse.move(320, 210);
-  await page.mouse.click(320, 210, { button: 'right' });
+  // Its logical y≈210 scales to physical y≈288 in the 640×480 SDL window.
+  await page.mouse.move(320, 288);
+  await page.mouse.click(320, 288, { button: 'right' });
   let after;
   for (const seconds of [5, 10, 15, 20]) {
     await page.waitForTimeout(5_000);
