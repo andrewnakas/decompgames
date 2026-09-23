@@ -64,6 +64,24 @@ def generate(output: Path) -> None:
         "#include <game/rail_info.h>\n",
     )
 
+    # Six station identities and three service markers, paired for contrast
+    # against the independently authored runtime palette.
+    entrance_colors = (
+        ("LightGreen", "DarkGreen"), ("Yellow", "DarkRed"),
+        ("Cyan", "DarkBlue"), ("Blue", "White"),
+        ("Red", "White"), ("White", "DarkBlue"),
+        ("Gray", "DarkGray"), ("BWBlinking", "Red"),
+        ("BWBlinking", "Black"),
+    )
+    entries = [
+        f"    {{Color::{background}, Color::{foreground}, 0, 0, {{}}}}"
+        for background, foreground in entrance_colors
+    ]
+    files["entrance.cpp"] = cpp(
+        "../entrance.h",
+        "Entrance g_entrances[9] = {\n" + ",\n".join(entries) + "\n};",
+    )
+
     # The glyphs extend around the tile center; broad bounds avoid stale rail
     # pixels during an incremental redraw. Tightening follows visual testing.
     boxes = ["    {-120, -32, 120, 72}" for _ in range(6)]

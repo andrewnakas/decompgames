@@ -17,10 +17,10 @@ output.mkdir(parents=True, exist_ok=True)
 
 HEADER = bytes.fromhex("220007383f3e06191124041b0312023f")
 PALETTE = [
-    (10, 13, 24), (35, 49, 74), (37, 76, 99), (47, 114, 123),
-    (90, 180, 172), (152, 226, 186), (245, 213, 104), (237, 151, 67),
-    (211, 72, 81), (145, 72, 112), (110, 87, 145), (86, 112, 166),
-    (129, 160, 190), (184, 202, 218), (226, 234, 240), (255, 255, 255),
+    (10, 13, 24), (35, 49, 74), (129, 160, 190), (86, 112, 166),
+    (226, 234, 240), (245, 213, 104), (237, 151, 67), (47, 114, 180),
+    (37, 76, 99), (211, 72, 81), (145, 72, 112), (90, 180, 172),
+    (47, 114, 123), (152, 226, 186), (45, 135, 91), (255, 255, 255),
 ]
 
 FONT = {
@@ -224,6 +224,7 @@ manifest = {
     "license": "CC0-1.0",
     "originalAssetsRead": False,
     "source": "scripts/generate-open-junction-assets.py",
+    "paletteRGB": PALETTE,
     "scope": "Independent loading, background, game-over, icon, and manual files for a replacement-only reSL build.",
     "files": sorted(records, key=lambda item: item["name"]),
     "remainingGate": "Generated glyphs, remaining source data, geometry, and gameplay require a full release audit.",

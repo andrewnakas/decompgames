@@ -43,6 +43,13 @@ if output.exists():
 asset_manifest = json.loads((generated / "manifest.json").read_text())
 if asset_manifest.get("license") != "CC0-1.0" or asset_manifest.get("originalAssetsRead") is not False:
     raise SystemExit("Independent asset provenance check failed")
+palette = asset_manifest.get("paletteRGB")
+if (not isinstance(palette, list) or len(palette) != 16 or any(
+    not isinstance(rgb, list) or len(rgb) != 3 or any(
+        not isinstance(channel, int) or not 0 <= channel <= 255 for channel in rgb
+    ) for rgb in palette
+)):
+    raise SystemExit("Independent runtime palette is missing or invalid")
 expected_assets = {
     "play.7", "poster.7", "captions.7", "GAMEOVER.7", "RULES.TXT",
     "build_rail_icon.png", "call_server_icon.png", "time_fast2.png", "time_fast3.png",
@@ -78,7 +85,7 @@ if set(cursor) != {"black", "white"} or any(
 
 scenario_manifest = json.loads((generated_scenario / "manifest.json").read_text())
 expected_scenario = {
-    "allowed_cursor_rail_types.cpp", "entrance_rails.cpp",
+    "allowed_cursor_rail_types.cpp", "entrance_rails.cpp", "entrance.cpp",
     "chunk_bounding_boxes.cpp", "train_specification.cpp",
 }
 if scenario_manifest.get("license") != "CC0-1.0" or scenario_manifest.get("originalAssetsRead") is not False:
@@ -121,6 +128,24 @@ for number, layer in ((1, "black"), (2, "white")):
     if count != 1:
         raise SystemExit(f"Pinned SDL cursor table {number} changed")
 mouse.write_text(mouse_text)
+
+video = source / "src/system/driver/sdl/video.cpp"
+video_text = video.read_text()
+runtime_colors = [
+    (0 if index == 0 else 255) << 24 | red << 16 | green << 8 | blue
+    for index, (red, green, blue) in enumerate(palette)
+]
+palette_cpp = "m_vgaState.palette = {\n" + "".join(
+    f"        0x{value:08X}{',' if index < 15 else ''}\n"
+    for index, value in enumerate(runtime_colors)
+) + "    };"
+video_text, count = re.subn(
+    r"m_vgaState\.palette = \{\n.*?\n    \};", palette_cpp,
+    video_text, count=1, flags=re.S,
+)
+if count != 1:
+    raise SystemExit("Pinned runtime palette changed")
+video.write_text(video_text)
 
 cmake = source / "CMakeLists.txt"
 cmake_text = cmake.read_text()
@@ -181,10 +206,8 @@ if dialog_text.count(timeout_branch) != 1:
     raise SystemExit("Pinned dialog timeout changed")
 dialog.write_text(dialog_text.replace(
     timeout_branch,
-    "if (timeout-- == 0) {\n"
-    "                    if (type == DialogType::MainMenu) timeout = 700;\n"
-    "                    else return -1;\n"
-    "                }",
+    "if (type != DialogType::MainMenu && timeout-- == 0)\n"
+    "                    return -1;",
 ))
 
 menu = source / "src/ui/main_menu.cpp"
@@ -209,7 +232,7 @@ files = []
 for name in ("resl.js", "resl.wasm"):
     data = (build / name).read_bytes()
     files.append({"path": name, "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
-for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/game/melody.cpp", "src/ui/components/dialog.cpp", "src/ui/main_menu.cpp"):
+for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/game/melody.cpp", "src/ui/components/dialog.cpp", "src/ui/main_menu.cpp"):
     data = (source / relative).read_bytes()
     files.append({"path": f"replacement-source/{relative}", "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
 
@@ -234,6 +257,7 @@ record = {
     "replacementGlyphs": glyph_manifest["files"],
     "replacementCursor": cursor_record,
     "replacementScenario": scenario_manifest["files"],
+    "replacementPaletteRGB": palette,
     "originalExternalResourcesBundled": False,
     "listedEmbeddedGlyphTablesReplaced": True,
     "embeddedVisualsReplaced": False,
