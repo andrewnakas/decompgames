@@ -64,7 +64,17 @@ jobs:
           node-version: 24
           cache: pnpm
       - name: Start privately in muted Chromium
+        env:
+          OPEN_JUNCTION_SCREENSHOT: /tmp/open-junction-gameplay.png
         run: |
           pnpm install --frozen-lockfile
           pnpm exec playwright install chromium --with-deps
           timeout 45s node scripts/test-open-junction-private.mjs /tmp/open-junction-build/build
+      - name: Retain replacement-only screenshot for visual audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: open-junction-private-screenshot
+          path: /tmp/open-junction-gameplay.png
+          if-no-files-found: ignore
+          retention-days: 1

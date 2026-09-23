@@ -1,6 +1,6 @@
 // Private, silent browser smoke test. A passing result is not a gameplay test.
 import { createServer } from 'node:http';
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { createHash } from 'node:crypto';
 import { chromium } from '@playwright/test';
@@ -92,6 +92,8 @@ try {
   const initialRails = Number(gameTicks(before).match(/rails (\d+)/)?.[1]);
   const image = await page.locator('canvas').screenshot({ timeout: 5_000 });
   console.log('Private gameplay canvas PNG SHA-256:', createHash('sha256').update(image).digest('hex'));
+  if (process.env.OPEN_JUNCTION_SCREENSHOT)
+    await writeFile(process.env.OPEN_JUNCTION_SCREENSHOT, image);
   // The independently drafted board permits rails on center tile (5,5).
   await page.mouse.move(320, 210);
   await page.mouse.click(320, 210, { button: 'right' });
