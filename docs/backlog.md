@@ -34,7 +34,7 @@ A Link to the Past's C reconstruction now compiles into a data-free 2.22 MB WASM
 
 ## Strict replacement candidate: Open Junction
 
-reSL's documented ShortLine decompilation now has independent CC0 external assets, ten generated replacement visual/mask tables, a replacement SDL cursor, and a candidate independent board, entrance set, train roster, rail redraw bounds, entrance colors, and runtime palette. The complete replacement set compiled privately in GitHub Actions run 35826170962 with a null audio backend; no binary was uploaded. Muted browser smoke runs confirmed runtime initialization and a 640×480 canvas without page errors or off-origin requests. Passive runs 35825608587 and 35826170962 found an idle stall between 13 and 18 seconds without input. Traced run 35828810324 emitted no menu-frame messages, and source review found the engine normally spends about 24 seconds in its rotating loading screen. A new private recipe shortens that animation to about one second and will test whether it was causing the stall. The new colors need in-game contrast review; gameplay, motion-data provenance, a completable loop, and persistence remain open. This build is not counted toward additions 3–5. See `docs/resl-replacement-integration.md` for pinned revision, artifact hashes, and release blockers.
+reSL's documented ShortLine decompilation now has independent CC0 external assets, ten generated replacement visual/mask tables, a replacement SDL cursor, and a candidate independent board, entrance set, train roster, rail redraw bounds, entrance colors, and runtime palette. The complete replacement set compiled privately in GitHub Actions run 35826170962 with a null audio backend; no binary was uploaded. Muted browser smoke runs confirmed runtime initialization and a 640×480 canvas without page errors or off-origin requests. Passive runs 35825608587 and 35826170962 found an idle stall between 13 and 18 seconds without input. Source review found a roughly 24-second rotating loading screen; shortening it to about one second moved the stall to before the 3-second state read in run 35829212839. A corrected private stage trace will locate the first failing startup operation. The new colors need in-game contrast review; gameplay, motion-data provenance, a completable loop, and persistence remain open. This build is not counted toward additions 3–5. See `docs/resl-replacement-integration.md` for pinned revision, artifact hashes, and release blockers.
 
 ## Current release gate
 
@@ -76,6 +76,11 @@ The user explicitly requested no audible development tests. Follow `AGENTS.md`: 
 - Consider additional open-data games on existing runtimes only when they are genuinely distinct games. Do not count editions, demos, or repeated engine builds as extra games.
 
 ## Discovery coverage to research
+
+### September 23 strict-candidate exclusions
+
+- [G-Diffuser](https://github.com/Zorkats/G-Diffuser) is a documented F-Zero X decompilation-based PC port, but upstream requires a user-provided cartridge ROM, Expansion Kit disk image, and IPL ROM. Its generated game-data archive is derived from those files and explicitly cannot be redistributed. It has no independently authored complete replacement game pack, so it cannot count toward the five instant-play releases; keep it for directory or future local-file research.
+- [Streets of Rage Project](https://github.com/RuiNelson/StreetsOfRageProject) requires a private 512 KiB cartridge ROM even to generate its C++ output; the generated directory is absent from a fresh clone. Its README places removal of Mega Drive hardware emulation and higher-resolution replacement assets on a future roadmap. It is not yet an eligible complete replacement-asset browser release. Revisit only if its source and asset boundary changes.
 
 - r/decomps: initial scan and primary checks recorded in `docs/reddit-opportunities-2026-09-20.md`. Prioritize Mario Kart 64 / SpaghettiKart license and browser feasibility; watch OpenPete for public source. Use community requests for clear project status and mod links to inform game pages. Do not confuse wishlist threads with available decomps.
 

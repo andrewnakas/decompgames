@@ -259,10 +259,16 @@ loading.write_text(loading_text)
 if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
     loop = source / "src/game/main_loop.cpp"
     loop_text = loop.read_text()
+    task_start = loop_text.find("Task taskGameMainLoop()")
+    task_end = loop_text.find("        mainMenu();\n", task_start)
+    if task_start < 0 or task_end < 0:
+        raise SystemExit("Pinned startup scope changed")
+    task_end += len("        mainMenu();\n")
+    startup = loop_text[task_start:task_end]
     loading_if = "    if (g_isDemoMode || !g_gameOver)\n"
-    if loop_text.count(loading_if) != 1:
+    if startup.count(loading_if) != 1:
         raise SystemExit("Pinned loading-screen condition changed")
-    loop_text = loop_text.replace(
+    startup = startup.replace(
         loading_if,
         '    std::fprintf(stderr, "OJ stage: before loading\\n");\n' + loading_if,
         1,
@@ -276,14 +282,14 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
         ("        mainMenu();\n", "after main menu"),
     )
     for marker, message in stages:
-        if loop_text.count(marker) != 1:
+        if startup.count(marker) != 1:
             raise SystemExit(f"Pinned main-loop trace marker changed: {message}")
-        loop_text = loop_text.replace(
+        startup = startup.replace(
             marker,
             marker + f'    std::fprintf(stderr, "OJ stage: {message}\\n");\n',
             1,
         )
-    loop.write_text(loop_text)
+    loop.write_text(loop_text[:task_start] + startup + loop_text[task_end:])
 
 build = output / "build"
 build.mkdir(parents=True)
