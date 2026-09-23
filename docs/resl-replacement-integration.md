@@ -137,6 +137,8 @@ The private scenario generator now replaces the recovered `carriage_bias.cpp` sp
 
 [Run 35928548131](https://github.com/andrewnakas/decompgames/actions/runs/35928548131) compiled the revised candidate but stopped before browser testing because the workflow still asserted the old five-table replacement-scenario count. The assertion is corrected to six; this failed run supplies no gameplay or visual evidence for the new vehicle offsets.
 
+[Run 35928838477](https://github.com/andrewnakas/decompgames/actions/runs/35928838477) passed with the independently generated vehicle baseline. Muted Chromium again observed a complete train delivery, a single active train on the two-station route, save/backup restoration, trace-only year transition and game-over entry, and the narrowed corresponding-source package. The temporary native-size train screenshot was inspected; the vehicle is seated on the rail, without an obvious new vertical offset or clipping defect. This is one visual frame and does not clear dynamic redraw or the remaining original signal offsets. No binary was published.
+
 1. The initial idle hang was caused by incompatible entrance spacing in the independent scenario and has been corrected. Confirm the demo fallback cannot reach original data. The silent audio backend is in place.
 2. Inspect the compiled fonts, signals, erase mask, rails, trains, and colors across dynamic gameplay. Audit remaining non-glyph source data before deciding the replacement build is redistributable.
 3. Rebuild from the pinned Emscripten revision and publish the exact replacement sources, generator, manifest, and checksums only after the asset audit passes.
