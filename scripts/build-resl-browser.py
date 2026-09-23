@@ -187,9 +187,18 @@ if status_text.count(original_footer) != 1:
     raise SystemExit("Pinned footer credit changed")
 status_bar.write_text(status_text.replace(
     original_footer,
-    '"OPEN JUNCTION * RESL ENGINE * INDEPENDENT ART * LICENSES IN ABOUT"',
+    '"OPEN JUNCTION - RESL ENGINE - CC0 ART - SOURCE AT DECOMPGAMES.COM"',
     1,
 ))
+
+# The original grass routine scatters over a thousand random black pixels
+# across the board. The independent map uses a clear drafted grid instead.
+static_objects = source / "src/game/static_object.cpp"
+static_text = static_objects.read_text()
+grass_call = "    drawGrass(yOffset);\n"
+if static_text.count(grass_call) != 1:
+    raise SystemExit("Pinned grass draw call changed")
+static_objects.write_text(static_text.replace(grass_call, "", 1))
 
 cmake = source / "CMakeLists.txt"
 cmake_text = cmake.read_text()
@@ -408,7 +417,7 @@ files = []
 for name in ("resl.js", "resl.wasm"):
     data = (build / name).read_bytes()
     files.append({"path": name, "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
-for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/game/melody.cpp", "src/game/init.cpp", "src/game/main_loop.cpp", "src/game/mouse/mouse.cpp", "src/game/road_construction.cpp", "src/ui/components/dialog.cpp", "src/ui/components/status_bar.cpp", "src/ui/main_menu.cpp", "src/ui/loading_screen.cpp"):
+for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/game/melody.cpp", "src/game/init.cpp", "src/game/main_loop.cpp", "src/game/mouse/mouse.cpp", "src/game/road_construction.cpp", "src/game/static_object.cpp", "src/ui/components/dialog.cpp", "src/ui/components/status_bar.cpp", "src/ui/main_menu.cpp", "src/ui/loading_screen.cpp"):
     data = (source / relative).read_bytes()
     files.append({"path": f"replacement-source/{relative}", "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
 

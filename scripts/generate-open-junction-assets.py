@@ -154,7 +154,7 @@ rect(play, 0, 0, 640, 46, 1)
 for x in range(0, 641, 32): rect(play, x, 47, 1, 303, 2)
 for y in range(47, 351, 24): rect(play, 0, y, 640, 1, 2)
 text(play, 16, 14, "OPEN JUNCTION", 5, 2)
-text(play, 440, 18, "RAIL CONTROL", 12, 1)
+text(play, 440, 18, "RAIL CONTROL", 4, 1)
 
 poster = canvas(640, 350, 0)
 for y in range(350):
