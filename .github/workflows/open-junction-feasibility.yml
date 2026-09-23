@@ -78,6 +78,8 @@ jobs:
           pnpm exec playwright install chromium --with-deps
           timeout 180s node scripts/test-open-junction-private.mjs /tmp/open-junction-build/build
       - name: Exercise the actual player in an ephemeral private preview
+        env:
+          OPEN_JUNCTION_PLAYER_SCREENSHOT: /tmp/open-junction-player.png
         run: |
           python3 - <<'PY'
           import json

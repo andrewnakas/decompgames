@@ -95,6 +95,8 @@ The first sparse-forest workflow [run 35865993114](https://github.com/andrewnaka
 
 The first actual-player fixture [run 35870845347](https://github.com/andrewnakas/decompgames/actions/runs/35870845347) built a private Astro page and loaded the replacement engine through the site's iframe shell with sound off, but its smoke sent Go before the in-engine menu reached its input loop. Traces stopped at the menu screen shift, so this run does not establish player input. The test now waits for the engine's menu-frame trace before sending Go. The fixture exists only in CI; no runtime was published.
 
+[Run 35871381411](https://github.com/andrewnakas/decompgames/actions/runs/35871381411) waited for the menu and observed Go reach the actual player's gameplay loop with sound still off. Its final assertion incorrectly required a fixed 640×480 canvas; the SDL player resized its drawing buffer to the preview's 1100×900 viewport. The next test accepts a responsive canvas and captures a temporary screenshot for aspect and legibility review. That earlier test did not finish all shell checks, so it is not a release pass.
+
 ## Remaining release gate
 
 1. The initial idle hang was caused by incompatible entrance spacing in the independent scenario and has been corrected. Confirm the demo fallback cannot reach original data. The silent audio backend is in place.

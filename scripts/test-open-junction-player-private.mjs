@@ -1,6 +1,7 @@
 // CI-only exercise of the real Decomp Games player against an ephemeral,
 // replacement-only Open Junction build. The fixture is never deployed.
 import { spawn } from 'node:child_process';
+import { writeFile } from 'node:fs/promises';
 import { setTimeout as delay } from 'node:timers/promises';
 import { chromium } from '@playwright/test';
 
@@ -56,8 +57,12 @@ try {
     throw new Error('Shared player did not enter Open Junction gameplay after Go');
   const canvasSize = await frame.locator('canvas').evaluate(canvas =>
     ({ width: canvas.width, height: canvas.height }));
-  if (canvasSize.width !== 640 || canvasSize.height !== 480)
+  if (canvasSize.width < 640 || canvasSize.height < 480)
     throw new Error(`Unexpected shared-player canvas size: ${JSON.stringify(canvasSize)}`);
+  console.log('Private shared-player canvas size:', canvasSize);
+  if (process.env.OPEN_JUNCTION_PLAYER_SCREENSHOT)
+    await writeFile(process.env.OPEN_JUNCTION_PLAYER_SCREENSHOT,
+      await frame.locator('canvas').screenshot({ timeout: 5_000 }));
   if (errors.length || remoteRequests.length)
     throw new Error(`Private shared-player errors: ${JSON.stringify({ errors, remoteRequests })}`);
   console.log('Private shared-player launch passed with sound off and no remote requests.');
