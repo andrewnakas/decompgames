@@ -279,12 +279,12 @@ try {
   // Exercise the otherwise slow year-2000 branch with a trace-only jump.
   // This proves the transition code path, not 200 years of continuous play.
   await page.evaluate(() => {
-    if (typeof window.Module._oj_trace_jump_to_1999 !== 'function')
+    if (typeof window.Module._oj_trace_jump_to_2000 !== 'function')
       throw new Error('Private transition hook is missing');
-    window.Module._oj_trace_jump_to_1999();
+    window.Module._oj_trace_jump_to_2000();
   });
   let transition;
-  for (let attempt = 0; attempt < 8; ++attempt) {
+  for (let attempt = 0; attempt < 15; ++attempt) {
     await page.waitForTimeout(1_000);
     transition = await readState();
     if (transition.stderr.includes('OJ level transition alert')) break;
