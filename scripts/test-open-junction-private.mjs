@@ -2,6 +2,7 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
+import { createHash } from 'node:crypto';
 import { chromium } from '@playwright/test';
 
 const directory = resolve(process.argv[2] || '');
@@ -85,6 +86,22 @@ try {
     if (!state.stderr.some((message) => message.includes('OJ stage: after main menu')))
       throw new Error('Go did not exit the main menu in the private smoke');
   }
+  const gameTicks = (state) => [...state.stderr].reverse().find((line) => line.startsWith('OJ game tick '));
+  const before = await readState();
+  if (!gameTicks(before)) throw new Error('Gameplay loop did not advance after Go');
+  const image = await page.locator('canvas').screenshot({ timeout: 5_000 });
+  console.log('Private gameplay canvas PNG SHA-256:', createHash('sha256').update(image).digest('hex'));
+  // The independently drafted board permits rails on center tile (5,5).
+  await page.mouse.move(320, 210);
+  await page.mouse.click(320, 210, { button: 'right' });
+  await page.waitForTimeout(3_000);
+  const after = await readState();
+  console.log('After center-tile build:', JSON.stringify({ state: after, pageErrors, remoteRequests }));
+  if (after.abort || pageErrors.length || remoteRequests.length)
+    throw new Error('Private browser encountered an error while building rails');
+  const railCount = (gameTicks(after) || '').match(/rails (\d+)/);
+  if (!railCount || Number(railCount[1]) < 1)
+    throw new Error('Center-tile rail construction was not observed');
 } finally {
   await browser?.close();
   await new Promise((done) => server.close(done));

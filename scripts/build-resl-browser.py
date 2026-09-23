@@ -312,6 +312,21 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
             1,
         )
     loop.write_text(loop_text[:task_start] + startup + loop_text[task_end:])
+    loop_text = loop.read_text()
+    tick_marker = "                co_await sleep(50);\n"
+    if loop_text.count(tick_marker) != 1:
+        raise SystemExit("Pinned gameplay tick marker changed")
+    loop.write_text(loop_text.replace(
+        tick_marker,
+        tick_marker
+        + '                static int ojGameTicks = 0;\n'
+        + '                if ((++ojGameTicks % 20) == 0)\n'
+        + '                    std::fprintf(stderr, "OJ game tick %d rails %u year %d entrances %d\\n",\n'
+        + '                        ojGameTicks, g_railRoadCount,\n'
+        + '                        g_headers[static_cast<int>(HeaderFieldId::Year)].value,\n'
+        + '                        g_entranceCount);\n',
+        1,
+    ))
 
 build = output / "build"
 build.mkdir(parents=True)
