@@ -357,7 +357,8 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
     ).replace(
         build_action,
         build_action + '            std::fprintf(stderr, "OJ build click tile %d,%d type %d\\n", '
-        'g_railCursorState.tileX, g_railCursorState.tileY, g_railCursorState.railType);\n',
+        'mouse::g_railCursorState.tileX, mouse::g_railCursorState.tileY, '
+        'mouse::g_railCursorState.railType);\n',
         1,
     ).replace(
         queue_action,

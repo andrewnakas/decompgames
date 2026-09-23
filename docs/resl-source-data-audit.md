@@ -9,7 +9,7 @@ Pinned reSL revision: `470cca330ee9abcf6173c843f4c89686c0c7e525` ([upstream](htt
 | `small_font.cpp`, `text_glyphs.cpp` | Bitmap fonts | Independently generated CC0 tables; private compile passed. Legibility and localization pending. |
 | `glyph_empty_background.cpp` | Full-bit sprite erase mask | Independently regenerated functional mask; private compile passed. |
 | `allowed_cursor_rail_types.cpp` | Buildable board cells | Independent candidate board generated; private compile passed, gameplay pending. |
-| `entrance_rails.cpp` and `src/game/init.cpp` selection | Eligible entrance positions and startup selection | Independent candidate left/right banks generated. The original random-spacing rule can loop forever on those banks, so the next private build uses six recorded alternating sites; compile, placement, and routing tests pending. |
+| `entrance_rails.cpp` and `src/game/init.cpp` selection | Eligible entrance positions and startup selection | Independent candidate left/right banks generated. The original random-spacing rule can loop forever on those banks; six recorded alternating sites compiled and passed a muted menu/gameplay-start smoke. Train routing remains unverified. |
 | `train_specification.cpp` | Train availability, speed, and composition | Independent candidate roster generated; private compile passed, gameplay balance pending. |
 | `chunk_bounding_boxes.cpp` | Incremental redraw regions | Candidate bounds enlarged for new rail sprites; private compile passed, ghosting checks pending. |
 | `carriage_bias.cpp`, `semaphore_glyph_bias.cpp` | Sprite placement offsets | Functional geometry coupled to new art. Keep under review; adjust after visual tests. |
@@ -22,4 +22,4 @@ Pinned reSL revision: `470cca330ee9abcf6173c843f4c89686c0c7e525` ([upstream](htt
 
 The top-level upstream `resources/` directory is excluded from the private build; only generated external files are embedded. A source-wide search for static byte arrays found the SDL cursor outside `src/game/resources`; other matches reviewed so far were control, text, audio, or rendering logic. Re-run this audit after source changes and before distribution. Do not infer that an exhaustive asset clearance has already happened.
 
-The candidate build is still private. A successful compile establishes only that the patch set links. Release requires a muted browser test of menu input, rail placement, train dispatch, a completable objective, save/reload/import, and the final provenance review. It remains outside the five-release count.
+The candidate build is still private. Muted browser tests now establish menu input and entry to the gameplay loop, with one entrance and advancing ticks. Release still requires rail placement, train dispatch, a completable objective, save/reload/import, visual review, and the final provenance review. It remains outside the five-release count.
