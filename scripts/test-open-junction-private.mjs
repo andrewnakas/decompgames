@@ -95,14 +95,19 @@ try {
   // The independently drafted board permits rails on center tile (5,5).
   await page.mouse.move(320, 210);
   await page.mouse.click(320, 210, { button: 'right' });
-  await page.waitForTimeout(3_000);
-  const after = await readState();
-  console.log('After center-tile build:', JSON.stringify({ state: after, pageErrors, remoteRequests }));
-  if (after.abort || pageErrors.length || remoteRequests.length)
-    throw new Error('Private browser encountered an error while building rails');
-  const railCount = (gameTicks(after) || '').match(/rails (\d+)/);
-  if (!after.stderr.some((line) => line.startsWith('OJ build queued tile ')) ||
-      !railCount || Number(railCount[1]) <= initialRails)
+  let after;
+  for (const seconds of [5, 10, 15, 20]) {
+    await page.waitForTimeout(5_000);
+    after = await readState();
+    const latestTick = gameTicks(after);
+    const latestCommit = [...after.stderr].reverse().find((line) => line.startsWith('OJ rail committed count '));
+    console.log(`After build ${seconds}s:`, JSON.stringify({ latestTick, latestCommit, abort: after.abort, pageErrors, remoteRequests }));
+    if (after.abort || pageErrors.length || remoteRequests.length)
+      throw new Error('Private browser encountered an error while building rails');
+    if (latestCommit && Number(latestCommit.match(/count (\d+)/)?.[1]) > initialRails) break;
+  }
+  if (!after.stderr.some((line) => line.startsWith('OJ build queued tile 5,5')) ||
+      !after.stderr.some((line) => /^OJ rail committed count [2-9]/.test(line)))
     throw new Error('Center-tile rail construction was not observed');
 } finally {
   await browser?.close();

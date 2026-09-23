@@ -367,6 +367,16 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
         1,
     )
     mouse_game.write_text(mouse_game_text)
+    construction = source / "src/game/road_construction.cpp"
+    construction_text = construction.read_text()
+    rail_commit = "        g_railRoad[g_railRoadCount++] = ri;\n"
+    if construction_text.count(rail_commit) != 1:
+        raise SystemExit("Pinned rail-construction completion marker changed")
+    construction.write_text(construction_text.replace(
+        rail_commit,
+        rail_commit + '        std::fprintf(stderr, "OJ rail committed count %u\\n", g_railRoadCount);\n',
+        1,
+    ))
 
 build = output / "build"
 build.mkdir(parents=True)
@@ -377,7 +387,7 @@ files = []
 for name in ("resl.js", "resl.wasm"):
     data = (build / name).read_bytes()
     files.append({"path": name, "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
-for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/game/melody.cpp", "src/game/init.cpp", "src/game/main_loop.cpp", "src/game/mouse/mouse.cpp", "src/ui/components/dialog.cpp", "src/ui/main_menu.cpp", "src/ui/loading_screen.cpp"):
+for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/game/melody.cpp", "src/game/init.cpp", "src/game/main_loop.cpp", "src/game/mouse/mouse.cpp", "src/game/road_construction.cpp", "src/ui/components/dialog.cpp", "src/ui/main_menu.cpp", "src/ui/loading_screen.cpp"):
     data = (source / relative).read_bytes()
     files.append({"path": f"replacement-source/{relative}", "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
 
