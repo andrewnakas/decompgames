@@ -64,6 +64,12 @@ try {
     await writeFile(process.env.OPEN_JUNCTION_PLAYER_SCREENSHOT,
       await frame.locator('canvas').screenshot({ timeout: 5_000 }));
   // Exercise the user-facing backup controls across the parent/iframe boundary.
+  await page.keyboard.press('3');
+  for (let attempt = 0; attempt < 12 && !engineLogs.some(line =>
+    /OJ game tick .* year 180[1-9] entrances [2-9]/.test(line)); ++attempt)
+    await delay(2_000);
+  if (!engineLogs.some(line => /OJ game tick .* year 180[1-9] entrances [2-9]/.test(line)))
+    throw new Error('Shared player did not reach a distinct two-station save state');
   await page.keyboard.press('p');
   await delay(1_000);
   await page.keyboard.press('s');
@@ -153,6 +159,7 @@ try {
     buffer: Buffer.from(JSON.stringify(backup)),
   });
   await page.locator('#start-game').waitFor({ state: 'visible', timeout: 15_000 });
+  const priorTraceCount = engineLogs.length;
   await page.locator('#start-game').click();
   await page.waitForFunction(() =>
     document.querySelector('#player-status')?.textContent?.includes('Engine running'),
@@ -163,11 +170,26 @@ try {
     .map(name => ({ path: `/persistent/${name}`, size: window.Module.FS.stat(`/persistent/${name}`).size })));
   if (!restored?.some(file => saved.some(item => item.path === file.path && item.size === file.size)))
     throw new Error('Shared player did not restore the imported backup');
+  await restoredFrame.locator('canvas').focus();
+  for (let attempt = 0; attempt < 15 && !engineLogs.slice(priorTraceCount)
+    .some(line => line.includes('OJ menu frame')); ++attempt)
+    await delay(1_000);
+  if (!engineLogs.slice(priorTraceCount).some(line => line.includes('OJ menu frame')))
+    throw new Error('Imported backup did not reach the in-game Archive menu');
+  await page.keyboard.press('a');
+  await delay(2_000);
+  await page.keyboard.press('g');
+  for (let attempt = 0; attempt < 10 && !engineLogs.slice(priorTraceCount)
+    .some(line => /OJ game tick .* year 180[1-9] entrances [2-9]/.test(line)); ++attempt)
+    await delay(1_000);
+  if (!engineLogs.slice(priorTraceCount)
+    .some(line => /OJ game tick .* year 180[1-9] entrances [2-9]/.test(line)))
+    throw new Error(`Imported backup did not resume the two-station game: ${JSON.stringify(engineLogs.slice(-8))}`);
   if (errors.length || remoteRequests.length)
     throw new Error(`Private shared-player errors: ${JSON.stringify({ errors, remoteRequests })}`);
   if (await page.locator('#toggle-sound').textContent() !== 'Sound: off')
     throw new Error('Private shared player enabled audible output during save round trip');
-  console.log('Private shared-player launch and backup round trip passed with sound off and no remote requests.');
+  console.log('Private shared-player launch, backup round trip, and Archive gameplay restore passed with sound off and no remote requests.');
 } finally {
   await browser?.close();
   server.kill('SIGTERM');
