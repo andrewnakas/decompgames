@@ -57,6 +57,8 @@ See [the provisional source-data audit](resl-source-data-audit.md) for every ide
 
 The manual CI workflow now also includes a **private browser smoke test** with the null audio driver and Chromium's mute flag. It checks runtime initialization, canvas size, page errors, and off-origin requests, then records before/after Enter screenshot hashes without uploading images. Even if it passes, those observations establish only browser startup and input delivery; they cannot certify menu progression, gameplay, persistence, or redistribution readiness.
 
+The replacement scenario compiled in [run 35815903124](https://github.com/andrewnakas/decompgames/actions/runs/35815903124). Its private `resl.js` is 189,490 bytes (SHA-256 `7d4b59d9c0edadff3e23b1f5fc924e08d3da1654478df519ac24ed5e6036f629`) and `resl.wasm` is 1,577,569 bytes (SHA-256 `0c1c917b6e6f4818172c99b65962dd7b59e01c43fa99cf5dc640aafc4df73dd9`). No binary was uploaded. The browser smoke run is [35819927541](https://github.com/andrewnakas/decompgames/actions/runs/35819927541); its outcome and observations still need to be recorded.
+
 ## Remaining release gate
 
 1. Confirm demo fallback cannot reach any original-data path. The private build recipe and silent audio backend are in place.
