@@ -414,6 +414,49 @@ loading.write_text(loading_text)
 if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
     loop = source / "src/game/main_loop.cpp"
     loop_text = loop.read_text()
+    year_marker = "static std::int16_t g_gameTime = 0;\n"
+    if loop_text.count(year_marker) != 1:
+        raise SystemExit("Pinned game-time marker changed")
+    loop_text = loop_text.replace(
+        "#include <cstdlib>\n", "#include <cstdlib>\n#include <emscripten/emscripten.h>\n", 1,
+    ).replace(
+        year_marker,
+        year_marker
+        + '\n// Private branch test only; this hook is absent from distributable builds.\n'
+        + 'extern "C" EMSCRIPTEN_KEEPALIVE void oj_trace_jump_to_1999() {\n'
+        + '    g_headers[static_cast<int>(HeaderFieldId::Year)].value = 1999;\n'
+        + '    g_gameTime = 1900;\n'
+        + '    std::fprintf(stderr, "OJ year jump prepared\\n");\n'
+        + '}\n',
+        1,
+    )
+    transition_marker = "                case 2000:\n"
+    if loop_text.count(transition_marker) != 1:
+        raise SystemExit("Pinned level-transition marker changed")
+    loop_text = loop_text.replace(
+        transition_marker,
+        transition_marker + '                    std::fprintf(stderr, "OJ level transition entered\\n");\n',
+        1,
+    )
+    alert_marker = '                    alert("Happy New 2000 Year!");\n'
+    if loop_text.count(alert_marker) != 1:
+        raise SystemExit("Pinned level-transition alert changed")
+    loop_text = loop_text.replace(
+        alert_marker,
+        '                    std::fprintf(stderr, "OJ level transition alert\\n");\n'
+        + alert_marker,
+        1,
+    )
+    completed_marker = "                    g_headers[static_cast<int>(HeaderFieldId::Level)].value++;\n"
+    if loop_text.count(completed_marker) != 1:
+        raise SystemExit("Pinned level-increment marker changed")
+    loop_text = loop_text.replace(
+        completed_marker,
+        completed_marker + '                    std::fprintf(stderr, "OJ level transition completed level %d year %d\\n", '
+        + 'g_headers[static_cast<int>(HeaderFieldId::Level)].value, '
+        + 'g_headers[static_cast<int>(HeaderFieldId::Year)].value);\n',
+        1,
+    )
     task_start = loop_text.find("Task taskGameMainLoop()")
     task_end = loop_text.find("        mainMenu();\n", task_start)
     if task_start < 0 or task_end < 0:

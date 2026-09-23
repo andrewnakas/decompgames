@@ -276,6 +276,33 @@ try {
     throw new Error('Imported backup did not restore gameplay state');
   if (pageErrors.length || remoteRequests.length)
     throw new Error('Private browser encountered an error during backup round trip');
+  // Exercise the otherwise slow year-2000 branch with a trace-only jump.
+  // This proves the transition code path, not 200 years of continuous play.
+  await page.evaluate(() => {
+    if (typeof window.Module._oj_trace_jump_to_1999 !== 'function')
+      throw new Error('Private transition hook is missing');
+    window.Module._oj_trace_jump_to_1999();
+  });
+  let transition;
+  for (let attempt = 0; attempt < 8; ++attempt) {
+    await page.waitForTimeout(1_000);
+    transition = await readState();
+    if (transition.stderr.includes('OJ level transition alert')) break;
+  }
+  if (!transition.stderr.includes('OJ level transition entered') ||
+      !transition.stderr.includes('OJ level transition alert'))
+    throw new Error('Private year-2000 transition did not reach its alert');
+  await page.keyboard.press('Space'); // Dismiss the in-game transition alert.
+  for (let attempt = 0; attempt < 8; ++attempt) {
+    await page.waitForTimeout(1_000);
+    transition = await readState();
+    if (transition.stderr.some(line => /OJ level transition completed level \d+ year 1800/.test(line))) break;
+  }
+  console.log('Private level-transition trace:', transition.stderr.filter(line =>
+    line.startsWith('OJ level transition')).slice(-3));
+  if (!transition.stderr.some(line => /OJ level transition completed level \d+ year 1800/.test(line)) ||
+      transition.abort || pageErrors.length || remoteRequests.length)
+    throw new Error('Private year-2000 transition did not reset the year and advance the level');
 } finally {
   await browser?.close();
   await new Promise((done) => server.close(done));
