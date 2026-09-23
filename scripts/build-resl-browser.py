@@ -256,6 +256,34 @@ for old, new in (
         raise SystemExit(f"Pinned loading animation changed: {old}")
     loading_text = loading_text.replace(old, new)
 loading.write_text(loading_text)
+if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
+    loop = source / "src/game/main_loop.cpp"
+    loop_text = loop.read_text()
+    loading_if = "    if (g_isDemoMode || !g_gameOver)\n"
+    if loop_text.count(loading_if) != 1:
+        raise SystemExit("Pinned loading-screen condition changed")
+    loop_text = loop_text.replace(
+        loading_if,
+        '    std::fprintf(stderr, "OJ stage: before loading\\n");\n' + loading_if,
+        1,
+    )
+    stages = (
+        ("        showLoadingScreen();\n", "after loading"),
+        ("        createNewWorld();\n", "after create world"),
+        ("        drawMainMenuBackground(350);\n", "after menu background"),
+        ("        drawDialog(DialogType::MainMenu, 350);\n", "after menu dialog"),
+        ("        graphics::animateScreenShifting();\n", "after screen shift"),
+        ("        mainMenu();\n", "after main menu"),
+    )
+    for marker, message in stages:
+        if loop_text.count(marker) != 1:
+            raise SystemExit(f"Pinned main-loop trace marker changed: {message}")
+        loop_text = loop_text.replace(
+            marker,
+            marker + f'    std::fprintf(stderr, "OJ stage: {message}\\n");\n',
+            1,
+        )
+    loop.write_text(loop_text)
 
 build = output / "build"
 build.mkdir(parents=True)
@@ -266,7 +294,7 @@ files = []
 for name in ("resl.js", "resl.wasm"):
     data = (build / name).read_bytes()
     files.append({"path": name, "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
-for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/game/melody.cpp", "src/ui/components/dialog.cpp", "src/ui/main_menu.cpp", "src/ui/loading_screen.cpp"):
+for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/game/melody.cpp", "src/game/main_loop.cpp", "src/ui/components/dialog.cpp", "src/ui/main_menu.cpp", "src/ui/loading_screen.cpp"):
     data = (source / relative).read_bytes()
     files.append({"path": f"replacement-source/{relative}", "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
 
