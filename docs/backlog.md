@@ -32,6 +32,10 @@ Latest Supaplex result: retained mouse clicks allow player creation and first-le
 
 A Link to the Past's C reconstruction now compiles into a data-free 2.22 MB WASM engine using `scripts/build-zelda3-browser.py`. Asyncify yielding and two function-signature fixes are included. No browser test or proprietary data was used, and no public playable claim was added. Next: validated local asset import, save mount, rendering/input checks, and muted gameplay/save tests. See `docs/zelda3-browser-integration.md` for the exact revision, recipe, hashes, and remaining gates. Fire & Forget II is another WASM lead blocked on a clear engine license grant.
 
+## Strict replacement candidate: Open Junction
+
+reSL's documented ShortLine decompilation now has an independent CC0 external asset generator and a reproducible private Emscripten build with a null audio backend. The build excludes the original external resource folder but still compiles ten upstream-derived visual glyph tables, so it is not distributable or counted toward additions 3–5. Next replace those embedded visuals, review the remaining gameplay tables and demo fallback, then run muted gameplay-loop and persistence tests. See `docs/resl-replacement-integration.md` for the pinned revision, artifact hashes, and release blockers.
+
 ## Current release gate
 
 - [ ] Eight complete instant-play games with documented gameplay/audio/save checks.

@@ -31,13 +31,21 @@ These hashes prove only that the pinned code builds. They are not release artifa
 
 `scripts/generate-open-junction-assets.py` now creates replacement loading, background, game-over, interface-icon, and manual files without reading upstream resources. It implements and round-trips the engine's planar `.7` format, writes pure-Python PNG icons, records per-file hashes, and dedicates generated data under CC0-1.0. The prototype is named **Open Junction**.
 
-This first generator covers the external presentation files needed for a replacement-only CMake target. It deliberately omits upstream demo and extra save files. No generated file has been tested in the engine yet, and the embedded C++ glyph tables remain unresolved.
+This first generator covers the external presentation files needed for a replacement-only CMake target. It deliberately omits upstream demo and extra save files. The files compiled in the private build below, but have not been tested in a browser. The embedded C++ glyph tables remain unresolved.
+
+## Private replacement-external-assets build
+
+`scripts/build-resl-browser.py` reproducibly copies the pinned source into a fresh output directory, excludes the upstream top-level `resources/`, validates and embeds only the generated CC0 files, and builds with Emscripten 6.0.1. It removes SDL audio initialization and substitutes a null audio driver, so this candidate cannot emit sound. It records the hashes of every still-unreplaced embedded visual table and explicitly writes `releaseReady: false`.
+
+The September 23 private build succeeded. Its `resl.js` is 189,490 bytes (SHA-256 `00dd6d4e2dc7a0989b4ba4e3b5d825f4511359217d703dac5ce00960d9295a66`) and `resl.wasm` is 1,593,111 bytes (SHA-256 `702ff647db819b872dec50a06f25d434f1b5088803f2a6a9f12696e34772772d`). These are **not release artifacts**. They have not been copied into the website, uploaded, or browser tested. The binary still contains upstream-derived presentation tables.
+
+Visual-table inventory that must be redrawn or replaced before distribution: `dispatcher_glyph`, `glyph_empty_background`, `impasse_glyph`, `rail_glyph`, `semaphore_glyph`, `small_font`, `static_object_glyph`, `text_glyphs`, `train_finished_exclamation_glyph`, and `train_glyph`. The pinned source's other tables represent positions, connections, movement, and train specifications; these need a separate provenance review before release. The detailed hash inventory is produced by the build recipe rather than hand-copied here.
 
 ## Remaining release gate
 
-1. Add a reproducible build recipe that copies the pinned source, selects only generated external files, disables demo fallback, and structurally removes SDL audio initialization.
+1. Confirm demo fallback cannot reach any original-data path. The private build recipe and silent audio backend are in place.
 2. Replace or redraw every visual glyph table used during menu and representative play. Record which source tables are game mechanics and which are replaced presentation data.
-3. Build from a pinned Emscripten revision and publish exact patches, generator sources, manifests, and checksums.
+3. Rebuild from the pinned Emscripten revision and publish the exact replacement sources, generator, manifest, and checksums only after the asset audit passes.
 4. Run muted browser tests for loading, menu input, rail construction, train dispatch, a complete success/failure gameplay loop, and save/export/delete/import restoration.
 5. Do not count or deploy Open Junction until those checks pass. A successful compile or title screen is insufficient.
 
