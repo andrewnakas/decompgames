@@ -34,7 +34,7 @@ A Link to the Past's C reconstruction now compiles into a data-free 2.22 MB WASM
 
 ## Strict replacement candidate: Open Junction
 
-reSL's documented ShortLine decompilation now has independent CC0 external assets and four generated replacement glyph tables in a reproducible private Emscripten build with a null audio backend. Six upstream-derived visual or mask tables remain, so the build is not distributable or counted toward additions 3–5. Next replace or audit those tables, review gameplay data and demo fallback, then run muted gameplay-loop and persistence tests. See `docs/resl-replacement-integration.md` for the pinned revision, artifact hashes, and release blockers.
+reSL's documented ShortLine decompilation now has independent CC0 external assets and ten generated replacement visual/mask tables. The first four tables compiled in a private Emscripten build with a null audio backend. Fonts, signals, erase mask, rails, and trains await compilation and visual checks because WSL was unavailable in the latest pass. The non-glyph source-data audit, demo fallback, gameplay-loop, and persistence tests also remain open; the build is not distributable or counted toward additions 3–5. See `docs/resl-replacement-integration.md` for the pinned revision, artifact hashes, and release blockers.
 
 ## Current release gate
 

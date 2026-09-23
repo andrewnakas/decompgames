@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Build a private reSL WebAssembly candidate with generated external assets.
+"""Build a private reSL WebAssembly candidate with generated art assets.
 
-The result is not release-ready until the embedded visual tables are replaced.
+The result is not release-ready until the full source audit and gameplay gate pass.
 Run under an activated Emscripten 6.0.1 environment:
   python3 build-resl-browser.py CHECKOUT OUTPUT GENERATED_ASSETS GENERATED_GLYPHS
 """
@@ -16,17 +16,15 @@ import subprocess
 import sys
 
 REVISION = "470cca330ee9abcf6173c843f4c89686c0c7e525"
-UNREPLACED_VISUAL_TABLES = (
-    "glyph_empty_background.cpp",
-    "rail_glyph.cpp",
-    "semaphore_glyph.cpp",
-    "small_font.cpp",
-    "text_glyphs.cpp",
-    "train_glyph.cpp",
-)
+UNREPLACED_VISUAL_TABLES: tuple[str, ...] = ()
 REPLACEMENT_GLYPHS = {
     "dispatcher_glyph.cpp", "impasse_glyph.cpp",
     "static_object_glyph.cpp", "train_finished_exclamation_glyph.cpp",
+    "small_font.cpp", "text_glyphs.cpp",
+    "semaphore_glyph.cpp",
+    "glyph_empty_background.cpp",
+    "rail_glyph.cpp",
+    "train_glyph.cpp",
 }
 if len(sys.argv) != 5:
     raise SystemExit("Usage: build-resl-browser.py CHECKOUT OUTPUT GENERATED_ASSETS GENERATED_GLYPHS")
@@ -135,9 +133,8 @@ for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/syst
     data = (source / relative).read_bytes()
     files.append({"path": f"replacement-source/{relative}", "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
 
-# The build is intentionally private while upstream-derived presentation is
-# still compiled in. Record exact inputs so this cannot be mistaken for a
-# replacement-only release merely because the external resource folder is new.
+# The build stays private while the source-data audit and gameplay gate remain
+# open. Retain an explicit inventory should an uncovered table be found later.
 embedded_visuals = []
 for name in UNREPLACED_VISUAL_TABLES:
     relative = f"src/game/resources/{name}"
@@ -156,6 +153,7 @@ record = {
     "replacementAssets": asset_manifest["files"],
     "replacementGlyphs": glyph_manifest["files"],
     "originalExternalResourcesBundled": False,
+    "listedEmbeddedGlyphTablesReplaced": True,
     "embeddedVisualsReplaced": False,
     "unreplacedEmbeddedVisuals": embedded_visuals,
     "audioBackend": "null",
@@ -164,9 +162,10 @@ record = {
     "browserTested": False,
     "releaseReady": False,
     "blockers": [
-        "Replace or clear every copyrightable visual table compiled from src/game/resources",
-        "Audit remaining gameplay tables separately from presentation data",
-        "Complete muted gameplay-loop and persistence tests after the source-data audit",
+        "Compile and inspect every generated visual table in a private browser build",
+        "Audit non-glyph source files and remaining gameplay tables separately from presentation data",
+        "Confirm menu, rail and train legibility and placement through muted gameplay tests",
+        "Complete a gameplay loop and persistence round trip before release",
     ],
 }
 (output / "build-record.json").write_text(json.dumps(record, indent=2) + "\n")
