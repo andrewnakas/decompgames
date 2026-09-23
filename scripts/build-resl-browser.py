@@ -658,11 +658,10 @@ record = {
     "shortBrowserLoadingScreen": True,
     "releaseReady": False,
     "blockers": [
-        "Inspect generated artwork and alignment in a private muted browser build",
-        "Audit remaining non-glyph source files and gameplay tables separately from presentation data",
-        "Test the independent campaign's entrance placement and train roster for a completable loop",
-        "Confirm menu, rail and train legibility and placement through muted gameplay tests",
-        "Complete a gameplay loop and persistence round trip before release",
+        "Audit remaining source files and retained engine-geometry tables for presentation data",
+        "Improve fine counter text and inspect signals, trains, and redraw across dynamic screens",
+        "Test the year-2000 level transition and wider independent scenario progression",
+        "Package exact corresponding replacement source and checksums after the audit passes",
     ],
 }
 (output / "build-record.json").write_text(json.dumps(record, indent=2) + "\n")
