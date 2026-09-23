@@ -175,6 +175,10 @@ try {
     if (delivered) break;
   }
   if (!delivered) throw new Error('A complete train delivery was not observed on the starter route');
+  const starterTicks = after.stderr
+    .filter((line) => /^OJ game tick .* entrances 2 trains \d+/.test(line));
+  if (starterTicks.some((line) => Number(line.match(/ trains (\d+)/)?.[1]) > 1))
+    throw new Error('Overlapping trains entered the independent single-track starter route');
   await page.keyboard.press('p');
   await page.waitForTimeout(1_000);
   await page.keyboard.press('s');
