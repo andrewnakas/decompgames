@@ -13,6 +13,16 @@ const html = `<!doctype html><html><head><meta charset="utf-8"></head><body styl
 window.__oj = { ready: false, abort: '', stderr: [] };
 var Module = {
   canvas: document.getElementById('canvas'),
+  preRun: [function () {
+    const fs = Module.FS;
+    fs.mkdirTree('/persistent');
+    fs.mount(Module.IDBFS, {}, '/persistent');
+    Module.addRunDependency('restore-saves');
+    fs.syncfs(true, (error) => {
+      if (error) window.__oj.abort = 'Save restore failed: ' + error;
+      Module.removeRunDependency('restore-saves');
+    });
+  }],
   onRuntimeInitialized() { window.__oj.ready = true; },
   onAbort(reason) { window.__oj.abort = String(reason); },
   printErr(message) { window.__oj.stderr.push(String(message)); console.log('engine: ' + message); }

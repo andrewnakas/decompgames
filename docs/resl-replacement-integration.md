@@ -79,6 +79,8 @@ Visual review now uses a private 640×480 Chromium viewport and a one-day screen
 
 [Run 35863960960](https://github.com/andrewnakas/decompgames/actions/runs/35863960960) added a pause-menu Save check after a completed train trip. The engine wrote one 3,878-byte file (`103lg805.01_`) to its `/persistent` IDBFS mount. A forced filesystem flush and full Chromium page reload restored the same filename and byte length with no abort, page error, or off-origin request. This verifies file persistence, not that the Archive menu can load the game or that a user-facing export/import workflow works. The next private test enters Archive after reload and checks restored year and rail count. The private binary hashes match the preceding run; no binary was published.
 
+[Run 35864478567](https://github.com/andrewnakas/decompgames/actions/runs/35864478567) passed the in-game Archive restoration step. After the saved file survived a full reload, Archive and Go resumed a game at year 1805 with six rails and two entrances, rather than the new-game state of year 1800 with four rails. The engine dispatched a train from the restored world, with no abort, page error, or off-origin request. This tests the upstream IDBFS mount, which is not yet the same as the site's pre-mounted, namespaced save volume. The build recipe now detects an existing mount before mounting its own, and the next private test exercises that shared-player path. User-facing export, delete, import, and the full campaign remain untested.
+
 ## Remaining release gate
 
 1. The initial idle hang was caused by incompatible entrance spacing in the independent scenario and has been corrected. Confirm the demo fallback cannot reach original data. The silent audio backend is in place.

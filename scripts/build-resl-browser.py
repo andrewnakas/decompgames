@@ -263,6 +263,30 @@ if cmake_text.count(runtime_methods) != 1:
     raise SystemExit("Pinned exported runtime methods changed")
 cmake.write_text(cmake_text.replace(runtime_methods, replacement_methods))
 
+# The shared player mounts and restores the namespaced save volume before
+# starting the engine. Keep the standalone private smoke's upstream mount,
+# but do not mount a second IDBFS over an already restored player volume.
+filesystem = source / "src/system/filesystem.cpp"
+filesystem_text = filesystem.read_text()
+mount_marker = """        FS.mkdir(path);
+        FS.mount(IDBFS, {
+            autoPersist: true
+        }, path);
+        FS.syncfs(true, (err) => {
+            console.error(`FS.syncfs failed: ${err}`);
+        });"""
+if filesystem_text.count(mount_marker) != 1:
+    raise SystemExit("Pinned filesystem mount marker changed")
+filesystem.write_text(filesystem_text.replace(mount_marker, """        if (!FS.analyzePath(path).exists) FS.mkdir(path);
+        var alreadyMounted = FS.getMounts(FS.root.mount)
+            .some((mount) => mount.mountpoint === path);
+        if (!alreadyMounted) {
+            FS.mount(IDBFS, { autoPersist: true }, path);
+            FS.syncfs(true, (err) => {
+                console.error(`FS.syncfs failed: ${err}`);
+            });
+        }"""))
+
 driver = source / "src/system/driver/sdl/driver.cpp"
 driver_text = driver.read_text()
 audio_flag = "SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS)"
@@ -486,7 +510,7 @@ files = []
 for name in ("resl.js", "resl.wasm"):
     data = (build / name).read_bytes()
     files.append({"path": name, "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
-for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/game/melody.cpp", "src/game/init.cpp", "src/game/main_loop.cpp", "src/game/mouse/mouse.cpp", "src/game/move_trains.cpp", "src/game/road_construction.cpp", "src/game/static_object.cpp", "src/game/train.cpp", "src/ui/components/dialog.cpp", "src/ui/components/status_bar.cpp", "src/ui/main_menu.cpp", "src/ui/loading_screen.cpp"):
+for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/system/filesystem.cpp", "src/game/melody.cpp", "src/game/init.cpp", "src/game/main_loop.cpp", "src/game/mouse/mouse.cpp", "src/game/move_trains.cpp", "src/game/road_construction.cpp", "src/game/static_object.cpp", "src/game/train.cpp", "src/ui/components/dialog.cpp", "src/ui/components/status_bar.cpp", "src/ui/main_menu.cpp", "src/ui/loading_screen.cpp"):
     data = (source / relative).read_bytes()
     files.append({"path": f"replacement-source/{relative}", "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
 
