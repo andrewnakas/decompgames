@@ -226,7 +226,7 @@ manifest = {
     "source": "scripts/generate-open-junction-assets.py",
     "scope": "Independent loading, background, game-over, icon, and manual files for a replacement-only reSL build.",
     "files": sorted(records, key=lambda item: item["name"]),
-    "remainingGate": "Embedded glyph and gameplay tables still require a source-level replacement audit before release.",
+    "remainingGate": "Generated glyphs, remaining source data, geometry, and gameplay require a full release audit.",
 }
 (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 print(json.dumps(manifest, indent=2))

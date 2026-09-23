@@ -1,0 +1,50 @@
+name: Private Open Junction feasibility build
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate independent assets
+        run: |
+          python3 scripts/generate-open-junction-assets.py /tmp/open-junction-assets >/dev/null
+          python3 scripts/generate-open-junction-glyphs.py /tmp/open-junction-glyphs
+      - name: Fetch pinned engine and toolchain
+        run: |
+          git clone --quiet https://github.com/konovalov-aleks/reSL.git /tmp/resl
+          git -C /tmp/resl checkout --quiet 470cca330ee9abcf6173c843f4c89686c0c7e525
+          git clone --quiet --depth 1 https://github.com/emscripten-core/emsdk.git /tmp/emsdk
+          /tmp/emsdk/emsdk install 6.0.1
+          /tmp/emsdk/emsdk activate 6.0.1
+      - name: Compile private candidate without audio
+        run: |
+          source /tmp/emsdk/emsdk_env.sh
+          python3 scripts/build-resl-browser.py \
+            /tmp/resl /tmp/open-junction-build \
+            /tmp/open-junction-assets /tmp/open-junction-glyphs \
+            >/tmp/open-junction-build.log 2>&1 || {
+              tail -n 100 /tmp/open-junction-build.log
+              exit 1
+            }
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          record = json.loads(Path('/tmp/open-junction-build/build-record.json').read_text())
+          assert record['sourceRevision'] == '470cca330ee9abcf6173c843f4c89686c0c7e525'
+          assert record['originalExternalResourcesBundled'] is False
+          assert record['audioBackend'] == 'null'
+          assert len(record['replacementGlyphs']) == 10
+          assert record['unreplacedEmbeddedVisuals'] == []
+          assert record['browserTested'] is False
+          assert record['releaseReady'] is False
+          print('Private compile passed; release gate remains closed.')
+          for item in record['files'][:2]:
+              print(item['path'], item['bytes'], item['sha256'])
+          PY

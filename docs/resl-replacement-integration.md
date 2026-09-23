@@ -45,6 +45,8 @@ The generator now also writes two independent font tables (`small_font` and `tex
 
 All ten previously identified embedded visual/mask tables now have independently generated replacements. This does not close the asset audit: other source files and the remaining position, connection, movement, and train-specification tables still need provenance review. The detailed hash inventory is produced by the build recipe rather than hand-copied here.
 
+The manual GitHub Actions workflow `open-junction-feasibility.yml` can compile this private candidate when the local WSL environment is unavailable. It deliberately uploads no binary artifact, asserts `releaseReady: false`, and prints checksums only. A successful CI compile will establish build feasibility, not gameplay or redistribution readiness.
+
 The new rail sprites use a 192×43 canvas. The pinned `g_chunkBoundingBoxes` ranges are narrower for some rail types, so incremental redraw can leave stale pixels unless those functional bounds are recomputed. The uniformly sized train glyphs may also change carriage spacing because movement code reads glyph widths. Both issues require a compiled, muted gameplay pass and likely geometry adjustment before release.
 
 ## Remaining release gate
