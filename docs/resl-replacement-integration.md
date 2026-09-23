@@ -113,6 +113,8 @@ The first actual-player fixture [run 35870845347](https://github.com/andrewnakas
 
 [Run 35893036334](https://github.com/andrewnakas/decompgames/actions/runs/35893036334) passed the strengthened private, silent player test. It advanced to a two-station game, saved through the engine, exported through the parent page, deleted and imported the backup, then chose Archive and Go in the restarted iframe. The trace resumed the saved two-station game instead of a new one. The separate engine smoke again restored its later year-1805, six-rail state after backup import. There were no page errors or off-origin requests, and Sound: off remained throughout. This closes the shared-player backup-to-gameplay test, not the year-2000 level transition, wider visual checks, source-data audit, or publication gate. The CI fixture published no runtime binary.
 
+A private, trace-only hook now prepares year 1999 after the existing backup/gameplay test and checks that the year-2000 branch resets the year and advances the level. It is compiled only with `OPEN_JUNCTION_TRACE=1`; a pass will establish that branch, **not** a continuous 200-year playthrough. [Run 35894132421](https://github.com/andrewnakas/decompgames/actions/runs/35894132421) was still waiting for a GitHub-hosted runner at the September 23 17:20 UTC check. Do not mark the transition verified until its result and logs are reviewed. A later commit adds a complete embedded-resource-table inventory guard and also awaits CI validation.
+
 ## Remaining release gate
 
 1. The initial idle hang was caused by incompatible entrance spacing in the independent scenario and has been corrected. Confirm the demo fallback cannot reach original data. The silent audio backend is in place.
