@@ -369,11 +369,15 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
         tick_marker,
         tick_marker
         + '                static int ojGameTicks = 0;\n'
-        + '                if (++ojGameTicks == 1 || (ojGameTicks % 10) == 0)\n'
-        + '                    std::fprintf(stderr, "OJ game tick %d rails %u year %d entrances %d\\n",\n'
+        + '                if (++ojGameTicks == 1 || (ojGameTicks % 10) == 0) {\n'
+        + '                    int ojActiveTrains = 0;\n'
+        + '                    for (const Train& train : g_trains)\n'
+        + '                        if (!train.isFreeSlot) ++ojActiveTrains;\n'
+        + '                    std::fprintf(stderr, "OJ game tick %d rails %u year %d entrances %d trains %d\\n",\n'
         + '                        ojGameTicks, g_railRoadCount,\n'
         + '                        g_headers[static_cast<int>(HeaderFieldId::Year)].value,\n'
-        + '                        g_entranceCount);\n',
+        + '                        g_entranceCount, ojActiveTrains);\n'
+        + '                }\n',
         1,
     ))
     mouse_game = source / "src/game/mouse/mouse.cpp"
@@ -407,6 +411,18 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
         rail_commit + '        std::fprintf(stderr, "OJ rail committed count %u\\n", g_railRoadCount);\n',
         1,
     ))
+    trains = source / "src/game/train.cpp"
+    train_text = trains.read_text()
+    spawn_marker = "        t->lastMovementTime = getTime();\n"
+    if train_text.count(spawn_marker) != 1:
+        raise SystemExit("Pinned train-spawn trace marker changed")
+    train_text = train_text.replace("#include <cstdlib>\n", "#include <cstdlib>\n#include <cstdio>\n", 1)
+    trains.write_text(train_text.replace(
+        spawn_marker,
+        spawn_marker + '        std::fprintf(stderr, "OJ train spawned from %d to %d at year %d\\n", '
+        'entranceIdx, dstEntranceIdx, t->year);\n',
+        1,
+    ))
 
 build = output / "build"
 build.mkdir(parents=True)
@@ -417,7 +433,7 @@ files = []
 for name in ("resl.js", "resl.wasm"):
     data = (build / name).read_bytes()
     files.append({"path": name, "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
-for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/game/melody.cpp", "src/game/init.cpp", "src/game/main_loop.cpp", "src/game/mouse/mouse.cpp", "src/game/road_construction.cpp", "src/game/static_object.cpp", "src/ui/components/dialog.cpp", "src/ui/components/status_bar.cpp", "src/ui/main_menu.cpp", "src/ui/loading_screen.cpp"):
+for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/game/melody.cpp", "src/game/init.cpp", "src/game/main_loop.cpp", "src/game/mouse/mouse.cpp", "src/game/road_construction.cpp", "src/game/static_object.cpp", "src/game/train.cpp", "src/ui/components/dialog.cpp", "src/ui/components/status_bar.cpp", "src/ui/main_menu.cpp", "src/ui/loading_screen.cpp"):
     data = (source / relative).read_bytes()
     files.append({"path": f"replacement-source/{relative}", "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
 

@@ -112,6 +112,37 @@ try {
   if (!after.stderr.some((line) => line.startsWith('OJ build queued tile 5,5')) ||
       !after.stderr.some((line) => /^OJ rail committed count [2-9]/.test(line)))
     throw new Error('Center-tile rail construction was not observed');
+  await page.keyboard.press('3');
+  console.log('Fast-time key delivered with audio still disabled.');
+  let secondEntrance = false;
+  for (const seconds of [5, 10, 15, 20, 25, 30]) {
+    await page.waitForTimeout(5_000);
+    after = await readState();
+    const latestTick = gameTicks(after);
+    console.log(`After fast time ${seconds}s:`, JSON.stringify({ latestTick, abort: after.abort, pageErrors, remoteRequests }));
+    if (after.abort || pageErrors.length || remoteRequests.length)
+      throw new Error('Private browser encountered an error during game-time progression');
+    if (Number(latestTick?.match(/entrances (\d+)/)?.[1]) >= 2) {
+      secondEntrance = true;
+      break;
+    }
+  }
+  if (!secondEntrance) throw new Error('Second entrance did not appear under accelerated time');
+  await page.keyboard.press('p');
+  await page.waitForTimeout(2_000);
+  await page.keyboard.press('g');
+  console.log('Pause-and-Go keys delivered to request the next train.');
+  for (const seconds of [5, 10, 15]) {
+    await page.waitForTimeout(5_000);
+    after = await readState();
+    const spawn = [...after.stderr].reverse().find((line) => line.startsWith('OJ train spawned from '));
+    console.log(`After resume ${seconds}s:`, JSON.stringify({ spawn, latestTick: gameTicks(after), abort: after.abort, pageErrors, remoteRequests }));
+    if (after.abort || pageErrors.length || remoteRequests.length)
+      throw new Error('Private browser encountered an error during train dispatch');
+    if (spawn) break;
+  }
+  if (!after.stderr.some((line) => line.startsWith('OJ train spawned from ')))
+    throw new Error('Train dispatch was not observed after pause and Go');
 } finally {
   await browser?.close();
   await new Promise((done) => server.close(done));
