@@ -51,6 +51,7 @@ jobs:
               {'x': 2, 'y': 2, 'type': 3},
               {'x': 1, 'y': 3, 'type': 5},
           ]
+          assert record['replacementForest'] == {'maximumTrees': 32, 'minimumSpacingPixels': 36}
           assert len(record['replacementPaletteRGB']) == 16
           assert record['unreplacedEmbeddedVisuals'] == []
           assert record['browserTested'] is False

@@ -169,6 +169,52 @@ init_text = init_text.replace(
     + "    }\n",
     1,
 )
+forest_pattern = r"static void generateForest\(\)\n\{.*?\n\}\n\n/\* 16a6:0973 \*/"
+forest_cpp = """static void generateForest()
+{
+    // Open Junction's sparse scenery layout is independent of ShortLine's
+    // clustered random walk. Trees use the separately generated CC0 glyphs.
+    constexpr std::size_t treeCount = 32;
+    for (std::size_t i = 30; i < std::size(g_staticObjects); ++i)
+        g_staticObjects[i].kind = StaticObjectKind::None;
+    for (std::size_t tree = 0; tree < treeCount; ++tree) {
+        StaticObject& obj = g_staticObjects[30 + tree];
+        bool placed = false;
+        for (int attempt = 0; attempt < 120 && !placed; ++attempt) {
+            const std::int16_t x = 16 + genRandomNumber(608);
+            const std::int16_t y = 64 + genRandomNumber(246);
+            if (!isInsideField(x, y))
+                continue;
+            placed = true;
+            for (std::size_t earlier = 30; earlier < 30 + tree; ++earlier) {
+                const StaticObject& other = g_staticObjects[earlier];
+                if (other.kind != StaticObjectKind::Tree)
+                    continue;
+                const int dx = x - other.x;
+                const int dy = y - other.y;
+                if (dx * dx + dy * dy < 36 * 36) {
+                    placed = false;
+                    break;
+                }
+            }
+            if (placed) {
+                obj.kind = StaticObjectKind::Tree;
+                obj.type = static_cast<std::uint8_t>(genRandomNumber(4));
+                obj.x = x;
+                obj.y = y;
+                obj.color = tree % 3 ? Color::DarkGreen : Color::Brown;
+            }
+        }
+    }
+    std::qsort(static_cast<void*>(g_staticObjects),
+               std::size(g_staticObjects), sizeof(StaticObject),
+               compareStaticObjByY);
+}
+
+/* 16a6:0973 */"""
+init_text, count = re.subn(forest_pattern, forest_cpp, init_text, count=1, flags=re.S)
+if count != 1:
+    raise SystemExit("Pinned forest generator changed")
 init.write_text(init_text)
 
 mouse = source / "src/system/driver/sdl/mouse.cpp"
@@ -537,6 +583,7 @@ record = {
     "replacementScenario": scenario_manifest["files"],
     "replacementEntranceSchedule": entrance_choices,
     "replacementStarterRoute": starter_route,
+    "replacementForest": {"maximumTrees": 32, "minimumSpacingPixels": 36},
     "replacementPaletteRGB": palette,
     "originalExternalResourcesBundled": False,
     "listedEmbeddedGlyphTablesReplaced": True,
