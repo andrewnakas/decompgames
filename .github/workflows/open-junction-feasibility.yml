@@ -103,6 +103,7 @@ jobs:
           candidate = next(game for game in games if game['id'] == 'shortline')
           assert candidate['mode'] == 'project'
           candidate['mode'] = 'instant'
+          candidate['title'] = 'Open Junction (private candidate)'
           candidate['runtime'] = 'shortline'
           candidate['downloadMB'] = 1.8
           catalog.write_text(json.dumps(games))

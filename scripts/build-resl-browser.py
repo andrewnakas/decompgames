@@ -268,6 +268,10 @@ mouse.write_text(mouse_text)
 
 video = source / "src/system/driver/sdl/video.cpp"
 video_text = video.read_text()
+original_window_title = '"reSL - reverse engineered ShortLine game"'
+if video_text.count(original_window_title) != 1:
+    raise SystemExit("Pinned window title changed")
+video_text = video_text.replace(original_window_title, '"Open Junction - reSL engine"', 1)
 clear_color = "SDL_SetRenderDrawColor(m_renderer, 0x55, 0xAA, 0x00, 0xFF);"
 if video_text.count(clear_color) != 1:
     raise SystemExit("Pinned SDL board-clear color changed")
