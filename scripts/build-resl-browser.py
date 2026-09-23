@@ -171,6 +171,35 @@ if melody_text.count(sound_flag) != 1:
     raise SystemExit("Pinned melody default changed")
 melody.write_text(melody_text.replace(sound_flag, "bool g_soundEnabled = false;"))
 
+# The original idle menu launches a prerecorded demo save. Those saves are
+# deliberately excluded; keep the menu waiting for user input instead of
+# repeatedly probing the missing original-data path.
+dialog = source / "src/ui/components/dialog.cpp"
+dialog_text = dialog.read_text()
+timeout_branch = "if (timeout-- == 0)\n                    return -1;"
+if dialog_text.count(timeout_branch) != 1:
+    raise SystemExit("Pinned dialog timeout changed")
+dialog.write_text(dialog_text.replace(
+    timeout_branch,
+    "if (timeout-- == 0) {\n"
+    "                    if (type == DialogType::MainMenu) timeout = 700;\n"
+    "                    else return -1;\n"
+    "                }",
+))
+
+menu = source / "src/ui/main_menu.cpp"
+menu_text = menu.read_text()
+demo_start = menu_text.find("        case -1:\n", menu_text.find("void mainMenu()"))
+demo_end = menu_text.find("        case 2:\n", demo_start)
+if demo_start < 0 or demo_end < 0 or menu_text[demo_start:demo_end].count("loadDemo()") != 1:
+    raise SystemExit("Pinned main-menu demo branch changed")
+menu.write_text(
+    menu_text[:demo_start]
+    + '        case -1:\n            break;\n\n'
+      '        case 1:\n            alert("Demo unavailable");\n            break;\n\n'
+    + menu_text[demo_end:]
+)
+
 build = output / "build"
 build.mkdir(parents=True)
 subprocess.run(["emcmake", "cmake", "-DCMAKE_BUILD_TYPE=Release", str(source)], cwd=build, check=True)
@@ -180,7 +209,7 @@ files = []
 for name in ("resl.js", "resl.wasm"):
     data = (build / name).read_bytes()
     files.append({"path": name, "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
-for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/game/melody.cpp"):
+for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/game/melody.cpp", "src/ui/components/dialog.cpp", "src/ui/main_menu.cpp"):
     data = (source / relative).read_bytes()
     files.append({"path": f"replacement-source/{relative}", "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
 
