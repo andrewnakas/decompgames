@@ -89,6 +89,12 @@ try {
     disabled: document.querySelector('#export-save')?.disabled,
     visible: Boolean(document.querySelector('#export-save')?.getBoundingClientRect().width),
   })));
+  const layout = await page.evaluate(() => ({
+    frameBottom: document.querySelector('#game-frame').getBoundingClientRect().bottom,
+    exportTop: document.querySelector('#export-save').getBoundingClientRect().top,
+  }));
+  if (layout.frameBottom > layout.exportTop)
+    throw new Error(`Shared player iframe overlaps its save controls: ${JSON.stringify(layout)}`);
   const downloadPromise = page.waitForEvent('download', { timeout: 8_000 })
     .then(download => ({ download }), error => ({ error }));
   let clickError;

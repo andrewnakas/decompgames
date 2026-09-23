@@ -101,6 +101,8 @@ The first actual-player fixture [run 35870845347](https://github.com/andrewnakas
 
 [Run 35872620375](https://github.com/andrewnakas/decompgames/actions/runs/35872620375) entered gameplay and wrote a nonempty save file through Pause→Save in the real player shell. Clicking the site's Export backup control did not produce a Playwright download within 30 seconds. This is an unresolved integration failure, not a passing save UI test. The next run captures parent/iframe messages and status when export stalls to distinguish an engine filesystem error from a browser download problem. No build was published.
 
+[Run 35873209266](https://github.com/andrewnakas/decompgames/actions/runs/35873209266) identified the actual export blocker: Playwright could not click the button because the responsive game iframe extended over the player tools and intercepted pointer events. The private save file existed and the button was enabled, but no export message reached the parent. The shared player stylesheet now anchors the iframe to the stage bounds, and the next preview asserts that its rectangle ends above the export control before testing the backup workflow. This is a site-shell layout fix; it needs a passing private browser run before a deployment or save claim.
+
 ## Remaining release gate
 
 1. The initial idle hang was caused by incompatible entrance spacing in the independent scenario and has been corrected. Confirm the demo fallback cannot reach original data. The silent audio backend is in place.
