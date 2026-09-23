@@ -121,6 +121,8 @@ The first private, trace-only transition probe [run 35894132421](https://github.
 
 ## Remaining release gate
 
+[Run 35903005140](https://github.com/andrewnakas/decompgames/actions/runs/35903005140) exposed a nondeterministic opening-route failure: trains departed in opposite directions in years 1801 and 1802, one disappeared before delivery, and the other stayed at the far track edge through year 1808. The previous single-delivery passes did not cover simultaneous traffic. The private build now queues additional departures while a train uses the independent two-station starter route, then resumes departures when it clears. This change and the narrowed source-package inventory still require a passing private CI run; Open Junction remains unreleased and uncounted.
+
 1. The initial idle hang was caused by incompatible entrance spacing in the independent scenario and has been corrected. Confirm the demo fallback cannot reach original data. The silent audio backend is in place.
 2. Inspect the compiled fonts, signals, erase mask, rails, trains, and colors across dynamic gameplay. Audit remaining non-glyph source data before deciding the replacement build is redistributable.
 3. Rebuild from the pinned Emscripten revision and publish the exact replacement sources, generator, manifest, and checksums only after the asset audit passes.

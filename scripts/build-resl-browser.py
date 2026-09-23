@@ -614,6 +614,27 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
     if train_text.count(spawn_marker) != 1:
         raise SystemExit("Pinned train-spawn trace marker changed")
     train_text = train_text.replace("#include <cstdlib>\n", "#include <cstdlib>\n#include <cstdio>\n", 1)
+    # The independently authored two-station opening has one shared track.
+    # Queue a second service until the active train clears it; otherwise
+    # opposing random departures can collide before either delivers.
+    waiting_marker = "void tryRunWaitingTrains()\n{\n"
+    new_train_marker = "    if (entranceIsFree(entranceIdx)) {\n"
+    if train_text.count(waiting_marker) != 1 or train_text.count(new_train_marker) != 1:
+        raise SystemExit("Pinned starter-route dispatch markers changed")
+    train_text = train_text.replace(
+        waiting_marker,
+        waiting_marker + "    if (g_entranceCount == 2 && !noTrainsExist())\n"
+        "        return;\n",
+        1,
+    )
+    train_text = train_text.replace(
+        new_train_marker,
+        "    if (g_entranceCount == 2 && !noTrainsExist()) {\n"
+        "        addWaitingTrain(entranceIdx);\n"
+        "        return;\n"
+        "    }\n\n" + new_train_marker,
+        1,
+    )
     trains.write_text(train_text.replace(
         spawn_marker,
         spawn_marker + '        std::fprintf(stderr, "OJ train spawned from %d to %d at year %d\\n", '
