@@ -207,6 +207,27 @@ try {
     throw new Error('Saved game file did not survive a browser reload');
   if (pageErrors.length || remoteRequests.length)
     throw new Error('Private browser encountered an error after save-file reload');
+  await page.locator('canvas').focus();
+  await page.keyboard.press('a');
+  await page.waitForTimeout(2_000);
+  await page.keyboard.press('g');
+  console.log('Archive and Go keys delivered after persisted-file reload.');
+  let loaded;
+  for (const seconds of [2, 4, 6, 8, 10]) {
+    await page.waitForTimeout(2_000);
+    loaded = await readState();
+    const tick = gameTicks(loaded);
+    console.log(`After Archive Go ${seconds}s:`, JSON.stringify({
+      tick, abort: loaded.abort, pageErrors, remoteRequests,
+    }));
+    if (loaded.abort || pageErrors.length || remoteRequests.length)
+      throw new Error('Private browser encountered an error while loading an archived game');
+    if (Number(tick?.match(/year (\d+)/)?.[1]) >= 1805) break;
+  }
+  const loadedTick = gameTicks(loaded);
+  if (Number(loadedTick?.match(/year (\d+)/)?.[1]) < 1805 ||
+      Number(loadedTick?.match(/rails (\d+)/)?.[1]) < 6)
+    throw new Error('Archive did not restore the saved year and constructed rails');
 } finally {
   await browser?.close();
   await new Promise((done) => server.close(done));
