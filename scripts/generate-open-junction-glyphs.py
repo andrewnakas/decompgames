@@ -249,6 +249,24 @@ def generate(output: Path) -> None:
         + ",\n".join(semaphores) + "\n};",
     )
 
+    # The engine's six rail types and two port identities determine which
+    # side of each connection receives a signal. Position our new 8-pixel
+    # mast with seven pixels of ballast clearance from that connection.
+    signal_port_sides = (
+        ((-1, -1), (1, 1)), ((1, -1), (-1, 1)),
+        ((-1, -1), (-1, 1)), ((1, -1), (-1, -1)),
+        ((1, -1), (1, 1)), ((1, 1), (-1, 1)),
+    )
+    signal_rows = [
+        "    {" + ", ".join(f"{{{sx * 11}, {sy * 5}}}" for sx, sy in ports) + "}"
+        for ports in signal_port_sides
+    ]
+    files["semaphore_glyph_bias.cpp"] = document(
+        "semaphore_glyph_bias.h",
+        "const SemaphoreGlyphBias g_semaphoreGlyphBiases[6][2] = {\n"
+        + ",\n".join(signal_rows) + "\n};",
+    )
+
     # This is a functional full-bit mask used when erasing sprites. Generate
     # it anew so no upstream data table is copied into the release candidate.
     files["glyph_empty_background.cpp"] = document(

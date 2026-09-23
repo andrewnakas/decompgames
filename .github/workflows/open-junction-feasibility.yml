@@ -42,7 +42,7 @@ jobs:
           assert record['sourceRevision'] == '470cca330ee9abcf6173c843f4c89686c0c7e525'
           assert record['originalExternalResourcesBundled'] is False
           assert record['audioBackend'] == 'null'
-          assert len(record['replacementGlyphs']) == 10
+          assert len(record['replacementGlyphs']) == 11
           assert record['replacementCursor']['name'] == 'cursor.json'
           assert len(record['replacementScenario']) == 6
           assert record['replacementEntranceSchedule'] == [0, 23, 8, 31, 16, 39]
@@ -54,7 +54,7 @@ jobs:
           assert record['replacementForest'] == {'maximumTrees': 32, 'minimumSpacingPixels': 36}
           assert len(record['replacementPaletteRGB']) == 16
           assert record['unreplacedEmbeddedVisuals'] == []
-          assert len(record['retainedEngineGeometryTables']) == 5
+          assert len(record['retainedEngineGeometryTables']) == 4
           assert record['browserTested'] is False
           assert record['releaseReady'] is False
           assert record['privateTraceEnabled'] is True

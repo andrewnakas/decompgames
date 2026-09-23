@@ -22,7 +22,7 @@ REPLACEMENT_GLYPHS = {
     "dispatcher_glyph.cpp", "impasse_glyph.cpp",
     "static_object_glyph.cpp", "train_finished_exclamation_glyph.cpp",
     "small_font.cpp", "text_glyphs.cpp",
-    "semaphore_glyph.cpp",
+    "semaphore_glyph.cpp", "semaphore_glyph_bias.cpp",
     "glyph_empty_background.cpp",
     "rail_glyph.cpp",
     "train_glyph.cpp",
@@ -30,7 +30,7 @@ REPLACEMENT_GLYPHS = {
 RETAINED_ENGINE_GEOMETRY_TABLES = {
     "movement_paths.cpp",
     "rail_connection_bias.cpp", "rail_connection_rule.cpp",
-    "rail_type_meta.cpp", "semaphore_glyph_bias.cpp",
+    "rail_type_meta.cpp",
 }
 if len(sys.argv) != 6:
     raise SystemExit("Usage: build-resl-browser.py CHECKOUT OUTPUT GENERATED_ASSETS GENERATED_GLYPHS GENERATED_SCENARIO")
