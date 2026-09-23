@@ -89,6 +89,7 @@ try {
   const gameTicks = (state) => [...state.stderr].reverse().find((line) => line.startsWith('OJ game tick '));
   const before = await readState();
   if (!gameTicks(before)) throw new Error('Gameplay loop did not advance after Go');
+  const initialRails = Number(gameTicks(before).match(/rails (\d+)/)?.[1]);
   const image = await page.locator('canvas').screenshot({ timeout: 5_000 });
   console.log('Private gameplay canvas PNG SHA-256:', createHash('sha256').update(image).digest('hex'));
   // The independently drafted board permits rails on center tile (5,5).
@@ -100,7 +101,8 @@ try {
   if (after.abort || pageErrors.length || remoteRequests.length)
     throw new Error('Private browser encountered an error while building rails');
   const railCount = (gameTicks(after) || '').match(/rails (\d+)/);
-  if (!railCount || Number(railCount[1]) < 1)
+  if (!after.stderr.some((line) => line.startsWith('OJ build queued tile ')) ||
+      !railCount || Number(railCount[1]) <= initialRails)
     throw new Error('Center-tile rail construction was not observed');
 } finally {
   await browser?.close();

@@ -346,6 +346,26 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
         + '                        g_entranceCount);\n',
         1,
     ))
+    mouse_game = source / "src/game/mouse/mouse.cpp"
+    mouse_game_text = mouse_game.read_text()
+    build_action = "        case MouseAction::BuildRails:\n"
+    queue_action = "                        g_railConstructionMsgQueue.push(rcs);\n"
+    if mouse_game_text.count(build_action) != 1 or mouse_game_text.count(queue_action) != 1:
+        raise SystemExit("Pinned rail-build trace markers changed")
+    mouse_game_text = mouse_game_text.replace(
+        "#include <cstdint>\n", "#include <cstdint>\n#include <cstdio>\n", 1
+    ).replace(
+        build_action,
+        build_action + '            std::fprintf(stderr, "OJ build click tile %d,%d type %d\\n", '
+        'g_railCursorState.tileX, g_railCursorState.tileY, g_railCursorState.railType);\n',
+        1,
+    ).replace(
+        queue_action,
+        queue_action + '                        std::fprintf(stderr, "OJ build queued tile %d,%d type %d\\n", '
+        'rcs.tileX, rcs.tileY, rcs.railType);\n',
+        1,
+    )
+    mouse_game.write_text(mouse_game_text)
 
 build = output / "build"
 build.mkdir(parents=True)
@@ -356,7 +376,7 @@ files = []
 for name in ("resl.js", "resl.wasm"):
     data = (build / name).read_bytes()
     files.append({"path": name, "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
-for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/game/melody.cpp", "src/game/init.cpp", "src/game/main_loop.cpp", "src/ui/components/dialog.cpp", "src/ui/main_menu.cpp", "src/ui/loading_screen.cpp"):
+for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/game/melody.cpp", "src/game/init.cpp", "src/game/main_loop.cpp", "src/game/mouse/mouse.cpp", "src/ui/components/dialog.cpp", "src/ui/main_menu.cpp", "src/ui/loading_screen.cpp"):
     data = (source / relative).read_bytes()
     files.append({"path": f"replacement-source/{relative}", "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
 
