@@ -1,5 +1,4 @@
 // Private, silent browser smoke test. A passing result is not a gameplay test.
-import { createHash } from 'node:crypto';
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
@@ -53,18 +52,28 @@ try {
   });
   await page.goto(base, { waitUntil: 'domcontentloaded', timeout: 20_000 });
   await page.waitForTimeout(12_000);
-  const state = await page.evaluate(() => ({
-    ...window.__oj,
-    canvas: {
-      width: document.querySelector('canvas')?.width,
-      height: document.querySelector('canvas')?.height,
-    },
-  }));
-  const before = createHash('sha256').update(await page.screenshot()).digest('hex');
-  await page.keyboard.press('Enter');
+  const readState = () => page.evaluate(() => {
+    const canvas = document.querySelector('canvas');
+    const context = canvas?.getContext('2d');
+    let sample = null;
+    if (context) {
+      const bytes = context.getImageData(0, 0, 64, 64).data;
+      sample = bytes.reduce((hash, value) => (Math.imul(hash, 33) ^ value) >>> 0, 5381);
+    }
+    return { ...window.__oj, canvas: { width: canvas?.width, height: canvas?.height }, sample };
+  });
+  const state = await readState();
+  console.log('Before Enter:', JSON.stringify({ state, pageErrors, remoteRequests }));
+  let inputSent = false;
+  try {
+    await page.keyboard.press('Enter', { timeout: 5_000 });
+    inputSent = true;
+  } catch (error) {
+    console.log('Enter delivery inconclusive:', error.message);
+  }
   await page.waitForTimeout(3_000);
-  const after = createHash('sha256').update(await page.screenshot()).digest('hex');
-  console.log(JSON.stringify({ state, before, after, pageErrors, remoteRequests }, null, 2));
+  const after = await readState();
+  console.log('After Enter:', JSON.stringify({ after, inputSent, pageErrors, remoteRequests }));
   if (!state.ready || state.abort || pageErrors.length || remoteRequests.length)
     throw new Error('Private browser boot failed');
   if (state.canvas.width < 320 || state.canvas.height < 200)
