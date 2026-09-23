@@ -143,6 +143,33 @@ for item in glyph_manifest["files"]:
 for item in scenario_manifest["files"]:
     shutil.copyfile(generated_scenario / item["name"], source / "src/game/resources" / item["name"])
 
+# The inherited character-trait table encodes spacing for the original
+# proportional font. Open Junction's independently drafted glyphs all declare
+# their own widths, so measure the actual replacement font instead.
+text_source = source / "src/graphics/text.cpp"
+text_body = text_source.read_text()
+traits_start = text_body.find("/* 1d7d:2969 : 256 bytes */")
+traits_end = text_body.find("/* 1d7d:2962 : 2 bytes */", traits_start)
+if traits_start < 0 or traits_end < 0 or text_body.count("g_charTraits[") != 2:
+    raise SystemExit("Pinned original font-trait table changed")
+text_body = text_body[:traits_start] + text_body[traits_end:]
+measure_original = (
+    "        width += g_textSpacing + 9;\n"
+    "        if (g_charTraits[static_cast<std::size_t>(*s)] & (4 | 2))\n"
+    "            width += 4;\n"
+)
+if text_body.count(measure_original) != 1:
+    raise SystemExit("Pinned original font measurement changed")
+text_body = text_body.replace(
+    measure_original,
+    "        const auto code = static_cast<std::uint8_t>(*s);\n"
+    "        width += g_textSpacing + (code >= 32 && code < 179\n"
+    "            ? g_textGlyphs[code - 32].width : 8);\n",
+    1,
+)
+text_body = text_body.replace("#include <cstddef>\n", "#include <cstddef>\n#include <cstdint>\n", 1)
+text_source.write_text(text_body)
+
 init = source / "src/game/init.cpp"
 init_text = init.read_text()
 selection_pattern = r"        bool suits = false;\n        while \(!suits\) \{.*?\n        \}\n"
@@ -607,7 +634,7 @@ files = []
 for name in ("resl.js", "resl.wasm"):
     data = (build / name).read_bytes()
     files.append({"path": name, "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
-for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/system/filesystem.cpp", "src/game/melody.cpp", "src/game/init.cpp", "src/game/main_loop.cpp", "src/game/mouse/mouse.cpp", "src/game/move_trains.cpp", "src/game/road_construction.cpp", "src/game/static_object.cpp", "src/game/train.cpp", "src/ui/components/dialog.cpp", "src/ui/components/status_bar.cpp", "src/ui/main_menu.cpp", "src/ui/loading_screen.cpp"):
+for relative in ("CMakeLists.txt", "src/graphics/text.cpp", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/system/filesystem.cpp", "src/game/melody.cpp", "src/game/init.cpp", "src/game/main_loop.cpp", "src/game/mouse/mouse.cpp", "src/game/move_trains.cpp", "src/game/road_construction.cpp", "src/game/static_object.cpp", "src/game/train.cpp", "src/ui/components/dialog.cpp", "src/ui/components/status_bar.cpp", "src/ui/main_menu.cpp", "src/ui/loading_screen.cpp"):
     data = (source / relative).read_bytes()
     files.append({"path": f"replacement-source/{relative}", "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
 
