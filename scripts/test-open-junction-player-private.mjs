@@ -89,11 +89,26 @@ try {
     disabled: document.querySelector('#export-save')?.disabled,
     visible: Boolean(document.querySelector('#export-save')?.getBoundingClientRect().width),
   })));
-  const layout = await page.evaluate(() => ({
-    frameBottom: document.querySelector('#game-frame').getBoundingClientRect().bottom,
-    exportTop: document.querySelector('#export-save').getBoundingClientRect().top,
-  }));
-  if (layout.frameBottom > layout.exportTop)
+  const layout = await page.evaluate(() => {
+    const frame = document.querySelector('#game-frame');
+    const stage = document.querySelector('#stage');
+    const rect = node => {
+      const box = node.getBoundingClientRect();
+      return { top: box.top, bottom: box.bottom, height: box.height };
+    };
+    return {
+      frame: rect(frame), stage: rect(stage), export: rect(document.querySelector('#export-save')),
+      framePosition: getComputedStyle(frame).position,
+      stagePosition: getComputedStyle(stage).position,
+      frameStyle: frame.getAttribute('style'), stageStyle: stage.getAttribute('style'),
+      fullscreen: document.fullscreenElement?.id ?? null, scrollY: window.scrollY,
+    };
+  });
+  console.log('Shared-player layout after Save:', layout);
+  if (process.env.OPEN_JUNCTION_PLAYER_SCREENSHOT)
+    await writeFile(process.env.OPEN_JUNCTION_PLAYER_SCREENSHOT.replace('.png', '-page.png'),
+      await page.screenshot({ fullPage: true, timeout: 5_000 }));
+  if (layout.frame.bottom > layout.export.top)
     throw new Error(`Shared player iframe overlaps its save controls: ${JSON.stringify(layout)}`);
   const downloadPromise = page.waitForEvent('download', { timeout: 8_000 })
     .then(download => ({ download }), error => ({ error }));

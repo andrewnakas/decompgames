@@ -103,6 +103,8 @@ The first actual-player fixture [run 35870845347](https://github.com/andrewnakas
 
 [Run 35873209266](https://github.com/andrewnakas/decompgames/actions/runs/35873209266) identified the actual export blocker: Playwright could not click the button because the responsive game iframe extended over the player tools and intercepted pointer events. The private save file existed and the button was enabled, but no export message reached the parent. The shared player stylesheet now anchors the iframe to the stage bounds, and the next preview asserts that its rectangle ends above the export control before testing the backup workflow. This is a site-shell layout fix; it needs a passing private browser run before a deployment or save claim.
 
+[Run 35874429851](https://github.com/andrewnakas/decompgames/actions/runs/35874429851) still found the iframe reaching viewport bottom (900px) while the Export control began at about 802px; the new absolute-position rule did not prevent overlap in the active game. A static preview without a loaded engine kept the iframe inside its 648px stage, so the cause depends on the running game or active player state. The next private run records the stage/iframe rectangles, computed positions, inline styles, fullscreen state, and a temporary full-page image before further layout changes. No export/import pass or public engine build is claimed.
+
 ## Remaining release gate
 
 1. The initial idle hang was caused by incompatible entrance spacing in the independent scenario and has been corrected. Confirm the demo fallback cannot reach original data. The silent audio backend is in place.
