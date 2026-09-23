@@ -93,6 +93,8 @@ The first sparse-forest workflow [run 35865993114](https://github.com/andrewnaka
 
 [Run 35866841564](https://github.com/andrewnakas/decompgames/actions/runs/35866841564) compiled the revised CC0 tree glyphs and passed the full private, silent smoke: rail placement, second entrance, train delivery, Save, Archive restoration, and backup export/delete/import. Its reviewed 640×480 gameplay screenshot now shows separated green and ochre tree crowns instead of the former dark cluster. Some fine UI text and dynamic screens still need visual review. Private `resl.js` was 189,627 bytes (SHA-256 `b000d1fc2df2b5e104f8e3e082ca4085859d64ee840d920d813e45405f3af914`) and `resl.wasm` was 1,581,748 bytes (SHA-256 `9c198e89a54d7bf8c0c740724d201b05c27b6f8de1411e12d9a2e3f04c6b7183`); neither was published. The temporary screenshot artifact contains no binary and expires after one day.
 
+The first actual-player fixture [run 35870845347](https://github.com/andrewnakas/decompgames/actions/runs/35870845347) built a private Astro page and loaded the replacement engine through the site's iframe shell with sound off, but its smoke sent Go before the in-engine menu reached its input loop. Traces stopped at the menu screen shift, so this run does not establish player input. The test now waits for the engine's menu-frame trace before sending Go. The fixture exists only in CI; no runtime was published.
+
 ## Remaining release gate
 
 1. The initial idle hang was caused by incompatible entrance spacing in the independent scenario and has been corrected. Confirm the demo fallback cannot reach original data. The silent audio backend is in place.

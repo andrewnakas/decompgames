@@ -43,6 +43,10 @@ try {
     throw new Error('Private player enabled audible output');
   const frame = page.frame({ url: /\/engine\/\?game=shortline/ });
   if (!frame) throw new Error('Shared engine iframe did not load');
+  for (let attempt = 0; attempt < 15 && !engineLogs.some(line => line.includes('OJ menu frame')); ++attempt)
+    await delay(1_000);
+  if (!engineLogs.some(line => line.includes('OJ menu frame')))
+    throw new Error(`Shared engine menu was not ready: ${JSON.stringify(engineLogs.slice(-8))}`);
   await frame.locator('canvas').focus();
   await page.keyboard.press('g');
   for (let attempt = 0; attempt < 10 && !engineLogs.some(line => line.includes('OJ stage: after main menu')); ++attempt)
