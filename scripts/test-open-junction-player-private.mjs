@@ -89,7 +89,7 @@ try {
     disabled: document.querySelector('#export-save')?.disabled,
     visible: Boolean(document.querySelector('#export-save')?.getBoundingClientRect().width),
   })));
-  const layout = await page.evaluate(() => {
+  const readLayout = () => page.evaluate(() => {
     const frame = document.querySelector('#game-frame');
     const stage = document.querySelector('#stage');
     const rect = node => {
@@ -104,7 +104,14 @@ try {
       fullscreen: document.fullscreenElement?.id ?? null, scrollY: window.scrollY,
     };
   });
+  let layout = await readLayout();
   console.log('Shared-player layout after Save:', layout);
+  if (layout.fullscreen === 'game-frame') {
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(() => !document.fullscreenElement, null, { timeout: 5_000 });
+    layout = await readLayout();
+    console.log('Shared-player layout after leaving fullscreen:', layout);
+  }
   if (process.env.OPEN_JUNCTION_PLAYER_SCREENSHOT)
     await writeFile(process.env.OPEN_JUNCTION_PLAYER_SCREENSHOT.replace('.png', '-page.png'),
       await page.screenshot({ fullPage: true, timeout: 5_000 }));

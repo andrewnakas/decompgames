@@ -105,6 +105,8 @@ The first actual-player fixture [run 35870845347](https://github.com/andrewnakas
 
 [Run 35874429851](https://github.com/andrewnakas/decompgames/actions/runs/35874429851) still found the iframe reaching viewport bottom (900px) while the Export control began at about 802px; the new absolute-position rule did not prevent overlap in the active game. A static preview without a loaded engine kept the iframe inside its 648px stage, so the cause depends on the running game or active player state. The next private run records the stage/iframe rectangles, computed positions, inline styles, fullscreen state, and a temporary full-page image before further layout changes. No export/import pass or public engine build is claimed.
 
+[Run 35875177871](https://github.com/andrewnakas/decompgames/actions/runs/35875177871) resolved the misleading overlap diagnosis: the engine had requested browser fullscreen for `#game-frame`. The browser correctly displayed it fixed across the entire 1100×900 viewport, covering the player tools until fullscreen is exited. The static layout rule was not responsible and has been reverted. The private test now sends Escape to leave fullscreen before using the parent page's Export control, matching what a player would have to do. Export/delete/import still require a passing test; no private binary was published.
+
 ## Remaining release gate
 
 1. The initial idle hang was caused by incompatible entrance spacing in the independent scenario and has been corrected. Confirm the demo fallback cannot reach original data. The silent audio backend is in place.
