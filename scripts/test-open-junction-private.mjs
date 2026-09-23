@@ -52,28 +52,23 @@ try {
   });
   await page.goto(base, { waitUntil: 'domcontentloaded', timeout: 20_000 });
   console.log('Private page navigation completed.');
-  await page.waitForTimeout(12_000);
-  console.log('Private runtime observation window completed.');
   const readState = () => page.evaluate(() => {
     const canvas = document.querySelector('canvas');
     return { ...window.__oj, canvas: { width: canvas?.width, height: canvas?.height } };
   });
-  const state = await readState();
-  console.log('Before Go:', JSON.stringify({ state, pageErrors, remoteRequests }));
-  let inputSent = false;
-  try {
-    await page.keyboard.press('g', { timeout: 5_000 });
-    inputSent = true;
-  } catch (error) {
-    console.log('Go delivery inconclusive:', error.message);
+  // A previous read at 12 seconds succeeded but a later read after input
+  // stalled. First isolate whether the idle runtime remains responsive.
+  let elapsed = 0;
+  for (const delay of [3_000, 5_000, 5_000, 5_000]) {
+    await page.waitForTimeout(delay);
+    elapsed += delay;
+    const state = await readState();
+    console.log(`Passive ${elapsed}ms:`, JSON.stringify({ state, pageErrors, remoteRequests }));
+    if (!state.ready || state.abort || pageErrors.length || remoteRequests.length)
+      throw new Error('Private browser boot failed');
+    if (state.canvas.width < 320 || state.canvas.height < 200)
+      throw new Error('Game canvas has an unexpected size');
   }
-  await page.waitForTimeout(3_000);
-  const after = await readState();
-  console.log('After Go:', JSON.stringify({ after, inputSent, pageErrors, remoteRequests }));
-  if (!state.ready || state.abort || pageErrors.length || remoteRequests.length)
-    throw new Error('Private browser boot failed');
-  if (state.canvas.width < 320 || state.canvas.height < 200)
-    throw new Error('Game canvas has an unexpected size');
 } finally {
   await browser?.close();
   await new Promise((done) => server.close(done));
