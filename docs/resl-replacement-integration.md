@@ -135,6 +135,8 @@ The independent glyph generator now draws numerals at 16-pixel width for the hea
 
 The private scenario generator now replaces the recovered `carriage_bias.cpp` sprite offsets with a uniform wheel baseline derived from its new 16-pixel vehicle art. The resource guard expects six generated scenario/alignment tables and five retained geometry tables. A compiled gameplay and visual run is required before accepting the alignment; the recovered semaphore-placement offsets remain under review.
 
+[Run 35928548131](https://github.com/andrewnakas/decompgames/actions/runs/35928548131) compiled the revised candidate but stopped before browser testing because the workflow still asserted the old five-table replacement-scenario count. The assertion is corrected to six; this failed run supplies no gameplay or visual evidence for the new vehicle offsets.
+
 1. The initial idle hang was caused by incompatible entrance spacing in the independent scenario and has been corrected. Confirm the demo fallback cannot reach original data. The silent audio backend is in place.
 2. Inspect the compiled fonts, signals, erase mask, rails, trains, and colors across dynamic gameplay. Audit remaining non-glyph source data before deciding the replacement build is redistributable.
 3. Rebuild from the pinned Emscripten revision and publish the exact replacement sources, generator, manifest, and checksums only after the asset audit passes.
