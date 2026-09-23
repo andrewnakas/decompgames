@@ -242,6 +242,21 @@ menu.write_text(
     + menu_text[demo_end:]
 )
 
+# A browser player already has its own loading progress. Keep this engine's
+# independent title card brief so visitors do not wait through the original
+# roughly 24-second rotating-caption sequence before reaching the menu.
+loading = source / "src/ui/loading_screen.cpp"
+loading_text = loading.read_text()
+for old, new in (
+    ("constexpr std::int16_t nItems = 5;", "constexpr std::int16_t nItems = 1;"),
+    ("constexpr std::int16_t totalAnimationTime = 120;", "constexpr std::int16_t totalAnimationTime = 0;"),
+    ("for (std::int16_t j = 0; j < 220; ++j)", "for (std::int16_t j = 0; j < 30; ++j)"),
+):
+    if loading_text.count(old) != 1:
+        raise SystemExit(f"Pinned loading animation changed: {old}")
+    loading_text = loading_text.replace(old, new)
+loading.write_text(loading_text)
+
 build = output / "build"
 build.mkdir(parents=True)
 subprocess.run(["emcmake", "cmake", "-DCMAKE_BUILD_TYPE=Release", str(source)], cwd=build, check=True)
@@ -251,7 +266,7 @@ files = []
 for name in ("resl.js", "resl.wasm"):
     data = (build / name).read_bytes()
     files.append({"path": name, "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
-for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/game/melody.cpp", "src/ui/components/dialog.cpp", "src/ui/main_menu.cpp"):
+for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/game/melody.cpp", "src/ui/components/dialog.cpp", "src/ui/main_menu.cpp", "src/ui/loading_screen.cpp"):
     data = (source / relative).read_bytes()
     files.append({"path": f"replacement-source/{relative}", "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
 
@@ -286,6 +301,7 @@ record = {
     "saveRoot": "/persistent",
     "browserTested": False,
     "privateTraceEnabled": os.environ.get("OPEN_JUNCTION_TRACE") == "1",
+    "shortBrowserLoadingScreen": True,
     "releaseReady": False,
     "blockers": [
         "Inspect generated artwork and alignment in a private muted browser build",

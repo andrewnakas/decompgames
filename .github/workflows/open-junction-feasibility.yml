@@ -50,6 +50,7 @@ jobs:
           assert record['browserTested'] is False
           assert record['releaseReady'] is False
           assert record['privateTraceEnabled'] is True
+          assert record['shortBrowserLoadingScreen'] is True
           print('Private compile passed; release gate remains closed.')
           for item in record['files'][:2]:
               print(item['path'], item['bytes'], item['sha256'])
