@@ -34,7 +34,7 @@ A Link to the Past's C reconstruction now compiles into a data-free 2.22 MB WASM
 
 ## Strict replacement candidate: Open Junction
 
-reSL's documented ShortLine decompilation now has independent CC0 external assets, ten generated replacement visual/mask tables, a replacement SDL cursor, and a candidate independent board, entrance set, train roster, and rail redraw bounds. The complete replacement set compiled privately in GitHub Actions run 35815903124 with a null audio backend. A muted browser smoke test is queued in run 35819927541; it cannot certify gameplay even if it passes. Motion-data provenance, demo fallback, a completable loop, and persistence remain open; this build is not counted toward additions 3–5. See `docs/resl-replacement-integration.md` for the pinned revision, artifact hashes, and release blockers.
+reSL's documented ShortLine decompilation now has independent CC0 external assets, ten generated replacement visual/mask tables, a replacement SDL cursor, and a candidate independent board, entrance set, train roster, and rail redraw bounds. The complete replacement set compiled privately in GitHub Actions run 35815903124 with a null audio backend. A later muted browser smoke run 35824375580 confirmed runtime initialization and a 640×480 canvas without page errors or off-origin requests, but the page became unresponsive after Enter; gameplay is unverified. The next private build disables the engine's melody flag and tests the actual Go shortcut. Motion-data provenance, demo fallback, a completable loop, and persistence remain open; this build is not counted toward additions 3–5. See `docs/resl-replacement-integration.md` for pinned revision, artifact hashes, and release blockers.
 
 ## Current release gate
 

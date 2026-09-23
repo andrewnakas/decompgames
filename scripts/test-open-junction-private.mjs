@@ -59,17 +59,17 @@ try {
     return { ...window.__oj, canvas: { width: canvas?.width, height: canvas?.height } };
   });
   const state = await readState();
-  console.log('Before Enter:', JSON.stringify({ state, pageErrors, remoteRequests }));
+  console.log('Before Go:', JSON.stringify({ state, pageErrors, remoteRequests }));
   let inputSent = false;
   try {
-    await page.keyboard.press('Enter', { timeout: 5_000 });
+    await page.keyboard.press('g', { timeout: 5_000 });
     inputSent = true;
   } catch (error) {
-    console.log('Enter delivery inconclusive:', error.message);
+    console.log('Go delivery inconclusive:', error.message);
   }
   await page.waitForTimeout(3_000);
   const after = await readState();
-  console.log('After Enter:', JSON.stringify({ after, inputSent, pageErrors, remoteRequests }));
+  console.log('After Go:', JSON.stringify({ after, inputSent, pageErrors, remoteRequests }));
   if (!state.ready || state.abort || pageErrors.length || remoteRequests.length)
     throw new Error('Private browser boot failed');
   if (state.canvas.width < 320 || state.canvas.height < 200)

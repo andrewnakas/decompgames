@@ -162,6 +162,15 @@ driver.write_text(driver_text.replace(audio_flag, "SDL_Init(SDL_INIT_VIDEO | SDL
 audio = source / "src/system/driver/sdl/audio.cpp"
 audio.write_text('''#include "audio.h"\n\nnamespace resl {\nAudioDriver::AudioDriver() = default;\nAudioDriver::~AudioDriver() = default;\nvoid AudioDriver::startSound(std::uint16_t) {}\nvoid AudioDriver::stopSound() {}\nvoid AudioDriver::fillBuffer(void*, Uint8*, int) {}\nvoid AudioDriver::fill(float* buffer, int length) {\n    for (int i = 0; i < length; ++i) buffer[i] = 0.0f;\n}\n} // namespace resl\n''')
 
+# The upstream game defaults its melody flag to on and waits several frames
+# when a menu key is rejected. Disable that behavior as well as SDL output.
+melody = source / "src/game/melody.cpp"
+melody_text = melody.read_text()
+sound_flag = "bool g_soundEnabled = true;"
+if melody_text.count(sound_flag) != 1:
+    raise SystemExit("Pinned melody default changed")
+melody.write_text(melody_text.replace(sound_flag, "bool g_soundEnabled = false;"))
+
 build = output / "build"
 build.mkdir(parents=True)
 subprocess.run(["emcmake", "cmake", "-DCMAKE_BUILD_TYPE=Release", str(source)], cwd=build, check=True)
@@ -171,7 +180,7 @@ files = []
 for name in ("resl.js", "resl.wasm"):
     data = (build / name).read_bytes()
     files.append({"path": name, "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
-for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp"):
+for relative in ("CMakeLists.txt", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/game/melody.cpp"):
     data = (source / relative).read_bytes()
     files.append({"path": f"replacement-source/{relative}", "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
 
