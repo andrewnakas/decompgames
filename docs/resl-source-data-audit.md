@@ -18,7 +18,7 @@ Pinned reSL revision: `470cca330ee9abcf6173c843f4c89686c0c7e525` ([upstream](htt
 | `movement_paths.cpp` | Discrete motion paths | Likely reconstructed engine movement data. Review whether new rail geometry needs paths changed; test collisions. |
 | `rail_connection_bias.cpp`, `rail_connection_rule.cpp`, `rail_type_meta.cpp` | Routing, connection, and signal rules | Treat as engine logic pending gameplay/provenance review. |
 | `src/system/driver/sdl/mouse.cpp` cursor planes | Custom pointer artwork | Independent CC0 cursor generated and patched; private compile passed. Appearance pending. |
-| `src/graphics/text.cpp` character traits | Original font width/spacing classes | The private recipe now removes this inherited 256-byte table and measures the declared widths of the independent replacement glyphs. Recompile and visually check centered UI labels. |
+| `src/graphics/text.cpp` character traits | Original font width/spacing classes | The private recipe removes this inherited 256-byte table and measures declared widths of the independent replacement glyphs. Private compile and muted gameplay passed; the Pause dialog is narrower and better centered in the reviewed screenshot. Header counters remain small. |
 
 The top-level upstream `resources/` directory is excluded from the private build; only generated external files are embedded. A source-wide search for static byte arrays found the SDL cursor outside `src/game/resources`; other matches reviewed so far were control, text, audio, or rendering logic. Re-run this audit after source changes and before distribution. Do not infer that an exhaustive asset clearance has already happened.
 
