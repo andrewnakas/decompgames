@@ -377,7 +377,10 @@ try {
         break;
       }
       if (state.abort || pageErrors.length || remoteRequests.length)
-        throw new Error(`Private player failed while building third-station branch at ${tile}`);
+        throw new Error(`Private player failed while building third-station branch at ${tile}: ${JSON.stringify({
+          abort: state.abort, pageErrors, remoteRequests,
+          recentEngine: state.stderr.slice(-8),
+        })}`);
     }
     console.log('Third-station branch placement:', tile, { placed, branchRails, cursor,
       recentBuild: (await readState()).stderr.filter((line) => line.startsWith('OJ build')).slice(-4) });
