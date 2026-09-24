@@ -114,15 +114,15 @@ if (not isinstance(entrance_choices, list) or len(entrance_choices) != 6
         )):
     raise SystemExit("Independent entrance schedule is invalid")
 starter_route = scenario_manifest.get("starterRoute")
-if (not isinstance(starter_route, list) or len(starter_route) != 3
+if (not isinstance(starter_route, list) or len(starter_route) != 2
         or any(not isinstance(rail, dict) or set(rail) != {"x", "y", "type"}
                or any(not isinstance(rail[key], int) for key in ("x", "y", "type"))
                or not (1 <= rail["x"] <= 9 and 1 <= rail["y"] <= 9
                        and abs(rail["x"] - rail["y"]) <= 3
-                       and 4 <= rail["x"] + rail["y"] <= 16
+                       and 3 <= rail["x"] + rail["y"] <= 16
                        and 0 <= rail["type"] < 6)
                for rail in starter_route)
-        or len({(rail["x"], rail["y"], rail["type"]) for rail in starter_route}) != 3):
+        or len({(rail["x"], rail["y"], rail["type"]) for rail in starter_route}) != 2):
     raise SystemExit("Independent starter route is invalid")
 
 source = output / "replacement-source"
