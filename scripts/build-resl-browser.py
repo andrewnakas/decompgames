@@ -520,6 +520,29 @@ for old, new in (
         raise SystemExit(f"Pinned loading animation changed: {old}")
     loading_text = loading_text.replace(old, new)
 loading.write_text(loading_text)
+# The independently drafted opening has one shared two-station line. Keep its
+# dispatch serialization in both private and distributable builds; otherwise
+# the trace-enabled tests would exercise different gameplay from production.
+trains = source / "src/game/train.cpp"
+train_text = trains.read_text()
+waiting_marker = "void tryRunWaitingTrains()\n{\n"
+new_train_marker = "    if (entranceIsFree(entranceIdx)) {\n"
+if train_text.count(waiting_marker) != 1 or train_text.count(new_train_marker) != 1:
+    raise SystemExit("Pinned starter-route dispatch markers changed")
+train_text = train_text.replace(
+    waiting_marker,
+    waiting_marker + "    if (g_entranceCount == 2 && !noTrainsExist())\n"
+    "        return;\n",
+    1,
+).replace(
+    new_train_marker,
+    "    if (g_entranceCount == 2 && !noTrainsExist()) {\n"
+    "        addWaitingTrain(entranceIdx);\n"
+    "        return;\n"
+    "    }\n\n" + new_train_marker,
+    1,
+)
+trains.write_text(train_text)
 if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
     loop = source / "src/game/main_loop.cpp"
     loop_text = loop.read_text()
@@ -767,18 +790,12 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
         + '}\n',
         1,
     )
-    # The independently authored two-station opening has one shared track.
-    # Queue a second service until the active train clears it; otherwise
-    # opposing random departures can collide before either delivers.
     waiting_marker = "void tryRunWaitingTrains()\n{\n"
-    new_train_marker = "    if (entranceIsFree(entranceIdx)) {\n"
-    if train_text.count(waiting_marker) != 1 or train_text.count(new_train_marker) != 1:
-        raise SystemExit("Pinned starter-route dispatch markers changed")
+    if train_text.count(waiting_marker) != 1:
+        raise SystemExit("Pinned private dispatch-pause marker changed")
     train_text = train_text.replace(
         waiting_marker,
-        waiting_marker + "    if (ojTracePauseDispatch) return;\n"
-        + "    if (g_entranceCount == 2 && !noTrainsExist())\n"
-        "        return;\n",
+        waiting_marker + "    if (ojTracePauseDispatch) return;\n",
         1,
     )
     automatic_spawn_marker = "void spawnNewTrain()\n{\n"
@@ -787,14 +804,6 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
     train_text = train_text.replace(
         automatic_spawn_marker,
         automatic_spawn_marker + "    if (ojTracePauseDispatch) return;\n", 1,
-    )
-    train_text = train_text.replace(
-        new_train_marker,
-        "    if (g_entranceCount == 2 && !noTrainsExist()) {\n"
-        "        addWaitingTrain(entranceIdx);\n"
-        "        return;\n"
-        "    }\n\n" + new_train_marker,
-        1,
     )
     trains.write_text(train_text.replace(
         spawn_marker,
