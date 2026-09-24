@@ -296,6 +296,12 @@ try {
       Number(gameTicks(thirdStation)?.match(/entrances (\d+)/)?.[1]) < 3 ||
       thirdStation.abort || pageErrors.length || remoteRequests.length)
     throw new Error('Private third-station branch did not add an entrance');
+  // Let the entrance animation and queued redraw settle before visual review.
+  await page.waitForTimeout(3_000);
+  thirdStation = await readState();
+  console.log('After third-station redraw:', gameTicks(thirdStation));
+  if (thirdStation.abort || pageErrors.length || remoteRequests.length)
+    throw new Error('Private browser failed after the third-station redraw');
   const thirdImage = await page.locator('canvas').screenshot({ timeout: 5_000 });
   console.log('Private third-station canvas PNG SHA-256:',
     createHash('sha256').update(thirdImage).digest('hex'));
