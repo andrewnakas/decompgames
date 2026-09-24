@@ -30,6 +30,8 @@ Each counted addition needs documented decompilation provenance, an open-source 
 
 This is a research queue, not five promised or verified releases. Continue searching smaller documented C/SDL decomps and recording license/data blockers. Do not invent an eligible fifth project to fill a table.
 
+At inspected `arcade-js` revision `e849d086f4168c9a0e1ab501d62efbe3766def8a`, Frogger's manifest declares a 16,384-byte main CPU image, 4,096-byte graphics image, and 32-byte color PROM. The translated JavaScript executes game logic, but its memory system still reads original ROM bytes as data, and `Machine` decodes graphics from the supplied `gfx` and `proms` images. A replacement project would have to identify every live ROM-data address, supply independent tables plus new tile/sprite art and palette in the expected encoded formats, disable or replace the original audio samples, and test a complete level loop. The existing ROM-size and hash checks would need a separate honest manifest for that new data. This is a scoped candidate, not a ready browser release.
+
 ## Open Paths release record
 
 Open Paths uses OpenSupaplex revision `bad56a4e174e628643995284ea55d4c49af3137c` and immutable package `bad56a4e174e-026301f2dd`. The published corresponding-source archive includes the patched pinned source, generated browser patches, build record, replacement-data generators, planar codec, package manifest, and build instructions. The browser build uses the null audio backend and contains no upstream resource directory.
