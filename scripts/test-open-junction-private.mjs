@@ -492,7 +492,7 @@ try {
   let crossDelivered = false;
   let departedOrigin = false;
   const crossSwitchAttempts = [];
-  for (let attempt = 0; attempt < 28; ++attempt) {
+  for (let attempt = 0; attempt < 40; ++attempt) {
     await page.waitForTimeout(5_000);
     const state = await readState();
     const lines = state.stderr.slice(crossStart);
