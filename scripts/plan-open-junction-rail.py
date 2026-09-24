@@ -59,14 +59,19 @@ def main():
         (3, 1, 5), (2, 2, 3), (1, 3, 5),
         (4, 1, 2), (5, 2, 4),
     }
-    fourth_station = (3, 6, 1)
-    path = path_to_target(existing, fourth_station, rules)
-    if not path:
-        raise SystemExit("No geometric path to station 4")
-    print("Candidate connection path:", path)
-    print("Player-built rails in construction order:",
-          [node for node in path if node not in existing and node != fourth_station])
-    print("Destination rail appears with station four:", fourth_station)
+    # The remaining three station rails are built by normal year progression.
+    # Iterative plans are provisional: each earlier route still needs browser
+    # construction and delivery tests before relying on a later route.
+    actual_stations = [(3, 6, 1), (8, 5, 0), (5, 8, 1)]
+    for number, station in enumerate(actual_stations, start=4):
+        path = path_to_target(existing, station, rules)
+        if not path:
+            raise SystemExit(f"No geometric path to station {number}")
+        additions = [node for node in path if node not in existing and node != station]
+        print(f"Station {number} candidate path:", path)
+        print("  player-built rails:", additions)
+        print("  station rail appears during progression:", station)
+        existing.update(path)
 
 
 if __name__ == "__main__":

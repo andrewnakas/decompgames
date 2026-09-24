@@ -251,6 +251,8 @@ The saved crossing screenshot was inspected at full resolution. The five-car tra
 
 The pinned `rail_connection_rule.cpp` table gives a short geometric extension from existing rail `(1,3,type 5)` toward the independent fourth station `(3,6,type 1)`: add `(1,4,type 4)` and `(2,5,type 2)`. `scripts/plan-open-junction-rail.py` reproduces this graph search from the pinned table. This is only a candidate connection on paper. The next muted private run attempts both rails through the real construction UI after ordinary progression adds station four; passing placement will still require an actual fourth-station arrival, signal/switch management, and save restoration before release.
 
+The same provisional graph search suggests symmetrical two-rail additions for later stations: `(6,3,type 2)` plus `(7,4,type 4)` toward station five `(8,5,type 0)`, and `(3,6,type 4)` plus `(4,7,type 2)` toward station six `(5,8,type 1)`. They reuse tiles at existing station entrances and may create player-managed switches. These are untested route hypotheses; geometry search does not check construction restrictions, collisions, signal state, or an arriving train.
+
 1. The initial idle hang was caused by incompatible entrance spacing in the independent scenario and has been corrected. Confirm the demo fallback cannot reach original data. The silent audio backend is in place.
 2. Inspect the compiled fonts, signals, erase mask, rails, trains, and colors across dynamic gameplay. Audit remaining non-glyph source data before deciding the replacement build is redistributable.
 3. Rebuild from the pinned Emscripten revision and publish the exact replacement sources, generator, manifest, and checksums only after the asset audit passes.
