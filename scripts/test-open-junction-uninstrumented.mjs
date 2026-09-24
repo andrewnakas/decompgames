@@ -84,8 +84,12 @@ try {
   }, gameplay.toString('base64'));
   if (gridSamples.filter(rgb => rgb[0] === 129 && rgb[1] === 160 && rgb[2] === 190).length < 5)
     throw new Error('Independent board did not appear after Go in the uninstrumented build');
+  // The engine ignores pause input during its opening station animation. The
+  // grid is visible before that animation finishes, so give normal gameplay
+  // time to begin before asking the actual pause menu to save.
+  await page.waitForTimeout(25_000);
   await page.keyboard.press('p');
-  await page.waitForTimeout(1_000);
+  await page.waitForTimeout(2_000);
   await page.keyboard.press('s');
   let saved = false;
   for (let attempt = 0; attempt < 10; ++attempt) {
@@ -95,7 +99,12 @@ try {
       window.Module.FS.stat(`/persistent/${name}`).size > 0));
     if (saved) break;
   }
-  if (!saved) throw new Error('Uninstrumented build did not create a nonempty local save');
+  if (!saved) {
+    const files = await page.evaluate(() => window.Module.FS.readdir('/persistent').map(name => ({
+      name, bytes: name === '.' || name === '..' ? 0 : window.Module.FS.stat(`/persistent/${name}`).size,
+    })));
+    throw new Error(`Uninstrumented build did not create a nonempty local save: ${JSON.stringify({ files, errors, remoteRequests })}`);
+  }
   if (errors.length || remoteRequests.length || await page.evaluate(() => window.__oj.abort))
     throw new Error(`Uninstrumented browser error: ${JSON.stringify({ errors, remoteRequests })}`);
   console.log('Uninstrumented null-audio build launched, accepted Go, drew the independent board, and saved locally.');
