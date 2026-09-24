@@ -472,12 +472,64 @@ try {
   }
   if (!thirdStationDelivery)
     throw new Error('No train completed a service involving the third station after player-built extension');
+  // Diagnose the other third-station pair separately. The starter switch must
+  // first let station 0's train leave; setting it toward station 2 too early
+  // traps the train at its origin. This trace-forced trip probes route geometry,
+  // never counts as naturally scheduled gameplay.
+  await page.mouse.click(branchSwitch.x, Math.round(branchSwitch.y * 480 / 350));
+  await page.waitForTimeout(1_000);
+  branchSwitch = await branchSwitchState();
+  if (!branchSwitch || branchSwitch.enabled)
+    throw new Error('Player could not align the branch for cross-route diagnosis');
+  const crossStart = (await readState()).stderr.length;
+  const crossSlot = await page.evaluate(() => {
+    if (typeof window.Module._oj_trace_spawn_cross_branch_service !== 'function')
+      throw new Error('Private cross-branch service hook is missing');
+    return window.Module._oj_trace_spawn_cross_branch_service();
+  });
+  if (crossSlot < 0)
+    throw new Error(`Private cross-branch service could not start: ${crossSlot}`);
+  let crossDelivered = false;
+  let departedOrigin = false;
+  const crossSwitchAttempts = [];
+  for (let attempt = 0; attempt < 28; ++attempt) {
+    await page.waitForTimeout(5_000);
+    const state = await readState();
+    const lines = state.stderr.slice(crossStart);
+    const heads = lines.filter((line) => line.startsWith(`OJ active train slot ${crossSlot} `));
+    const latestHead = heads.at(-1);
+    const headX = Number(latestHead?.match(/head (\d+),/)?.[1]);
+    if (Number.isFinite(headX) && headX < 550) departedOrigin = true;
+    if (departedOrigin && !(await branchSwitchState())?.enabled) {
+      const before = await branchSwitchState();
+      await page.mouse.click(before.x, Math.round(before.y * 480 / 350));
+      await page.waitForTimeout(1_000);
+      crossSwitchAttempts.push({ seconds: (attempt + 1) * 5, head: latestHead,
+        before, after: await branchSwitchState() });
+    }
+    crossDelivered = lines.some((line) =>
+      line === `OJ train completed slot ${crossSlot} dst 2 arrived 1`);
+    if (state.abort || pageErrors.length || remoteRequests.length)
+      throw new Error('Private browser failed during cross-branch diagnostic');
+    if (crossDelivered || lines.some((line) =>
+      line.startsWith(`OJ train completed slot ${crossSlot} `))) break;
+  }
+  console.log('Trace-forced 0-to-2 route diagnostic:', {
+    crossSlot, departedOrigin, crossDelivered, crossSwitchAttempts,
+    branchSwitch: await branchSwitchState(),
+    trainHeads: (await readState()).stderr.slice(crossStart).filter((line) =>
+      line.startsWith(`OJ active train slot ${crossSlot} `)).slice(-15),
+  });
+  if (!crossDelivered)
+    throw new Error('Player-managed cross-branch route did not complete a 0-to-2 service');
   // Restore the original route through ordinary player input before letting
   // the scheduler run again. The fixed branch alignment blocked mixed traffic
   // in run 35966071614. Move the junction for the oldest pending service when
   // it is safe to do so; these are real management-mode mouse clicks.
-  await page.mouse.click(branchSwitch.x, Math.round(branchSwitch.y * 480 / 350));
-  await page.waitForTimeout(1_000);
+  if ((await branchSwitchState())?.enabled) {
+    await page.mouse.click(branchSwitch.x, Math.round(branchSwitch.y * 480 / 350));
+    await page.waitForTimeout(1_000);
+  }
   branchSwitch = await branchSwitchState();
   if (!branchSwitch || branchSwitch.enabled)
     throw new Error('Player could not restore the original route before natural dispatch');

@@ -828,6 +828,18 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
         '    std::fprintf(stderr, "OJ train spawned from 1 to 2 at year %d slot %d\\n",\n'
         '        train->year, slot);\n'
         '    return slot;\n'
+        '}\n'
+        'extern "C" EMSCRIPTEN_KEEPALIVE int oj_trace_spawn_cross_branch_service() {\n'
+        '    if (g_entranceCount < 3 || !noTrainsExist() || !entranceIsFree(0)) return -1;\n'
+        '    Train* train = spawnTrain(0);\n'
+        '    if (!train) return -2;\n'
+        '    for (int i = 0; i < train->carriageCnt; ++i)\n'
+        '        train->carriages[i].dstEntranceIdx = 2;\n'
+        '    const int slot = static_cast<int>(train - g_trains.data());\n'
+        '    std::fprintf(stderr, "OJ trace forced cross-branch service slot %d\\n", slot);\n'
+        '    std::fprintf(stderr, "OJ train spawned from 0 to 2 at year %d slot %d\\n",\n'
+        '        train->year, slot);\n'
+        '    return slot;\n'
         '}\n\n' + next_train_function,
         1,
     ))
