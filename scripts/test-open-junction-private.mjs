@@ -436,6 +436,8 @@ try {
     console.log('Third-station delivery probe:', {
       seconds: (attempt + 1) * 5, activeSlots: [...activeSlots],
       completedThirdStationService: thirdStationDelivery, latestTick: gameTicks(state),
+      branchSwitch: await branchSwitchState(),
+      trainHeads: state.stderr.filter((line) => line.startsWith('OJ active train slot ')).slice(-5),
       abort: state.abort, pageErrors, remoteRequests,
     });
     if (state.abort || pageErrors.length || remoteRequests.length)

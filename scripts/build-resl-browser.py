@@ -636,6 +636,15 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
         + '                        ojFirstTrain && ojFirstTrain->head.rail ? ojFirstTrain->head.rail->x : -1,\n'
         + '                        ojFirstTrain && ojFirstTrain->head.rail ? ojFirstTrain->head.rail->y : -1,\n'
         + '                        ojFirstTrain ? ojFirstTrain->head.pathStep : -1);\n'
+        + '                    for (int i = 0; i < static_cast<int>(g_trains.size()); ++i) {\n'
+        + '                        const Train& train = g_trains[i];\n'
+        + '                        if (train.isFreeSlot) continue;\n'
+        + '                        std::fprintf(stderr, "OJ active train slot %d dst %d head %d,%d:%d\\n",\n'
+        + '                            i, train.carriages[0].dstEntranceIdx,\n'
+        + '                            train.head.rail ? train.head.rail->x : -1,\n'
+        + '                            train.head.rail ? train.head.rail->y : -1,\n'
+        + '                            train.head.pathStep);\n'
+        + '                    }\n'
         + '                }\n',
         1,
     ))
