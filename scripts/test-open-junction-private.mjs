@@ -305,6 +305,23 @@ try {
   const thirdImage = await page.locator('canvas').screenshot({ timeout: 5_000 });
   console.log('Private third-station canvas PNG SHA-256:',
     createHash('sha256').update(thirdImage).digest('hex'));
+  const gridPixels = await page.evaluate(async (pngBase64) => {
+    const image = new Image();
+    image.src = `data:image/png;base64,${pngBase64}`;
+    await image.decode();
+    const scratch = document.createElement('canvas');
+    scratch.width = image.width;
+    scratch.height = image.height;
+    const context = scratch.getContext('2d');
+    context.drawImage(image, 0, 0);
+    return [220, 300].flatMap((y) => [32, 64, 96, 128].map((x) =>
+      [...context.getImageData(x, y, 1, 1).data].slice(0, 3)));
+  }, thirdImage.toString('base64'));
+  const preservedGrid = gridPixels.filter((rgb) =>
+    rgb[0] === 129 && rgb[1] === 160 && rgb[2] === 190).length;
+  console.log('Third-station independent grid samples:', preservedGrid, 'of', gridPixels.length);
+  if (preservedGrid < 5)
+    throw new Error('The independent board grid disappeared after world redraw');
   if (process.env.OPEN_JUNCTION_THIRD_SCREENSHOT)
     await writeFile(process.env.OPEN_JUNCTION_THIRD_SCREENSHOT, thirdImage);
   // Exercise the otherwise slow year-2000 branch with a trace-only jump.
