@@ -797,6 +797,11 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
         + '    int count = 0;\n'
         + '    for (const Train& train : g_trains) if (!train.isFreeSlot) ++count;\n'
         + '    return count;\n'
+        + '}\n'
+        + 'extern "C" EMSCRIPTEN_KEEPALIVE int oj_trace_waiting_train_count() {\n'
+        + '    int count = 0;\n'
+        + '    for (int i = 0; i < g_entranceCount; ++i) count += g_entrances[i].waitingTrainsCount;\n'
+        + '    return count;\n'
         + '}\n',
         1,
     )

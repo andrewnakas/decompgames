@@ -601,17 +601,24 @@ try {
     }
     if (state.abort || pageErrors.length || remoteRequests.length)
       throw new Error('Private browser failed during natural-dispatch observation');
-    if (organicThirdDelivery) break;
+    // Continue after the first third-station arrival. A single successful trip
+    // does not show that queued return and later cross-branch services remain
+    // playable on this shared line.
   }
   console.log('Natural-dispatch observation:', JSON.stringify({
     secondsObserved: organicSeconds, organicThirdDelivery, organicSpawns, organicCompletions,
     organicSwitchAttempts, maxSimultaneousServices,
+    waitingServices: await page.evaluate(() => window.Module._oj_trace_waiting_train_count()),
     branchSwitch: await branchSwitchState(), latestTick: gameTicks(await readState()),
     trainHeads: (await readState()).stderr.slice(organicStart).filter((line) =>
       line.startsWith('OJ active train slot ')).slice(-12),
   }));
   if (maxSimultaneousServices > 1)
     throw new Error('The independent single-track network dispatched overlapping services');
+  if (!organicThirdDelivery)
+    throw new Error('Ordinary dispatch did not complete a third-station delivery');
+  if (organicCompletions.length < 2)
+    throw new Error('Ordinary dispatch did not complete a second serialized service');
   await page.evaluate(() => window.Module._oj_trace_pause_dispatch(1));
   // Exercise the otherwise slow year-2000 branch with a trace-only jump.
   // This proves the transition code path, not 200 years of continuous play.
