@@ -692,10 +692,15 @@ try {
     fourthSwitchAttempts.push({ before: fourthSwitch, after });
     fourthSwitch = after;
   }
+  if (!fourthSwitch?.enabled)
+    throw new Error('Player could not enable the fourth-station branch switch');
   const fourthStart = (await readState()).stderr.length;
   const fourthActiveService = organicSpawns.at(-1);
+  if (!fourthActiveService ||
+      (fourthActiveService.from !== 3 && fourthActiveService.to !== 3))
+    throw new Error('Ordinary dispatch did not present a fourth-station service for the route probe');
   let fourthArrival = false;
-  for (let attempt = 0; attempt < 18; ++attempt) {
+  for (let attempt = 0; attempt < 54; ++attempt) {
     if ((await page.evaluate(() => window.Module._oj_trace_active_train_count())) === 0) break;
     await page.waitForTimeout(5_000);
     const state = await readState();
@@ -712,6 +717,8 @@ try {
     recentEngine: (await readState()).stderr.slice(fourthStart).filter((line) =>
       line.startsWith('OJ train completed') || line.startsWith('OJ active train slot ')).slice(-18),
   }));
+  if (!fourthArrival)
+    throw new Error('Player-connected fourth-station service did not arrive');
   // Exercise the otherwise slow year-2000 branch with a trace-only jump.
   // This proves the transition code path, not 200 years of continuous play.
   await page.evaluate(() => {
