@@ -280,6 +280,27 @@ try {
     throw new Error('Imported backup did not restore gameplay state');
   if (pageErrors.length || remoteRequests.length)
     throw new Error('Private browser encountered an error during backup round trip');
+  // Reach the third station's branch without pretending to play 35 years.
+  await page.evaluate(() => {
+    if (typeof window.Module._oj_trace_jump_to_1840 !== 'function')
+      throw new Error('Private third-station hook is missing');
+    window.Module._oj_trace_jump_to_1840();
+  });
+  let thirdStation;
+  for (let attempt = 0; attempt < 15; ++attempt) {
+    await page.waitForTimeout(1_000);
+    thirdStation = await readState();
+    if (Number(gameTicks(thirdStation)?.match(/entrances (\d+)/)?.[1]) >= 3) break;
+  }
+  if (!thirdStation.stderr.includes('OJ year-1840 branch prepared') ||
+      Number(gameTicks(thirdStation)?.match(/entrances (\d+)/)?.[1]) < 3 ||
+      thirdStation.abort || pageErrors.length || remoteRequests.length)
+    throw new Error('Private third-station branch did not add an entrance');
+  const thirdImage = await page.locator('canvas').screenshot({ timeout: 5_000 });
+  console.log('Private third-station canvas PNG SHA-256:',
+    createHash('sha256').update(thirdImage).digest('hex'));
+  if (process.env.OPEN_JUNCTION_THIRD_SCREENSHOT)
+    await writeFile(process.env.OPEN_JUNCTION_THIRD_SCREENSHOT, thirdImage);
   // Exercise the otherwise slow year-2000 branch with a trace-only jump.
   // This proves the transition code path, not 200 years of continuous play.
   await page.evaluate(() => {

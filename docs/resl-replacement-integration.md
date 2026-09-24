@@ -143,6 +143,8 @@ The glyph generator now also supplies new semaphore-placement distances, selecte
 
 [Run 35932927868](https://github.com/andrewnakas/decompgames/actions/runs/35932927868) passed the private source inventory, muted gameplay delivery, starter-route occupancy, save and backup paths, and trace-only transition and loss branches with the replacement signal offsets. Native-size train and player screenshots were inspected; the connection-edge signal markers remain visible without an obvious displaced sprite. One sampled frame cannot prove every signal state, erase path, or collision case. The original signal-placement table is no longer included in the private build; four routing and movement tables remain as GPL engine geometry. No binary was published.
 
+The next private trace advances the restored game to the year-1840 branch and checks that the third independent station appears before the existing year-2000 and loss probes. It will capture a native-size frame for placement review. This is a branch test, not 35 years of uninterrupted play or proof that the player can route a train through all three stations.
+
 1. The initial idle hang was caused by incompatible entrance spacing in the independent scenario and has been corrected. Confirm the demo fallback cannot reach original data. The silent audio backend is in place.
 2. Inspect the compiled fonts, signals, erase mask, rails, trains, and colors across dynamic gameplay. Audit remaining non-glyph source data before deciding the replacement build is redistributable.
 3. Rebuild from the pinned Emscripten revision and publish the exact replacement sources, generator, manifest, and checksums only after the asset audit passes.
