@@ -489,9 +489,21 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
     loop_text = loop_text.replace(
         "#include <cstdlib>\n", "#include <cstdlib>\n#include <emscripten/emscripten.h>\n", 1,
     ).replace(
+        '#include "rail.h"\n', '#include "rail.h"\n#include "switch.h"\n', 1,
+    ).replace(
         year_marker,
         year_marker
         + '\n// Private branch test only; this hook is absent from distributable builds.\n'
+        + 'extern "C" EMSCRIPTEN_KEEPALIVE int oj_trace_branch_switch_state() {\n'
+        + '    const Rail* branch = &g_rails[4][1][2];\n'
+        + '    for (int i = 0; i < g_nSwitches; ++i) {\n'
+        + '        const Switch& sw = g_switches[i];\n'
+        + '        if (sw.entry.rail == branch || sw.disabledPath.rail == branch)\n'
+        + '            return ((sw.entry.rail == branch) ? 1 : 0) << 24\n'
+        + '                | (sw.x & 4095) << 12 | (sw.y & 4095);\n'
+        + '    }\n'
+        + '    return -1;\n'
+        + '}\n'
         + 'extern "C" EMSCRIPTEN_KEEPALIVE int oj_trace_mouse_state() {\n'
         + '    const auto& cursor = mouse::g_railCursorState;\n'
         + '    return ((mouse::g_state.mode == &mouse::g_modeConstruction) ? 1 : 0) << 24\n'

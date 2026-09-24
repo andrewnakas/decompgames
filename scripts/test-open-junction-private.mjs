@@ -342,6 +342,34 @@ try {
       recentBuild: (await readState()).stderr.filter((line) => line.startsWith('OJ build')).slice(-4) });
     if (!placed) throw new Error(`Player could not build third-station branch at ${tile}`);
   }
+  // The newly built path begins disabled at a player-operated switch. Use
+  // ordinary management-mode input to select it before testing service.
+  const branchSwitchState = () => page.evaluate(() => {
+    if (typeof window.Module._oj_trace_branch_switch_state !== 'function')
+      throw new Error('Private branch-switch probe is missing');
+    const raw = window.Module._oj_trace_branch_switch_state();
+    if (raw < 0) return null;
+    return { x: (raw >>> 12) & 4095, y: raw & 4095, enabled: Boolean(raw >>> 24) };
+  });
+  let branchSwitch = await branchSwitchState();
+  if (!branchSwitch) throw new Error('Player-built third-station branch has no switch');
+  await page.locator('canvas').focus();
+  await page.keyboard.press('Space');
+  await page.waitForTimeout(300);
+  if ((await mouseState()).construction)
+    throw new Error('Third-station test could not enter switch management mode');
+  for (let attempt = 0; !branchSwitch.enabled && attempt < 60; ++attempt) {
+    await page.mouse.click(branchSwitch.x, Math.round(branchSwitch.y * 480 / 350));
+    await page.waitForTimeout(1_000);
+    branchSwitch = await branchSwitchState();
+    if (!branchSwitch) throw new Error('Branch switch disappeared after player click');
+    const state = await readState();
+    if (state.abort || pageErrors.length || remoteRequests.length)
+      throw new Error('Private browser failed while toggling the branch switch');
+  }
+  console.log('Player-managed third-station switch:', branchSwitch);
+  if (!branchSwitch.enabled)
+    throw new Error('Player could not enable third-station branch switch');
   // Reach the third station's branch without pretending to play 35 years.
   await page.evaluate(() => {
     if (typeof window.Module._oj_trace_jump_to_1840 !== 'function')
