@@ -671,6 +671,47 @@ try {
     if (!placed)
       throw new Error(`Player could not construct fourth-station candidate rail at ${tile}`);
   }
+  const fourthSwitchState = () => page.evaluate(() => {
+    const raw = window.Module._oj_trace_fourth_switch_state();
+    if (raw < 0) return null;
+    return { x: (raw >>> 12) & 4095, y: raw & 4095, enabled: Boolean(raw >>> 24) };
+  });
+  await page.locator('canvas').focus();
+  if ((await mouseState()).construction) {
+    await page.keyboard.press('Space');
+    await page.waitForTimeout(1_000);
+  }
+  if ((await mouseState()).construction)
+    throw new Error('Player could not return to management mode after station-four construction');
+  let fourthSwitch = await fourthSwitchState();
+  const fourthSwitchAttempts = [];
+  for (let attempt = 0; fourthSwitch && !fourthSwitch.enabled && attempt < 8; ++attempt) {
+    await page.mouse.click(fourthSwitch.x, Math.round(fourthSwitch.y * 480 / 350));
+    await page.waitForTimeout(1_000);
+    const after = await fourthSwitchState();
+    fourthSwitchAttempts.push({ before: fourthSwitch, after });
+    fourthSwitch = after;
+  }
+  const fourthStart = (await readState()).stderr.length;
+  const fourthActiveService = organicSpawns.at(-1);
+  let fourthArrival = false;
+  for (let attempt = 0; attempt < 18; ++attempt) {
+    if ((await page.evaluate(() => window.Module._oj_trace_active_train_count())) === 0) break;
+    await page.waitForTimeout(5_000);
+    const state = await readState();
+    fourthArrival = fourthArrival || Boolean(fourthActiveService &&
+      (fourthActiveService.from === 3 || fourthActiveService.to === 3) &&
+      state.stderr.slice(fourthStart).includes(
+        `OJ train completed slot ${fourthActiveService.slot} dst ${fourthActiveService.to} arrived 1`));
+    if (state.abort || pageErrors.length || remoteRequests.length)
+      throw new Error('Private browser failed while observing the fourth-station extension');
+  }
+  console.log('Fourth-station route diagnostic:', JSON.stringify({
+    fourthActiveService, fourthSwitch, fourthSwitchAttempts, fourthArrival,
+    latestTick: gameTicks(await readState()),
+    recentEngine: (await readState()).stderr.slice(fourthStart).filter((line) =>
+      line.startsWith('OJ train completed') || line.startsWith('OJ active train slot ')).slice(-18),
+  }));
   // Exercise the otherwise slow year-2000 branch with a trace-only jump.
   // This proves the transition code path, not 200 years of continuous play.
   await page.evaluate(() => {
