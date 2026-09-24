@@ -620,6 +620,57 @@ try {
   if (organicCompletions.length < 2)
     throw new Error('Ordinary dispatch did not complete a second serialized service');
   await page.evaluate(() => window.Module._oj_trace_pause_dispatch(1));
+  const lateGameState = await readState();
+  if (Number(gameTicks(lateGameState)?.match(/entrances (\d+)/)?.[1]) < 4)
+    throw new Error('Fourth station did not appear during ordinary progression');
+  // A graph search over the pinned connection table found this two-rail
+  // extension toward the automatically added fourth station. Construction is
+  // tested through actual player input; connectivity and delivery are separate
+  // gates and are not inferred from these placement assertions.
+  await page.locator('canvas').focus();
+  if (!(await mouseState()).construction) {
+    await page.keyboard.press('Space');
+    await page.waitForTimeout(1_000);
+  }
+  if (!(await mouseState()).construction)
+    throw new Error('Player could not enter construction mode for station four');
+  let fourthRouteRails = Number(gameTicks(lateGameState)?.match(/rails (\d+)/)?.[1]);
+  for (const { tile, x, y, type } of [
+    { tile: '1,4', x: 56, y: 120, type: 4 },
+    { tile: '2,5', x: 56, y: 178, type: 2 },
+  ]) {
+    await page.mouse.move(x, y);
+    await page.mouse.click(x, y, { button: 'left' });
+    await page.waitForTimeout(300);
+    let selected = await mouseState();
+    if (`${selected.tileX},${selected.tileY}` !== tile)
+      throw new Error(`Fourth-station pointer selected ${selected.tileX},${selected.tileY} instead of ${tile}`);
+    for (let attempt = 0; selected.type !== type && attempt < 6; ++attempt) {
+      await page.mouse.click(x, y, { button: 'left' });
+      await page.waitForTimeout(100);
+      selected = await mouseState();
+    }
+    if (selected.type !== type)
+      throw new Error(`Fourth-station cursor could not select rail type ${type} at ${tile}`);
+    await page.mouse.click(x, y, { button: 'right' });
+    let placed = false;
+    for (let attempt = 0; attempt < 8; ++attempt) {
+      await page.waitForTimeout(1_000);
+      const state = await readState();
+      const count = Number(gameTicks(state)?.match(/rails (\d+)/)?.[1]);
+      if (count > fourthRouteRails && state.stderr.some((line) =>
+        line.startsWith(`OJ build queued tile ${tile}`))) {
+        fourthRouteRails = count;
+        placed = true;
+        break;
+      }
+      if (state.abort || pageErrors.length || remoteRequests.length)
+        throw new Error(`Private browser failed during fourth-station construction at ${tile}`);
+    }
+    console.log('Fourth-station candidate rail:', JSON.stringify({ tile, type, placed, fourthRouteRails }));
+    if (!placed)
+      throw new Error(`Player could not construct fourth-station candidate rail at ${tile}`);
+  }
   // Exercise the otherwise slow year-2000 branch with a trace-only jump.
   // This proves the transition code path, not 200 years of continuous play.
   await page.evaluate(() => {
