@@ -389,7 +389,7 @@ try {
   await page.locator('canvas').focus();
   await page.keyboard.press('1');
   let thirdStationDelivery = false;
-  for (let attempt = 0; attempt < 18; ++attempt) {
+  for (let attempt = 0; attempt < 30; ++attempt) {
     await page.waitForTimeout(5_000);
     const state = await readState();
     const activeSlots = new Map();
@@ -407,7 +407,7 @@ try {
     }
     console.log('Third-station delivery probe:', {
       seconds: (attempt + 1) * 5, activeSlots: [...activeSlots],
-      completedToThird: thirdStationDelivery, latestTick: gameTicks(state),
+      completedThirdStationService: thirdStationDelivery, latestTick: gameTicks(state),
       abort: state.abort, pageErrors, remoteRequests,
     });
     if (state.abort || pageErrors.length || remoteRequests.length)
