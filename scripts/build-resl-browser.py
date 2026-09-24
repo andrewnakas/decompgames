@@ -515,8 +515,9 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
         + '    g_gameTime = 1900;\n'
         + '    std::fprintf(stderr, "OJ year-1840 branch prepared\\n");\n'
         + '}\n'
+        + 'static bool g_ojTraceForceTransition = false;\n'
         + 'extern "C" EMSCRIPTEN_KEEPALIVE void oj_trace_jump_to_2000() {\n'
-        + '    g_headers[static_cast<int>(HeaderFieldId::Year)].value = 2000;\n'
+        + '    g_ojTraceForceTransition = true;\n'
         + '    g_gameTime = 1900;\n'
         + '    std::fprintf(stderr, "OJ year-2000 branch prepared\\n");\n'
         + '}\n',
@@ -538,6 +539,17 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
     transition_marker = "                case 2000:\n"
     if loop_text.count(transition_marker) != 1:
         raise SystemExit("Pinned level-transition marker changed")
+    transition_switch = "                switch (g_headers[static_cast<int>(HeaderFieldId::Year)].value) {\n"
+    if loop_text.count(transition_switch) != 1:
+        raise SystemExit("Pinned level-switch marker changed")
+    loop_text = loop_text.replace(
+        transition_switch,
+        '                if (g_ojTraceForceTransition) {\n'
+        '                    g_headers[static_cast<int>(HeaderFieldId::Year)].value = 2000;\n'
+        '                    g_ojTraceForceTransition = false;\n'
+        '                }\n' + transition_switch,
+        1,
+    )
     loop_text = loop_text.replace(
         transition_marker,
         transition_marker + '                    std::fprintf(stderr, "OJ level transition entered\\n");\n',
