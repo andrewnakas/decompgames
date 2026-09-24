@@ -47,8 +47,9 @@ jobs:
           assert len(record['replacementScenario']) == 6
           assert record['replacementEntranceSchedule'] == [0, 23, 8, 31, 16, 39]
           assert record['replacementStarterRoute'] == [
-              {'x': 2, 'y': 1, 'type': 5},
-              {'x': 1, 'y': 2, 'type': 3},
+              {'x': 3, 'y': 1, 'type': 5},
+              {'x': 2, 'y': 2, 'type': 3},
+              {'x': 1, 'y': 3, 'type': 5},
           ]
           assert record['replacementForest'] == {'maximumTrees': 32, 'minimumSpacingPixels': 36}
           assert len(record['replacementPaletteRGB']) == 16

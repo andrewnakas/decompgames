@@ -240,7 +240,7 @@ try {
   }
   const loadedTick = gameTicks(loaded);
   if (Number(loadedTick?.match(/year (\d+)/)?.[1]) < 1805 ||
-      Number(loadedTick?.match(/rails (\d+)/)?.[1]) < 5)
+      Number(loadedTick?.match(/rails (\d+)/)?.[1]) < 6)
     throw new Error('Archive did not restore the saved year and constructed rails');
   const backupBytes = await page.evaluate((name) =>
     Array.from(window.Module.FS.readFile(`/persistent/${name}`)), savedFile.name);
@@ -276,7 +276,7 @@ try {
   const importedTick = gameTicks(await readState());
   console.log('After backup import and Archive Go:', importedTick);
   if (Number(importedTick?.match(/year (\d+)/)?.[1]) < 1805 ||
-      Number(importedTick?.match(/rails (\d+)/)?.[1]) < 5)
+      Number(importedTick?.match(/rails (\d+)/)?.[1]) < 6)
     throw new Error('Imported backup did not restore gameplay state');
   if (pageErrors.length || remoteRequests.length)
     throw new Error('Private browser encountered an error during backup round trip');
@@ -331,7 +331,7 @@ try {
   let cursorType = 0;
   for (const { tile, x, y, type } of [
     { tile: '4,1', x: 584, y: 183, type: 2 },
-    { tile: '5,2', x: 584, y: 225, type: 1 },
+    { tile: '5,2', x: 584, y: 225, type: 4 },
   ]) {
     await page.mouse.move(x, y);
     await page.mouse.click(x, y, { button: 'left' });

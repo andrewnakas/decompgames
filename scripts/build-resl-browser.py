@@ -114,15 +114,15 @@ if (not isinstance(entrance_choices, list) or len(entrance_choices) != 6
         )):
     raise SystemExit("Independent entrance schedule is invalid")
 starter_route = scenario_manifest.get("starterRoute")
-if (not isinstance(starter_route, list) or len(starter_route) != 2
+if (not isinstance(starter_route, list) or len(starter_route) != 3
         or any(not isinstance(rail, dict) or set(rail) != {"x", "y", "type"}
                or any(not isinstance(rail[key], int) for key in ("x", "y", "type"))
                or not (1 <= rail["x"] <= 9 and 1 <= rail["y"] <= 9
                        and abs(rail["x"] - rail["y"]) <= 3
-                       and 3 <= rail["x"] + rail["y"] <= 16
+                       and 4 <= rail["x"] + rail["y"] <= 16
                        and 0 <= rail["type"] < 6)
                for rail in starter_route)
-        or len({(rail["x"], rail["y"], rail["type"]) for rail in starter_route}) != 2):
+        or len({(rail["x"], rail["y"], rail["type"]) for rail in starter_route}) != 3):
     raise SystemExit("Independent starter route is invalid")
 
 source = output / "replacement-source"
@@ -176,23 +176,6 @@ text_source.write_text(text_body)
 
 init = source / "src/game/init.cpp"
 init_text = init.read_text()
-# The original housing rule assumes entrances sit against the display's far
-# left/right margins. Independent stations are inset so players can extend
-# tracks at the outward endpoint; allow their houses beside those stations.
-old_house_bounds = (
-    "    // Houses can only be placed at the edge of the screen;\n"
-    "    // valid X coordinate ranges are: [0; 50] and [590; 640]\n"
-    "    if ((x < 0 || x > 50) && (x < 590 || x > 640))\n"
-    "        return false;\n"
-)
-new_house_bounds = (
-    "    // Open Junction houses may surround independently placed inset stations.\n"
-    "    if (x < 8 || x > 632 || house.y < 36 || house.y > 300)\n"
-    "        return false;\n"
-)
-if init_text.count(old_house_bounds) != 1:
-    raise SystemExit("Pinned house placement rule changed")
-init_text = init_text.replace(old_house_bounds, new_house_bounds, 1)
 selection_pattern = r"        bool suits = false;\n        while \(!suits\) \{.*?\n        \}\n"
 choice_cpp = ", ".join(str(value) for value in entrance_choices)
 selection_cpp = (

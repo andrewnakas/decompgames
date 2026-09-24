@@ -29,7 +29,7 @@ def generate(output: Path) -> None:
     for x in range(11):
         row = []
         for y in range(11):
-            usable = 1 <= x <= 9 and 1 <= y <= 9 and abs(x - y) <= 3 and 3 <= x + y <= 16
+            usable = 1 <= x <= 9 and 1 <= y <= 9 and abs(x - y) <= 3 and 4 <= x + y <= 16
             row.append("0x3F" if usable else "0x00")
         grid.append("    {" + ", ".join(row) + "}")
     files["allowed_cursor_rail_types.cpp"] = cpp(
@@ -46,13 +46,13 @@ def generate(output: Path) -> None:
         kinds = (0, 2, 3, 5) if right_side else (1, 2, 4, 5)
         bank = []
         for coordinate in range(1, 7):
-            x, y = (coordinate + 2, coordinate) if right_side else (coordinate, coordinate + 2)
+            x, y = (coordinate + 3, coordinate) if right_side else (coordinate, coordinate + 3)
             for kind in kinds:
                 bank.append((x, y, kind))
         rail_sites.extend(bank[:23])
     assert len(rail_sites) == 46 and len(set(rail_sites)) == 46
     assert all(
-        1 <= x <= 9 and 1 <= y <= 9 and abs(x - y) == 2 and 3 <= x + y <= 16
+        1 <= x <= 9 and 1 <= y <= 9 and abs(x - y) == 3 and 4 <= x + y <= 16
         for x, y, _kind in rail_sites
     )
     assert all(x > y for x, y, _kind in rail_sites[:23])
@@ -64,16 +64,16 @@ def generate(output: Path) -> None:
     assert len(set(initial_entrances)) == 6
     assert all((index < 23) == (slot % 2 == 0) for slot, index in enumerate(initial_entrances))
     assert all(rail_sites[index][2] == (0 if index < 23 else 1) for index in initial_entrances)
-    # A short independent starter route links the first two stations. Both
-    # outward endpoints remain on-screen so later stations can be connected
-    # without the engine's forbidden three-rail switch.
+    # A small original starter route links the first two stations. Later
+    # stations still require the player to extend and manage the network.
     starter_route = [
-        {"x": 2, "y": 1, "type": 5},
-        {"x": 1, "y": 2, "type": 3},
+        {"x": 3, "y": 1, "type": 5},
+        {"x": 2, "y": 2, "type": 3},
+        {"x": 1, "y": 3, "type": 5},
     ]
-    assert len({(r["x"], r["y"], r["type"]) for r in starter_route}) == 2
+    assert len({(r["x"], r["y"], r["type"]) for r in starter_route}) == 3
     assert all(1 <= r["x"] <= 9 and 1 <= r["y"] <= 9 and
-               abs(r["x"] - r["y"]) <= 3 and 3 <= r["x"] + r["y"] <= 16 and
+               abs(r["x"] - r["y"]) <= 3 and 4 <= r["x"] + r["y"] <= 16 and
                0 <= r["type"] < 6 for r in starter_route)
     rails = [f"    {{0, {x}, {y}, {kind}, 0}}" for x, y, kind in rail_sites]
     files["entrance_rails.cpp"] = cpp(
