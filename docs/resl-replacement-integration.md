@@ -227,6 +227,8 @@ That run failed the cross-route assertion at its 140-second limit, but the train
 
 The same run's release-like build again launched, accepted Go, and drew the independent board, but its Save smoke failed even after a longer opening wait. The `/persistent` directory remained empty and Chromium reported no page errors or remote requests. The next smoke records silent screenshots before Pause, inside Pause, and after Save to determine whether the keys reached the menu or whether the non-instrumented binary handles saving differently. A short diagnostic workflow option avoids repeating the 10-minute traced route test for this particular failure.
 
+The first isolated smoke invocation, [run 35992212876](https://github.com/andrewnakas/decompgames/actions/runs/35992212876), built the non-instrumented null-audio runtime and its source package but could not start Chromium because the fast path skipped dependency installation. This is a workflow setup failure, not a new game failure. The fast path now installs the browser dependencies before running the smoke. [Run 35992539498](https://github.com/andrewnakas/decompgames/actions/runs/35992539498) was queued to capture the Pause/Save screens.
+
 1. The initial idle hang was caused by incompatible entrance spacing in the independent scenario and has been corrected. Confirm the demo fallback cannot reach original data. The silent audio backend is in place.
 2. Inspect the compiled fonts, signals, erase mask, rails, trains, and colors across dynamic gameplay. Audit remaining non-glyph source data before deciding the replacement build is redistributable.
 3. Rebuild from the pinned Emscripten revision and publish the exact replacement sources, generator, manifest, and checksums only after the asset audit passes.
