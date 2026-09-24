@@ -104,6 +104,8 @@ try {
   console.log('Private gameplay canvas PNG SHA-256:', createHash('sha256').update(image).digest('hex'));
   if (process.env.OPEN_JUNCTION_SCREENSHOT)
     await writeFile(process.env.OPEN_JUNCTION_SCREENSHOT, image);
+  console.log('Opening mouse state:', await page.evaluate(() =>
+    window.Module._oj_trace_mouse_state()));
   // The independently drafted board permits rails on center tile (5,5).
   // Its logical y≈210 scales to physical y≈288 in the 640×480 SDL window.
   await page.mouse.move(320, 288);
@@ -334,11 +336,13 @@ try {
       type: packed & 255 };
   });
   let cursor = await mouseState();
+  console.log('Third-station initial cursor state:', cursor);
   if (!cursor.construction) {
     await page.locator('canvas').focus();
-    await page.keyboard.press(' ');
-    await page.waitForTimeout(300);
+    await page.keyboard.press('Space');
+    await page.waitForTimeout(1_000);
     cursor = await mouseState();
+    console.log('Third-station cursor after Space:', cursor);
   }
   if (!cursor.construction)
     throw new Error('Third-station branch test could not enter construction mode');
