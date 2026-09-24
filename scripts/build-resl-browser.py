@@ -520,9 +520,11 @@ for old, new in (
         raise SystemExit(f"Pinned loading animation changed: {old}")
     loading_text = loading_text.replace(old, new)
 loading.write_text(loading_text)
-# The independently drafted opening has one shared two-station line. Keep its
-# dispatch serialization in both private and distributable builds; otherwise
-# the trace-enabled tests would exercise different gameplay from production.
+# The independent board has one shared line and no passing siding, even after
+# the third station branches from it. Queue later services until the current
+# train clears; otherwise trains with conflicting switch needs occupy the same
+# short junction and the player cannot safely route either one. Keep this rule
+# in both private and distributable builds so the tested gameplay is identical.
 trains = source / "src/game/train.cpp"
 train_text = trains.read_text()
 waiting_marker = "void tryRunWaitingTrains()\n{\n"
@@ -531,15 +533,23 @@ if train_text.count(waiting_marker) != 1 or train_text.count(new_train_marker) !
     raise SystemExit("Pinned starter-route dispatch markers changed")
 train_text = train_text.replace(
     waiting_marker,
-    waiting_marker + "    if (g_entranceCount == 2 && !noTrainsExist())\n"
+    waiting_marker + "    if (!noTrainsExist())\n"
     "        return;\n",
     1,
 ).replace(
     new_train_marker,
-    "    if (g_entranceCount == 2 && !noTrainsExist()) {\n"
+    "    if (!noTrainsExist()) {\n"
     "        addWaitingTrain(entranceIdx);\n"
     "        return;\n"
     "    }\n\n" + new_train_marker,
+    1,
+)
+waiting_spawn_marker = "            if (train && !(--g_entrances[i].waitingTrainsCount))\n                drawDispatcher(i, false);\n"
+if train_text.count(waiting_spawn_marker) != 1:
+    raise SystemExit("Pinned waiting-service serialization marker changed")
+train_text = train_text.replace(
+    waiting_spawn_marker,
+    waiting_spawn_marker + "            if (train) return;\n",
     1,
 )
 trains.write_text(train_text)

@@ -553,7 +553,8 @@ try {
   let organicCompletions = [];
   const organicSwitchAttempts = [];
   let organicSeconds = 0;
-  for (let attempt = 0; attempt < 28; ++attempt) {
+  let maxSimultaneousServices = 0;
+  for (let attempt = 0; attempt < 48; ++attempt) {
     await page.waitForTimeout(5_000);
     organicSeconds += 5;
     const state = await readState();
@@ -565,6 +566,7 @@ try {
       if (spawned) {
         const service = { from: Number(spawned[1]), to: Number(spawned[2]), slot: Number(spawned[3]) };
         services.set(service.slot, service);
+        maxSimultaneousServices = Math.max(maxSimultaneousServices, services.size);
         organicSpawns.push(service);
       }
       const completed = line.match(/^OJ train completed slot (\d+) dst (\d+) arrived ([01])$/);
@@ -580,27 +582,36 @@ try {
       }
     }
     const oldestPendingService = [...services.values()][0];
-    const desiredBranch = oldestPendingService &&
-      (oldestPendingService.from === 2 || oldestPendingService.to === 2);
+    const latestHead = oldestPendingService && [...state.stderr.slice(organicStart)].reverse()
+      .find(line => line.startsWith(`OJ active train slot ${oldestPendingService.slot} `));
+    const headX = Number(latestHead?.match(/head (\d+),/)?.[1]);
+    const departedOrigin = Number.isFinite(headX) && headX < 550;
+    const desiredBranch = oldestPendingService && (
+      oldestPendingService.from === 0 && oldestPendingService.to === 2 ? departedOrigin :
+      oldestPendingService.from === 2 && oldestPendingService.to === 0 ? !departedOrigin :
+      oldestPendingService.from === 2 || oldestPendingService.to === 2
+    );
     const beforeSwitch = await branchSwitchState();
     if (oldestPendingService && beforeSwitch?.enabled !== desiredBranch) {
       await page.mouse.click(beforeSwitch.x, Math.round(beforeSwitch.y * 480 / 350));
       await page.waitForTimeout(1_000);
       const afterSwitch = await branchSwitchState();
       organicSwitchAttempts.push({ seconds: organicSeconds, service: oldestPendingService,
-        desiredBranch, before: beforeSwitch, after: afterSwitch });
+        head: latestHead, desiredBranch, before: beforeSwitch, after: afterSwitch });
     }
     if (state.abort || pageErrors.length || remoteRequests.length)
       throw new Error('Private browser failed during natural-dispatch observation');
     if (organicThirdDelivery) break;
   }
-  console.log('Natural-dispatch observation:', {
+  console.log('Natural-dispatch observation:', JSON.stringify({
     secondsObserved: organicSeconds, organicThirdDelivery, organicSpawns, organicCompletions,
-    organicSwitchAttempts,
+    organicSwitchAttempts, maxSimultaneousServices,
     branchSwitch: await branchSwitchState(), latestTick: gameTicks(await readState()),
     trainHeads: (await readState()).stderr.slice(organicStart).filter((line) =>
       line.startsWith('OJ active train slot ')).slice(-12),
-  });
+  }));
+  if (maxSimultaneousServices > 1)
+    throw new Error('The independent single-track network dispatched overlapping services');
   await page.evaluate(() => window.Module._oj_trace_pause_dispatch(1));
   // Exercise the otherwise slow year-2000 branch with a trace-only jump.
   // This proves the transition code path, not 200 years of continuous play.
