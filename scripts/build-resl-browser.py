@@ -322,6 +322,32 @@ if static_text.count(grass_call) != 1:
     raise SystemExit("Pinned grass draw call changed")
 static_objects.write_text(static_text.replace(grass_call, "", 1))
 
+# The pinned engine rebuilds its offscreen world after entrances appear. Its
+# original flat-color field fill erases the independent grid from play.7, so
+# restore that replacement board before drawing tracks and scenery over it.
+world = source / "src/game/drawing.cpp"
+world_text = world.read_text()
+flat_field = """void fillGameFieldBackground(std::int16_t yOffset)
+{
+    graphics::filledRectangle(0, 49 + yOffset, 80, 285, 0xFF, Color::Green);
+}
+"""
+if world_text.count(flat_field) != 1:
+    raise SystemExit("Pinned world background fill changed")
+grid_field = """void fillGameFieldBackground(std::int16_t yOffset)
+{
+    std::span<const std::byte> data = readBinaryFile("play.7");
+    if (data.empty()) [[unlikely]] {
+        std::cerr << "unable to read replacement board 'play.7'" << std::endl;
+        graphics::filledRectangle(0, 49 + yOffset, 80, 285, 0xFF, Color::Green);
+    } else {
+        graphics::imageDot7(0, yOffset, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT,
+                            reinterpret_cast<const std::uint8_t*>(data.data()));
+    }
+}
+"""
+world.write_text(world_text.replace(flat_field, grid_field, 1))
+
 cmake = source / "CMakeLists.txt"
 cmake_text = cmake.read_text()
 resource_list = "set(resources\n" + "".join(
@@ -691,7 +717,7 @@ files = []
 for name in ("resl.js", "resl.wasm"):
     data = (build / name).read_bytes()
     files.append({"path": name, "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
-for relative in ("CMakeLists.txt", "src/graphics/text.cpp", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/system/filesystem.cpp", "src/game/melody.cpp", "src/game/init.cpp", "src/game/main_loop.cpp", "src/game/mouse/mouse.cpp", "src/game/move_trains.cpp", "src/game/road_construction.cpp", "src/game/static_object.cpp", "src/game/train.cpp", "src/ui/components/dialog.cpp", "src/ui/components/status_bar.cpp", "src/ui/main_menu.cpp", "src/ui/loading_screen.cpp"):
+for relative in ("CMakeLists.txt", "src/graphics/text.cpp", "src/system/driver/sdl/driver.cpp", "src/system/driver/sdl/audio.cpp", "src/system/driver/sdl/mouse.cpp", "src/system/driver/sdl/video.cpp", "src/system/filesystem.cpp", "src/game/melody.cpp", "src/game/drawing.cpp", "src/game/init.cpp", "src/game/main_loop.cpp", "src/game/mouse/mouse.cpp", "src/game/move_trains.cpp", "src/game/road_construction.cpp", "src/game/static_object.cpp", "src/game/train.cpp", "src/ui/components/dialog.cpp", "src/ui/components/status_bar.cpp", "src/ui/main_menu.cpp", "src/ui/loading_screen.cpp"):
     data = (source / relative).read_bytes()
     files.append({"path": f"replacement-source/{relative}", "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
 
