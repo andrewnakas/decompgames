@@ -176,6 +176,23 @@ text_source.write_text(text_body)
 
 init = source / "src/game/init.cpp"
 init_text = init.read_text()
+# The original housing rule assumes entrances sit against the display's far
+# left/right margins. Independent stations are inset so players can extend
+# tracks at the outward endpoint; allow their houses beside those stations.
+old_house_bounds = (
+    "    // Houses can only be placed at the edge of the screen;\n"
+    "    // valid X coordinate ranges are: [0; 50] and [590; 640]\n"
+    "    if ((x < 0 || x > 50) && (x < 590 || x > 640))\n"
+    "        return false;\n"
+)
+new_house_bounds = (
+    "    // Open Junction houses may surround independently placed inset stations.\n"
+    "    if (x < 8 || x > 632 || house.y < 36 || house.y > 300)\n"
+    "        return false;\n"
+)
+if init_text.count(old_house_bounds) != 1:
+    raise SystemExit("Pinned house placement rule changed")
+init_text = init_text.replace(old_house_bounds, new_house_bounds, 1)
 selection_pattern = r"        bool suits = false;\n        while \(!suits\) \{.*?\n        \}\n"
 choice_cpp = ", ".join(str(value) for value in entrance_choices)
 selection_cpp = (
