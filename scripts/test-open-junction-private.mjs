@@ -514,6 +514,8 @@ try {
   console.log('Natural-dispatch observation:', {
     secondsObserved: organicSeconds, organicThirdDelivery, organicSpawns, organicCompletions,
     branchSwitch: await branchSwitchState(), latestTick: gameTicks(await readState()),
+    trainHeads: (await readState()).stderr.slice(organicStart).filter((line) =>
+      line.startsWith('OJ active train slot ')).slice(-12),
   });
   await page.evaluate(() => window.Module._oj_trace_pause_dispatch(1));
   // Exercise the otherwise slow year-2000 branch with a trace-only jump.
