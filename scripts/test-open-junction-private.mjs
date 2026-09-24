@@ -342,6 +342,21 @@ try {
       recentBuild: (await readState()).stderr.filter((line) => line.startsWith('OJ build')).slice(-4) });
     if (!placed) throw new Error(`Player could not build third-station branch at ${tile}`);
   }
+  // Private route diagnostic: stop random dispatch, let existing trains clear
+  // on the original alignment, then send one controlled service to station 3.
+  await page.evaluate(() => {
+    if (typeof window.Module._oj_trace_pause_dispatch !== 'function')
+      throw new Error('Private dispatch-pause probe is missing');
+    window.Module._oj_trace_pause_dispatch(1);
+  });
+  let clearedTraffic = false;
+  for (let attempt = 0; attempt < 65; ++attempt) {
+    const active = await page.evaluate(() => window.Module._oj_trace_active_train_count());
+    if (active === 0) { clearedTraffic = true; break; }
+    await page.waitForTimeout(1_000);
+  }
+  if (!clearedTraffic)
+    throw new Error('Existing two-station trains did not clear before the targeted route probe');
   // The newly built path begins disabled at a player-operated switch. Use
   // ordinary management-mode input to select it before testing service.
   const branchSwitchState = () => page.evaluate(() => {
@@ -416,6 +431,14 @@ try {
     await writeFile(process.env.OPEN_JUNCTION_THIRD_SCREENSHOT, thirdImage);
   await page.locator('canvas').focus();
   await page.keyboard.press('1');
+  const targetedSlot = await page.evaluate(() => {
+    if (typeof window.Module._oj_trace_spawn_third_service !== 'function')
+      throw new Error('Private targeted-service probe is missing');
+    return window.Module._oj_trace_spawn_third_service();
+  });
+  console.log('Private targeted third-station service slot:', targetedSlot);
+  if (targetedSlot < 0)
+    throw new Error('Private test could not dispatch an isolated third-station service');
   let thirdStationDelivery = false;
   for (let attempt = 0; attempt < 30; ++attempt) {
     await page.waitForTimeout(5_000);

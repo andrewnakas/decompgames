@@ -694,7 +694,27 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
     spawn_marker = "        t->lastMovementTime = getTime();\n"
     if train_text.count(spawn_marker) != 1:
         raise SystemExit("Pinned train-spawn trace marker changed")
-    train_text = train_text.replace("#include <cstdlib>\n", "#include <cstdlib>\n#include <cstdio>\n", 1)
+    train_text = train_text.replace(
+        "#include <cstdlib>\n",
+        "#include <cstdlib>\n#include <cstdio>\n#include <emscripten/emscripten.h>\n", 1,
+    )
+    train_array = "std::array<Train, 20> g_trains;\n"
+    if train_text.count(train_array) != 1:
+        raise SystemExit("Pinned train-array trace marker changed")
+    train_text = train_text.replace(
+        train_array,
+        train_array
+        + 'static bool ojTracePauseDispatch = false;\n'
+        + 'extern "C" EMSCRIPTEN_KEEPALIVE void oj_trace_pause_dispatch(int enabled) {\n'
+        + '    ojTracePauseDispatch = enabled != 0;\n'
+        + '}\n'
+        + 'extern "C" EMSCRIPTEN_KEEPALIVE int oj_trace_active_train_count() {\n'
+        + '    int count = 0;\n'
+        + '    for (const Train& train : g_trains) if (!train.isFreeSlot) ++count;\n'
+        + '    return count;\n'
+        + '}\n',
+        1,
+    )
     # The independently authored two-station opening has one shared track.
     # Queue a second service until the active train clears it; otherwise
     # opposing random departures can collide before either delivers.
@@ -704,9 +724,17 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
         raise SystemExit("Pinned starter-route dispatch markers changed")
     train_text = train_text.replace(
         waiting_marker,
-        waiting_marker + "    if (g_entranceCount == 2 && !noTrainsExist())\n"
+        waiting_marker + "    if (ojTracePauseDispatch) return;\n"
+        + "    if (g_entranceCount == 2 && !noTrainsExist())\n"
         "        return;\n",
         1,
+    )
+    automatic_spawn_marker = "void spawnNewTrain()\n{\n"
+    if train_text.count(automatic_spawn_marker) != 1:
+        raise SystemExit("Pinned automatic train-spawn marker changed")
+    train_text = train_text.replace(
+        automatic_spawn_marker,
+        automatic_spawn_marker + "    if (ojTracePauseDispatch) return;\n", 1,
     )
     train_text = train_text.replace(
         new_train_marker,
@@ -720,6 +748,26 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
         spawn_marker,
         spawn_marker + '        std::fprintf(stderr, "OJ train spawned from %d to %d at year %d slot %d\\n", '
         'entranceIdx, dstEntranceIdx, t->year, static_cast<int>(t - g_trains.data()));\n',
+        1,
+    ))
+    train_text = trains.read_text()
+    next_train_function = "/* 16a6:08bb */\nvoid tryRunWaitingTrains()"
+    if train_text.count(next_train_function) != 1:
+        raise SystemExit("Pinned targeted-service trace marker changed")
+    trains.write_text(train_text.replace(
+        next_train_function,
+        'extern "C" EMSCRIPTEN_KEEPALIVE int oj_trace_spawn_third_service() {\n'
+        '    if (g_entranceCount < 3 || !noTrainsExist() || !entranceIsFree(0)) return -1;\n'
+        '    Train* train = spawnTrain(0);\n'
+        '    if (!train) return -2;\n'
+        '    for (int i = 0; i < train->carriageCnt; ++i)\n'
+        '        train->carriages[i].dstEntranceIdx = 2;\n'
+        '    const int slot = static_cast<int>(train - g_trains.data());\n'
+        '    std::fprintf(stderr, "OJ trace forced third service slot %d\\n", slot);\n'
+        '    std::fprintf(stderr, "OJ train spawned from 0 to 2 at year %d slot %d\\n",\n'
+        '        train->year, slot);\n'
+        '    return slot;\n'
+        '}\n\n' + next_train_function,
         1,
     ))
     movement = source / "src/game/move_trains.cpp"
