@@ -305,11 +305,21 @@ def generate(output: Path) -> None:
                 f"static RailGlyphData<24, 43> rail_{index}_{role} = "
                 f"{{-96, -21, {values(pixels)}}};"
             )
-        for side, port in enumerate(alternate):
-            pixels = mask(192, 43, lambda x, y: segment_distance(x, y, (96, 21), ports[port]) <= 2.5)
+        for side, _ in enumerate(alternate):
+            # The engine stores each switch glyph's covered background bytes
+            # in a fixed 30-byte slot. A full-size rail segment overflows that
+            # slot and can corrupt the VGA state when a player builds a switch.
+            # Use a compact independent direction marker with at most 12 bytes.
+            arrow_y = 3 if side == 0 else 8
+            pixels = mask(8, 12, lambda x, y: (
+                (x in (3, 4) and 1 <= y <= 10)
+                or (y == arrow_y and 1 <= x <= 6)
+                or (abs(x - 4) == abs(y - arrow_y) and abs(y - arrow_y) <= 2)
+            ))
+            assert sum(value != 0 for value in pixels) <= 30
             rail_defs.append(
-                f"static RailGlyphData<24, 43> rail_{index}_{side + 3} = "
-                f"{{-96, -21, {values(pixels)}}};"
+                f"static RailGlyphData<1, 12> rail_{index}_{side + 3} = "
+                f"{{-4, -6, {values(pixels)}}};"
             )
         rail_rows.append(
             "    {" + ", ".join(
