@@ -1291,7 +1291,7 @@
     "mode": "project",
     "engine": "reSL",
     "description": "Explore a fully restored rail-dispatch simulation reconstructed from the 1992 DOS executable.",
-    "overview": "reSL reconstructs ShortLine 1.1 in portable C++ with an Emscripten target. Its upstream resource directory contains original game data, so Decomp Games does not distribute that build. A separate Open Junction candidate now uses independently generated screens, fonts, glyphs, cursor, colors, and scenario data. Private muted browser tests completed a train delivery and restored a save, but the remaining source-data audit, player integration, and release checks are unfinished. This page remains a project directory entry.",
+    "overview": "reSL reconstructs ShortLine 1.1 in portable C++ with an Emscripten target. Its upstream resource directory contains original game data, so Decomp Games does not distribute that build. A separate Open Junction candidate uses independently generated screens, fonts, glyphs, cursor, colors, and scenario data. Private muted browser tests completed repeated deliveries across the first three stations, player rail construction toward a fourth, and a real player backup round trip. The fourth-station route, later progression, and final source review remain unverified. This page remains a project directory entry.",
     "source": "https://github.com/konovalov-aleks/reSL",
     "engineLicense": "GPL-3.0",
     "assetLicense": "Original upstream resources excluded; independent CC0 replacement candidate remains private",
@@ -1302,7 +1302,7 @@
     "saveInstructions": "Follow upstream save instructions. No supported Decomp Games player or save namespace exists yet.",
     "limitations": [
       "Directory entry only; no Open Junction browser build is distributed.",
-      "The private candidate has replacement visual tables, but the full source-data and corresponding-source review is unfinished.",
+      "The private candidate has replacement visual tables, but later-station gameplay and final source review are unfinished.",
       "Private muted testing does not establish a public player, a complete campaign playthrough, or audible sound support."
     ],
     "inputs": [],
@@ -1311,9 +1311,9 @@
     "color": "#5ab4ac",
     "verification": {
       "status": "unverified",
-      "date": "2026-09-23",
+      "date": "2026-09-24",
       "browsers": [],
-      "scope": "Pinned reSL revision 470cca330ee9abcf6173c843f4c89686c0c7e525. A separate replacement-only candidate passed private, silent Chromium checks for rail placement, one train delivery, Save/reload/Archive, and backup round-trip. No engine binary or game data was published, and the public player remains unverified.",
+      "scope": "Pinned reSL revision 470cca330ee9abcf6173c843f4c89686c0c7e525. A separate replacement-only candidate passed private, silent Chromium checks for several assigned trips across three stations, fourth-station rail placement and switch input, Save/reload/Archive, and backup round-trip. A completed fourth-station journey and later progression are unverified. No engine binary or game data was published, and the public player remains unverified.",
       "playthrough": false
     }
   },
