@@ -1,6 +1,6 @@
 // Silent browser smoke for the build that has no private trace hooks.
 import { createServer } from 'node:http';
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { createHash } from 'node:crypto';
 import { chromium } from '@playwright/test';
@@ -88,8 +88,12 @@ try {
   // grid is visible before that animation finishes, so give normal gameplay
   // time to begin before asking the actual pause menu to save.
   await page.waitForTimeout(25_000);
+  await writeFile('/tmp/open-junction-uninstrumented-before-pause.png',
+    await page.locator('canvas').screenshot());
   await page.keyboard.press('p');
   await page.waitForTimeout(2_000);
+  await writeFile('/tmp/open-junction-uninstrumented-pause.png',
+    await page.locator('canvas').screenshot());
   await page.keyboard.press('s');
   let saved = false;
   for (let attempt = 0; attempt < 10; ++attempt) {
@@ -100,6 +104,8 @@ try {
     if (saved) break;
   }
   if (!saved) {
+    await writeFile('/tmp/open-junction-uninstrumented-after-save.png',
+      await page.locator('canvas').screenshot());
     const files = await page.evaluate(() => window.Module.FS.readdir('/persistent').map(name => ({
       name, bytes: name === '.' || name === '..' ? 0 : window.Module.FS.stat(`/persistent/${name}`).size,
     })));

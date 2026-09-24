@@ -2,6 +2,11 @@ name: Private Open Junction feasibility build
 
 on:
   workflow_dispatch:
+    inputs:
+      uninstrumented_only:
+        description: Diagnose the release-like build without the longer trace run
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -25,6 +30,7 @@ jobs:
           /tmp/emsdk/emsdk install 6.0.1
           /tmp/emsdk/emsdk activate 6.0.1
       - name: Compile private candidate without audio
+        if: ${{ !inputs.uninstrumented_only }}
         run: |
           source /tmp/emsdk/emsdk_env.sh
           OPEN_JUNCTION_TRACE=1 python3 scripts/build-resl-browser.py \
@@ -64,6 +70,7 @@ jobs:
               print(item['path'], item['bytes'], item['sha256'])
           PY
       - name: Check private corresponding-source package
+        if: ${{ !inputs.uninstrumented_only }}
         run: |
           python3 scripts/package-open-junction-private-source.py /tmp/open-junction-build
           tar -tzf /tmp/open-junction-build/open-junction-private-source.tar.gz \
@@ -78,6 +85,7 @@ jobs:
           node-version: 24
           cache: pnpm
       - name: Start privately in muted Chromium
+        if: ${{ !inputs.uninstrumented_only }}
         env:
           OPEN_JUNCTION_SCREENSHOT: /tmp/open-junction-gameplay.png
           OPEN_JUNCTION_TRAIN_SCREENSHOT: /tmp/open-junction-train.png
@@ -87,6 +95,7 @@ jobs:
           pnpm exec playwright install chromium --with-deps
           timeout 900s node scripts/test-open-junction-private.mjs /tmp/open-junction-build/build
       - name: Exercise the actual player in an ephemeral private preview
+        if: ${{ !inputs.uninstrumented_only }}
         env:
           OPEN_JUNCTION_PLAYER_SCREENSHOT: /tmp/open-junction-player.png
         run: |
