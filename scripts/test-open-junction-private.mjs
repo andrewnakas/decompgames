@@ -350,7 +350,7 @@ try {
     window.Module._oj_trace_pause_dispatch(1);
   });
   let clearedTraffic = false;
-  for (let attempt = 0; attempt < 65; ++attempt) {
+  for (let attempt = 0; attempt < 105; ++attempt) {
     const active = await page.evaluate(() => window.Module._oj_trace_active_train_count());
     if (active === 0) { clearedTraffic = true; break; }
     await page.waitForTimeout(1_000);

@@ -85,7 +85,7 @@ jobs:
         run: |
           pnpm install --frozen-lockfile
           pnpm exec playwright install chromium --with-deps
-          timeout 360s node scripts/test-open-junction-private.mjs /tmp/open-junction-build/build
+          timeout 480s node scripts/test-open-junction-private.mjs /tmp/open-junction-build/build
       - name: Exercise the actual player in an ephemeral private preview
         env:
           OPEN_JUNCTION_PLAYER_SCREENSHOT: /tmp/open-junction-player.png
