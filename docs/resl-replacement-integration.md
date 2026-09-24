@@ -191,6 +191,8 @@ The next private test logs each train's slot and destination and requires a trai
 
 [Run 35961349753](https://github.com/andrewnakas/decompgames/actions/runs/35961349753) compiled the corrected station-2-to-station-3 probe, built the branch, and let the existing two-station train complete. Its test then pressed Space on the assumption that construction mode was still active; the live mode was already management, so that press entered construction and the test stopped before toggling the switch. The next probe reads the actual mouse mode and presses Space only when needed. It supplies no new third-station routing evidence, and no runtime was published.
 
+[Run 35961784558](https://github.com/andrewnakas/decompgames/actions/runs/35961784558) again compiled and passed the early two-station work, but a mode check 300 milliseconds after Space still reported construction. That may be too soon for the game loop to process the key; the probe now waits a full second and records each attempt before touching the switch. It never dispatched the third-station service and does not change release status.
+
 1. The initial idle hang was caused by incompatible entrance spacing in the independent scenario and has been corrected. Confirm the demo fallback cannot reach original data. The silent audio backend is in place.
 2. Inspect the compiled fonts, signals, erase mask, rails, trains, and colors across dynamic gameplay. Audit remaining non-glyph source data before deciding the replacement build is redistributable.
 3. Rebuild from the pinned Emscripten revision and publish the exact replacement sources, generator, manifest, and checksums only after the asset audit passes.

@@ -369,9 +369,10 @@ try {
   let branchSwitch = await branchSwitchState();
   if (!branchSwitch) throw new Error('Player-built third-station branch has no switch');
   await page.locator('canvas').focus();
-  if ((await mouseState()).construction) {
+  for (let attempt = 0; (await mouseState()).construction && attempt < 5; ++attempt) {
     await page.keyboard.press('Space');
-    await page.waitForTimeout(300);
+    await page.waitForTimeout(1_000);
+    console.log('Switch management mode attempt:', attempt + 1, await mouseState());
   }
   if ((await mouseState()).construction)
     throw new Error('Third-station test could not enter switch management mode');
