@@ -472,14 +472,21 @@ try {
   }
   if (!thirdStationDelivery)
     throw new Error('No train completed a service involving the third station after player-built extension');
-  // Remove the private dispatch pause and observe the unmodified scheduler.
-  // This is diagnostic until a naturally scheduled third-station journey
-  // completes; it does not count the forced service above as organic play.
+  // Restore the original route through ordinary player input before letting
+  // the scheduler run again. The fixed branch alignment blocked mixed traffic
+  // in run 35966071614. Move the junction for the oldest pending service when
+  // it is safe to do so; these are real management-mode mouse clicks.
+  await page.mouse.click(branchSwitch.x, Math.round(branchSwitch.y * 480 / 350));
+  await page.waitForTimeout(1_000);
+  branchSwitch = await branchSwitchState();
+  if (!branchSwitch || branchSwitch.enabled)
+    throw new Error('Player could not restore the original route before natural dispatch');
   const organicStart = (await readState()).stderr.length;
   await page.evaluate(() => window.Module._oj_trace_pause_dispatch(0));
   let organicThirdDelivery = false;
   let organicSpawns = [];
   let organicCompletions = [];
+  const organicSwitchAttempts = [];
   let organicSeconds = 0;
   for (let attempt = 0; attempt < 28; ++attempt) {
     await page.waitForTimeout(5_000);
@@ -507,12 +514,24 @@ try {
         }
       }
     }
+    const oldestPendingService = [...services.values()][0];
+    const desiredBranch = oldestPendingService &&
+      (oldestPendingService.from === 2 || oldestPendingService.to === 2);
+    const beforeSwitch = await branchSwitchState();
+    if (oldestPendingService && beforeSwitch?.enabled !== desiredBranch) {
+      await page.mouse.click(beforeSwitch.x, Math.round(beforeSwitch.y * 480 / 350));
+      await page.waitForTimeout(1_000);
+      const afterSwitch = await branchSwitchState();
+      organicSwitchAttempts.push({ seconds: organicSeconds, service: oldestPendingService,
+        desiredBranch, before: beforeSwitch, after: afterSwitch });
+    }
     if (state.abort || pageErrors.length || remoteRequests.length)
       throw new Error('Private browser failed during natural-dispatch observation');
     if (organicThirdDelivery) break;
   }
   console.log('Natural-dispatch observation:', {
     secondsObserved: organicSeconds, organicThirdDelivery, organicSpawns, organicCompletions,
+    organicSwitchAttempts,
     branchSwitch: await branchSwitchState(), latestTick: gameTicks(await readState()),
     trainHeads: (await readState()).stderr.slice(organicStart).filter((line) =>
       line.startsWith('OJ active train slot ')).slice(-12),
