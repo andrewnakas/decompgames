@@ -2,7 +2,6 @@
 import { createServer } from 'node:http';
 import { readFile, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
-import { createHash } from 'node:crypto';
 import { chromium } from '@playwright/test';
 
 if (!process.argv[2]) throw new Error('Usage: node test-open-junction-uninstrumented.mjs BUILD_DIRECTORY');
@@ -63,14 +62,38 @@ try {
   if (await page.evaluate(() => window.__oj.abort)) throw new Error('Uninstrumented engine aborted at startup');
   if (await page.evaluate(() => typeof window.Module._oj_trace_mouse_state) !== 'undefined')
     throw new Error('Release-like runtime still exports a private trace hook');
-  const menu = await page.locator('canvas').screenshot();
+  const mainMenuIsVisible = async () => {
+    const png = await page.locator('canvas').screenshot();
+    return page.evaluate(async (base64) => {
+      const image = new Image();
+      image.src = `data:image/png;base64,${base64}`;
+      await image.decode();
+      const scratch = document.createElement('canvas');
+      scratch.width = image.width; scratch.height = image.height;
+      const context = scratch.getContext('2d');
+      context.drawImage(image, 0, 0);
+      return [[250, 120], [250, 200], [390, 390]].every(([x, y]) => {
+        const pixel = context.getImageData(x, y, 1, 1).data;
+        return pixel[0] === 129 && pixel[1] === 160 && pixel[2] === 190;
+      });
+    }, png.toString('base64'));
+  };
+  let sawMenu = false;
+  for (let attempt = 0; attempt < 20; ++attempt) {
+    if (await mainMenuIsVisible()) { sawMenu = true; break; }
+    await page.waitForTimeout(1_000);
+  }
+  if (!sawMenu) throw new Error('Uninstrumented runtime did not reach its main menu');
   await page.locator('canvas').focus();
-  await page.keyboard.press('g');
+  let enteredGameplay = false;
+  for (let attempt = 0; attempt < 6; ++attempt) {
+    await page.keyboard.press('g');
+    await page.waitForTimeout(2_000);
+    if (!(await mainMenuIsVisible())) { enteredGameplay = true; break; }
+  }
+  if (!enteredGameplay) throw new Error('Go input did not leave the uninstrumented main menu');
   await page.waitForTimeout(8_000);
   const gameplay = await page.locator('canvas').screenshot();
-  if (createHash('sha256').update(menu).digest('hex') ===
-      createHash('sha256').update(gameplay).digest('hex'))
-    throw new Error('Go input did not visibly change the uninstrumented game screen');
   const gridSamples = await page.evaluate(async (base64) => {
     const image = new Image();
     image.src = `data:image/png;base64,${base64}`;
@@ -84,10 +107,8 @@ try {
   }, gameplay.toString('base64'));
   if (gridSamples.filter(rgb => rgb[0] === 129 && rgb[1] === 160 && rgb[2] === 190).length < 5)
     throw new Error('Independent board did not appear after Go in the uninstrumented build');
-  // The engine ignores pause input during its opening station animation. The
-  // grid is visible before that animation finishes, so give normal gameplay
-  // time to begin before asking the actual pause menu to save.
-  await page.waitForTimeout(25_000);
+  // The board is visible behind the menu, so the menu-disappearance check
+  // above is the actual proof that Go entered gameplay before Save is tested.
   await writeFile('/tmp/open-junction-uninstrumented-before-pause.png',
     await page.locator('canvas').screenshot());
   await page.keyboard.press('p');
