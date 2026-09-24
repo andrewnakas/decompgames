@@ -328,14 +328,17 @@ try {
   // These are real mouse actions after the trace-only time jump, so failures
   // reveal geometry or construction restrictions rather than faking a route.
   let branchRails = Number(gameTicks(thirdStation)?.match(/rails (\d+)/)?.[1]);
+  let cursorType = 0;
   for (const { tile, x, y, type } of [
     { tile: '4,1', x: 584, y: 183, type: 2 },
     { tile: '5,2', x: 584, y: 225, type: 1 },
   ]) {
     await page.mouse.move(x, y);
     await page.mouse.click(x, y, { button: 'left' });
-    for (let nextType = 0; nextType < type; ++nextType)
+    while (cursorType !== type) {
       await page.mouse.click(x, y, { button: 'left' });
+      cursorType = (cursorType + 1) % 6;
+    }
     await page.mouse.click(x, y, { button: 'right' });
     let placed = false;
     for (let attempt = 0; attempt < 8; ++attempt) {
