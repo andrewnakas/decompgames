@@ -719,6 +719,122 @@ try {
   }));
   if (!fourthArrival)
     throw new Error('Player-connected fourth-station service did not arrive');
+  const fourthImage = await page.locator('canvas').screenshot({ timeout: 5_000 });
+  if (process.env.OPEN_JUNCTION_FOURTH_SCREENSHOT)
+    await writeFile(process.env.OPEN_JUNCTION_FOURTH_SCREENSHOT, fourthImage);
+  console.log('Private fourth-station canvas PNG SHA-256:',
+    createHash('sha256').update(fourthImage).digest('hex'));
+  // Explore the next proposed extension separately. This trace-only year jump
+  // and forced service test geometry; they do not prove natural fifth-station
+  // dispatch or continuous play through the skipped years.
+  await page.evaluate(() => {
+    if (typeof window.Module._oj_trace_jump_to_1920 !== 'function')
+      throw new Error('Private fifth-station year hook is missing');
+    window.Module._oj_trace_jump_to_1920();
+  });
+  let fifthStation;
+  for (let attempt = 0; attempt < 15; ++attempt) {
+    await page.waitForTimeout(1_000);
+    fifthStation = await readState();
+    if (Number(gameTicks(fifthStation)?.match(/entrances (\d+)/)?.[1]) >= 5) break;
+  }
+  if (Number(gameTicks(fifthStation)?.match(/entrances (\d+)/)?.[1]) < 5 ||
+      fifthStation.abort || pageErrors.length || remoteRequests.length)
+    throw new Error('Private fifth-station branch did not add an entrance');
+  await page.locator('canvas').focus();
+  if (!(await mouseState()).construction) {
+    await page.keyboard.press('Space');
+    await page.waitForTimeout(1_000);
+  }
+  if (!(await mouseState()).construction)
+    throw new Error('Player could not enter construction mode for station five');
+  let fifthRouteRails = Number(gameTicks(fifthStation)?.match(/rails (\d+)/)?.[1]);
+  for (const { tile, x, y, type } of [
+    { tile: '6,3', x: 584, y: 229, type: 2 },
+    { tile: '7,4', x: 584, y: 287, type: 4 },
+  ]) {
+    await page.mouse.move(x, y);
+    await page.mouse.click(x, y, { button: 'left' });
+    await page.waitForTimeout(300);
+    let selected = await mouseState();
+    if (`${selected.tileX},${selected.tileY}` !== tile)
+      throw new Error(`Fifth-station pointer selected ${selected.tileX},${selected.tileY} instead of ${tile}`);
+    for (let attempt = 0; selected.type !== type && attempt < 6; ++attempt) {
+      await page.mouse.click(x, y, { button: 'left' });
+      await page.waitForTimeout(100);
+      selected = await mouseState();
+    }
+    if (selected.type !== type)
+      throw new Error(`Fifth-station cursor could not select rail type ${type} at ${tile}`);
+    await page.mouse.click(x, y, { button: 'right' });
+    let placed = false;
+    for (let attempt = 0; attempt < 8; ++attempt) {
+      await page.waitForTimeout(1_000);
+      const state = await readState();
+      const count = Number(gameTicks(state)?.match(/rails (\d+)/)?.[1]);
+      if (count > fifthRouteRails && state.stderr.some((line) =>
+        line.startsWith(`OJ build queued tile ${tile}`))) {
+        fifthRouteRails = count;
+        placed = true;
+        break;
+      }
+      if (state.abort || pageErrors.length || remoteRequests.length)
+        throw new Error(`Private browser failed during fifth-station construction at ${tile}`);
+    }
+    console.log('Fifth-station candidate rail:', JSON.stringify({ tile, type, placed, fifthRouteRails }));
+    if (!placed)
+      throw new Error(`Player could not construct fifth-station candidate rail at ${tile}`);
+  }
+  await page.locator('canvas').focus();
+  if ((await mouseState()).construction) {
+    await page.keyboard.press('Space');
+    await page.waitForTimeout(1_000);
+  }
+  if ((await mouseState()).construction)
+    throw new Error('Player could not return to management mode after station-five construction');
+  const fifthSwitchState = () => page.evaluate(() => {
+    const raw = window.Module._oj_trace_fifth_switch_state();
+    if (raw < 0) return null;
+    return { x: (raw >>> 12) & 4095, y: raw & 4095, enabled: Boolean(raw >>> 24) };
+  });
+  let fifthSwitch = await fifthSwitchState();
+  if (!fifthSwitch)
+    throw new Error('Player-built fifth-station branch has no switch');
+  if (!fifthSwitch.enabled) {
+    await page.mouse.click(fifthSwitch.x, Math.round(fifthSwitch.y * 480 / 350));
+    await page.waitForTimeout(1_000);
+    fifthSwitch = await fifthSwitchState();
+  }
+  let towardThird = await branchSwitchState();
+  if (towardThird && !towardThird.enabled) {
+    await page.mouse.click(towardThird.x, Math.round(towardThird.y * 480 / 350));
+    await page.waitForTimeout(1_000);
+    towardThird = await branchSwitchState();
+  }
+  if (!fifthSwitch?.enabled || !towardThird?.enabled)
+    throw new Error('Player could not enable the route to station five');
+  const fifthSlot = await page.evaluate(() => window.Module._oj_trace_spawn_fifth_service());
+  if (fifthSlot < 0)
+    throw new Error(`Private test could not dispatch isolated fifth-station service: ${fifthSlot}`);
+  const fifthStart = (await readState()).stderr.length;
+  let fifthArrival = false;
+  for (let attempt = 0; attempt < 36; ++attempt) {
+    await page.waitForTimeout(5_000);
+    const state = await readState();
+    fifthArrival = fifthArrival || state.stderr.slice(fifthStart).includes(
+      `OJ train completed slot ${fifthSlot} dst 4 arrived 1`);
+    if (state.abort || pageErrors.length || remoteRequests.length)
+      throw new Error('Private browser failed while observing the fifth-station extension');
+    if (fifthArrival) break;
+  }
+  console.log('Fifth-station route diagnostic:', JSON.stringify({
+    fifthSlot, fifthSwitch, towardThird, fifthArrival,
+    latestTick: gameTicks(await readState()),
+    recentEngine: (await readState()).stderr.slice(fifthStart).filter((line) =>
+      line.startsWith('OJ train completed') || line.startsWith('OJ active train slot ')).slice(-18),
+  }));
+  if (!fifthArrival)
+    throw new Error('Player-connected fifth-station trace service did not arrive');
   // Exercise the otherwise slow year-2000 branch with a trace-only jump.
   // This proves the transition code path, not 200 years of continuous play.
   await page.evaluate(() => {
