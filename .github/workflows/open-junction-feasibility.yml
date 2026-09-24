@@ -118,6 +118,32 @@ jobs:
           PY
           pnpm build
           timeout 150s node scripts/test-open-junction-player-private.mjs
+      - name: Smoke-test a second build without private instrumentation
+        run: |
+          source /tmp/emsdk/emsdk_env.sh
+          python3 scripts/build-resl-browser.py \
+            /tmp/resl /tmp/open-junction-uninstrumented \
+            /tmp/open-junction-assets /tmp/open-junction-glyphs \
+            /tmp/open-junction-scenario \
+            >/tmp/open-junction-uninstrumented.log 2>&1 || {
+              tail -n 100 /tmp/open-junction-uninstrumented.log
+              exit 1
+            }
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          record = json.loads(Path('/tmp/open-junction-uninstrumented/build-record.json').read_text())
+          assert record['privateTraceEnabled'] is False
+          assert record['audioBackend'] == 'null'
+          assert record['unreplacedEmbeddedVisuals'] == []
+          assert record['embeddedVisualsReplaced'] is True
+          assert len(record['sourceInventoryGuard']['nonResourceByteArrays']) == 5
+          assert len(record['sourceInventoryGuard']['literalResourceReads']) == 5
+          print('Second build excludes private trace hooks and uses the null-audio backend.')
+          PY
+          python3 scripts/package-open-junction-private-source.py /tmp/open-junction-uninstrumented
+          timeout 90s node scripts/test-open-junction-uninstrumented.mjs \
+            /tmp/open-junction-uninstrumented/build
       - name: Retain replacement-only screenshot for visual audit
         if: always()
         uses: actions/upload-artifact@v4
