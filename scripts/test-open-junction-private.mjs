@@ -324,6 +324,37 @@ try {
     throw new Error('The independent board grid disappeared after world redraw');
   if (process.env.OPEN_JUNCTION_THIRD_SCREENSHOT)
     await writeFile(process.env.OPEN_JUNCTION_THIRD_SCREENSHOT, thirdImage);
+  // Attempt a player-built branch from the opening line to the third station.
+  // These are real mouse actions after the trace-only time jump, so failures
+  // reveal geometry or construction restrictions rather than faking a route.
+  let branchRails = Number(gameTicks(thirdStation)?.match(/rails (\d+)/)?.[1]);
+  for (const { tile, x, y, type } of [
+    { tile: '3,2', x: 408, y: 205, type: 0 },
+    { tile: '4,2', x: 496, y: 226, type: 0 },
+    { tile: '5,2', x: 584, y: 247, type: 2 },
+  ]) {
+    await page.mouse.move(x, y);
+    await page.mouse.click(x, y, { button: 'left' });
+    for (let nextType = 0; nextType < type; ++nextType)
+      await page.mouse.click(x, y, { button: 'left' });
+    await page.mouse.click(x, y, { button: 'right' });
+    let placed = false;
+    for (let attempt = 0; attempt < 8; ++attempt) {
+      await page.waitForTimeout(1_000);
+      const state = await readState();
+      const count = Number(gameTicks(state)?.match(/rails (\d+)/)?.[1]);
+      if (count > branchRails && state.stderr.some((line) =>
+        line.startsWith(`OJ build queued tile ${tile}`))) {
+        branchRails = count;
+        placed = true;
+        break;
+      }
+      if (state.abort || pageErrors.length || remoteRequests.length)
+        throw new Error(`Private player failed while building third-station branch at ${tile}`);
+    }
+    console.log('Third-station branch placement:', tile, { placed, branchRails });
+    if (!placed) throw new Error(`Player could not build third-station branch at ${tile}`);
+  }
   // Exercise the otherwise slow year-2000 branch with a trace-only jump.
   // This proves the transition code path, not 200 years of continuous play.
   await page.evaluate(() => {
