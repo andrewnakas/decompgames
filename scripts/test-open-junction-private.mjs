@@ -348,8 +348,8 @@ try {
     throw new Error('Third-station branch test could not enter construction mode');
   let branchRails = Number(gameTicks(thirdStation)?.match(/rails (\d+)/)?.[1]);
   for (const { tile, x, y, type } of [
-    { tile: '4,1', x: 584, y: 183, type: 2 },
-    { tile: '5,2', x: 584, y: 225, type: 4 },
+    { tile: '4,1', x: 584, y: 120, type: 2 },
+    { tile: '5,2', x: 584, y: 178, type: 4 },
   ]) {
     await page.mouse.move(x, y);
     await page.mouse.click(x, y, { button: 'left' });

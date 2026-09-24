@@ -161,6 +161,8 @@ The first inset-station build [run 35942856604](https://github.com/andrewnakas/d
 
 [Run 35944022524](https://github.com/andrewnakas/decompgames/actions/runs/35944022524) restored the prior two-station delivery and reached the third-station redraw, but its new right-click sequence produced no construction trace at the first branch tile. A private-only state probe now reports construction versus management mode plus the selected tile and rail type; the test enters construction mode if needed and verifies pointer selection before trying the branch. No route claim follows from that failed input attempt.
 
+[Run 35944726788](https://github.com/andrewnakas/decompgames/actions/runs/35944726788) showed that Archive restore resumes in management mode; the Space key successfully entered construction mode. The probe then found the first pointer landed on `(5,2)` rather than `(4,1)`. The SDL renderer stretches 350 logical rows to 480 physical pixels, so the test's unscaled Y coordinate was too low. Corrected physical pointer coordinates now need a private construction check. The failed run did not build the proposed branch.
+
 1. The initial idle hang was caused by incompatible entrance spacing in the independent scenario and has been corrected. Confirm the demo fallback cannot reach original data. The silent audio backend is in place.
 2. Inspect the compiled fonts, signals, erase mask, rails, trains, and colors across dynamic gameplay. Audit remaining non-glyph source data before deciding the replacement build is redistributable.
 3. Rebuild from the pinned Emscripten revision and publish the exact replacement sources, generator, manifest, and checksums only after the asset audit passes.
