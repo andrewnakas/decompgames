@@ -750,8 +750,9 @@ try {
     throw new Error('Player could not enter construction mode for station five');
   let fifthRouteRails = Number(gameTicks(fifthStation)?.match(/rails (\d+)/)?.[1]);
   for (const { tile, x, y, type } of [
-    { tile: '6,3', x: 584, y: 229, type: 2 },
-    { tile: '7,4', x: 584, y: 287, type: 4 },
+    // Click inside each projected diamond, not exactly on its upper boundary.
+    { tile: '6,3', x: 584, y: 235, type: 2 },
+    { tile: '7,4', x: 584, y: 293, type: 4 },
   ]) {
     await page.mouse.move(x, y);
     await page.mouse.click(x, y, { button: 'left' });
