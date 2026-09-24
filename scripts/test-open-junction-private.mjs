@@ -282,6 +282,66 @@ try {
     throw new Error('Imported backup did not restore gameplay state');
   if (pageErrors.length || remoteRequests.length)
     throw new Error('Private browser encountered an error during backup round trip');
+  // Attempt a player-built branch from the opening line to the third station.
+  // These are real mouse actions before the trace-only time jump, so failures
+  // reveal geometry or construction restrictions rather than faking a route.
+  const mouseState = () => page.evaluate(() => {
+    const packed = window.Module._oj_trace_mouse_state();
+    return { construction: Boolean((packed >>> 24) & 1),
+      tileX: (packed >>> 16) & 255, tileY: (packed >>> 8) & 255,
+      type: packed & 255 };
+  });
+  let cursor = await mouseState();
+  console.log('Third-station initial cursor state:', cursor);
+  if (!cursor.construction) {
+    await page.locator('canvas').focus();
+    await page.keyboard.press('Space');
+    await page.waitForTimeout(1_000);
+    cursor = await mouseState();
+    console.log('Third-station cursor after Space:', cursor);
+  }
+  if (!cursor.construction)
+    throw new Error('Third-station branch test could not enter construction mode');
+  let branchRails = Number(importedTick?.match(/rails (\d+)/)?.[1]);
+  for (const { tile, x, y, type } of [
+    { tile: '4,1', x: 584, y: 120, type: 2 },
+    { tile: '5,2', x: 584, y: 178, type: 4 },
+  ]) {
+    await page.mouse.move(x, y);
+    await page.mouse.click(x, y, { button: 'left' });
+    await page.waitForTimeout(300);
+    cursor = await mouseState();
+    if (`${cursor.tileX},${cursor.tileY}` !== tile)
+      throw new Error(`Branch pointer selected ${cursor.tileX},${cursor.tileY} instead of ${tile}`);
+    for (let attempt = 0; cursor.type !== type && attempt < 6; ++attempt) {
+      await page.mouse.click(x, y, { button: 'left' });
+      await page.waitForTimeout(100);
+      cursor = await mouseState();
+    }
+    if (cursor.type !== type)
+      throw new Error(`Branch cursor could not select rail type ${type} at ${tile}`);
+    await page.mouse.click(x, y, { button: 'right' });
+    let placed = false;
+    for (let attempt = 0; attempt < 8; ++attempt) {
+      await page.waitForTimeout(1_000);
+      const state = await readState();
+      const count = Number(gameTicks(state)?.match(/rails (\d+)/)?.[1]);
+      if (count > branchRails && state.stderr.some((line) =>
+        line.startsWith(`OJ build queued tile ${tile}`))) {
+        branchRails = count;
+        placed = true;
+        break;
+      }
+      if (state.abort || pageErrors.length || remoteRequests.length)
+        throw new Error(`Private player failed while building third-station branch at ${tile}: ${JSON.stringify({
+          abort: state.abort, pageErrors, remoteRequests,
+          recentEngine: state.stderr.slice(-8),
+        })}`);
+    }
+    console.log('Third-station branch placement:', tile, { placed, branchRails, cursor,
+      recentBuild: (await readState()).stderr.filter((line) => line.startsWith('OJ build')).slice(-4) });
+    if (!placed) throw new Error(`Player could not build third-station branch at ${tile}`);
+  }
   // Reach the third station's branch without pretending to play 35 years.
   await page.evaluate(() => {
     if (typeof window.Module._oj_trace_jump_to_1840 !== 'function')
@@ -326,66 +386,6 @@ try {
     throw new Error('The independent board grid disappeared after world redraw');
   if (process.env.OPEN_JUNCTION_THIRD_SCREENSHOT)
     await writeFile(process.env.OPEN_JUNCTION_THIRD_SCREENSHOT, thirdImage);
-  // Attempt a player-built branch from the opening line to the third station.
-  // These are real mouse actions after the trace-only time jump, so failures
-  // reveal geometry or construction restrictions rather than faking a route.
-  const mouseState = () => page.evaluate(() => {
-    const packed = window.Module._oj_trace_mouse_state();
-    return { construction: Boolean((packed >>> 24) & 1),
-      tileX: (packed >>> 16) & 255, tileY: (packed >>> 8) & 255,
-      type: packed & 255 };
-  });
-  let cursor = await mouseState();
-  console.log('Third-station initial cursor state:', cursor);
-  if (!cursor.construction) {
-    await page.locator('canvas').focus();
-    await page.keyboard.press('Space');
-    await page.waitForTimeout(1_000);
-    cursor = await mouseState();
-    console.log('Third-station cursor after Space:', cursor);
-  }
-  if (!cursor.construction)
-    throw new Error('Third-station branch test could not enter construction mode');
-  let branchRails = Number(gameTicks(thirdStation)?.match(/rails (\d+)/)?.[1]);
-  for (const { tile, x, y, type } of [
-    { tile: '4,1', x: 584, y: 120, type: 2 },
-    { tile: '5,2', x: 584, y: 178, type: 4 },
-  ]) {
-    await page.mouse.move(x, y);
-    await page.mouse.click(x, y, { button: 'left' });
-    await page.waitForTimeout(300);
-    cursor = await mouseState();
-    if (`${cursor.tileX},${cursor.tileY}` !== tile)
-      throw new Error(`Branch pointer selected ${cursor.tileX},${cursor.tileY} instead of ${tile}`);
-    for (let attempt = 0; cursor.type !== type && attempt < 6; ++attempt) {
-      await page.mouse.click(x, y, { button: 'left' });
-      await page.waitForTimeout(100);
-      cursor = await mouseState();
-    }
-    if (cursor.type !== type)
-      throw new Error(`Branch cursor could not select rail type ${type} at ${tile}`);
-    await page.mouse.click(x, y, { button: 'right' });
-    let placed = false;
-    for (let attempt = 0; attempt < 8; ++attempt) {
-      await page.waitForTimeout(1_000);
-      const state = await readState();
-      const count = Number(gameTicks(state)?.match(/rails (\d+)/)?.[1]);
-      if (count > branchRails && state.stderr.some((line) =>
-        line.startsWith(`OJ build queued tile ${tile}`))) {
-        branchRails = count;
-        placed = true;
-        break;
-      }
-      if (state.abort || pageErrors.length || remoteRequests.length)
-        throw new Error(`Private player failed while building third-station branch at ${tile}: ${JSON.stringify({
-          abort: state.abort, pageErrors, remoteRequests,
-          recentEngine: state.stderr.slice(-8),
-        })}`);
-    }
-    console.log('Third-station branch placement:', tile, { placed, branchRails, cursor,
-      recentBuild: (await readState()).stderr.filter((line) => line.startsWith('OJ build')).slice(-4) });
-    if (!placed) throw new Error(`Player could not build third-station branch at ${tile}`);
-  }
   // Exercise the otherwise slow year-2000 branch with a trace-only jump.
   // This proves the transition code path, not 200 years of continuous play.
   await page.evaluate(() => {
