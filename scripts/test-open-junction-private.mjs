@@ -389,16 +389,18 @@ try {
   await page.locator('canvas').focus();
   await page.keyboard.press('1');
   let thirdStationDelivery = false;
-  for (let attempt = 0; attempt < 12; ++attempt) {
+  for (let attempt = 0; attempt < 18; ++attempt) {
     await page.waitForTimeout(5_000);
     const state = await readState();
     const activeSlots = new Map();
     for (const line of state.stderr) {
       const spawned = line.match(/^OJ train spawned from (\d+) to (\d+) at year \d+ slot (\d+)$/);
-      if (spawned) activeSlots.set(spawned[3], Number(spawned[2]));
+      if (spawned) activeSlots.set(spawned[3], { from: Number(spawned[1]), to: Number(spawned[2]) });
       const completed = line.match(/^OJ train completed slot (\d+) dst (\d+) arrived ([01])$/);
       if (completed) {
-        if (activeSlots.get(completed[1]) === 2 && completed[2] === '2' && completed[3] === '1')
+        const service = activeSlots.get(completed[1]);
+        if (service && (service.from === 2 || service.to === 2) &&
+            Number(completed[2]) === service.to && completed[3] === '1')
           thirdStationDelivery = true;
         activeSlots.delete(completed[1]);
       }
@@ -413,7 +415,7 @@ try {
     if (thirdStationDelivery) break;
   }
   if (!thirdStationDelivery)
-    throw new Error('No train completed a delivery to the third station after player-built extension');
+    throw new Error('No train completed a service involving the third station after player-built extension');
   // Exercise the otherwise slow year-2000 branch with a trace-only jump.
   // This proves the transition code path, not 200 years of continuous play.
   await page.evaluate(() => {

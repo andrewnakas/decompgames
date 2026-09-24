@@ -175,6 +175,8 @@ Source inspection found a concrete memory-budget mismatch in the generated repla
 
 The next private test logs each train's slot and destination and requires a train that was assigned station 3 to actually reach that station after the player-built extension. A source-level `arrived` flag distinguishes a real arrival from the game's server and blinking-train completion paths. This longer gameplay probe must pass before the multi-station routing claim is made.
 
+[Run 35952587020](https://github.com/andrewnakas/decompgames/actions/runs/35952587020) built both extension rails and added the third station without a browser error. A train spawned from station 3 toward station 1, but remained active at the end of the 60-second probe; no arrival involving station 3 was observed. The test had only accepted journeys *to* station 3, so it now accepts a traced real arrival in either direction and waits up to 90 seconds. The prior run is a routing lead, not completion evidence.
+
 1. The initial idle hang was caused by incompatible entrance spacing in the independent scenario and has been corrected. Confirm the demo fallback cannot reach original data. The silent audio backend is in place.
 2. Inspect the compiled fonts, signals, erase mask, rails, trains, and colors across dynamic gameplay. Audit remaining non-glyph source data before deciding the replacement build is redistributable.
 3. Rebuild from the pinned Emscripten revision and publish the exact replacement sources, generator, manifest, and checksums only after the asset audit passes.
