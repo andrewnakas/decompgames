@@ -492,6 +492,12 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
         year_marker,
         year_marker
         + '\n// Private branch test only; this hook is absent from distributable builds.\n'
+        + 'extern "C" EMSCRIPTEN_KEEPALIVE int oj_trace_mouse_state() {\n'
+        + '    const auto& cursor = mouse::g_railCursorState;\n'
+        + '    return ((mouse::g_state.mode == &mouse::g_modeConstruction) ? 1 : 0) << 24\n'
+        + '        | (cursor.tileX & 255) << 16 | (cursor.tileY & 255) << 8\n'
+        + '        | (cursor.railType & 255);\n'
+        + '}\n'
         + 'extern "C" EMSCRIPTEN_KEEPALIVE void oj_trace_jump_to_1840() {\n'
         + '    g_headers[static_cast<int>(HeaderFieldId::Year)].value = 1840;\n'
         + '    g_gameTime = 1900;\n'
