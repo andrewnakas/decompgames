@@ -138,6 +138,46 @@ def ignore_source_extraction_tools(directory: str, names: list[str]) -> set[str]
     return set()
 
 shutil.copytree(checkout / "src", source / "src", ignore=ignore_source_extraction_tools)
+# Pin a source-wide presentation-data inventory in addition to the resource
+# table allowlist above. These are the only non-resource byte-array definitions
+# in this upstream revision: transient train state, the font spacing classes,
+# two cursor bitplanes, and DOS keycode translation. The font and cursor are
+# replaced below; the other two are engine state/input mappings, not art.
+source_code = [path for path in (source / "src").rglob("*") if path.is_file()]
+if any(path.suffix not in {".c", ".cpp", ".h"} for path in source_code):
+    raise SystemExit("Unclassified non-code file in pinned source tree")
+non_resource_byte_arrays = {
+    (path.relative_to(source).as_posix(), name)
+    for path in source_code
+    if "resources" not in path.parts
+    for name in re.findall(
+        r"\b(?:std::)?uint8_t\s+(g_\w+)\s*\[[^\]]*\]\s*=",
+        path.read_text(errors="replace"),
+    )
+}
+expected_byte_arrays = {
+    ("src/game/train.cpp", "g_lastProcessedCarriages"),
+    ("src/graphics/text.cpp", "g_charTraits"),
+    ("src/system/driver/sdl/mouse.cpp", "g_cursorGlyph1"),
+    ("src/system/driver/sdl/mouse.cpp", "g_cursorGlyph2"),
+    ("src/ui/components/dialog.cpp", "g_asciiToKeycodeTable"),
+}
+if non_resource_byte_arrays != expected_byte_arrays:
+    raise SystemExit(f"Unclassified non-resource byte arrays: {sorted(non_resource_byte_arrays ^ expected_byte_arrays)}")
+literal_file_reads = {
+    (kind, name)
+    for path in source_code
+    for kind, name in re.findall(
+        r'\bread(Binary|Text)File\("([^"]+)"\)', path.read_text(errors="replace")
+    )
+}
+expected_literal_reads = {
+    ("Binary", "play.7"), ("Binary", "poster.7"),
+    ("Binary", "captions.7"), ("Binary", "GAMEOVER.7"),
+    ("Text", "RULES.TXT"),
+}
+if literal_file_reads != expected_literal_reads:
+    raise SystemExit(f"Unclassified literal file reads: {sorted(literal_file_reads ^ expected_literal_reads)}")
 asset_dir = source / "resources" / "open-junction"
 asset_dir.mkdir(parents=True)
 for item in asset_manifest["files"]:
@@ -855,9 +895,14 @@ record = {
     "replacementPaletteRGB": palette,
     "originalExternalResourcesBundled": False,
     "listedEmbeddedGlyphTablesReplaced": True,
-    "embeddedVisualsReplaced": False,
+    "embeddedVisualsReplaced": not bool(embedded_visuals),
     "unreplacedEmbeddedVisuals": embedded_visuals,
     "retainedEngineGeometryTables": retained_geometry,
+    "sourceInventoryGuard": {
+        "nonResourceByteArrays": sorted(f"{path}:{name}" for path, name in non_resource_byte_arrays),
+        "literalResourceReads": sorted(f"{kind}:{name}" for kind, name in literal_file_reads),
+        "sourceFileExtensions": [".c", ".cpp", ".h"],
+    },
     "audioBackend": "null",
     "classicModuleForSharedPlayer": True,
     "saveRoot": "/persistent",
@@ -866,10 +911,11 @@ record = {
     "shortBrowserLoadingScreen": True,
     "releaseReady": False,
     "blockers": [
-        "Audit remaining source files and retained engine-geometry tables for presentation data",
-        "Improve fine counter text and inspect signals, trains, and redraw across dynamic screens",
-        "Test the year-2000 level transition and wider independent scenario progression",
-        "Package exact corresponding replacement source and checksums after the audit passes",
+        "Finish retained engine-geometry classification and dynamic drawing review",
+        "Inspect signals, trains, small labels, and redraw across additional gameplay states",
+        "Test conflicting natural services and longer independent scenario progression",
+        "Test organic year advancement and loss beyond trace-only transition checks",
+        "Publish corresponding source, asset manifests, and checksums after the release gate passes",
     ],
 }
 (output / "build-record.json").write_text(json.dumps(record, indent=2) + "\n")
