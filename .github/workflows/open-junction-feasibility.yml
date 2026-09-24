@@ -90,6 +90,7 @@ jobs:
           OPEN_JUNCTION_SCREENSHOT: /tmp/open-junction-gameplay.png
           OPEN_JUNCTION_TRAIN_SCREENSHOT: /tmp/open-junction-train.png
           OPEN_JUNCTION_THIRD_SCREENSHOT: /tmp/open-junction-third-station.png
+          OPEN_JUNCTION_CROSS_SCREENSHOT: /tmp/open-junction-cross-service.png
         run: |
           pnpm install --frozen-lockfile
           pnpm exec playwright install chromium --with-deps

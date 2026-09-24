@@ -491,6 +491,7 @@ try {
     throw new Error(`Private cross-branch service could not start: ${crossSlot}`);
   let crossDelivered = false;
   let departedOrigin = false;
+  let crossImageCaptured = false;
   const crossSwitchAttempts = [];
   for (let attempt = 0; attempt < 40; ++attempt) {
     await page.waitForTimeout(5_000);
@@ -507,6 +508,12 @@ try {
       crossSwitchAttempts.push({ seconds: (attempt + 1) * 5, head: latestHead,
         before, after: await branchSwitchState() });
     }
+    if (!crossImageCaptured && (await branchSwitchState())?.enabled &&
+        process.env.OPEN_JUNCTION_CROSS_SCREENSHOT) {
+      await writeFile(process.env.OPEN_JUNCTION_CROSS_SCREENSHOT,
+        await page.locator('canvas').screenshot({ timeout: 5_000 }));
+      crossImageCaptured = true;
+    }
     crossDelivered = lines.some((line) =>
       line === `OJ train completed slot ${crossSlot} dst 2 arrived 1`);
     if (state.abort || pageErrors.length || remoteRequests.length)
@@ -522,6 +529,9 @@ try {
   });
   if (!crossDelivered)
     throw new Error('Player-managed cross-branch route did not complete a 0-to-2 service');
+  if (process.env.OPEN_JUNCTION_CROSS_SCREENSHOT)
+    await writeFile(process.env.OPEN_JUNCTION_CROSS_SCREENSHOT.replace('.png', '-arrived.png'),
+      await page.locator('canvas').screenshot({ timeout: 5_000 }));
   // Restore the original route through ordinary player input before letting
   // the scheduler run again. The fixed branch alignment blocked mixed traffic
   // in run 35966071614. Move the junction for the oldest pending service when
@@ -534,6 +544,9 @@ try {
   if (!branchSwitch || branchSwitch.enabled)
     throw new Error('Player could not restore the original route before natural dispatch');
   const organicStart = (await readState()).stderr.length;
+  // Accelerate ordinary player-controlled game time to sample more than one
+  // scheduler decision in this bounded CI observation window.
+  await page.keyboard.press('3');
   await page.evaluate(() => window.Module._oj_trace_pause_dispatch(0));
   let organicThirdDelivery = false;
   let organicSpawns = [];
