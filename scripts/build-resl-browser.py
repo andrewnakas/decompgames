@@ -697,8 +697,8 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
     )
     trains.write_text(train_text.replace(
         spawn_marker,
-        spawn_marker + '        std::fprintf(stderr, "OJ train spawned from %d to %d at year %d\\n", '
-        'entranceIdx, dstEntranceIdx, t->year);\n',
+        spawn_marker + '        std::fprintf(stderr, "OJ train spawned from %d to %d at year %d slot %d\\n", '
+        'entranceIdx, dstEntranceIdx, t->year, static_cast<int>(t - g_trains.data()));\n',
         1,
     ))
     movement = source / "src/game/move_trains.cpp"
@@ -707,6 +707,17 @@ if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
     if movement_text.count(delivered_marker) != 1:
         raise SystemExit("Pinned train-delivery trace marker changed")
     movement_text = movement_text.replace("#include <cstdlib>\n", "#include <cstdlib>\n#include <cstdio>\n", 1)
+    delete_marker = "            deleteTrain(train);\n"
+    if movement_text.count(delete_marker) != 1:
+        raise SystemExit("Pinned train-completion marker changed")
+    movement_text = movement_text.replace(
+        delete_marker,
+        '            std::fprintf(stderr, "OJ train completed slot %d dst %d arrived %d\\n", '
+        'static_cast<int>(&train - g_trains.data()), '
+        'train.carriages[0].dstEntranceIdx, '
+        'train.head.rail == &dstEntrance.rail ? 1 : 0);\n' + delete_marker,
+        1,
+    )
     movement.write_text(movement_text.replace(
         delivered_marker,
         '                std::fprintf(stderr, "OJ train delivered\\n");\n'

@@ -386,6 +386,34 @@ try {
     throw new Error('The independent board grid disappeared after world redraw');
   if (process.env.OPEN_JUNCTION_THIRD_SCREENSHOT)
     await writeFile(process.env.OPEN_JUNCTION_THIRD_SCREENSHOT, thirdImage);
+  await page.locator('canvas').focus();
+  await page.keyboard.press('1');
+  let thirdStationDelivery = false;
+  for (let attempt = 0; attempt < 12; ++attempt) {
+    await page.waitForTimeout(5_000);
+    const state = await readState();
+    const activeSlots = new Map();
+    for (const line of state.stderr) {
+      const spawned = line.match(/^OJ train spawned from (\d+) to (\d+) at year \d+ slot (\d+)$/);
+      if (spawned) activeSlots.set(spawned[3], Number(spawned[2]));
+      const completed = line.match(/^OJ train completed slot (\d+) dst (\d+) arrived ([01])$/);
+      if (completed) {
+        if (activeSlots.get(completed[1]) === 2 && completed[2] === '2' && completed[3] === '1')
+          thirdStationDelivery = true;
+        activeSlots.delete(completed[1]);
+      }
+    }
+    console.log('Third-station delivery probe:', {
+      seconds: (attempt + 1) * 5, activeSlots: [...activeSlots],
+      completedToThird: thirdStationDelivery, latestTick: gameTicks(state),
+      abort: state.abort, pageErrors, remoteRequests,
+    });
+    if (state.abort || pageErrors.length || remoteRequests.length)
+      throw new Error('Private browser failed during third-station delivery probe');
+    if (thirdStationDelivery) break;
+  }
+  if (!thirdStationDelivery)
+    throw new Error('No train completed a delivery to the third station after player-built extension');
   // Exercise the otherwise slow year-2000 branch with a trace-only jump.
   // This proves the transition code path, not 200 years of continuous play.
   await page.evaluate(() => {
