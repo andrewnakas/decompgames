@@ -129,6 +129,10 @@ jobs:
           timeout 150s node scripts/test-open-junction-player-private.mjs
       - name: Smoke-test a second build without private instrumentation
         run: |
+          if [[ '${{ inputs.uninstrumented_only }}' == 'true' ]]; then
+            pnpm install --frozen-lockfile
+            pnpm exec playwright install chromium --with-deps
+          fi
           source /tmp/emsdk/emsdk_env.sh
           python3 scripts/build-resl-browser.py \
             /tmp/resl /tmp/open-junction-uninstrumented \
