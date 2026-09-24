@@ -472,6 +472,50 @@ try {
   }
   if (!thirdStationDelivery)
     throw new Error('No train completed a service involving the third station after player-built extension');
+  // Remove the private dispatch pause and observe the unmodified scheduler.
+  // This is diagnostic until a naturally scheduled third-station journey
+  // completes; it does not count the forced service above as organic play.
+  const organicStart = (await readState()).stderr.length;
+  await page.evaluate(() => window.Module._oj_trace_pause_dispatch(0));
+  let organicThirdDelivery = false;
+  let organicSpawns = [];
+  let organicCompletions = [];
+  let organicSeconds = 0;
+  for (let attempt = 0; attempt < 28; ++attempt) {
+    await page.waitForTimeout(5_000);
+    organicSeconds += 5;
+    const state = await readState();
+    const services = new Map();
+    organicSpawns = [];
+    organicCompletions = [];
+    for (const line of state.stderr.slice(organicStart)) {
+      const spawned = line.match(/^OJ train spawned from (\d+) to (\d+) at year \d+ slot (\d+)$/);
+      if (spawned) {
+        const service = { from: Number(spawned[1]), to: Number(spawned[2]), slot: Number(spawned[3]) };
+        services.set(service.slot, service);
+        organicSpawns.push(service);
+      }
+      const completed = line.match(/^OJ train completed slot (\d+) dst (\d+) arrived ([01])$/);
+      if (completed) {
+        const service = services.get(Number(completed[1]));
+        if (service) {
+          const outcome = { ...service, destination: Number(completed[2]), arrived: completed[3] === '1' };
+          organicCompletions.push(outcome);
+          if ((outcome.from === 2 || outcome.to === 2) && outcome.destination === outcome.to && outcome.arrived)
+            organicThirdDelivery = true;
+          services.delete(service.slot);
+        }
+      }
+    }
+    if (state.abort || pageErrors.length || remoteRequests.length)
+      throw new Error('Private browser failed during natural-dispatch observation');
+    if (organicThirdDelivery) break;
+  }
+  console.log('Natural-dispatch observation:', {
+    secondsObserved: organicSeconds, organicThirdDelivery, organicSpawns, organicCompletions,
+    branchSwitch: await branchSwitchState(), latestTick: gameTicks(await readState()),
+  });
+  await page.evaluate(() => window.Module._oj_trace_pause_dispatch(1));
   // Exercise the otherwise slow year-2000 branch with a trace-only jump.
   // This proves the transition code path, not 200 years of continuous play.
   await page.evaluate(() => {
