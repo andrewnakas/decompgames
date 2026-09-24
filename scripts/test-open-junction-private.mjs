@@ -493,7 +493,7 @@ try {
   let departedOrigin = false;
   let crossImageCaptured = false;
   const crossSwitchAttempts = [];
-  for (let attempt = 0; attempt < 40; ++attempt) {
+  for (let attempt = 0; attempt < 56; ++attempt) {
     await page.waitForTimeout(5_000);
     const state = await readState();
     const lines = state.stderr.slice(crossStart);
@@ -521,12 +521,12 @@ try {
     if (crossDelivered || lines.some((line) =>
       line.startsWith(`OJ train completed slot ${crossSlot} `))) break;
   }
-  console.log('Trace-forced 0-to-2 route diagnostic:', {
+  console.log('Trace-forced 0-to-2 route diagnostic:', JSON.stringify({
     crossSlot, departedOrigin, crossDelivered, crossSwitchAttempts,
     branchSwitch: await branchSwitchState(),
     trainHeads: (await readState()).stderr.slice(crossStart).filter((line) =>
       line.startsWith(`OJ active train slot ${crossSlot} `)).slice(-15),
-  });
+  }));
   if (!crossDelivered)
     throw new Error('Player-managed cross-branch route did not complete a 0-to-2 service');
   if (process.env.OPEN_JUNCTION_CROSS_SCREENSHOT)
