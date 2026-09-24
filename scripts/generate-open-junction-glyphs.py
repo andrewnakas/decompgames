@@ -108,7 +108,10 @@ def font_rows(character: str) -> list[int]:
 def header_digit_rows(character: str) -> list[int]:
     """Draw a wider independent numeral for the 16-pixel header slots."""
     rows = FONT[character].split("/")
-    return mask(16, 14, lambda x, y: 2 <= x < 12 and rows[y // 2][(x - 2) // 2] == "1")
+    data = mask(16, 14, lambda x, y: 2 <= x < 12 and rows[y // 2][(x - 2) // 2] == "1")
+    # drawGlyphW16 consumes each row's right byte first, unlike the generic
+    # row-major Glyph reader. Store the two bytes in that expected order.
+    return [byte for index in range(0, len(data), 2) for byte in (data[index + 1], data[index])]
 
 
 def generate(output: Path) -> None:
