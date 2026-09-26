@@ -22,6 +22,7 @@ RECIPE_FILES = (
     "scripts/generate-open-junction-scenario.py",
     "docs/resl-source-data-audit.md",
     "docs/resl-replacement-integration.md",
+    "docs/open-junction-player-guide-draft.md",
 )
 
 if len(sys.argv) != 2:
