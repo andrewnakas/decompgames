@@ -836,6 +836,106 @@ try {
   }));
   if (!fifthArrival)
     throw new Error('Player-connected fifth-station trace service did not arrive');
+  // The sixth station is reached by another private year jump. This probes
+  // player-buildable geometry and one isolated train only, not natural service.
+  await page.evaluate(() => window.Module._oj_trace_jump_to_1960());
+  let sixthStation;
+  for (let attempt = 0; attempt < 15; ++attempt) {
+    await page.waitForTimeout(1_000);
+    sixthStation = await readState();
+    if (Number(gameTicks(sixthStation)?.match(/entrances (\d+)/)?.[1]) >= 6) break;
+  }
+  if (Number(gameTicks(sixthStation)?.match(/entrances (\d+)/)?.[1]) < 6 ||
+      sixthStation.abort || pageErrors.length || remoteRequests.length)
+    throw new Error('Private sixth-station branch did not add an entrance');
+  await page.locator('canvas').focus();
+  if (!(await mouseState()).construction) {
+    await page.keyboard.press('Space');
+    await page.waitForTimeout(1_000);
+  }
+  if (!(await mouseState()).construction)
+    throw new Error('Player could not enter construction mode for station six');
+  let sixthRouteRails = Number(gameTicks(sixthStation)?.match(/rails (\d+)/)?.[1]);
+  for (const { tile, x, y, type } of [
+    { tile: '3,6', x: 56, y: 235, type: 4 },
+    { tile: '4,7', x: 56, y: 293, type: 2 },
+  ]) {
+    await page.mouse.move(x, y);
+    await page.mouse.click(x, y, { button: 'left' });
+    await page.waitForTimeout(300);
+    let selected = await mouseState();
+    if (`${selected.tileX},${selected.tileY}` !== tile)
+      throw new Error(`Sixth-station pointer selected ${selected.tileX},${selected.tileY} instead of ${tile}`);
+    for (let attempt = 0; selected.type !== type && attempt < 6; ++attempt) {
+      await page.mouse.click(x, y, { button: 'left' });
+      await page.waitForTimeout(100);
+      selected = await mouseState();
+    }
+    if (selected.type !== type)
+      throw new Error(`Sixth-station cursor could not select rail type ${type} at ${tile}`);
+    await page.mouse.click(x, y, { button: 'right' });
+    let placed = false;
+    for (let attempt = 0; attempt < 8; ++attempt) {
+      await page.waitForTimeout(1_000);
+      const state = await readState();
+      const count = Number(gameTicks(state)?.match(/rails (\d+)/)?.[1]);
+      if (count > sixthRouteRails && state.stderr.some((line) =>
+        line.startsWith(`OJ build queued tile ${tile}`))) {
+        sixthRouteRails = count;
+        placed = true;
+        break;
+      }
+      if (state.abort || pageErrors.length || remoteRequests.length)
+        throw new Error(`Private browser failed during sixth-station construction at ${tile}`);
+    }
+    console.log('Sixth-station candidate rail:', JSON.stringify({ tile, type, placed, sixthRouteRails }));
+    if (!placed)
+      throw new Error(`Player could not construct sixth-station candidate rail at ${tile}`);
+  }
+  await page.locator('canvas').focus();
+  if ((await mouseState()).construction) {
+    await page.keyboard.press('Space');
+    await page.waitForTimeout(1_000);
+  }
+  if ((await mouseState()).construction)
+    throw new Error('Player could not return to management mode after station-six construction');
+  const sixthSwitchState = () => page.evaluate(() => {
+    const raw = window.Module._oj_trace_sixth_switch_state();
+    if (raw < 0) return null;
+    return { x: (raw >>> 12) & 4095, y: raw & 4095, enabled: Boolean(raw >>> 24) };
+  });
+  let sixthSwitch = await sixthSwitchState();
+  if (!sixthSwitch)
+    throw new Error('Player-built sixth-station branch has no switch');
+  if (!sixthSwitch.enabled) {
+    await page.mouse.click(sixthSwitch.x, Math.round(sixthSwitch.y * 480 / 350));
+    await page.waitForTimeout(1_000);
+    sixthSwitch = await sixthSwitchState();
+  }
+  if (!sixthSwitch?.enabled)
+    throw new Error('Player could not enable the sixth-station branch');
+  const sixthSlot = await page.evaluate(() => window.Module._oj_trace_spawn_sixth_service());
+  if (sixthSlot < 0)
+    throw new Error(`Private test could not dispatch isolated sixth-station service: ${sixthSlot}`);
+  const sixthStart = (await readState()).stderr.length;
+  let sixthArrival = false;
+  for (let attempt = 0; attempt < 36; ++attempt) {
+    await page.waitForTimeout(5_000);
+    const state = await readState();
+    sixthArrival = sixthArrival || state.stderr.slice(sixthStart).includes(
+      `OJ train completed slot ${sixthSlot} dst 5 arrived 1`);
+    if (state.abort || pageErrors.length || remoteRequests.length)
+      throw new Error('Private browser failed while observing the sixth-station extension');
+    if (sixthArrival) break;
+  }
+  console.log('Sixth-station route diagnostic:', JSON.stringify({
+    sixthSlot, sixthSwitch, sixthArrival,
+    latestTick: gameTicks(await readState()),
+    recentEngine: (await readState()).stderr.slice(sixthStart).filter((line) =>
+      line.startsWith('OJ train completed') || line.startsWith('OJ active train slot ')).slice(-18),
+  }));
+  if (!sixthArrival)
+    throw new Error('Player-connected sixth-station trace service did not arrive');
   // Exercise the otherwise slow year-2000 branch with a trace-only jump.
   // This proves the transition code path, not 200 years of continuous play.
   await page.evaluate(() => {
