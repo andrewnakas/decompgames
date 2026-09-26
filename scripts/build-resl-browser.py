@@ -519,7 +519,28 @@ melody_text = melody.read_text()
 sound_flag = "bool g_soundEnabled = true;"
 if melody_text.count(sound_flag) != 1:
     raise SystemExit("Pinned melody default changed")
-melody.write_text(melody_text.replace(sound_flag, "bool g_soundEnabled = false;"))
+# Original PC-speaker sequences are procedural audio content. The hosted
+# replacement has no authorized sound package, so remove the sequences from
+# its corresponding source as well as disabling SDL output.
+silent_melody_source = """#include \"melody.h\"
+
+namespace resl {
+bool g_soundEnabled = false;
+void playErrorMelody() {}
+void playFixRoadMelody() {}
+void playSwitchSwitchedMelody() {}
+void playEntitySwitchedSound(bool) {}
+void playScheduledTrainMelody(std::uint16_t, std::uint16_t, std::int16_t) {}
+void playTrainFinishedMelody(std::int16_t) {}
+void beepSound(std::int16_t) {}
+void playSpawnedEntranceMelody() {}
+void playGameOverMelody() {}
+void playRailDamagedMelody() {}
+void playHappy2000YearMelody() {}
+void playSingleClickSound() {}
+} // namespace resl
+"""
+melody.write_text(silent_melody_source)
 
 # The original idle menu launches a prerecorded demo save. Those saves are
 # deliberately excluded; keep the menu waiting for user input instead of
@@ -1056,6 +1077,8 @@ record = {
         "generatedSectionSha256": hashlib.sha256(new_button_namespace.encode()).hexdigest(),
         "license": "CC0-1.0",
     },
+    "originalMelodySequencesReplaced": True,
+    "silentMelodySourceSha256": hashlib.sha256(silent_melody_source.encode()).hexdigest(),
     "replacementScenario": scenario_manifest["files"],
     "replacementEntranceSchedule": entrance_choices,
     "replacementStarterRoute": starter_route,

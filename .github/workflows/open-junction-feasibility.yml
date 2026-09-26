@@ -48,6 +48,7 @@ jobs:
           assert record['sourceRevision'] == '470cca330ee9abcf6173c843f4c89686c0c7e525'
           assert record['originalExternalResourcesBundled'] is False
           assert record['audioBackend'] == 'null'
+          assert record['originalMelodySequencesReplaced'] is True
           assert len(record['replacementGlyphs']) == 11
           assert record['replacementCursor']['name'] == 'cursor.json'
           assert record['replacementButtonGlyphs']['count'] == 4
@@ -155,6 +156,7 @@ jobs:
           record = json.loads(Path('/tmp/open-junction-uninstrumented/build-record.json').read_text())
           assert record['privateTraceEnabled'] is False
           assert record['audioBackend'] == 'null'
+          assert record['originalMelodySequencesReplaced'] is True
           assert record['unreplacedEmbeddedVisuals'] == []
           assert record['embeddedVisualsReplaced'] is True
           assert record['replacementButtonGlyphs']['count'] == 4
