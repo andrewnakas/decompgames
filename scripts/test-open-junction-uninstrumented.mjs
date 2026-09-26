@@ -107,12 +107,34 @@ try {
   }, gameplay.toString('base64'));
   if (gridSamples.filter(rgb => rgb[0] === 129 && rgb[1] === 160 && rgb[2] === 190).length < 5)
     throw new Error('Independent board did not appear after Go in the uninstrumented build');
-  // Keep the real game running without trace year jumps, then retain a second
-  // frame for visual review of the ordinary animated year counter.
+  // Observe the release-like header change during ordinary play. Compare only
+  // the year glyph region so scenery motion cannot satisfy this assertion.
+  const yearPixels = png => page.evaluate(async base64 => {
+    const image = new Image();
+    image.src = `data:image/png;base64,${base64}`;
+    await image.decode();
+    const scratch = document.createElement('canvas');
+    scratch.width = image.width; scratch.height = image.height;
+    const context = scratch.getContext('2d');
+    context.drawImage(image, 0, 0);
+    return [...context.getImageData(272, 25, 64, 16).data];
+  }, png.toString('base64'));
+  const initialYearPixels = await yearPixels(gameplay);
   await page.keyboard.press('3');
-  await page.waitForTimeout(20_000);
-  await writeFile('/tmp/open-junction-uninstrumented-natural-year.png',
-    await page.locator('canvas').screenshot());
+  let naturalYearImage;
+  let changedYearPixels = 0;
+  for (let attempt = 0; attempt < 15; ++attempt) {
+    await page.waitForTimeout(2_000);
+    naturalYearImage = await page.locator('canvas').screenshot();
+    const current = await yearPixels(naturalYearImage);
+    changedYearPixels = current.reduce((count, value, index) =>
+      count + Number(value !== initialYearPixels[index]), 0);
+    if (changedYearPixels > 30) break;
+  }
+  if (changedYearPixels <= 30)
+    throw new Error('Uninstrumented year glyphs did not visibly advance during ordinary play');
+  await writeFile('/tmp/open-junction-uninstrumented-natural-year.png', naturalYearImage);
+  console.log('Uninstrumented ordinary year-header changed color channels:', changedYearPixels);
   // The board is visible behind the menu, so the menu-disappearance check
   // above is the actual proof that Go entered gameplay before Save is tested.
   await writeFile('/tmp/open-junction-uninstrumented-before-pause.png',
