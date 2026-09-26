@@ -604,7 +604,7 @@ try {
       oldestPendingService.from === 2 || oldestPendingService.to === 2
     );
     const beforeSwitch = await branchSwitchState();
-    if (oldestPendingService && beforeSwitch?.enabled !== desiredBranch) {
+    if (oldestPendingService && beforeSwitch && beforeSwitch.enabled !== desiredBranch) {
       await page.mouse.click(beforeSwitch.x, Math.round(beforeSwitch.y * 480 / 350));
       await page.waitForTimeout(1_000);
       const afterSwitch = await branchSwitchState();
