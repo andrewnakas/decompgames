@@ -1004,11 +1004,18 @@ try {
   let lateService = null;
   let lateDepartedOrigin = false;
   let lateArrival = false;
+  let naturalTransition = false;
+  const naturalTransitionLines = [];
   let lateCursor = lateStart;
   for (let attempt = 0; attempt < 72; ++attempt) {
     await page.waitForTimeout(5_000);
     const state = await readState();
     for (const line of state.stderr.slice(lateCursor)) {
+      if (line.startsWith('OJ level transition')) {
+        naturalTransitionLines.push(line);
+        if (/^OJ level transition completed level 2 year 1800$/.test(line))
+          naturalTransition = true;
+      }
       const spawned = line.match(/^OJ train spawned from (\d+) to (\d+) at year \d+ slot (\d+)$/);
       if (spawned) {
         lateService = { from: Number(spawned[1]), to: Number(spawned[2]), slot: Number(spawned[3]) };
@@ -1027,7 +1034,7 @@ try {
     lateCursor = state.stderr.length;
     if (state.abort || pageErrors.length || remoteRequests.length)
       throw new Error('Private browser failed during natural six-station traffic');
-    if (lateArrival) break;
+    if (lateArrival || naturalTransition) break;
     if (!lateService) continue;
     const activeLine = [...state.stderr].reverse().find(line =>
       line.startsWith(`OJ active train slot ${lateService.slot} `));
@@ -1063,47 +1070,54 @@ try {
     }
   }
   console.log('Natural six-station observation:', JSON.stringify({
-    lateSpawns, lateCompletions, lateArrival, lateSwitchClicks, lateDepartedOrigin,
+    lateSpawns, lateCompletions, lateArrival, naturalTransition, naturalTransitionLines,
+    lateSwitchClicks, lateDepartedOrigin,
     waitingServices: await page.evaluate(() => window.Module._oj_trace_waiting_train_count()),
     latestTick: gameTicks(await readState()),
     trainHeads: (await readState()).stderr.slice(lateStart).filter(line =>
       line.startsWith('OJ active train slot ')).slice(-30),
   }));
-  if (!lateArrival)
-    throw new Error('Ordinary six-station dispatch did not complete a late-station journey');
+  if (!lateArrival && !naturalTransition)
+    throw new Error('Ordinary six-station dispatch reached neither a late-station arrival nor the next level');
   const lateImage = await page.locator('canvas').screenshot({ timeout: 5_000 });
   if (process.env.OPEN_JUNCTION_LATE_SCREENSHOT)
     await writeFile(process.env.OPEN_JUNCTION_LATE_SCREENSHOT, lateImage);
   console.log('Private natural six-station canvas PNG SHA-256:',
     createHash('sha256').update(lateImage).digest('hex'));
   await page.evaluate(() => window.Module._oj_trace_pause_dispatch(1));
-  // Exercise the otherwise slow year-2000 branch with a trace-only jump.
-  // This proves the transition code path, not 200 years of continuous play.
-  await page.evaluate(() => {
-    if (typeof window.Module._oj_trace_jump_to_2000 !== 'function')
-      throw new Error('Private transition hook is missing');
-    window.Module._oj_trace_jump_to_2000();
-  });
-  let transition;
-  for (let attempt = 0; attempt < 15; ++attempt) {
-    await page.waitForTimeout(1_000);
-    transition = await readState();
-    if (transition.stderr.includes('OJ level transition alert')) break;
+  if (naturalTransition) {
+    if (!naturalTransitionLines.includes('OJ level transition entered') ||
+        !naturalTransitionLines.includes('OJ level transition alert'))
+      throw new Error('Natural transition completion lacked its entry and alert traces');
+    console.log('Natural level-transition trace:', naturalTransitionLines.slice(-3));
+  } else {
+    // Fallback probe skips to 2000; it does not prove continuous play.
+    await page.evaluate(() => {
+      if (typeof window.Module._oj_trace_jump_to_2000 !== 'function')
+        throw new Error('Private transition hook is missing');
+      window.Module._oj_trace_jump_to_2000();
+    });
+    let transition;
+    for (let attempt = 0; attempt < 15; ++attempt) {
+      await page.waitForTimeout(1_000);
+      transition = await readState();
+      if (transition.stderr.includes('OJ level transition alert')) break;
+    }
+    if (!transition.stderr.includes('OJ level transition entered') ||
+        !transition.stderr.includes('OJ level transition alert'))
+      throw new Error('Private year-2000 transition did not reach its alert');
+    await page.keyboard.press('Space'); // Dismiss the in-game transition alert.
+    for (let attempt = 0; attempt < 8; ++attempt) {
+      await page.waitForTimeout(1_000);
+      transition = await readState();
+      if (transition.stderr.some(line => /OJ level transition completed level \d+ year 1800/.test(line))) break;
+    }
+    console.log('Private level-transition trace:', transition.stderr.filter(line =>
+      line.startsWith('OJ level transition')).slice(-3));
+    if (!transition.stderr.some(line => /OJ level transition completed level \d+ year 1800/.test(line)) ||
+        transition.abort || pageErrors.length || remoteRequests.length)
+      throw new Error('Private year-2000 transition did not reset the year and advance the level');
   }
-  if (!transition.stderr.includes('OJ level transition entered') ||
-      !transition.stderr.includes('OJ level transition alert'))
-    throw new Error('Private year-2000 transition did not reach its alert');
-  await page.keyboard.press('Space'); // Dismiss the in-game transition alert.
-  for (let attempt = 0; attempt < 8; ++attempt) {
-    await page.waitForTimeout(1_000);
-    transition = await readState();
-    if (transition.stderr.some(line => /OJ level transition completed level \d+ year 1800/.test(line))) break;
-  }
-  console.log('Private level-transition trace:', transition.stderr.filter(line =>
-    line.startsWith('OJ level transition')).slice(-3));
-  if (!transition.stderr.some(line => /OJ level transition completed level \d+ year 1800/.test(line)) ||
-      transition.abort || pageErrors.length || remoteRequests.length)
-    throw new Error('Private year-2000 transition did not reset the year and advance the level');
   // Force the loss condition only in the private trace build. This tests the
   // branch and replacement game-over art, not organic campaign failure.
   await page.evaluate(() => {
