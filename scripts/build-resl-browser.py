@@ -164,6 +164,24 @@ expected_byte_arrays = {
 }
 if non_resource_byte_arrays != expected_byte_arrays:
     raise SystemExit(f"Unclassified non-resource byte arrays: {sorted(non_resource_byte_arrays ^ expected_byte_arrays)}")
+non_resource_glyph_data = {
+    (path.relative_to(source).as_posix(), name)
+    for path in source_code
+    if "resources" not in path.parts
+    for name in re.findall(
+        r"\b(?:const\s+)?GlyphData<[^>]+>\s+(g_\w+)\s*=",
+        path.read_text(errors="replace"),
+    )
+}
+expected_glyph_data = {
+    ("src/ui/components/button.cpp", name)
+    for name in (
+        "g_menuItemGlyph1", "g_menuItemGlyph2", "g_menuItemGlyph3",
+        "g_firstMenuItemTextArea",
+    )
+}
+if non_resource_glyph_data != expected_glyph_data:
+    raise SystemExit(f"Unclassified non-resource glyphs: {sorted(non_resource_glyph_data ^ expected_glyph_data)}")
 literal_file_reads = {
     (kind, name)
     for path in source_code
@@ -352,6 +370,48 @@ status_bar.write_text(status_text.replace(
     '"OPEN JUNCTION - RESL ENGINE - CC0 ART - SOURCE AT DECOMPGAMES.COM"',
     1,
 ))
+
+# Four original 1-bit button drawings are embedded directly in button.cpp,
+# outside the resources/ inventory. Generate a simple independent 24x21
+# beveled control with the same hitbox and XOR highlight geometry.
+button = source / "src/ui/components/button.cpp"
+button_text = button.read_text()
+button_start = button_text.index("\nnamespace {\n")
+button_end = button_text.index("\n} // namespace\n", button_start) + len("\n} // namespace\n")
+if button_text.count("const GlyphData<") != 4 or "1d7d:884a" not in button_text:
+    raise SystemExit("Pinned embedded button drawings changed")
+
+def independent_button_mask(width_bytes: int, height: int, predicate) -> str:
+    values = []
+    for y in range(height):
+        for byte in range(width_bytes):
+            values.append(sum(
+                1 << (7 - bit) for bit in range(8)
+                if predicate(byte * 8 + bit, y)
+            ))
+    return "\n".join(
+        "        " + ", ".join(f"0x{value:02X}" for value in values[i:i + 12]) +
+        ("," if i + 12 < len(values) else "")
+        for i in range(0, len(values), 12)
+    )
+
+button_shapes = (
+    ("g_menuItemGlyph1", 3, 21, lambda x, y: x < 24 and 0 < y < 20),
+    ("g_menuItemGlyph2", 4, 21, lambda x, y: 2 <= x < 22 and 2 <= y < 19),
+    ("g_menuItemGlyph3", 4, 21, lambda x, y: x < 24 and (
+        y in (0, 20) or x in (0, 23))),
+    ("g_firstMenuItemTextArea", 3, 15, lambda x, y: 4 <= x < 20),
+)
+new_button_namespace = "\nnamespace {\n\n"
+for name, width_bytes, height, predicate in button_shapes:
+    new_button_namespace += (
+        f"    // Independently drafted rectangular UI mask.\n"
+        f"    const GlyphData<{width_bytes}, {height}> {name} = {{\n"
+        f"{independent_button_mask(width_bytes, height, predicate)}\n"
+        "    };\n\n"
+    )
+new_button_namespace += "} // namespace\n"
+button.write_text(button_text[:button_start] + new_button_namespace + button_text[button_end:])
 
 # The original grass routine scatters over a thousand random black pixels
 # across the board. The independent map uses a clear drafted grid instead.
@@ -988,6 +1048,14 @@ record = {
     "replacementAssets": asset_manifest["files"],
     "replacementGlyphs": glyph_manifest["files"],
     "replacementCursor": cursor_record,
+    "replacementButtonGlyphs": {
+        "source": "src/ui/components/button.cpp",
+        "count": len(button_shapes),
+        "dimensions": "24x21 controls; 24x15 highlight",
+        "generator": "scripts/build-resl-browser.py:independent_button_mask",
+        "generatedSectionSha256": hashlib.sha256(new_button_namespace.encode()).hexdigest(),
+        "license": "CC0-1.0",
+    },
     "replacementScenario": scenario_manifest["files"],
     "replacementEntranceSchedule": entrance_choices,
     "replacementStarterRoute": starter_route,
@@ -1000,6 +1068,7 @@ record = {
     "retainedEngineGeometryTables": retained_geometry,
     "sourceInventoryGuard": {
         "nonResourceByteArrays": sorted(f"{path}:{name}" for path, name in non_resource_byte_arrays),
+        "nonResourceGlyphData": sorted(f"{path}:{name}" for path, name in non_resource_glyph_data),
         "literalResourceReads": sorted(f"{kind}:{name}" for kind, name in literal_file_reads),
         "sourceFileExtensions": [".c", ".cpp", ".h"],
     },

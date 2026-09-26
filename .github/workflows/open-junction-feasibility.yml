@@ -50,6 +50,7 @@ jobs:
           assert record['audioBackend'] == 'null'
           assert len(record['replacementGlyphs']) == 11
           assert record['replacementCursor']['name'] == 'cursor.json'
+          assert record['replacementButtonGlyphs']['count'] == 4
           assert len(record['replacementScenario']) == 6
           assert record['replacementEntranceSchedule'] == [0, 23, 8, 31, 16, 39]
           assert record['replacementStarterRoute'] == [
@@ -61,6 +62,7 @@ jobs:
           assert len(record['replacementPaletteRGB']) == 16
           assert record['unreplacedEmbeddedVisuals'] == []
           assert len(record['retainedEngineGeometryTables']) == 4
+          assert len(record['sourceInventoryGuard']['nonResourceGlyphData']) == 4
           assert record['browserTested'] is False
           assert record['releaseReady'] is False
           assert record['privateTraceEnabled'] is True
@@ -155,7 +157,9 @@ jobs:
           assert record['audioBackend'] == 'null'
           assert record['unreplacedEmbeddedVisuals'] == []
           assert record['embeddedVisualsReplaced'] is True
+          assert record['replacementButtonGlyphs']['count'] == 4
           assert len(record['sourceInventoryGuard']['nonResourceByteArrays']) == 5
+          assert len(record['sourceInventoryGuard']['nonResourceGlyphData']) == 4
           assert len(record['sourceInventoryGuard']['literalResourceReads']) == 5
           print('Second build excludes private trace hooks and uses the null-audio backend.')
           PY
