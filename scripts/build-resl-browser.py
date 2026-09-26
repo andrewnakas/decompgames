@@ -637,6 +637,20 @@ train_text = train_text.replace(
     1,
 )
 trains.write_text(train_text)
+# The six independently placed stations require player-built extensions and
+# incur upkeep before a service can reach each new branch. Give this edition
+# enough starting funds to build and operate its drafted network through the
+# first century; annual upkeep and out-of-money defeat still apply.
+loop = source / "src/game/main_loop.cpp"
+loop_text = loop.read_text()
+starting_funds_marker = "        setHeaderValues(0, 100, 1800, readLevel(), 350);"
+if loop_text.count(starting_funds_marker) != 1:
+    raise SystemExit("Pinned starting-funds marker changed")
+loop.write_text(loop_text.replace(
+    starting_funds_marker,
+    "        setHeaderValues(0, 160, 1800, readLevel(), 350);",
+    1,
+))
 if os.environ.get("OPEN_JUNCTION_TRACE") == "1":
     loop = source / "src/game/main_loop.cpp"
     loop_text = loop.read_text()
@@ -1085,6 +1099,7 @@ record = {
     "replacementScenario": scenario_manifest["files"],
     "replacementEntranceSchedule": entrance_choices,
     "replacementStarterRoute": starter_route,
+    "replacementStartingFunds": 160,
     "replacementForest": {"maximumTrees": 32, "minimumSpacingPixels": 36},
     "replacementPaletteRGB": palette,
     "originalExternalResourcesBundled": False,
