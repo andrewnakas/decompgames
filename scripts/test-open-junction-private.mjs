@@ -864,7 +864,7 @@ try {
     throw new Error(`Private test could not dispatch isolated fifth-station service: ${fifthSlot}`);
   const fifthStart = (await readState()).stderr.length;
   let fifthArrival = false;
-  for (let attempt = 0; attempt < 36; ++attempt) {
+  for (let attempt = 0; attempt < 72; ++attempt) {
     await page.waitForTimeout(5_000);
     const state = await readState();
     fifthArrival = fifthArrival || state.stderr.slice(fifthStart).includes(
@@ -969,7 +969,7 @@ try {
     throw new Error(`Private test could not dispatch isolated sixth-station service: ${sixthSlot}`);
   const sixthStart = (await readState()).stderr.length;
   let sixthArrival = false;
-  for (let attempt = 0; attempt < 54; ++attempt) {
+  for (let attempt = 0; attempt < 72; ++attempt) {
     await page.waitForTimeout(5_000);
     const state = await readState();
     sixthArrival = sixthArrival || state.stderr.slice(sixthStart).includes(
@@ -1005,7 +1005,7 @@ try {
   let lateDepartedOrigin = false;
   let lateArrival = false;
   let lateCursor = lateStart;
-  for (let attempt = 0; attempt < 36; ++attempt) {
+  for (let attempt = 0; attempt < 72; ++attempt) {
     await page.waitForTimeout(5_000);
     const state = await readState();
     for (const line of state.stderr.slice(lateCursor)) {

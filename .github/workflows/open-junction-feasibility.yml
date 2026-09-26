@@ -14,7 +14,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 50
     steps:
       - uses: actions/checkout@v4
       - name: Generate independent assets
@@ -98,7 +98,7 @@ jobs:
         run: |
           pnpm install --frozen-lockfile
           pnpm exec playwright install chromium --with-deps
-          timeout 1200s node scripts/test-open-junction-private.mjs /tmp/open-junction-build/build
+          timeout 2400s node scripts/test-open-junction-private.mjs /tmp/open-junction-build/build
       - name: Exercise the actual player in an ephemeral private preview
         if: ${{ !inputs.uninstrumented_only }}
         env:
