@@ -206,6 +206,12 @@ try {
   }
   const savedFile = saved.files.find((file) => file.bytes > 0);
   if (!savedFile) throw new Error('Pause-menu Save did not write a nonempty persistent file');
+  const savedTick = gameTicks(await readState());
+  const savedYear = Number(savedTick?.match(/year (\d+)/)?.[1]);
+  const savedRails = Number(savedTick?.match(/rails (\d+)/)?.[1]);
+  if (!Number.isFinite(savedYear) || savedYear < 1800 || savedRails < 6)
+    throw new Error('Private save lacks a valid post-construction gameplay state');
+  console.log('State at private save:', JSON.stringify({ savedYear, savedRails, savedTick }));
   await page.evaluate(() => new Promise((resolve, reject) => {
     window.Module.FS.syncfs(false, (error) => error ? reject(error) : resolve());
   }));
@@ -238,11 +244,14 @@ try {
     }));
     if (loaded.abort || pageErrors.length || remoteRequests.length)
       throw new Error('Private browser encountered an error while loading an archived game');
-    if (Number(tick?.match(/year (\d+)/)?.[1]) >= 1805) break;
+    if (Number(tick?.match(/year (\d+)/)?.[1]) >= savedYear &&
+        Number(tick?.match(/rails (\d+)/)?.[1]) >= savedRails) break;
   }
   const loadedTick = gameTicks(loaded);
-  if (Number(loadedTick?.match(/year (\d+)/)?.[1]) < 1805 ||
-      Number(loadedTick?.match(/rails (\d+)/)?.[1]) < 6)
+  const loadedYear = Number(loadedTick?.match(/year (\d+)/)?.[1]);
+  const loadedRails = Number(loadedTick?.match(/rails (\d+)/)?.[1]);
+  if (!Number.isFinite(loadedYear) || !Number.isFinite(loadedRails) ||
+      loadedYear < savedYear || loadedRails < savedRails)
     throw new Error('Archive did not restore the saved year and constructed rails');
   const backupBytes = await page.evaluate((name) =>
     Array.from(window.Module.FS.readFile(`/persistent/${name}`)), savedFile.name);
@@ -277,8 +286,10 @@ try {
   await page.waitForTimeout(2_000);
   const importedTick = gameTicks(await readState());
   console.log('After backup import and Archive Go:', importedTick);
-  if (Number(importedTick?.match(/year (\d+)/)?.[1]) < 1805 ||
-      Number(importedTick?.match(/rails (\d+)/)?.[1]) < 6)
+  const importedYear = Number(importedTick?.match(/year (\d+)/)?.[1]);
+  const importedRails = Number(importedTick?.match(/rails (\d+)/)?.[1]);
+  if (!Number.isFinite(importedYear) || !Number.isFinite(importedRails) ||
+      importedYear < savedYear || importedRails < savedRails)
     throw new Error('Imported backup did not restore gameplay state');
   if (pageErrors.length || remoteRequests.length)
     throw new Error('Private browser encountered an error during backup round trip');
