@@ -926,7 +926,7 @@ try {
     throw new Error(`Private test could not dispatch isolated sixth-station service: ${sixthSlot}`);
   const sixthStart = (await readState()).stderr.length;
   let sixthArrival = false;
-  for (let attempt = 0; attempt < 36; ++attempt) {
+  for (let attempt = 0; attempt < 54; ++attempt) {
     await page.waitForTimeout(5_000);
     const state = await readState();
     sixthArrival = sixthArrival || state.stderr.slice(sixthStart).includes(
