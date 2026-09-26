@@ -881,6 +881,11 @@ try {
   }));
   if (!fifthArrival)
     throw new Error('Player-connected fifth-station trace service did not arrive');
+  const fifthImage = await page.locator('canvas').screenshot({ timeout: 5_000 });
+  if (process.env.OPEN_JUNCTION_FIFTH_SCREENSHOT)
+    await writeFile(process.env.OPEN_JUNCTION_FIFTH_SCREENSHOT, fifthImage);
+  console.log('Private fifth-station canvas PNG SHA-256:',
+    createHash('sha256').update(fifthImage).digest('hex'));
   // The sixth station is reached by another private year jump. This probes
   // player-buildable geometry and one isolated train only, not natural service.
   await page.evaluate(() => window.Module._oj_trace_jump_to_1960());
@@ -981,6 +986,11 @@ try {
   }));
   if (!sixthArrival)
     throw new Error('Player-connected sixth-station trace service did not arrive');
+  const sixthImage = await page.locator('canvas').screenshot({ timeout: 5_000 });
+  if (process.env.OPEN_JUNCTION_SIXTH_SCREENSHOT)
+    await writeFile(process.env.OPEN_JUNCTION_SIXTH_SCREENSHOT, sixthImage);
+  console.log('Private sixth-station canvas PNG SHA-256:',
+    createHash('sha256').update(sixthImage).digest('hex'));
   // Let the ordinary scheduler run at six stations. The test operates each
   // visible switch with mouse clicks according to the assigned service; no
   // destination is injected. Observe a completed late-station service, not
@@ -1061,6 +1071,11 @@ try {
   }));
   if (!lateArrival)
     throw new Error('Ordinary six-station dispatch did not complete a late-station journey');
+  const lateImage = await page.locator('canvas').screenshot({ timeout: 5_000 });
+  if (process.env.OPEN_JUNCTION_LATE_SCREENSHOT)
+    await writeFile(process.env.OPEN_JUNCTION_LATE_SCREENSHOT, lateImage);
+  console.log('Private natural six-station canvas PNG SHA-256:',
+    createHash('sha256').update(lateImage).digest('hex'));
   await page.evaluate(() => window.Module._oj_trace_pause_dispatch(1));
   // Exercise the otherwise slow year-2000 branch with a trace-only jump.
   // This proves the transition code path, not 200 years of continuous play.
