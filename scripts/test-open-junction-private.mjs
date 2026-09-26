@@ -849,6 +849,16 @@ try {
   }
   if (!fifthSwitch?.enabled || !towardThird?.enabled)
     throw new Error('Player could not enable the route to station five');
+  // The forced service departs station four (index 3). Its exit branch was
+  // switched off after the preceding 3→0 delivery, so restore it first.
+  let fifthOriginSwitch = await fourthSwitchState();
+  if (fifthOriginSwitch && !fifthOriginSwitch.enabled) {
+    await page.mouse.click(fifthOriginSwitch.x, Math.round(fifthOriginSwitch.y * 480 / 350));
+    await page.waitForTimeout(1_000);
+    fifthOriginSwitch = await fourthSwitchState();
+  }
+  if (!fifthOriginSwitch?.enabled)
+    throw new Error('Player could not reopen station-four exit for fifth-station service');
   const fifthSlot = await page.evaluate(() => window.Module._oj_trace_spawn_fifth_service());
   if (fifthSlot < 0)
     throw new Error(`Private test could not dispatch isolated fifth-station service: ${fifthSlot}`);
@@ -864,7 +874,7 @@ try {
     if (fifthArrival) break;
   }
   console.log('Fifth-station route diagnostic:', JSON.stringify({
-    fifthSlot, fifthSwitch, towardThird, fifthArrival,
+    fifthSlot, fifthSwitch, towardThird, fifthOriginSwitch, fifthArrival,
     latestTick: gameTicks(await readState()),
     recentEngine: (await readState()).stderr.slice(fifthStart).filter((line) =>
       line.startsWith('OJ train completed') || line.startsWith('OJ active train slot ')).slice(-18),
