@@ -107,6 +107,12 @@ try {
   }, gameplay.toString('base64'));
   if (gridSamples.filter(rgb => rgb[0] === 129 && rgb[1] === 160 && rgb[2] === 190).length < 5)
     throw new Error('Independent board did not appear after Go in the uninstrumented build');
+  // Keep the real game running without trace year jumps, then retain a second
+  // frame for visual review of the ordinary animated year counter.
+  await page.keyboard.press('3');
+  await page.waitForTimeout(20_000);
+  await writeFile('/tmp/open-junction-uninstrumented-natural-year.png',
+    await page.locator('canvas').screenshot());
   // The board is visible behind the menu, so the menu-disappearance check
   // above is the actual proof that Go entered gameplay before Save is tested.
   await writeFile('/tmp/open-junction-uninstrumented-before-pause.png',
