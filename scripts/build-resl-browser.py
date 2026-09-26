@@ -978,7 +978,7 @@ for name in sorted(RETAINED_ENGINE_GEOMETRY_TABLES):
         "path": f"src/game/resources/{name}",
         "bytes": len(data),
         "sha256": hashlib.sha256(data).hexdigest(),
-        "classification": "provisional GPL engine geometry, not independent presentation art",
+        "classification": "GPL engine movement/connectivity geometry, not bundled presentation or scenario art",
     })
 
 record = {
@@ -1011,7 +1011,7 @@ record = {
     "shortBrowserLoadingScreen": True,
     "releaseReady": False,
     "blockers": [
-        "Finish retained engine-geometry classification and dynamic drawing review",
+        "Finish whole-source presentation and dynamic drawing review",
         "Inspect signals, trains, small labels, and redraw across additional gameplay states",
         "Test conflicting natural services and longer independent scenario progression",
         "Test organic year advancement and loss beyond trace-only transition checks",
