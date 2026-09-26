@@ -937,6 +937,8 @@ try {
       }
       if (state.abort || pageErrors.length || remoteRequests.length)
         throw new Error(`Private browser failed during sixth-station construction at ${tile}`);
+      if (state.stderr.some(line => line.includes('OJ game over entered')))
+        throw new Error(`Open Junction ran out of money during sixth-station construction at ${tile}`);
     }
     console.log('Sixth-station candidate rail:', JSON.stringify({ tile, type, placed, sixthRouteRails }));
     if (!placed)
