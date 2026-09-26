@@ -36,6 +36,8 @@ if (record.get("sourceRevision") != REVISION
         or record.get("originalExternalResourcesBundled") is not False
         or record.get("unreplacedEmbeddedVisuals") != []
         or record.get("audioBackend") != "null"
+        or record.get("originalMelodySequencesReplaced") is not True
+        or record.get("replacementButtonGlyphs", {}).get("count") != 4
         or record.get("releaseReady") is not False):
     raise SystemExit("Private replacement-source gate failed")
 if {path.name for path in source.iterdir()} != {
@@ -46,6 +48,12 @@ if {path.name for path in (source / "resources").iterdir()} != {"open-junction"}
     raise SystemExit("Original upstream resources appeared in the source copy")
 if (source / "src/game/resources/scripts").exists() or (source / "src/game/resources/utility").exists():
     raise SystemExit("Executable-extraction utilities appeared in the source copy")
+melody = (source / "src/game/melody.cpp").read_bytes()
+if hashlib.sha256(melody).hexdigest() != record["silentMelodySourceSha256"]:
+    raise SystemExit("Original melody sequences remain in the source copy")
+button_source = (source / "src/ui/components/button.cpp").read_text()
+if "1d7d:884a" in button_source or button_source.count("Independently drafted rectangular UI mask") != 4:
+    raise SystemExit("Original button glyphs remain in the source copy")
 
 for item in record["files"]:
     path = (build / "build" / item["path"] if item["path"] in {"resl.js", "resl.wasm"}
