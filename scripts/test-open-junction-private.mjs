@@ -979,6 +979,12 @@ try {
     if (state.abort || pageErrors.length || remoteRequests.length)
       throw new Error('Private browser failed while observing the sixth-station extension');
     if (sixthArrival) break;
+    if (state.stderr.slice(sixthStart).includes('OJ game over entered')) {
+      await writeFile('/tmp/open-junction-sixth-game-over.png',
+        await page.locator('canvas').screenshot({ timeout: 5_000 }));
+      throw new Error(`Sixth-station route ended in game over before delivery; ` +
+        `latest tick: ${gameTicks(state)}`);
+    }
     const tick = Number(gameTicks(state)?.match(/^OJ game tick (\d+)/)?.[1]);
     if (!Number.isFinite(tick))
       throw new Error('Sixth-station observer lost the game tick trace');
