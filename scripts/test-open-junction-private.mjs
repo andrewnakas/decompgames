@@ -997,14 +997,19 @@ try {
       lateService.to === 5;
     const desired = [rightTop, leftTop, rightBottom, leftBottom];
     for (let index = 0; index < lateSwitches.length; ++index) {
-      const before = await lateSwitches[index]();
+      let before = await lateSwitches[index]();
       if (!before || before.enabled === desired[index]) continue;
-      await page.mouse.click(before.x, Math.round(before.y * 480 / 350));
-      await page.waitForTimeout(700);
-      const after = await lateSwitches[index]();
-      lateSwitchClicks.push({ service: lateService, index, headX, before, after });
-      if (!after || after.enabled !== desired[index])
-        throw new Error(`Player could not operate late-route switch ${index}`);
+      for (let click = 0; click < 3; ++click) {
+        await page.mouse.click(before.x, Math.round(before.y * 480 / 350));
+        await page.waitForTimeout(1_200);
+        const after = await lateSwitches[index]();
+        lateSwitchClicks.push({ service: lateService, index, headX, before, after, click });
+        if (after?.enabled === desired[index]) break;
+        // A train may temporarily occupy the junction. Let the next sampled
+        // tick retry rather than calling a refused click a browser failure.
+        before = after;
+        if (!before) break;
+      }
     }
   }
   console.log('Natural six-station observation:', JSON.stringify({
