@@ -616,9 +616,10 @@ try {
     // Continue after the first third-station arrival. A single successful trip
     // does not show that queued return and later cross-branch services remain
     // playable on this shared line.
-    // Later construction needs a live fourth-station assignment. The random
-    // scheduler does not guarantee one exactly at the four-minute boundary.
-    if (organicSeconds >= 240 && oldestPendingService &&
+    // Later construction needs a live fourth-station assignment while the
+    // train is still approaching its junction. Waiting for a fixed four-minute
+    // cutoff can let the assigned train pass that junction before rails exist.
+    if (organicCompletions.length >= 2 && oldestPendingService &&
         (oldestPendingService.from === 3 || oldestPendingService.to === 3)) {
       organicFourthService = oldestPendingService;
       break;
