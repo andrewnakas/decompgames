@@ -954,6 +954,7 @@ try {
   const lateCompletions = [];
   const lateSwitchClicks = [];
   let lateService = null;
+  let lateDepartedOrigin = false;
   let lateArrival = false;
   let lateCursor = lateStart;
   for (let attempt = 0; attempt < 36; ++attempt) {
@@ -963,6 +964,7 @@ try {
       const spawned = line.match(/^OJ train spawned from (\d+) to (\d+) at year \d+ slot (\d+)$/);
       if (spawned) {
         lateService = { from: Number(spawned[1]), to: Number(spawned[2]), slot: Number(spawned[3]) };
+        lateDepartedOrigin = false;
         lateSpawns.push(lateService);
       }
       const completed = line.match(/^OJ train completed slot (\d+) dst (\d+) arrived ([01])$/);
@@ -984,16 +986,16 @@ try {
     const headX = Number(activeLine?.match(/head (-?\d+),/)?.[1]);
     const fromRight = lateService.from % 2 === 0;
     const fromLeft = !fromRight;
-    const leftRight = Number.isFinite(headX);
-    const rightDeparted = fromRight && leftRight && headX < 550;
-    const leftDeparted = fromLeft && leftRight && headX > 100;
-    const rightTop = fromRight && !rightDeparted ? lateService.from >= 2 :
+    if (Number.isFinite(headX) &&
+        (fromRight && headX < 550 || fromLeft && headX > 100))
+      lateDepartedOrigin = true;
+    const rightTop = fromRight && !lateDepartedOrigin ? lateService.from >= 2 :
       lateService.to === 2 || lateService.to === 4;
-    const rightBottom = fromRight && !rightDeparted ? lateService.from === 4 :
+    const rightBottom = fromRight && !lateDepartedOrigin ? lateService.from === 4 :
       lateService.to === 4;
-    const leftTop = fromLeft && !leftDeparted ? lateService.from >= 3 :
+    const leftTop = fromLeft && !lateDepartedOrigin ? lateService.from >= 3 :
       lateService.to === 3 || lateService.to === 5;
-    const leftBottom = fromLeft && !leftDeparted ? lateService.from === 5 :
+    const leftBottom = fromLeft && !lateDepartedOrigin ? lateService.from === 5 :
       lateService.to === 5;
     const desired = [rightTop, leftTop, rightBottom, leftBottom];
     for (let index = 0; index < lateSwitches.length; ++index) {
@@ -1013,9 +1015,11 @@ try {
     }
   }
   console.log('Natural six-station observation:', JSON.stringify({
-    lateSpawns, lateCompletions, lateArrival, lateSwitchClicks,
+    lateSpawns, lateCompletions, lateArrival, lateSwitchClicks, lateDepartedOrigin,
     waitingServices: await page.evaluate(() => window.Module._oj_trace_waiting_train_count()),
     latestTick: gameTicks(await readState()),
+    trainHeads: (await readState()).stderr.slice(lateStart).filter(line =>
+      line.startsWith('OJ active train slot ')).slice(-30),
   }));
   if (!lateArrival)
     throw new Error('Ordinary six-station dispatch did not complete a late-station journey');
