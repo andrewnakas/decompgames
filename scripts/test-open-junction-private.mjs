@@ -719,19 +719,35 @@ try {
   const fourthStart = (await readState()).stderr.length;
   const fourthActiveService = organicFourthService;
   let fourthArrival = false;
+  let fourthDepartedOrigin = false;
+  const fourthReturnSwitchAttempts = [];
   for (let attempt = 0; attempt < 54; ++attempt) {
-    if ((await page.evaluate(() => window.Module._oj_trace_active_train_count())) === 0) break;
     await page.waitForTimeout(5_000);
     const state = await readState();
+    const headLine = [...state.stderr.slice(fourthStart)].reverse().find(line =>
+      line.startsWith(`OJ active train slot ${fourthActiveService.slot} `));
+    const headX = Number(headLine?.match(/head (-?\d+),/)?.[1]);
+    if (fourthActiveService.from === 3 && Number.isFinite(headX) && headX > 100)
+      fourthDepartedOrigin = true;
+    if (fourthDepartedOrigin && fourthActiveService.to !== 3) {
+      const before = await fourthSwitchState();
+      if (before?.enabled) {
+        await page.mouse.click(before.x, Math.round(before.y * 480 / 350));
+        await page.waitForTimeout(1_000);
+        fourthReturnSwitchAttempts.push({ headLine, before, after: await fourthSwitchState() });
+      }
+    }
     fourthArrival = fourthArrival || Boolean(fourthActiveService &&
       (fourthActiveService.from === 3 || fourthActiveService.to === 3) &&
       state.stderr.slice(fourthStart).includes(
         `OJ train completed slot ${fourthActiveService.slot} dst ${fourthActiveService.to} arrived 1`));
     if (state.abort || pageErrors.length || remoteRequests.length)
       throw new Error('Private browser failed while observing the fourth-station extension');
+    if (fourthArrival) break;
   }
   console.log('Fourth-station route diagnostic:', JSON.stringify({
-    fourthActiveService, fourthSwitch, fourthSwitchAttempts, fourthArrival,
+    fourthActiveService, fourthSwitch, fourthSwitchAttempts,
+    fourthDepartedOrigin, fourthReturnSwitchAttempts, fourthArrival,
     latestTick: gameTicks(await readState()),
     recentEngine: (await readState()).stderr.slice(fourthStart).filter((line) =>
       line.startsWith('OJ train completed') || line.startsWith('OJ active train slot ')).slice(-18),
