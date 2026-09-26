@@ -936,6 +936,78 @@ try {
   }));
   if (!sixthArrival)
     throw new Error('Player-connected sixth-station trace service did not arrive');
+  // Let the ordinary scheduler run at six stations. The test operates each
+  // visible switch with mouse clicks according to the assigned service; no
+  // destination is injected. Observe a completed late-station service, not
+  // merely another trace-targeted route.
+  const lateStart = (await readState()).stderr.length;
+  await page.evaluate(() => window.Module._oj_trace_pause_dispatch(0));
+  const lateSwitches = [branchSwitchState, fourthSwitchState, fifthSwitchState, sixthSwitchState];
+  const lateSpawns = [];
+  const lateCompletions = [];
+  const lateSwitchClicks = [];
+  let lateService = null;
+  let lateArrival = false;
+  let lateCursor = lateStart;
+  for (let attempt = 0; attempt < 36; ++attempt) {
+    await page.waitForTimeout(5_000);
+    const state = await readState();
+    for (const line of state.stderr.slice(lateCursor)) {
+      const spawned = line.match(/^OJ train spawned from (\d+) to (\d+) at year \d+ slot (\d+)$/);
+      if (spawned) {
+        lateService = { from: Number(spawned[1]), to: Number(spawned[2]), slot: Number(spawned[3]) };
+        lateSpawns.push(lateService);
+      }
+      const completed = line.match(/^OJ train completed slot (\d+) dst (\d+) arrived ([01])$/);
+      if (completed && lateService?.slot === Number(completed[1])) {
+        const result = { ...lateService, arrived: completed[3] === '1', destination: Number(completed[2]) };
+        lateCompletions.push(result);
+        if (result.arrived && result.destination === result.to &&
+            (result.from >= 4 || result.to >= 4)) lateArrival = true;
+        lateService = null;
+      }
+    }
+    lateCursor = state.stderr.length;
+    if (state.abort || pageErrors.length || remoteRequests.length)
+      throw new Error('Private browser failed during natural six-station traffic');
+    if (lateArrival) break;
+    if (!lateService) continue;
+    const activeLine = [...state.stderr].reverse().find(line =>
+      line.startsWith(`OJ active train slot ${lateService.slot} `));
+    const headX = Number(activeLine?.match(/head (-?\d+),/)?.[1]);
+    const fromRight = lateService.from % 2 === 0;
+    const fromLeft = !fromRight;
+    const leftRight = Number.isFinite(headX);
+    const rightDeparted = fromRight && leftRight && headX < 550;
+    const leftDeparted = fromLeft && leftRight && headX > 100;
+    const rightTop = fromRight && !rightDeparted ? lateService.from >= 2 :
+      lateService.to === 2 || lateService.to === 4;
+    const rightBottom = fromRight && !rightDeparted ? lateService.from === 4 :
+      lateService.to === 4;
+    const leftTop = fromLeft && !leftDeparted ? lateService.from >= 3 :
+      lateService.to === 3 || lateService.to === 5;
+    const leftBottom = fromLeft && !leftDeparted ? lateService.from === 5 :
+      lateService.to === 5;
+    const desired = [rightTop, leftTop, rightBottom, leftBottom];
+    for (let index = 0; index < lateSwitches.length; ++index) {
+      const before = await lateSwitches[index]();
+      if (!before || before.enabled === desired[index]) continue;
+      await page.mouse.click(before.x, Math.round(before.y * 480 / 350));
+      await page.waitForTimeout(700);
+      const after = await lateSwitches[index]();
+      lateSwitchClicks.push({ service: lateService, index, headX, before, after });
+      if (!after || after.enabled !== desired[index])
+        throw new Error(`Player could not operate late-route switch ${index}`);
+    }
+  }
+  console.log('Natural six-station observation:', JSON.stringify({
+    lateSpawns, lateCompletions, lateArrival, lateSwitchClicks,
+    waitingServices: await page.evaluate(() => window.Module._oj_trace_waiting_train_count()),
+    latestTick: gameTicks(await readState()),
+  }));
+  if (!lateArrival)
+    throw new Error('Ordinary six-station dispatch did not complete a late-station journey');
+  await page.evaluate(() => window.Module._oj_trace_pause_dispatch(1));
   // Exercise the otherwise slow year-2000 branch with a trace-only jump.
   // This proves the transition code path, not 200 years of continuous play.
   await page.evaluate(() => {
