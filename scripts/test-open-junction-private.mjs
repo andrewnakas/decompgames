@@ -1053,6 +1053,12 @@ try {
     lateCursor = state.stderr.length;
     if (state.abort || pageErrors.length || remoteRequests.length)
       throw new Error('Private browser failed during natural six-station traffic');
+    if (state.stderr.slice(lateStart).includes('OJ game over entered')) {
+      await writeFile('/tmp/open-junction-natural-game-over.png',
+        await page.locator('canvas').screenshot({ timeout: 5_000 }));
+      throw new Error(`Ordinary six-station traffic ended in game over; ` +
+        `latest tick: ${gameTicks(state)}`);
+    }
     if (lateArrival || naturalTransition) break;
     if (!lateService) continue;
     const activeLine = [...state.stderr].reverse().find(line =>
