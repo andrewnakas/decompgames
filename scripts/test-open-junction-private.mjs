@@ -969,6 +969,8 @@ try {
     throw new Error(`Private test could not dispatch isolated sixth-station service: ${sixthSlot}`);
   const sixthStart = (await readState()).stderr.length;
   let sixthArrival = false;
+  let sixthLastTick = -1;
+  let sixthStagnantChecks = 0;
   for (let attempt = 0; attempt < 72; ++attempt) {
     await page.waitForTimeout(5_000);
     const state = await readState();
@@ -977,6 +979,17 @@ try {
     if (state.abort || pageErrors.length || remoteRequests.length)
       throw new Error('Private browser failed while observing the sixth-station extension');
     if (sixthArrival) break;
+    const tick = Number(gameTicks(state)?.match(/^OJ game tick (\d+)/)?.[1]);
+    if (!Number.isFinite(tick))
+      throw new Error('Sixth-station observer lost the game tick trace');
+    if (tick === sixthLastTick) ++sixthStagnantChecks;
+    else { sixthLastTick = tick; sixthStagnantChecks = 0; }
+    if (sixthStagnantChecks >= 6) {
+      await writeFile('/tmp/open-junction-sixth-stall.png',
+        await page.locator('canvas').screenshot({ timeout: 5_000 }));
+      throw new Error(`Sixth-station simulation stalled at tick ${tick}; ` +
+        `recent engine: ${JSON.stringify(state.stderr.slice(-12))}`);
+    }
   }
   console.log('Sixth-station route diagnostic:', JSON.stringify({
     sixthSlot, sixthSwitch, sixthArrival,

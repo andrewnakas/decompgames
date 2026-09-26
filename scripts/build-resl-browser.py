@@ -523,6 +523,7 @@ if melody_text.count(sound_flag) != 1:
 # replacement has no authorized sound package, so remove the sequences from
 # its corresponding source as well as disabling SDL output.
 silent_melody_source = """#include \"melody.h\"
+#include <graphics/vga.h>
 
 namespace resl {
 bool g_soundEnabled = false;
@@ -533,7 +534,9 @@ void playEntitySwitchedSound(bool) {}
 void playScheduledTrainMelody(std::uint16_t, std::uint16_t, std::int16_t) {}
 void playTrainFinishedMelody(std::int16_t) {}
 void beepSound(std::int16_t) {}
-void playSpawnedEntranceMelody() {}
+// Entrance creation used to include a retrace delay even with sound off.
+// Retain that functional pacing without retaining the speaker sequence.
+void playSpawnedEntranceMelody() { vga::waitForNRetraces(8); }
 void playGameOverMelody() {}
 void playRailDamagedMelody() {}
 void playHappy2000YearMelody() {}
