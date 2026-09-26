@@ -16,6 +16,7 @@ import tarfile
 
 REVISION = "470cca330ee9abcf6173c843f4c89686c0c7e525"
 RECIPE_FILES = (
+    ".github/workflows/open-junction-feasibility.yml",
     "scripts/build-resl-browser.py",
     "scripts/generate-open-junction-assets.py",
     "scripts/generate-open-junction-glyphs.py",
@@ -82,6 +83,13 @@ instructions = (
     "decompgames/ contains the build recipe, generators, and current audit notes.\n"
     "The build-record contains SHA-256 hashes of the private WASM and JS.\n"
     "The candidate is not licensed for redistribution of upstream game assets.\n"
+    "To reproduce on Linux, check out the engine revision above and activate Emscripten 6.0.1.\n"
+    "From decompgames/, run:\n"
+    "  python3 scripts/generate-open-junction-assets.py /tmp/oj-assets\n"
+    "  python3 scripts/generate-open-junction-glyphs.py /tmp/oj-glyphs\n"
+    "  python3 scripts/generate-open-junction-scenario.py /tmp/oj-scenario\n"
+    "  python3 scripts/build-resl-browser.py ENGINE_CHECKOUT BUILD_OUTPUT /tmp/oj-assets /tmp/oj-glyphs /tmp/oj-scenario\n"
+    "The bundled workflow records the CI environment and private muted verification steps.\n"
 ).encode()
 with archive_path.open("wb") as raw, gzip.GzipFile(fileobj=raw, mode="wb", mtime=0) as gz:
     with tarfile.open(fileobj=gz, mode="w") as archive:
