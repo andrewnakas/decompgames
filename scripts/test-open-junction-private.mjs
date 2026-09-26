@@ -554,7 +554,8 @@ try {
   const organicSwitchAttempts = [];
   let organicSeconds = 0;
   let maxSimultaneousServices = 0;
-  for (let attempt = 0; attempt < 48; ++attempt) {
+  let organicFourthService = null;
+  for (let attempt = 0; attempt < 96; ++attempt) {
     await page.waitForTimeout(5_000);
     organicSeconds += 5;
     const state = await readState();
@@ -604,6 +605,13 @@ try {
     // Continue after the first third-station arrival. A single successful trip
     // does not show that queued return and later cross-branch services remain
     // playable on this shared line.
+    // Later construction needs a live fourth-station assignment. The random
+    // scheduler does not guarantee one exactly at the four-minute boundary.
+    if (organicSeconds >= 240 && oldestPendingService &&
+        (oldestPendingService.from === 3 || oldestPendingService.to === 3)) {
+      organicFourthService = oldestPendingService;
+      break;
+    }
   }
   console.log('Natural-dispatch observation:', JSON.stringify({
     secondsObserved: organicSeconds, organicThirdDelivery, organicSpawns, organicCompletions,
@@ -619,6 +627,8 @@ try {
     throw new Error('Ordinary dispatch did not complete a third-station delivery');
   if (organicCompletions.length < 2)
     throw new Error('Ordinary dispatch did not complete a second serialized service');
+  if (!organicFourthService)
+    throw new Error('Ordinary dispatch did not assign a fourth-station service within eight minutes');
   await page.evaluate(() => window.Module._oj_trace_pause_dispatch(1));
   const lateGameState = await readState();
   if (Number(gameTicks(lateGameState)?.match(/entrances (\d+)/)?.[1]) < 4)
@@ -695,10 +705,7 @@ try {
   if (!fourthSwitch?.enabled)
     throw new Error('Player could not enable the fourth-station branch switch');
   const fourthStart = (await readState()).stderr.length;
-  const fourthActiveService = organicSpawns.at(-1);
-  if (!fourthActiveService ||
-      (fourthActiveService.from !== 3 && fourthActiveService.to !== 3))
-    throw new Error('Ordinary dispatch did not present a fourth-station service for the route probe');
+  const fourthActiveService = organicFourthService;
   let fourthArrival = false;
   for (let attempt = 0; attempt < 54; ++attempt) {
     if ((await page.evaluate(() => window.Module._oj_trace_active_train_count())) === 0) break;
