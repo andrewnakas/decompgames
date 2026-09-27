@@ -1,0 +1,33 @@
+{
+  "id": "skyways",
+  "engine": "skyroads",
+  "packageRevision": "df219e03b854-59b1a2a61bd4",
+  "repository": "https://github.com/haroldo-ok/skyroads-32x",
+  "sourceRevision": "df219e03b854153291b32224593013b60d861d40",
+  "recipeRevision": "0da835dd6bb284edf8fcaa652f02cf7954d944a3",
+  "toolchain": "Emscripten 6.0.1; Python 3.13; Pillow 12.3.0",
+  "recipe": "scripts/build-open-skyroads-browser.py",
+  "sourceArchive": "/sources/open-skyways-df219e03b854-59b1a2a61bd4.tar.gz",
+  "sourceArchiveBytes": 68279,
+  "sourceArchiveSha256": "0276af350558edc7e89b008fde9ce7f382ccc55dbfbefcb1ced544683e95cf85",
+  "base": "/runtime/skyways/df219e03b854-59b1a2a61bd4/",
+  "script": "skyroads.js",
+  "files": [
+    {"path": "skyroads.js", "bytes": 180656, "sha256": "260f9afe0edfc87ad0b25333956b6b2c8e94f25340852e3858cba98e5c1bd6e3"},
+    {"path": "skyroads.wasm", "bytes": 685541, "sha256": "d28ac44c6abf4188a575a119917a5d31909efe330c9f4d6bf190c79b83cc7cd3"},
+    {"path": "skyroads.data", "bytes": 1402541, "sha256": "59b1a2a61bd46d813f5f7f8d5763c4c6ada53137ee865bf89cb08ccd0e5b3f37"}
+  ],
+  "requirements": ["WebAssembly", "Keyboard", "IndexedDB"],
+  "saveVersion": "open-skyways-replacement-v1",
+  "saveRoots": ["/save"],
+  "mountSave": true,
+  "assets": [],
+  "args": [],
+  "audioBackend": "null",
+  "replacementData": {
+    "license": "CC0-1.0",
+    "count": 25,
+    "record": "build-record.json in source archive",
+    "provenance": "Procedural authored roads, geometric graphics, hand-authored font, HUD, objects, animation and inert demo; no original Bluemoon files"
+  }
+}

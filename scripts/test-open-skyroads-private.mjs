@@ -59,8 +59,46 @@ try {
     await writeFile(`test-results/open-skyroads-private/accelerating-${seconds}.png`, await canvas.screenshot());
   }
   await page.keyboard.up('ArrowUp');
+  await page.keyboard.press('Enter');
+  await delay(3_000);
+  await writeFile('test-results/open-skyroads-private/chooser-after-completion.png', await canvas.screenshot());
+  const cfg = await page.evaluate(async () => {
+    const db = await new Promise((resolve, reject) => {
+      const request = indexedDB.open('/save');
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    const files = await new Promise((resolve, reject) => {
+      const request = db.transaction('FILE_DATA', 'readonly').objectStore('FILE_DATA').getAll();
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    db.close();
+    return files.map(file => ({ bytes: file.contents?.length, firstCompletion: file.contents?.[6] | file.contents?.[7] << 8 }));
+  });
+  if (!cfg.some(file => file.bytes === 66 && file.firstCompletion > 0)) {
+    throw new Error(`Browser progress was not saved: ${JSON.stringify(cfg)}`);
+  }
+  console.log('IndexedDB completion record:', JSON.stringify(cfg));
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await delay(4_000);
+  await page.keyboard.press('Enter');
+  await delay(3_000);
+  await page.keyboard.press('Enter');
+  await delay(3_000);
+  await writeFile('test-results/open-skyroads-private/chooser-after-reload.png', await canvas.screenshot());
+  await page.keyboard.press('Enter');
+  await delay(3_000);
+  await page.keyboard.down('ArrowRight');
+  await delay(1_000);
+  await page.keyboard.up('ArrowRight');
+  await writeFile('test-results/open-skyroads-private/steered-right.png', await canvas.screenshot());
+  await page.keyboard.down('Space');
+  await delay(350);
+  await writeFile('test-results/open-skyroads-private/jump.png', await canvas.screenshot());
+  await page.keyboard.up('Space');
   if (errors.length || remote.length) throw new Error(JSON.stringify({ errors, remote }));
-  console.log('Private muted exploratory screenshots captured; gameplay remains unverified.');
+  console.log('Private muted first-course screenshots captured; review visuals and reload state before release.');
 } finally {
   await browser?.close();
   server.kill('SIGTERM');
