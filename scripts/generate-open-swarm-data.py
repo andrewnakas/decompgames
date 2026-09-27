@@ -189,7 +189,7 @@ def generate(output: Path) -> None:
                                "five alien-shot rate choices"],
         "missingComponents": [
             "remaining work-RAM and object templates", "functional alien-shot records for slots 2-4",
-            "score and fire-rate tables", "attract and game-over scripts",
+            "complete attract and game-over scripts",
             "complete tested gameplay",
         ],
         "file": {"name": "open-swarm-draft.bin", "bytes": len(image),
