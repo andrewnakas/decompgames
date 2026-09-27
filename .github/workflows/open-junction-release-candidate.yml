@@ -1,0 +1,112 @@
+name: Prepare gated Open Junction release candidate
+
+on:
+  workflow_dispatch:
+    inputs:
+      full_run:
+        description: Successful private silent gameplay run for the unchanged build inputs
+        required: true
+        type: string
+      player_run:
+        description: Successful uninstrumented shared-player run for the unchanged build inputs
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - name: Generate independent replacement data
+        run: |
+          python3 scripts/generate-open-junction-assets.py /tmp/oj-assets >/dev/null
+          python3 scripts/generate-open-junction-glyphs.py /tmp/oj-glyphs
+          python3 scripts/generate-open-junction-scenario.py /tmp/oj-scenario
+      - name: Fetch pinned engine and toolchain
+        run: |
+          git clone --quiet https://github.com/konovalov-aleks/reSL.git /tmp/resl
+          git -C /tmp/resl checkout --quiet 470cca330ee9abcf6173c843f4c89686c0c7e525
+          git clone --quiet --depth 1 https://github.com/emscripten-core/emsdk.git /tmp/emsdk
+          /tmp/emsdk/emsdk install 6.0.1
+          /tmp/emsdk/emsdk activate 6.0.1
+      - name: Compile and package silent uninstrumented candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FULL_RUN: ${{ inputs.full_run }}
+          PLAYER_RUN: ${{ inputs.player_run }}
+        run: |
+          source /tmp/emsdk/emsdk_env.sh
+          python3 scripts/build-resl-browser.py \
+            /tmp/resl /tmp/oj-release-build \
+            /tmp/oj-assets /tmp/oj-glyphs /tmp/oj-scenario \
+            >/tmp/oj-release-build.log 2>&1 || {
+              tail -n 100 /tmp/oj-release-build.log
+              exit 1
+            }
+          python3 scripts/release-open-junction-browser.py \
+            /tmp/oj-release-build "$FULL_RUN" "$PLAYER_RUN"
+      - name: Test immutable package in the shared player without sound
+        env:
+          OPEN_JUNCTION_SAVE_VERSION: open-junction-replacement-v1
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          catalog = Path('src/data/games.json')
+          games = json.loads(catalog.read_text())
+          game = next(game for game in games if game['id'] == 'shortline')
+          assert game['mode'] == 'project'
+          game['mode'] = 'instant'
+          game['runtime'] = 'shortline'
+          game['title'] = 'Open Junction (release candidate)'
+          game['downloadMB'] = 2.0
+          catalog.write_text(json.dumps(games))
+          PY
+          pnpm install --frozen-lockfile
+          pnpm exec playwright install chromium --with-deps
+          pnpm build
+          timeout 180s node scripts/test-open-junction-player-uninstrumented.mjs
+      - name: Verify immutable artifact checksums and stage candidate
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          import shutil
+          manifest = json.loads(Path('public/manifests/shortline.json').read_text())
+          stage = Path('/tmp/oj-release-artifact')
+          for relative in ('manifests', 'sources', manifest['base'].lstrip('/')):
+              (stage / relative).mkdir(parents=True, exist_ok=True)
+          shutil.copyfile('public/manifests/shortline.json', stage / 'manifests/shortline.json')
+          archive = Path('public') / manifest['sourceArchive'].lstrip('/')
+          data = archive.read_bytes()
+          assert len(data) == manifest['sourceArchiveBytes']
+          assert hashlib.sha256(data).hexdigest() == manifest['sourceArchiveSha256']
+          shutil.copyfile(archive, stage / 'sources' / archive.name)
+          for item in manifest['files']:
+              source = Path('public') / manifest['base'].lstrip('/') / item['path']
+              data = source.read_bytes()
+              assert len(data) == item['bytes']
+              assert hashlib.sha256(data).hexdigest() == item['sha256']
+              shutil.copyfile(source, stage / manifest['base'].lstrip('/') / item['path'])
+          print('Candidate archive and runtime checksums passed; deployment remains separate.')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: open-junction-release-candidate
+          path: /tmp/oj-release-artifact/
+          retention-days: 1

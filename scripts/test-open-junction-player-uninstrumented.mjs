@@ -6,6 +6,7 @@ import { setTimeout as delay } from 'node:timers/promises';
 import { chromium } from '@playwright/test';
 
 const origin = 'http://127.0.0.1:4322';
+const saveVersion = process.env.OPEN_JUNCTION_SAVE_VERSION || 'open-junction-private-1';
 const server = spawn(process.execPath, ['scripts/serve.mjs'], { stdio: 'ignore' });
 let browser;
 try {
@@ -97,7 +98,7 @@ try {
   const downloadPromise = page.waitForEvent('download', { timeout: 10_000 });
   await page.locator('#export-save').click();
   const backup = JSON.parse(await readFile(await (await downloadPromise).path(), 'utf8'));
-  if (backup.game !== 'shortline' || backup.version !== 'open-junction-private-1' ||
+  if (backup.game !== 'shortline' || backup.version !== saveVersion ||
       !backup.files.some(file => files.some(item => item.path === file.path && item.size === file.data.length)))
     throw new Error('Release-like player exported an incomplete backup');
   page.once('dialog', dialog => dialog.accept());
