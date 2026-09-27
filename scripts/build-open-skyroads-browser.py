@@ -100,7 +100,7 @@ def stage(source: Path, output: Path, roads: Path, visuals: Path, support: Path)
     cmake = src / 'CMakeLists.txt'
     cmake_body = cmake.read_text(encoding='utf-8')
     cmake_before = 'LINK_FLAGS "-sUSE_SDL=2 -sALLOW_MEMORY_GROWTH=1 ${PRELOAD}"'
-    cmake_after = 'LINK_FLAGS "-sUSE_SDL=2 -sALLOW_MEMORY_GROWTH=1 -sFORCE_FILESYSTEM=1 -lidbfs.js --pre-js ${CMAKE_SOURCE_DIR}/open_skyways_pre.js ${PRELOAD}"'
+    cmake_after = 'LINK_FLAGS "-sUSE_SDL=2 -sALLOW_MEMORY_GROWTH=1 -sFORCE_FILESYSTEM=1 -sEXPORTED_RUNTIME_METHODS=FS,IDBFS -lidbfs.js --pre-js ${CMAKE_SOURCE_DIR}/open_skyways_pre.js ${PRELOAD}"'
     if cmake_body.count(cmake_before) != 1:
         raise ValueError('Pinned web linker flags changed upstream')
     cmake.write_text(cmake_body.replace(cmake_before, cmake_after), encoding='utf-8')
