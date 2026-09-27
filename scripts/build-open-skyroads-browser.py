@@ -50,6 +50,36 @@ def patch_shell(source: Path) -> None:
     if body.count(before) != 1:
         raise ValueError('Pinned audio initialization block changed upstream')
     body = body.replace(before, after)
+    if body.count('SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)') != 1:
+        raise ValueError('Pinned SDL initialization block changed upstream')
+    body = body.replace('SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)', 'SDL_Init(SDL_INIT_VIDEO)')
+    browser_setup = '''#ifdef __EMSCRIPTEN__
+    snprintf(data_dir, sizeof data_dir, "/data");
+#endif'''
+    browser_setup_after = '''#ifdef __EMSCRIPTEN__
+    snprintf(data_dir, sizeof data_dir, "/data");
+    snprintf(pref_dir, sizeof pref_dir, "/save");
+#endif'''
+    if body.count(browser_setup) != 1:
+        raise ValueError('Pinned browser data path changed upstream')
+    body = body.replace(browser_setup, browser_setup_after)
+    write_return = '''        if (n == size)
+            return true;'''
+    write_return_after = '''        if (n == size) {
+#ifdef __EMSCRIPTEN__
+            EM_ASM({ FS.syncfs(false, function(err) {
+                if (err) console.error('Open Skyways save sync failed', err);
+            }); });
+#endif
+            return true;
+        }'''
+    if body.count(write_return) != 1:
+        raise ValueError('Pinned file write block changed upstream')
+    body = body.replace(write_return, write_return_after)
+    write_dirs = 'const char *dirs[2] = { data_dir, pref_dir };'
+    if body.count(write_dirs) != 1:
+        raise ValueError('Pinned file write directories changed upstream')
+    body = body.replace(write_dirs, 'const char *dirs[2] = { pref_dir, data_dir };')
     if body.count('SDL_CreateWindow("SkyRoads"') != 1:
         raise ValueError('Pinned SDL title changed upstream')
     body = body.replace('SDL_CreateWindow("SkyRoads"', 'SDL_CreateWindow("Open Skyways"')
@@ -67,6 +97,25 @@ def stage(source: Path, output: Path, roads: Path, visuals: Path, support: Path)
     for relative in ('src/core', 'src/platform/sdl', 'src/thirdparty'):
         shutil.copytree(source / relative, src / relative)
     patch_shell(src)
+    cmake = src / 'CMakeLists.txt'
+    cmake_body = cmake.read_text(encoding='utf-8')
+    cmake_before = 'LINK_FLAGS "-sUSE_SDL=2 -sALLOW_MEMORY_GROWTH=1 ${PRELOAD}"'
+    cmake_after = 'LINK_FLAGS "-sUSE_SDL=2 -sALLOW_MEMORY_GROWTH=1 -sFORCE_FILESYSTEM=1 -lidbfs.js --pre-js ${CMAKE_SOURCE_DIR}/open_skyways_pre.js ${PRELOAD}"'
+    if cmake_body.count(cmake_before) != 1:
+        raise ValueError('Pinned web linker flags changed upstream')
+    cmake.write_text(cmake_body.replace(cmake_before, cmake_after), encoding='utf-8')
+    (src / 'open_skyways_pre.js').write_text('''// Mount private browser storage and load prior progress before main().
+Module.preRun = Module.preRun || [];
+Module.preRun.push(function () {
+  FS.mkdir('/save');
+  FS.mount(IDBFS, {}, '/save');
+  addRunDependency('open-skyways-saves');
+  FS.syncfs(true, function (error) {
+    if (error) console.error('Open Skyways save load failed', error);
+    removeRunDependency('open-skyways-saves');
+  });
+});
+''', encoding='utf-8')
     locations = [roads, visuals, support]
     entries = []
     for name in DATA:
@@ -87,7 +136,8 @@ def stage(source: Path, output: Path, roads: Path, visuals: Path, support: Path)
         'upstreamRevision': PIN,
         'codeLicense': 'MIT (third-party files retain their own licenses)',
         'replacementLicense': 'CC0-1.0 independently authored',
-        'audio': 'SDL_OpenAudioDevice omitted; no music or SFX files packaged',
+        'audio': 'SDL audio subsystem and device omitted; no music or SFX files packaged',
+        'persistence': 'IDBFS /save mounted before main; cfg writes sync to IndexedDB',
         'replacements': entries,
     }
     (output / 'build-record.json').write_text(json.dumps(record, indent=2) + '\n', encoding='utf-8')
