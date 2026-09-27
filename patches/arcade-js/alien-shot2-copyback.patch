@@ -1,0 +1,29 @@
+diff --git a/games/invaders/idiomatic/alienShotSlot2Handler.js b/games/invaders/idiomatic/alienShotSlot2Handler.js
+index fbd4eb8a..3c319825 100644
+--- a/games/invaders/idiomatic/alienShotSlot2Handler.js
++++ b/games/invaders/idiomatic/alienShotSlot2Handler.js
+@@ -5,6 +5,7 @@ import { stepAlienShot } from "./stepAlienShot.js";
+ import { copyWorkBufferToRecord } from "./copyWorkBufferToRecord.js";
+ import { blockCopy } from "./blockCopy.js";
+ import {
++  OBJECT_WORK_BUFFER,
+   loc_1b32, loc_2032, ALIEN_SHOT2_STEP_GATE, loc_2035, loc_2046, ALIEN_SHOT_RATE_GATE0, loc_2056, ALIEN_SHOT_RATE_GATE_1,
+   ALIEN_SHOT_BLOWUP_TIMER, ALIEN_SHOT_SLOT2_RECORD, ALIEN_SHOT_SLOT2_TEMPLATE,
+ } from "./names.js";
+@@ -58,9 +59,13 @@ export function alienShotSlot2Handler(m) {
+   // blowup animation while it is exploding, else descend one step, redraw with collision, and retire
+   // across the shield/ground bands or launch a fresh shot from a firing column.
+   stepAlienShot(m);
+-  // If the shot is mid-explosion (ALIEN_SHOT_BLOWUP_TIMER 0x2078 nonzero), write the edited working
+-  // strip back into the record so the blowup animation persists across frames.
+-  if (m.mem8[ALIEN_SHOT_BLOWUP_TIMER] !== 0) return copyWorkBufferToRecord(m, loc_2035);
++  // Experimental independent-data adaptation: keep the edited work strip
++  // across frames while the shot flies or blows up. The translated branch
++  // otherwise reseeds the template each pass and loses the live shot state.
++  // A zero blowup timer after bit 0 is set ends this shot and reseeds it.
++  const status = m.mem8[OBJECT_WORK_BUFFER];
++  if ((status & 0x80) && ((status & 0x01) === 0 || m.mem8[ALIEN_SHOT_BLOWUP_TIMER] !== 0))
++    return copyWorkBufferToRecord(m, loc_2035);
+   // Otherwise reseed the entire 16-byte record from its ROM template (ALIEN_SHOT_SLOT2_TEMPLATE -> ALIEN_SHOT_SLOT2_RECORD), returning
+   // the record to its template state for the next launch cycle.
+   blockCopy(m, ALIEN_SHOT_SLOT2_TEMPLATE, ALIEN_SHOT_SLOT2_RECORD, 16);

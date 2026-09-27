@@ -22,8 +22,15 @@ const trailPatchSha256 = trailDiff.length ? createHash('sha256').update(trailDif
 if (trailExperiment && trailPatchSha256 !== 'e76a8d64ae69816b66f4abfa6ce73d77464267265e9488c000b049c4a2e52366')
   throw new Error(`Unexpected trail patch checksum ${trailPatchSha256}`);
 if (!trailExperiment && trailPatchSha256) throw new Error('Unexpected trail patch without --trail-experiment');
+const shot2Experiment = process.argv.includes('--shot2-experiment');
+const shot2Diff = execFileSync('git', ['diff', '--binary', '--', 'games/invaders/idiomatic/alienShotSlot2Handler.js'], { cwd: checkout });
+const shot2PatchSha256 = shot2Diff.length ? createHash('sha256').update(shot2Diff).digest('hex') : null;
+if (shot2Experiment && shot2PatchSha256 !== 'c1a645c39d2482405b8d11bd6949beda576bcf03a6dda76e2f113bdea8cd6ca7')
+  throw new Error(`Unexpected shot-2 patch checksum ${shot2PatchSha256}`);
+if (!shot2Experiment && shot2PatchSha256) throw new Error('Unexpected shot-2 patch without --shot2-experiment');
 const excluded = ['.', ':(exclude)games/invaders/idiomatic/reverseFleetAtEdge.js'];
 if (trailExperiment) excluded.push(':(exclude)games/invaders/idiomatic/drawPendingAlien.js');
+if (shot2Experiment) excluded.push(':(exclude)games/invaders/idiomatic/alienShotSlot2Handler.js');
 const otherTrackedChanges = execFileSync('git', ['diff', '--name-only', '--', ...excluded], { cwd: checkout, encoding: 'utf8' }).trim();
 if (otherTrackedChanges) throw new Error(`Unexpected tracked changes in pinned source: ${otherTrackedChanges}`);
 const moduleAt = (path) => import(pathToFileURL(join(checkout, path)).href);
@@ -97,6 +104,8 @@ let minShotY = 255;
 let maxShotY = 0;
 let alienShot2LiveFrames = 0;
 let alienShot2BlowupFrames = 0;
+let minAlienShotY = 255;
+let maxAlienShotY = 0;
 let maxPlayer1ScoreRaw = 0;
 const shotSamples = [];
 const fleetSamples = [];
@@ -111,7 +120,11 @@ const result = runIdiomaticGame(machine, {
   maxFrames,
   onFrame: (m, frame) => {
     currentFrame = frame;
-    if (m.mem8[0x2035] & 0x80) alienShot2LiveFrames++;
+    if (m.mem8[0x2035] & 0x80) {
+      alienShot2LiveFrames++;
+      minAlienShotY = Math.min(minAlienShotY, m.mem8[0x203d]);
+      maxAlienShotY = Math.max(maxAlienShotY, m.mem8[0x203d]);
+    }
     if (m.mem8[0x2035] & 0x01) alienShot2BlowupFrames++;
     maxPlayer1ScoreRaw = Math.max(maxPlayer1ScoreRaw, m.mem16[0x20f8]);
     if (m.mem8[GAME_IN_PROGRESS] !== 0 && firstPlayFrame === null) firstPlayFrame = frame;
@@ -205,6 +218,7 @@ console.log(JSON.stringify({
   upstreamRevision: actual,
   sourcePatchSha256,
   trailPatchSha256,
+  shot2PatchSha256,
   trailPositions: trailExperiment ? Array.from(machine._openSwarmAlienPositions || [], ([key, packed]) => ({ key, packed, base: 0x2000 | ((packed >> 3) & 0x1fff) })) : undefined,
   headerGlyphPixels: Array.from({ length: 28 }, (_, glyph) => Array.from({ length: 8 }, (_, row) => machine.mem8[0x241e + glyph * 0x100 + row * 0x20]).reduce((sum, byte) => sum + Number(byte !== 0), 0)),
   inputData,
@@ -223,6 +237,12 @@ console.log(JSON.stringify({
   shotFrames,
   alienShot2LiveFrames,
   alienShot2BlowupFrames,
+  alienShot2Status: machine.mem8[0x2035],
+  alienShotStep: machine.mem8[0x207e],
+  alienShotBlowupTimer: machine.mem8[0x2078],
+  alienShot2Y: machine.mem8[0x203d],
+  minAlienShotY: minAlienShotY === 255 ? null : minAlienShotY,
+  maxAlienShotY,
   maxPlayer1ScoreRaw,
   alienShot2Gate: machine.mem16[0x2038],
   shipReadyFlag: machine.mem8[0x2069],

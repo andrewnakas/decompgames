@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Draft independent text/glyph data for the pinned arcade-js Invaders translation.
+"""Draft independent data for the pinned arcade-js Invaders translation.
 
-This deliberately leaves gameplay templates blank. It is an asset-format probe,
+Several gameplay templates remain incomplete. It is an asset-format probe,
 not a complete replacement image or a playable release. No original ROM is read.
-Usage: python scripts/generate-open-swarm-data.py OUTPUT_DIRECTORY
+Usage: python scripts/generate-open-swarm-data.py OUTPUT_DIRECTORY [--shot2-experiment]
 """
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ CREDIT_LABEL = 0x1FA9
 IDENTITY = "OPEN SWARM"
 
 
-def generate(output: Path) -> None:
+def generate(output: Path, shot2_experiment: bool = False) -> None:
     output.mkdir(parents=True, exist_ok=True)
     # Reuse the five-column drafting alphabet authored for Open Junction.
     # That alphabet and these new table layouts are CC0-1.0; it was not
@@ -141,6 +141,12 @@ def generate(output: Path) -> None:
     data[0x1B3B:0x1B3D] = (0x1CED).to_bytes(2, "little")
     data[0x1B3D:0x1B3F] = (0x7050).to_bytes(2, "little")
     data[0x1B3F] = 3
+    if shot2_experiment:
+        # Private hostile-fire format experiment. It requires the separately
+        # pinned GPL shot-2 state-copyback patch; the baseline remains skipped.
+        data[0x1B30] = 0
+        data[0x1B3A] = 4  # short terminal blowup countdown
+        data[0x1B7E] = 0xFC  # signed -4 descent step in round work template
     data[0x1B60] = 0xFF
     # The invader-hit path fills the explosion coordinate at 0x2064/65.
     # Its surrounding descriptor still needs a safe authored bitmap and
@@ -195,10 +201,12 @@ def generate(output: Path) -> None:
         "file": {"name": "open-swarm-draft.bin", "bytes": len(image),
                  "sha256": hashlib.sha256(image).hexdigest()},
     }
+    if shot2_experiment:
+        manifest["experimentalVariation"] = "unskipped slot 2, four-tick blowup, signed -4 descent; requires shot-2 GPL source patch"
     (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        raise SystemExit("Usage: generate-open-swarm-data.py OUTPUT_DIRECTORY")
-    generate(Path(sys.argv[1]))
+    if len(sys.argv) not in (2, 3) or (len(sys.argv) == 3 and sys.argv[2] != "--shot2-experiment"):
+        raise SystemExit("Usage: generate-open-swarm-data.py OUTPUT_DIRECTORY [--shot2-experiment]")
+    generate(Path(sys.argv[1]), shot2_experiment=len(sys.argv) == 3)

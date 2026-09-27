@@ -12,6 +12,7 @@ const headerReview = process.argv.includes('--header-review');
 const edgeReview = process.argv.includes('--edge-review') || headerReview;
 const trailExperiment = process.argv.includes('--trail-experiment');
 const acceleratedLoop = process.argv.includes('--accelerated-loop');
+const shot2Experiment = process.argv.includes('--shot2-experiment');
 const probeFile = resolve('experiments/open-swarm-browser-probe.html');
 const revision = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: checkout, encoding: 'utf8' }).trim();
 if (revision !== 'e849d086f4168c9a0e1ab501d62efbe3766def8a') throw Error(`Unexpected arcade-js revision ${revision}`);
@@ -23,8 +24,14 @@ if (trailExperiment) {
   const trailSha256 = createHash('sha256').update(trailDiff).digest('hex');
   if (trailSha256 !== 'e76a8d64ae69816b66f4abfa6ce73d77464267265e9488c000b049c4a2e52366') throw Error(`Unexpected trail experiment patch ${trailSha256}`);
 }
+if (shot2Experiment) {
+  const shotDiff = execFileSync('git', ['diff', '--binary', '--', 'games/invaders/idiomatic/alienShotSlot2Handler.js'], { cwd: checkout });
+  const shotSha256 = createHash('sha256').update(shotDiff).digest('hex');
+  if (shotSha256 !== 'c1a645c39d2482405b8d11bd6949beda576bcf03a6dda76e2f113bdea8cd6ca7') throw Error(`Unexpected shot-2 experiment patch ${shotSha256}`);
+}
 const excluded = ['.', ':(exclude)games/invaders/idiomatic/reverseFleetAtEdge.js'];
 if (trailExperiment) excluded.push(':(exclude)games/invaders/idiomatic/drawPendingAlien.js');
+if (shot2Experiment) excluded.push(':(exclude)games/invaders/idiomatic/alienShotSlot2Handler.js');
 const otherChanges = execFileSync('git', ['diff', '--name-only', '--', ...excluded], { cwd: checkout, encoding: 'utf8' }).trim();
 if (otherChanges) throw Error(`Unexpected tracked changes in upstream checkout: ${otherChanges}`);
 const types = { '.js': 'text/javascript', '.html': 'text/html; charset=utf-8', '.bin': 'application/octet-stream' };
@@ -39,6 +46,13 @@ const server = createServer(async (request, response) => {
   }
   try {
     let bytes = await readFile(file);
+    if (pathname === '/web/open-swarm-probe.html' && shot2Experiment) {
+      const baseline = 'e2a57af4b03e7d7c653d3ded671002b445204c18789ab5a4158e8bee247051dc';
+      const experimental = 'c6a358501493da752dafa9e2f5cb6488d44625e220093937da255696d88026d8';
+      const html = bytes.toString('utf8');
+      if (!html.includes(baseline)) throw Error('Private probe checksum anchor changed');
+      bytes = Buffer.from(html.replace(baseline, experimental));
+    }
     if (pathname === '/web/worker.js') {
       // Private observation only: emit a small state sample without changing
       // game execution, input, renderer, or the upstream checkout on disk.
@@ -52,7 +66,7 @@ const server = createServer(async (request, response) => {
         source = source.replace(pace, 'machine._next += 1000 / 1200;');
         source = source.replace(anchor, `${anchor}\n  const auto = machine._openSwarmAuto ||= { right: true, fireNext: false, firstOver: null };\n  if (frameIndex > 600) {\n    if (machine.mem8[0x201b] >= 210) auto.right = false;\n    if (machine.mem8[0x201b] <= 48) auto.right = true;\n  }\n  if (frameIndex > 600 && machine.mem8[0x2025] === 0) auto.fireNext = !auto.fireNext;\n  else auto.fireNext = false;\n  if (frameIndex > 600 && machine.mem8[0x20ef] === 0 && auto.firstOver === null && auto.seenPlay) auto.firstOver = frameIndex;\n  if (machine.mem8[0x20ef]) auto.seenPlay = true;\n  let virtualInput = 0;\n  if (frameIndex >= 300 && frameIndex < 306) virtualInput |= 1;\n  if (frameIndex >= 360 && frameIndex < 366) virtualInput |= 4;\n  if (auto.firstOver !== null) {\n    if (frameIndex >= auto.firstOver + 245 && frameIndex < auto.firstOver + 251) virtualInput |= 1;\n    if (frameIndex >= auto.firstOver + 305 && frameIndex < auto.firstOver + 311) virtualInput |= 4;\n  }\n  if (frameIndex > 600) virtualInput |= auto.right ? 64 : 32;\n  if (frameIndex > 600 && auto.fireNext) virtualInput |= 16;\n  machine.io.inputAssert[PORTS.in1] = virtualInput;`);
       }
-      source = source.replace(anchor, `${anchor}\n  if (frameIndex % 15 === 0 || (Atomics.load(ctrl, 1) & 5)) { const header = Array.from({ length: 28 }, (_, glyph) => Array.from({ length: 8 }, (_, row) => machine.mem8[0x241e + glyph * 0x100 + row * 0x20])); postMessage({ type: 'probe', frame: frameIndex, in1: Atomics.load(ctrl, 1), play: machine.mem8[0x20ef], shipX: machine.mem8[0x201b], shot: machine.mem8[0x2025], aliens: machine.mem8[0x2082], round: machine.mem8[0x21fe], score: machine.mem16[0x20f8], fleetDir: machine.mem8[0x200d], headerCells: header.filter(bytes => bytes.some(Boolean)).length, headerBits: header.flat().reduce((sum, byte) => { while (byte) { sum += byte & 1; byte >>= 1; } return sum; }, 0) }); }`);
+      source = source.replace(anchor, `${anchor}\n  if (frameIndex % 15 === 0 || (Atomics.load(ctrl, 1) & 5)) { const header = Array.from({ length: 28 }, (_, glyph) => Array.from({ length: 8 }, (_, row) => machine.mem8[0x241e + glyph * 0x100 + row * 0x20])); postMessage({ type: 'probe', frame: frameIndex, in1: Atomics.load(ctrl, 1), play: machine.mem8[0x20ef], shipX: machine.mem8[0x201b], shot: machine.mem8[0x2025], alienShot2: machine.mem8[0x2035], alienShot2Y: machine.mem8[0x203d], aliens: machine.mem8[0x2082], round: machine.mem8[0x21fe], score: machine.mem16[0x20f8], fleetDir: machine.mem8[0x200d], headerCells: header.filter(bytes => bytes.some(Boolean)).length, headerBits: header.flat().reduce((sum, byte) => { while (byte) { sum += byte & 1; byte >>= 1; } return sum; }, 0) }); }`);
       bytes = Buffer.from(source);
     }
     response.writeHead(200, {
@@ -126,6 +140,7 @@ try {
     moved: Math.max(...probes.filter(p => p.frame >= 600).map(p => p.shipX)) > Math.min(...probes.filter(p => p.frame >= 600).map(p => p.shipX)),
     shot: probes.some(p => p.shot),
     alienCount: Math.max(...probes.map(p => p.aliens)),
+    alienShot2LiveSamples: probes.filter(p => p.alienShot2 & 0x80).length,
   };
   const loopProof = acceleratedLoop ? {
     firstPlay: probes.find(p => p.play)?.frame ?? null,
