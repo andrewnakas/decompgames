@@ -1281,39 +1281,47 @@
   },
   {
     "id": "shortline",
-    "title": "ShortLine",
+    "title": "Open Junction",
     "aliases": [
+      "ShortLine",
       "reSL"
     ],
     "year": 1992,
     "genre": "Simulation",
     "kind": "Decompilation",
-    "mode": "project",
+    "mode": "instant",
     "engine": "reSL",
-    "description": "Research a reverse-engineered rail-dispatch simulation reconstructed from the 1992 DOS executable.",
-    "overview": "reSL reconstructs ShortLine 1.1 in portable C++ with an Emscripten target. Its upstream resource directory contains original game data, so Decomp Games does not distribute that build. A separate Open Junction candidate uses independently generated screens, fonts, glyphs, buttons, cursor, colors, and scenario data, with original speaker sequences removed. Private muted browser tests completed early and later deliveries, including naturally assigned 5-to-4, 5-to-1, 1-to-4, and 0-to-5 trips across separate six-station runs with player-built rails and operated switches. One run naturally crossed year 2000 after private hooks had skipped earlier station-creation years; two reached out-of-money defeats. Continuous 1800-to-2000 progression, stable economic balance, and final release review remain open. The shared player's save backup round trip passed privately. This page remains a project directory entry.",
+    "description": "Build connecting rails and dispatch trains across a new six-station network.",
+    "overview": "Open Junction pairs the reSL reconstruction of ShortLine with independently authored CC0 screens, fonts, vehicles, rails, buttons, cursor, colors, and scenario data. The browser package excludes the upstream game-data directory and original speaker sequences. Private silent browser tests completed multiple naturally assigned deliveries, including later-station journeys after player-built rails and switch operation. The published build has no private trace hooks. Its continuous 1800-to-2000 progression and full repeat-level campaign remain unverified.",
     "source": "https://github.com/konovalov-aleks/reSL",
     "engineLicense": "GPL-3.0",
-    "assetLicense": "Original upstream resources excluded; independent CC0 replacement candidate remains private",
-    "assetRequirements": "The upstream build includes original ShortLine resources. Decomp Games currently provides project research only and serves none of those files.",
+    "assetLicense": "CC0-1.0 independently authored Open Junction replacement data",
+    "assetRequirements": "No original ShortLine files needed. The included replacement package supplies its own graphics, text, six-station board, and silent audio backend.",
     "controls": [
-      "The private Open Junction test used Go, pause, save, and mouse rail construction. No public browser player is available yet."
+      "Choose Go in the main menu to start",
+      "Space — switch between management and construction",
+      "Construction: hover over a buildable diamond, left-click to cycle rail shapes, then right-click to place the selected rail",
+      "Management: left-click switches and signals to route trains",
+      "1, 2, 3 — set simulation speed",
+      "Click the in-game menu button to pause, Save, or return to the menu"
     ],
-    "saveInstructions": "Follow upstream save instructions. No supported Decomp Games player or save namespace exists yet.",
+    "saveInstructions": "Use the in-game Pause menu’s Save action, then Archive and Go from the main menu to resume. Saves stay in this browser. Use Export saves in the player toolbar for a portable backup before clearing browser data; private export/delete/import restoration passed.",
     "limitations": [
-      "Directory entry only; no Open Junction browser build is distributed.",
-      "The private candidate has independent replacement art and multiple naturally assigned late-station deliveries, but uninterrupted 1800-to-2000 progression, economy balance, and final release review are unfinished.",
-      "Private muted testing does not establish a public player, a complete campaign playthrough, or audible sound support."
+      "A train needs its departure and destination switches set before it reaches each junction; a missed turn can leave it circling the board.",
+      "The complete 1800-to-2000 period, repeat-level campaign, and long-term economic balance have not been verified.",
+      "This build has a null audio backend. Audible sound has not been tested or enabled.",
+      "The immutable package passed private browser tests; public production gameplay is still being checked."
     ],
-    "inputs": [],
-    "downloadMB": null,
+    "inputs": ["Keyboard", "Mouse"],
+    "downloadMB": 1.8,
     "complete": false,
     "color": "#5ab4ac",
+    "runtime": "shortline",
     "verification": {
-      "status": "unverified",
-      "date": "2026-09-26",
-      "browsers": [],
-      "scope": "Pinned reSL revision 470cca330ee9abcf6173c843f4c89686c0c7e525. A separate replacement-only candidate passed private, silent Chromium checks for early deliveries, naturally assigned fourth-station trips, and separate 5-to-4, 5-to-1, 1-to-4, and 0-to-5 services after player-built rails and switch input. Save/reload/Archive and backup restoration passed. A private run naturally entered level 2 from a trace-selected late era; two reached organic out-of-money losses, most recently during sixth-station construction. Adding stations five and six still required private year jumps, so uninterrupted 1800-to-2000 play remains unverified. No engine binary or game data was published, and the public player remains unverified.",
+      "status": "smoke-tested",
+      "date": "2026-09-27",
+      "browsers": ["Headless Chromium on Linux (private CI)"],
+      "scope": "The pinned replacement build passed silent private gameplay checks for rail construction, switch input, naturally assigned completed deliveries, an isolated six-station route, and in-game Save/Archive. The exact immutable uninstrumented package passed a shared-player export/delete/import/Archive round trip. Its public production gameplay and persistence test is pending; the full repeat-level campaign remains unverified.",
       "playthrough": false
     }
   },

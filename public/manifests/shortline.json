@@ -1,0 +1,203 @@
+{
+  "id": "shortline",
+  "engine": "resl",
+  "packageRevision": "470cca330ee9-d1e3c65b2a",
+  "repository": "https://github.com/konovalov-aleks/reSL",
+  "sourceRevision": "470cca330ee9abcf6173c843f4c89686c0c7e525",
+  "recipeRevision": "e9e54987aab714ac190aa346bf83982d1a215382",
+  "toolchain": "emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 6.0.1 (25e4e8d6550d392ba9e0c2936bce7cf41ee47cc0)",
+  "recipe": "scripts/build-resl-browser.py",
+  "sourceArchive": "/sources/open-junction-470cca330ee9-d1e3c65b2a.tar.gz",
+  "sourceArchiveBytes": 195615,
+  "sourceArchiveSha256": "ccfd3a56d55329c4b1a6b83293de504410a0bbcfe0b8167545e98b8c0f1fb6e6",
+  "base": "/runtime/shortline/470cca330ee9-d1e3c65b2a/",
+  "script": "resl.js",
+  "files": [
+    {
+      "path": "resl.js",
+      "bytes": 189627,
+      "sha256": "a709ab510dbb796957ec1b7ee8a1a18d9dceba0bddb623dadc21e397c5d3cbbd"
+    },
+    {
+      "path": "resl.wasm",
+      "bytes": 1559982,
+      "sha256": "28207909c831b7198a55f1c7406fcfc117b5d4b09b9532cc7c37e748c15e11ff"
+    }
+  ],
+  "requirements": [
+    "WebAssembly",
+    "Keyboard",
+    "Mouse"
+  ],
+  "saveVersion": "open-junction-replacement-v1",
+  "saveRoots": [
+    "/persistent"
+  ],
+  "mountSave": true,
+  "assets": [],
+  "args": [
+    "--windowed"
+  ],
+  "audioBackend": "null",
+  "replacementData": {
+    "license": "CC0-1.0",
+    "externalAssets": [
+      {
+        "name": "GAMEOVER.7",
+        "bytes": 11492,
+        "sha256": "fed29d680a1ab48f00399f14ab62dcb53ccbfe10fe2cfcdfb6bea5ab4ee23684"
+      },
+      {
+        "name": "RULES.TXT",
+        "bytes": 391,
+        "sha256": "1e5a2be6083786b3b08c615dbb05ad94074b1521d374403c49308cef95e86dfb"
+      },
+      {
+        "name": "build_rail_icon.png",
+        "bytes": 124,
+        "sha256": "c910137c03393855554bcf1e78b60870047d9ea8baef6c65d48be5e761fce301"
+      },
+      {
+        "name": "call_server_icon.png",
+        "bytes": 126,
+        "sha256": "70fa51600767bcf11ff908e323c81fcb6d3d9ec41788b8dc0fe9c7d032b47f99"
+      },
+      {
+        "name": "captions.7",
+        "bytes": 14030,
+        "sha256": "717e2b093f77223be9fa1042b472c5d536809857ea14b9951eaf36c68ee20eb1"
+      },
+      {
+        "name": "play.7",
+        "bytes": 19700,
+        "sha256": "ebcbadb2de512c3b09401ee8b869d19733bc2231d5f667932ab3a3a7beed984f"
+      },
+      {
+        "name": "poster.7",
+        "bytes": 22458,
+        "sha256": "65c0a27d284b02bcdef82f049de242effabe49486308bdfe895662df318f5c4e"
+      },
+      {
+        "name": "time_fast2.png",
+        "bytes": 132,
+        "sha256": "58e782288443ff27a2000a1b5f1e1c9f0c85e674f6c5eccbf21f14c338ca42bf"
+      },
+      {
+        "name": "time_fast3.png",
+        "bytes": 125,
+        "sha256": "ccee023d4b9a864ebca2aa456542b24ab3b22ef862feed958ee16e1ae1e6d74c"
+      }
+    ],
+    "glyphs": [
+      {
+        "name": "dispatcher_glyph.cpp",
+        "bytes": 1025,
+        "sha256": "ba553569f688fb1058720a8dd6c203814a29db2674afa28a06c004570fe3c170"
+      },
+      {
+        "name": "glyph_empty_background.cpp",
+        "bytes": 435,
+        "sha256": "351ca6adf86d498b2b35bd523e97cf74dd2a559159816119a3ba691dd0a441af"
+      },
+      {
+        "name": "impasse_glyph.cpp",
+        "bytes": 632,
+        "sha256": "ba3f1ab8ccab8d0131d2c3930e90bcd4cd179b5516f632dc2674c42d8c4a15c6"
+      },
+      {
+        "name": "rail_glyph.cpp",
+        "bytes": 115535,
+        "sha256": "0649cf855b817e33d7eb30c70f3d16a0075bb132fc4211c15e0cefa3a1710b69"
+      },
+      {
+        "name": "semaphore_glyph.cpp",
+        "bytes": 1299,
+        "sha256": "a94a6997bb3dac3b398abb511642e86fe5472865bf7152777555420e66680926"
+      },
+      {
+        "name": "semaphore_glyph_bias.cpp",
+        "bytes": 407,
+        "sha256": "d760897850929b8b74275a148ac494a20a3598b64c6b98b211068a38e6004c1e"
+      },
+      {
+        "name": "small_font.cpp",
+        "bytes": 21723,
+        "sha256": "08567cfb902f2cd9f9b2ec2dc09c1b4af58ec1a7bbe82168d17caed91389a517"
+      },
+      {
+        "name": "static_object_glyph.cpp",
+        "bytes": 3829,
+        "sha256": "d6a41a7e49264524e533638109813bd85d8ee96309f45648cc3b8123cb8e65b5"
+      },
+      {
+        "name": "text_glyphs.cpp",
+        "bytes": 23343,
+        "sha256": "07a666d8eddfc2ccde5f4a710b126bbcae418735fe40f45d13b472025e8b84fd"
+      },
+      {
+        "name": "train_finished_exclamation_glyph.cpp",
+        "bytes": 1308,
+        "sha256": "7a85ad4cffd36fc5767c536d141ea0eed652fea7f997f1a2ef40981b0fd3aec3"
+      },
+      {
+        "name": "train_glyph.cpp",
+        "bytes": 38059,
+        "sha256": "abab2806c9c0e3df356950f283d5547af545576bcb0198a269c32be4845fda3d"
+      }
+    ],
+    "scenario": [
+      {
+        "name": "allowed_cursor_rail_types.cpp",
+        "bytes": 1036,
+        "sha256": "8f96ba06c41917a4dcf575076a718fb5fadc54a117e82e0af6ed15020d351903"
+      },
+      {
+        "name": "carriage_bias.cpp",
+        "bytes": 538,
+        "sha256": "fbef3b78d3dc148c1f6c36e656e8d130eb2fede59324886a92e64c214dc3cca6"
+      },
+      {
+        "name": "chunk_bounding_boxes.cpp",
+        "bytes": 393,
+        "sha256": "aa377a885e2fe6320a884fa9ebbaa8b432780c84b9c97c7678c99b27652851ec"
+      },
+      {
+        "name": "entrance.cpp",
+        "bytes": 603,
+        "sha256": "73f1adaff7fdf1aebf0aaf203ca81a5fe2c2be99e1bc09c0704877ba1f6984fc"
+      },
+      {
+        "name": "entrance_rails.cpp",
+        "bytes": 1191,
+        "sha256": "d5c9ff7137dc05e8422bffd4d7a6c54f8eef9b941a94160474ff293a125137de"
+      },
+      {
+        "name": "train_specification.cpp",
+        "bytes": 2800,
+        "sha256": "00fc527646f37c5b9a1557bc0c6fff5ae76189daa59ca07877e1057ef9631bd7"
+      }
+    ],
+    "buttons": {
+      "source": "src/ui/components/button.cpp",
+      "count": 4,
+      "dimensions": "24x21 controls; 24x15 highlight",
+      "generator": "scripts/build-resl-browser.py:independent_button_mask",
+      "generatedSectionSha256": "b89950c89afcbb7cace1ed707c11c630ba6f567676c407595e68cbef98902e64",
+      "license": "CC0-1.0"
+    }
+  },
+  "verificationEvidence": [
+    {
+      "scope": "full muted gameplay",
+      "run": 36280382582,
+      "url": "https://github.com/andrewnakas/decompgames/actions/runs/36280382582",
+      "recipeRevision": "7aa2b4a30fb2a630b5abc60ba5ecab871dd27183"
+    },
+    {
+      "scope": "uninstrumented shared player",
+      "run": 36277343530,
+      "url": "https://github.com/andrewnakas/decompgames/actions/runs/36277343530",
+      "recipeRevision": "188c20cda49e67345b4ab3311ab81ba80c305af7"
+    }
+  ]
+}
