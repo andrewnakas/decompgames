@@ -3,6 +3,10 @@ layout: ../../layouts/Article.astro
 title: What’s new
 description: Release notes and compatibility changes for Decomp Games.
 ---
+## September 27, 2026 — Open Junction is playable
+
+Open Junction pairs the documented reSL decompilation with independently authored CC0 art, interface, and six-station scenario data. The pinned WebAssembly build excludes original game resources and uses a null audio backend. Muted private tests covered player-built rails, switch routing, natural train deliveries, Save/Archive, and six-station cases. The deployed package passed a natural completed-train delivery and a save export/delete/import/restore cycle in an isolated, silent browser test. Uninterrupted 1800–2000 progression and the repeat-level campaign remain unverified. [Play Open Junction](/games/shortline/).
+
 ## September 22, 2026 — Open Paths is playable
 
 Open Paths combines the documented OpenSupaplex decompilation with six original CC0 navigation mazes and independently generated graphics, screens, fonts, palettes, and panel data. The null-audio WebAssembly build passed muted local and production tests for launch, menu input, player creation, movement, first-level completion, fresh-start progress, and backup export/delete/import restoration. The full six-level playthrough remains unverified.

@@ -1305,23 +1305,22 @@
       "1, 2, 3 — set simulation speed",
       "Click the in-game menu button to pause, Save, or return to the menu"
     ],
-    "saveInstructions": "Use the in-game Pause menu’s Save action, then Archive and Go from the main menu to resume. Saves stay in this browser. Use Export saves in the player toolbar for a portable backup before clearing browser data; private export/delete/import restoration passed.",
+    "saveInstructions": "Use the in-game Pause menu’s Save action, then Archive and Go from the main menu to resume. Saves stay in this browser. Use Export saves in the player toolbar for a portable backup before clearing browser data; production export/delete/import restoration passed.",
     "limitations": [
       "A train needs its departure and destination switches set before it reaches each junction; a missed turn can leave it circling the board.",
       "The complete 1800-to-2000 period, repeat-level campaign, and long-term economic balance have not been verified.",
-      "This build has a null audio backend. Audible sound has not been tested or enabled.",
-      "The immutable package passed private browser tests; public production gameplay is still being checked."
+      "This build has a null audio backend. Audible sound has not been tested or enabled."
     ],
     "inputs": ["Keyboard", "Mouse"],
     "downloadMB": 1.8,
-    "complete": false,
+    "complete": true,
     "color": "#5ab4ac",
     "runtime": "shortline",
     "verification": {
-      "status": "smoke-tested",
+      "status": "gameplay-tested",
       "date": "2026-09-27",
-      "browsers": ["Headless Chromium on Linux (private CI)"],
-      "scope": "The pinned replacement build passed silent private gameplay checks for rail construction, switch input, naturally assigned completed deliveries, an isolated six-station route, and in-game Save/Archive. The exact immutable uninstrumented package passed a shared-player export/delete/import/Archive round trip. Its public production gameplay and persistence test is pending; the full repeat-level campaign remains unverified.",
+      "browsers": ["Headless Chromium on Linux (private CI)", "Headless Microsoft Edge on Windows (production)"],
+      "scope": "The pinned replacement build passed silent private gameplay checks for rail construction, switch input, naturally assigned completed deliveries, an isolated six-station route, and in-game Save/Archive. The exact immutable uninstrumented production package passed Go input, a natural delivery with the completed-train counter advancing, local Save, export/delete/import, and Archive/Go restoration in isolated headless Edge with audio muted. The full repeat-level campaign and uninterrupted 1800-to-2000 progression remain unverified.",
       "playthrough": false
     }
   },
