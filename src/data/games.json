@@ -1289,7 +1289,7 @@
     "mode": "instant",
     "engine": "skyroads-32x",
     "description": "Steer and jump a spacecraft through independently authored sky roads.",
-    "overview": "Open Skyways pairs a disassembly-derived SkyRoads engine with thirty independently authored roads and replacement menus, graphics, dashboard, HUD and geometric objects. It does not include Bluemoon’s original game data or music. In private silent browser tests, Road 01 reached the completion screen and retained a completion marker across reload. The other roads and a full thirty-road campaign remain unverified.",
+    "overview": "Open Skyways pairs a disassembly-derived SkyRoads engine with thirty independently authored roads and replacement menus, graphics, dashboard, HUD and geometric objects. It does not include Bluemoon’s original game data or music. Silent production browser testing completed Road 01 and restored its completion marker from an exported backup. The other roads and a full thirty-road campaign remain unverified.",
     "source": "https://github.com/haroldo-ok/skyroads-32x",
     "engineLicense": "MIT engine reconstruction; bundled third-party code retains its upstream license",
     "assetLicense": "CC0-1.0 independent Open Skyways replacement data",
@@ -1301,7 +1301,7 @@
       "Space — jump",
       "P — pause; Escape — return to the road menu"
     ],
-    "saveInstructions": "Completing a road records a completion marker automatically in this browser. Use Export saves for a portable backup before clearing browser data. Reload persistence passed a local private browser test; production backup restoration remains to be checked.",
+    "saveInstructions": "Completing a road records a completion marker automatically in this browser. Use Export saves for a portable backup before clearing browser data; export/delete/import restoration passed the September 27 production test.",
     "limitations": [
       "Thirty independent courses use minimalist replacement art. Only Road 01 has been observed through its completion gate; the full campaign remains unverified.",
       "Sound is permanently disabled in this build; audible playback has not been tested.",
@@ -1315,8 +1315,8 @@
     "verification": {
       "status": "gameplay-tested",
       "date": "2026-09-27",
-      "browsers": ["Headless Microsoft Edge on Windows (private local package)"],
-      "scope": "The private null-audio build displayed the menus and game road, responded visibly to steering and jump, completed Road 01 with held acceleration, saved one completion to IndexedDB, and showed the marker again after reload. Site player integration, backup export/import and production behavior remain unverified.",
+      "browsers": ["Headless Microsoft Edge on Windows (private package and production)"],
+      "scope": "The null-audio package displayed the menus and game road, responded visibly to steering and jump, completed Road 01 with held acceleration, saved one completion to IndexedDB, and showed the marker again after reload. The exact production package passed Road 01 completion, save export, deletion, import, and restored completion marker in muted Edge. The other 29 roads and full campaign remain unverified.",
       "playthrough": false
     }
   },

@@ -69,8 +69,12 @@ try {
   await page.keyboard.press('Enter');
   await delay(4_000);
   await writeFile('test-results/open-skyroads-site/chooser-restored.png', await canvas.screenshot());
-  if (errors.length || remote.length) throw new Error(JSON.stringify({ errors, remote }));
-  console.log('Local site shell completed Road 01 and restored exported backup silently; inspect saved marker screenshot.');
+  const unexpectedRemote = remote.filter(url => !url.startsWith('https://static.cloudflareinsights.com/beacon.min.js/'));
+  const unexpectedErrors = errors.filter(message => message !== 'Failed to load resource: net::ERR_FAILED');
+  if (unexpectedRemote.length || unexpectedErrors.length || errors.length > remote.length) {
+    throw new Error(JSON.stringify({ errors, remote }));
+  }
+  console.log(`Site shell completed Road 01 and restored the backup silently; ${remote.length} Cloudflare analytics requests blocked.`);
 } finally {
   await browser.close();
 }
