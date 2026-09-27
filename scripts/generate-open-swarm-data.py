@@ -38,6 +38,33 @@ def generate(output: Path) -> None:
         rows = [int(row, 2) << 2 for row in pattern] + [0]
         data[GLYPH_BASE + index * 8:GLYPH_BASE + (index + 1) * 8] = bytes(rows)
 
+    # The translated blitter reads six 16-byte alien frames from 0x1c00,
+    # followed by a reserve craft and a two-frame explosion at 0x1c60.
+    # These silhouettes were drawn for Open Swarm; the bytes are not taken
+    # from a game image. Keep this probe's gameplay tables blank.
+    craft = (
+        0b00011000, 0b00111100, 0b01111110, 0b11111111,
+        0b11011011, 0b11111111, 0b00100100, 0b01000010,
+        0b01000010, 0b00100100, 0b11111111, 0b11011011,
+        0b11111111, 0b01111110, 0b00111100, 0b00011000,
+    )
+    for frame in range(6):
+        mask = frame % 3
+        pattern = bytes((row ^ (0b00000001 << mask)) & 0xff for row in craft)
+        start = 0x1C00 + frame * 16
+        data[start:start + 16] = pattern
+    data[0x1C60:0x1C70] = bytes(craft)
+    data[0x1C70:0x1C90] = bytes(
+        (0b00011000 if row % 3 else 0b10100101) for row in range(32)
+    )
+    # The shield initializer copies exactly 0x2c bytes per bunker. Use an
+    # independent arch with a central opening so the buffer is nonblank.
+    shield = bytes(
+        0b11111111 if row < 22 else (0b11100111 if row < 36 else 0b11000011)
+        for row in range(44)
+    )
+    data[0x1D20:0x1D4C] = shield
+
     def write_text(offset: int, length: int, value: str) -> None:
         assert len(value) <= length
         encoded = bytes(ids[character] for character in value.ljust(length))
@@ -53,10 +80,13 @@ def generate(output: Path) -> None:
         "originalAssetsRead": False,
         "target": "arcade-js Space Invaders idiomatic translation",
         "upstreamRevision": "e849d086f4168c9a0e1ab501d62efbe3766def8a",
-        "authoredComponents": ["5x7 glyph shapes", "score header", "credit label"],
+        "authoredComponents": ["5x7 glyph shapes", "score header", "credit label",
+                               "six alien frames", "reserve craft", "explosion frames",
+                               "shield buffer template"],
         "missingComponents": [
-            "work-RAM and object templates", "alien and ship sprites", "score and fire-rate tables",
-            "shield art", "attract and game-over scripts", "complete tested gameplay",
+            "work-RAM and object templates", "remaining in-game sprite descriptors",
+            "score and fire-rate tables", "attract and game-over scripts",
+            "complete tested gameplay",
         ],
         "file": {"name": "open-swarm-draft.bin", "bytes": len(image),
                  "sha256": hashlib.sha256(image).hexdigest()},
