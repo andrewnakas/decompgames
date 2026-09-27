@@ -95,6 +95,8 @@ let collisionFrames = 0;
 let shotHitFrames = 0;
 let minShotY = 255;
 let maxShotY = 0;
+let alienShot2LiveFrames = 0;
+let alienShot2BlowupFrames = 0;
 const shotSamples = [];
 const fleetSamples = [];
 let firstBothEdgesFrame = null;
@@ -108,6 +110,8 @@ const result = runIdiomaticGame(machine, {
   maxFrames,
   onFrame: (m, frame) => {
     currentFrame = frame;
+    if (m.mem8[0x2035] & 0x80) alienShot2LiveFrames++;
+    if (m.mem8[0x2035] & 0x01) alienShot2BlowupFrames++;
     if (m.mem8[GAME_IN_PROGRESS] !== 0 && firstPlayFrame === null) firstPlayFrame = frame;
     const count = m.mem8[ALIEN_COUNT];
     if (count !== 0 && firstLiveFleetFrame === null) firstLiveFleetFrame = frame;
@@ -215,6 +219,12 @@ console.log(JSON.stringify({
   minShipX: minShipX === 255 ? null : minShipX,
   maxShipX,
   shotFrames,
+  alienShot2LiveFrames,
+  alienShot2BlowupFrames,
+  alienShot2Gate: machine.mem16[0x2038],
+  shipReadyFlag: machine.mem8[0x2069],
+  alienShotRate: machine.mem8[0x20cf],
+  alienShotRateGates: [machine.mem8[0x2070], machine.mem8[0x2071]],
   marchingFrames,
   maxDrawIndex,
   collisionFrames,

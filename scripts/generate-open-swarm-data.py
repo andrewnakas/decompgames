@@ -67,6 +67,18 @@ def generate(output: Path) -> None:
         (0b00011000 if row % 3 else 0b10100101) for row in range(32)
     )
     data[0x1C90:0x1C98] = bytes((0b00011000,) * 8)
+    # Three-byte frames for an experimental descending-shot data format.
+    # Its translated stepper adds three to the pointer and wraps at
+    # low byte 0xf9, so four frames must fill 0x1ced..0x1cf8.
+    shot_frames = (
+        0b00011000, 0b00111100, 0b00011000,
+        0b00001000, 0b00011100, 0b00001000,
+        0b00100100, 0b00011000, 0b00100100,
+        0b00010000, 0b00111000, 0b00010000,
+    )
+    data[0x1CED:0x1CF9] = bytes(shot_frames)
+    data[0x1CDC:0x1CE2] = bytes((0b01000010, 0b00100100, 0b00011000,
+                                0b00011000, 0b00100100, 0b01000010))
     # The shield initializer copies exactly 0x2c bytes per bunker. Use an
     # independent arch with a central opening so the buffer is nonblank.
     shield = bytes(
@@ -104,14 +116,20 @@ def generate(output: Path) -> None:
     data[0x1BE9] = 1
     # The ISR's five-record walker dispatches by function address stored at
     # record+3/4. Supply valid targets from the GPL translation. The shot
-    # secondary slots are marked skipped (0xfe) until their descriptors
-    # place blits safely inside video RAM.
+    # All secondary slots remain skipped (0xfe). The experimental slot-2
+    # descriptor below is drafted but not enabled: a headless dispatch probe
+    # reset its live status each pass and fired no sustained shot.
     handlers = (0x028E, 0x03BB, 0x0476, 0x04B6, 0x0682)
     for slot, handler in enumerate(handlers):
         record = 0x1B10 + slot * 16
         data[record + 3:record + 5] = handler.to_bytes(2, "little")
         if slot >= 2:
             data[record] = 0xFE
+    # Slot 2's work-strip bytes +6..+10 become the five-byte graphics,
+    # coordinate, and row-count descriptor at 0x2079..0x207d.
+    data[0x1B3B:0x1B3D] = (0x1CED).to_bytes(2, "little")
+    data[0x1B3D:0x1B3F] = (0x7050).to_bytes(2, "little")
+    data[0x1B3F] = 3
     data[0x1B60] = 0xFF
     # The invader-hit path fills the explosion coordinate at 0x2064/65.
     # Its surrounding descriptor still needs a safe authored bitmap and
@@ -153,9 +171,11 @@ def generate(output: Path) -> None:
                                "video-safe reserve-craft descriptor",
                                "beam sprite and video-safe shot descriptor",
                                "16-frame shot retire timer", "invader-hit explosion descriptor",
-                               "player-one 0x21xx field-page selector"],
+                               "player-one 0x21xx field-page selector",
+                               "slot-2 descending-shot frames and blowup art",
+                               "slot-2 three-row descriptor"],
         "missingComponents": [
-            "work-RAM and object templates", "remaining in-game sprite descriptors",
+            "remaining work-RAM and object templates", "functional alien-shot records for slots 2-4",
             "score and fire-rate tables", "attract and game-over scripts",
             "complete tested gameplay",
         ],
