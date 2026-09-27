@@ -1,0 +1,25 @@
+diff --git a/games/invaders/idiomatic/drawPendingAlien.js b/games/invaders/idiomatic/drawPendingAlien.js
+index 1d43ef37..1f6ceca0 100644
+--- a/games/invaders/idiomatic/drawPendingAlien.js
++++ b/games/invaders/idiomatic/drawPendingAlien.js
+@@ -38,6 +38,20 @@ export function drawPendingAlien(m) {
+   // index cursor in ALIEN_DRAW_INDEX. A nonzero byte means that alien is still alive and worth drawing.
+   const objAddr = (m.mem8[ACTIVE_PLAYER_PAGE] << 8) | m.mem8[ALIEN_DRAW_INDEX];
+   if (m.mem8[objAddr] !== 0) {
++    // Open Swarm experimental rendering correction: the translated blit
++    // overwrites only the two bytes at the new location. Remember the old
++    // footprint for each alien so marching does not leave permanent trails.
++    const key = (m.mem8[ACTIVE_PLAYER_PAGE] << 8) | m.mem8[ALIEN_DRAW_INDEX];
++    const previous = m._openSwarmAlienPositions ??= new Map();
++    const old = previous.get(key);
++    if (old !== undefined) {
++      let dst = 0x2000 | ((old >> 3) & 0x1fff);
++      for (let row = 0; row < 16; row++, dst += 0x20) {
++        m.mem8[dst] = 0;
++        m.mem8[dst + 1] = 0;
++      }
++    }
++    previous.set(key, m.mem16[ALIEN_DRAW_ADDR]);
+     // Build the sprite source pointer. loc_2004 holds the alien's sprite id; clearing bit 0 selects the
+     // base pose, and rotate-left-3 (the *8 below) turns the id into a byte offset into the sprite table
+     // ALIEN_SPRITE_TABLE (0x1c00). Because bit 0 is cleared first (ids step by two), the *8 spaces

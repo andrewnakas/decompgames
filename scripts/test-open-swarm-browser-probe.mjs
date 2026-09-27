@@ -9,13 +9,21 @@ import { createHash } from 'node:crypto';
 const checkout = resolve(process.argv[2] || '.cache/arcade-js');
 const dataFile = resolve(process.argv[3] || '.cache/open-swarm-draft/open-swarm-draft.bin');
 const edgeReview = process.argv.includes('--edge-review');
+const trailExperiment = process.argv.includes('--trail-experiment');
 const probeFile = resolve('experiments/open-swarm-browser-probe.html');
 const revision = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: checkout, encoding: 'utf8' }).trim();
 if (revision !== 'e849d086f4168c9a0e1ab501d62efbe3766def8a') throw Error(`Unexpected arcade-js revision ${revision}`);
 const patch = execFileSync('git', ['diff', '--binary', '--', 'games/invaders/idiomatic/reverseFleetAtEdge.js'], { cwd: checkout });
 const patchSha256 = createHash('sha256').update(patch).digest('hex');
 if (patchSha256 !== 'e1242a57f67d90444be041d9a5f1ea5b6f994b0934bd828f9311e7e73153aad7') throw Error(`Unexpected edge patch ${patchSha256}`);
-const otherChanges = execFileSync('git', ['diff', '--name-only', '--', '.', ':(exclude)games/invaders/idiomatic/reverseFleetAtEdge.js'], { cwd: checkout, encoding: 'utf8' }).trim();
+if (trailExperiment) {
+  const trailDiff = execFileSync('git', ['diff', '--binary', '--', 'games/invaders/idiomatic/drawPendingAlien.js'], { cwd: checkout });
+  const trailSha256 = createHash('sha256').update(trailDiff).digest('hex');
+  if (trailSha256 !== 'e76a8d64ae69816b66f4abfa6ce73d77464267265e9488c000b049c4a2e52366') throw Error(`Unexpected trail experiment patch ${trailSha256}`);
+}
+const excluded = ['.', ':(exclude)games/invaders/idiomatic/reverseFleetAtEdge.js'];
+if (trailExperiment) excluded.push(':(exclude)games/invaders/idiomatic/drawPendingAlien.js');
+const otherChanges = execFileSync('git', ['diff', '--name-only', '--', ...excluded], { cwd: checkout, encoding: 'utf8' }).trim();
 if (otherChanges) throw Error(`Unexpected tracked changes in upstream checkout: ${otherChanges}`);
 const types = { '.js': 'text/javascript', '.html': 'text/html; charset=utf-8', '.bin': 'application/octet-stream' };
 const server = createServer(async (request, response) => {

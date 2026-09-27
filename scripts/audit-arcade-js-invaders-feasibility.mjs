@@ -1,6 +1,6 @@
 // Inspect ROM-data dependencies without possessing or loading the original ROM.
 // This is a feasibility probe, never a gameplay or compatibility test.
-// Usage: node scripts/audit-arcade-js-invaders-feasibility.mjs PATH_TO_PINNED_ARCADE_JS [GENERATED_DIRECTORY] [MAX_FRAMES] [idle|coin-start|coin-start-move-fire|coin-start-repeat-fire|coin-start-sweep-fire|coin-start-sweep-fire-fast|coin-start-sweep-fire-fast-restart|coin-start-sweep-fire-fast-edge-clear|coin-start-sweep-fire-fast-edge-clear-restart]
+// Usage: node scripts/audit-arcade-js-invaders-feasibility.mjs PATH_TO_PINNED_ARCADE_JS [GENERATED_DIRECTORY] [MAX_FRAMES] [SCENARIO] [--trail-experiment]
 import { resolve, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { execFileSync } from 'node:child_process';
@@ -16,7 +16,15 @@ const sourceDiff = execFileSync('git', ['diff', '--binary', '--', 'games/invader
 const sourcePatchSha256 = sourceDiff.length ? createHash('sha256').update(sourceDiff).digest('hex') : null;
 if (sourcePatchSha256 && sourcePatchSha256 !== 'e1242a57f67d90444be041d9a5f1ea5b6f994b0934bd828f9311e7e73153aad7')
   throw new Error(`Unexpected edge patch checksum ${sourcePatchSha256}`);
-const otherTrackedChanges = execFileSync('git', ['diff', '--name-only', '--', '.', ':(exclude)games/invaders/idiomatic/reverseFleetAtEdge.js'], { cwd: checkout, encoding: 'utf8' }).trim();
+const trailExperiment = process.argv.includes('--trail-experiment');
+const trailDiff = execFileSync('git', ['diff', '--binary', '--', 'games/invaders/idiomatic/drawPendingAlien.js'], { cwd: checkout });
+const trailPatchSha256 = trailDiff.length ? createHash('sha256').update(trailDiff).digest('hex') : null;
+if (trailExperiment && trailPatchSha256 !== 'e76a8d64ae69816b66f4abfa6ce73d77464267265e9488c000b049c4a2e52366')
+  throw new Error(`Unexpected trail patch checksum ${trailPatchSha256}`);
+if (!trailExperiment && trailPatchSha256) throw new Error('Unexpected trail patch without --trail-experiment');
+const excluded = ['.', ':(exclude)games/invaders/idiomatic/reverseFleetAtEdge.js'];
+if (trailExperiment) excluded.push(':(exclude)games/invaders/idiomatic/drawPendingAlien.js');
+const otherTrackedChanges = execFileSync('git', ['diff', '--name-only', '--', ...excluded], { cwd: checkout, encoding: 'utf8' }).trim();
 if (otherTrackedChanges) throw new Error(`Unexpected tracked changes in pinned source: ${otherTrackedChanges}`);
 const moduleAt = (path) => import(pathToFileURL(join(checkout, path)).href);
 const { Machine, resolveAllIdiomatic } = await moduleAt('games/invaders/machine.js');
@@ -190,6 +198,7 @@ for (let i = 0; i < reads.length;) {
 console.log(JSON.stringify({
   upstreamRevision: actual,
   sourcePatchSha256,
+  trailPatchSha256,
   inputData,
   shipHandlerWrites,
   scenario,
