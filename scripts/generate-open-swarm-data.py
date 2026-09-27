@@ -72,6 +72,22 @@ def generate(output: Path) -> None:
 
     write_text(SCORE_HEADER, 28, "OPEN SWARM SCORE1   SCORE2")
     write_text(CREDIT_LABEL, 7, "CREDITS")
+    write_text(0x1CA3, 21, "OPEN SWARM POINTS")
+    # Empty 4-byte-record draw scripts still need the single-byte 0xff
+    # sentinel; otherwise the translated walker reads around all of ROM.
+    data[0x1DBE] = 0xFF
+    data[0x1DCF] = 0xFF
+    # Each 12-byte attract record is copied to 0x20c2. Its second running
+    # coordinate advances by byte 2 and finishes when it equals byte 9.
+    # A one-tick blank transition is intentional while full animation
+    # descriptors and art are still unbuilt; it prevents an infinite wait.
+    blank_transition = bytes([0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0])
+    for offset in (0x1A95, 0x1BB0, 0x1FC9):
+        data[offset:offset + 12] = blank_transition
+    # 0x1b00 is copied to 0x2000 at round setup. The translated attract
+    # loop uses work-RAM 0x2015 == 0xff as its armed sentinel. This is an
+    # independently chosen state byte, not a copy of the old ROM template.
+    data[0x1B15] = 0xFF
     image = bytes(data)
     (output / "open-swarm-draft.bin").write_bytes(image)
     manifest = {
@@ -82,7 +98,10 @@ def generate(output: Path) -> None:
         "upstreamRevision": "e849d086f4168c9a0e1ab501d62efbe3766def8a",
         "authoredComponents": ["5x7 glyph shapes", "score header", "credit label",
                                "six alien frames", "reserve craft", "explosion frames",
-                               "shield buffer template"],
+                               "shield buffer template", "point-table heading",
+                               "two empty draw-script terminators",
+                               "three one-tick blank attract transitions",
+                               "armed attract-state sentinel"],
         "missingComponents": [
             "work-RAM and object templates", "remaining in-game sprite descriptors",
             "score and fire-rate tables", "attract and game-over scripts",

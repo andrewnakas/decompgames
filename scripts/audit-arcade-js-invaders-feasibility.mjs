@@ -1,6 +1,6 @@
 // Inspect ROM-data dependencies without possessing or loading the original ROM.
 // This is a feasibility probe, never a gameplay or compatibility test.
-// Usage: node scripts/audit-arcade-js-invaders-feasibility.mjs PATH_TO_PINNED_ARCADE_JS [GENERATED_DIRECTORY]
+// Usage: node scripts/audit-arcade-js-invaders-feasibility.mjs PATH_TO_PINNED_ARCADE_JS [GENERATED_DIRECTORY] [MAX_FRAMES]
 import { resolve, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { execFileSync } from 'node:child_process';
@@ -15,8 +15,14 @@ if (actual !== expected) throw new Error(`Expected arcade-js ${expected}, got ${
 const moduleAt = (path) => import(pathToFileURL(join(checkout, path)).href);
 const { Machine, resolveAllIdiomatic } = await moduleAt('games/invaders/machine.js');
 const { runIdiomaticGame } = await moduleAt('core/frame-stepped.js');
-const { ATTRACT_DEMO_PTR, GAME_ACTIVE } = await moduleAt('games/invaders/idiomatic/names.js');
+const {
+  ATTRACT_DEMO_PTR, GAME_ACTIVE, FRAME_DELAY_TIMER, TASK_FLAGS,
+  ANIM_DONE_FLAG, SCREEN_MODE_TOGGLE, loc_2015,
+} = await moduleAt('games/invaders/idiomatic/names.js');
 const manifest = (await moduleAt('games/invaders/manifest.js')).default;
+const maxFrames = process.argv[4] === undefined ? 200 : Number(process.argv[4]);
+if (!Number.isSafeInteger(maxFrames) || maxFrames < 1 || maxFrames > 5000)
+  throw new Error('MAX_FRAMES must be an integer from 1 to 5000');
 
 let rom = new Uint8Array(8192);
 let inputData = '8,192 zero bytes; no original ROM';
@@ -44,7 +50,7 @@ machine.mem.read8 = (address) => {
 };
 const result = runIdiomaticGame(machine, {
   nmiReturnPC: manifest.convergence.idiomatic.nmiReturnPC,
-  maxFrames: 200,
+  maxFrames,
 });
 const ranges = [];
 for (let i = 0; i < reads.length;) {
@@ -66,6 +72,11 @@ console.log(JSON.stringify({
   stopError: result.stopError ? String(result.stopError) : null,
   attractDemoPtr: machine.mem8[ATTRACT_DEMO_PTR],
   gameActive: machine.mem8[GAME_ACTIVE],
+  frameDelayTimer: machine.mem8[FRAME_DELAY_TIMER],
+  taskFlags: machine.mem8[TASK_FLAGS],
+  animDoneFlag: machine.mem8[ANIM_DONE_FLAG],
+  screenModeToggle: machine.mem8[SCREEN_MODE_TOGGLE],
+  armTrigger: machine.mem8[loc_2015],
   nonzeroVideoBytes: machine.mem.ram.subarray(0x400).reduce(
     (count, value) => count + Number(value !== 0), 0),
   touchedRomBytes: reads.reduce((count, value) => count + Number(value !== 0), 0),
