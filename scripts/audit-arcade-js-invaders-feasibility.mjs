@@ -21,6 +21,7 @@ const {
   ALIEN_COUNT, PLAYER_SHOT_STATUS, PLAYER_SHIP_X, ACTIVE_PLAYER_PAGE,
   FLEET_MARCH_ENABLE, ALIEN_DRAW_INDEX, ALIEN_DRAW_ADDR,
   COLLISION_FLAG, PLAYER_SHOT_HIT, loc_2029, loc_202a,
+  FLEET_MOVE_DIR, loc_2008,
 } = await moduleAt('games/invaders/idiomatic/names.js');
 const manifest = (await moduleAt('games/invaders/manifest.js')).default;
 const maxFrames = process.argv[4] === undefined ? 200 : Number(process.argv[4]);
@@ -77,6 +78,8 @@ let shotHitFrames = 0;
 let minShotY = 255;
 let maxShotY = 0;
 const shotSamples = [];
+const fleetSamples = [];
+let firstBothEdgesFrame = null;
 let sweepRight = true;
 let pressNextReadyFrame = false;
 const actions = manifest.inputs.actions;
@@ -104,6 +107,15 @@ const result = runIdiomaticGame(machine, {
       }
       if (scenario === 'coin-start-move-fire' && ((frame >= 810 && frame <= 840 && frame % 5 === 0) || [860, 900, 1000].includes(frame)))
         shotSamples.push({ frame, state: m.mem8[PLAYER_SHOT_STATUS], y: m.mem8[loc_2029], x: m.mem8[loc_202a], collision: m.mem8[COLLISION_FLAG], hit: m.mem8[PLAYER_SHOT_HIT] });
+      if (scenario === 'coin-start-sweep-fire-fast') {
+        const right = m.mem.ram.subarray(0x1ea4, 0x1ebb);
+        const left = m.mem.ram.subarray(0x0524, 0x053b);
+        const rightEdgeLit = right.some(Boolean);
+        const leftEdgeLit = left.some(Boolean);
+        if (rightEdgeLit && leftEdgeLit && firstBothEdgesFrame === null) firstBothEdgesFrame = frame;
+        if ([537, 1000, 1820, 1821, 1822, 1825, 3000, 5000, 6385, 6400].includes(frame))
+          fleetSamples.push({ frame, count, ref: m.mem16[0x2009], dir: m.mem8[FLEET_MOVE_DIR], step: m.mem8[loc_2008], index: m.mem8[ALIEN_DRAW_INDEX], rightEdgeLit, leftEdgeLit, rightPixels: Array.from(right, (v,i) => v ? i : null).filter(v => v !== null), leftPixels: Array.from(left, (v,i) => v ? i : null).filter(v => v !== null) });
+      }
     }
     const timer = m.mem8[FRAME_DELAY_TIMER];
     if (lastTimer !== null && timer === 0xb0 && lastTimer !== 0xb0) splashResets++;
@@ -165,6 +177,8 @@ console.log(JSON.stringify({
   minShotY: minShotY === 255 ? null : minShotY,
   maxShotY,
   shotSamples,
+  fleetSamples,
+  firstBothEdgesFrame,
   splashResets,
   frames: result.frames,
   stop: result.stop,
