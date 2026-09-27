@@ -57,6 +57,7 @@ def generate(output: Path) -> None:
     data[0x1C70:0x1C90] = bytes(
         (0b00011000 if row % 3 else 0b10100101) for row in range(32)
     )
+    data[0x1C90:0x1C98] = bytes((0b00011000,) * 8)
     # The shield initializer copies exactly 0x2c bytes per bunker. Use an
     # independent arch with a central opening so the buffer is nonblank.
     shield = bytes(
@@ -88,6 +89,35 @@ def generate(output: Path) -> None:
     # loop uses work-RAM 0x2015 == 0xff as its armed sentinel. This is an
     # independently chosen state byte, not a copy of the old ROM template.
     data[0x1B15] = 0xFF
+    # The cold-boot copier also seeds 0x20e9 from this image. Mark the
+    # independently authored attract world active so the vblank task runner
+    # can actually service its object table after the title sequence.
+    data[0x1BE9] = 1
+    # The ISR's five-record walker dispatches by function address stored at
+    # record+3/4. Supply valid targets from the GPL translation. The shot
+    # secondary slots are marked skipped (0xfe) until their descriptors
+    # place blits safely inside video RAM.
+    handlers = (0x028E, 0x03BB, 0x0476, 0x04B6, 0x0682)
+    for slot, handler in enumerate(handlers):
+        record = 0x1B10 + slot * 16
+        data[record + 3:record + 5] = handler.to_bytes(2, "little")
+        if slot >= 2:
+            data[record] = 0xFE
+    data[0x1B60] = 0xFF
+    # This is the high address byte, not a player ordinal: 0x21 selects
+    # 0x2100, where the translated start flow fills 55 live alien cells.
+    data[0x1B67] = 0x21
+    # The ship record's five-byte blit descriptor must point into video RAM.
+    # 0x6000 >> 3 maps to framebuffer byte 0x2c00; 16 rows remain in bounds.
+    data[0x1B18:0x1B1A] = (0x1C60).to_bytes(2, "little")
+    data[0x1B1A:0x1B1C] = (0x6000).to_bytes(2, "little")
+    data[0x1B1C] = 16
+    # A separate eight-row beam starts in the playfield at 0x6820 >> 3.
+    # Its Y counter steps upward by one and is reset from this template.
+    data[0x1B27:0x1B29] = (0x1C90).to_bytes(2, "little")
+    data[0x1B29:0x1B2B] = (0x6820).to_bytes(2, "little")
+    data[0x1B2B] = 8
+    data[0x1B2C] = 0xFF
     image = bytes(data)
     (output / "open-swarm-draft.bin").write_bytes(image)
     manifest = {
@@ -101,7 +131,10 @@ def generate(output: Path) -> None:
                                "shield buffer template", "point-table heading",
                                "two empty draw-script terminators",
                                "three one-tick blank attract transitions",
-                               "armed attract-state sentinel"],
+                               "armed attract-state sentinel", "object dispatch targets",
+                               "video-safe reserve-craft descriptor",
+                               "beam sprite and video-safe shot descriptor",
+                               "player-one 0x21xx field-page selector"],
         "missingComponents": [
             "work-RAM and object templates", "remaining in-game sprite descriptors",
             "score and fire-rate tables", "attract and game-over scripts",
