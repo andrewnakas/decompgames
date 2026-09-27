@@ -113,11 +113,12 @@ def generate(output: Path) -> None:
     data[0x1B1A:0x1B1C] = (0x6000).to_bytes(2, "little")
     data[0x1B1C] = 16
     # A separate eight-row beam starts in the playfield at 0x6820 >> 3.
-    # Its Y counter steps upward by one and is reset from this template.
+    # The board's rotated Y coordinate rises toward 0xd8 at the top.
+    # A positive four-unit step advances the beam into the fleet.
     data[0x1B27:0x1B29] = (0x1C90).to_bytes(2, "little")
     data[0x1B29:0x1B2B] = (0x6820).to_bytes(2, "little")
     data[0x1B2B] = 8
-    data[0x1B2C] = 0xFF
+    data[0x1B2C] = 4
     image = bytes(data)
     (output / "open-swarm-draft.bin").write_bytes(image)
     manifest = {

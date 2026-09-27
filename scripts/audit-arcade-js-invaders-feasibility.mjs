@@ -19,6 +19,8 @@ const {
   ATTRACT_DEMO_PTR, GAME_ACTIVE, FRAME_DELAY_TIMER, TASK_FLAGS,
   ANIM_DONE_FLAG, SCREEN_MODE_TOGGLE, loc_2015, GAME_IN_PROGRESS,
   ALIEN_COUNT, PLAYER_SHOT_STATUS, PLAYER_SHIP_X, ACTIVE_PLAYER_PAGE,
+  FLEET_MARCH_ENABLE, ALIEN_DRAW_INDEX, ALIEN_DRAW_ADDR,
+  COLLISION_FLAG, PLAYER_SHOT_HIT, loc_2029, loc_202a,
 } = await moduleAt('games/invaders/idiomatic/names.js');
 const manifest = (await moduleAt('games/invaders/manifest.js')).default;
 const maxFrames = process.argv[4] === undefined ? 200 : Number(process.argv[4]);
@@ -53,12 +55,20 @@ machine.mem.read8 = (address) => {
 };
 let firstPlayFrame = null;
 let firstLiveFleetFrame = null;
+let firstAlienHitFrame = null;
 let maxAlienCount = 0;
 let splashResets = 0;
 let lastTimer = null;
 let minShipX = 255;
 let maxShipX = 0;
 let shotFrames = 0;
+let marchingFrames = 0;
+let maxDrawIndex = 0;
+let collisionFrames = 0;
+let shotHitFrames = 0;
+let minShotY = 255;
+let maxShotY = 0;
+const shotSamples = [];
 const actions = manifest.inputs.actions;
 const result = runIdiomaticGame(machine, {
   nmiReturnPC: manifest.convergence.idiomatic.nmiReturnPC,
@@ -67,11 +77,22 @@ const result = runIdiomaticGame(machine, {
     if (m.mem8[GAME_IN_PROGRESS] !== 0 && firstPlayFrame === null) firstPlayFrame = frame;
     const count = m.mem8[ALIEN_COUNT];
     if (count !== 0 && firstLiveFleetFrame === null) firstLiveFleetFrame = frame;
+    if (firstLiveFleetFrame !== null && count > 0 && count < 55 && firstAlienHitFrame === null) firstAlienHitFrame = frame;
     maxAlienCount = Math.max(maxAlienCount, count);
     if (m.mem8[GAME_ACTIVE] && m.mem8[GAME_IN_PROGRESS]) {
       minShipX = Math.min(minShipX, m.mem8[PLAYER_SHIP_X]);
       maxShipX = Math.max(maxShipX, m.mem8[PLAYER_SHIP_X]);
       if (m.mem8[PLAYER_SHOT_STATUS]) shotFrames++;
+      if (m.mem8[FLEET_MARCH_ENABLE]) marchingFrames++;
+      maxDrawIndex = Math.max(maxDrawIndex, m.mem8[ALIEN_DRAW_INDEX]);
+      if (m.mem8[COLLISION_FLAG]) collisionFrames++;
+      if (m.mem8[PLAYER_SHOT_HIT]) shotHitFrames++;
+      if (m.mem8[PLAYER_SHOT_STATUS] === 2) {
+        minShotY = Math.min(minShotY, m.mem8[loc_2029]);
+        maxShotY = Math.max(maxShotY, m.mem8[loc_2029]);
+      }
+      if (scenario === 'coin-start-move-fire' && ((frame >= 810 && frame <= 840 && frame % 5 === 0) || [860, 900, 1000].includes(frame)))
+        shotSamples.push({ frame, state: m.mem8[PLAYER_SHOT_STATUS], y: m.mem8[loc_2029], x: m.mem8[loc_202a], collision: m.mem8[COLLISION_FLAG], hit: m.mem8[PLAYER_SHOT_HIT] });
     }
     const timer = m.mem8[FRAME_DELAY_TIMER];
     if (lastTimer !== null && timer === 0xb0 && lastTimer !== 0xb0) splashResets++;
@@ -83,8 +104,8 @@ const result = runIdiomaticGame(machine, {
     if (frame >= 360 && frame < 366) press(actions.start1);
     if (scenario === 'coin-start-move-fire') {
       if (frame >= 600 && frame < 660) press(actions.left);
-      if (frame >= 700 && frame < 760) press(actions.right);
-      if (frame >= 780 && frame < 786) press(actions.fire);
+      if (frame >= 700 && frame < 790) press(actions.right);
+      if (frame >= 810 && frame < 816) press(actions.fire);
     }
     m.io.inputAssert = input;
   },
@@ -107,10 +128,18 @@ console.log(JSON.stringify({
   scenario,
   firstPlayFrame,
   firstLiveFleetFrame,
+  firstAlienHitFrame,
   maxAlienCount,
   minShipX: minShipX === 255 ? null : minShipX,
   maxShipX,
   shotFrames,
+  marchingFrames,
+  maxDrawIndex,
+  collisionFrames,
+  shotHitFrames,
+  minShotY: minShotY === 255 ? null : minShotY,
+  maxShotY,
+  shotSamples,
   splashResets,
   frames: result.frames,
   stop: result.stop,
@@ -121,6 +150,9 @@ console.log(JSON.stringify({
   alienCount: machine.mem8[ALIEN_COUNT],
   shotStatus: machine.mem8[PLAYER_SHOT_STATUS],
   playerShipX: machine.mem8[PLAYER_SHIP_X],
+  shotY: machine.mem8[loc_2029],
+  shotX: machine.mem8[loc_202a],
+  alienDrawAddr: machine.mem16[ALIEN_DRAW_ADDR],
   activePlayerPage: machine.mem8[ACTIVE_PLAYER_PAGE],
   player1FieldCells: Array.from({ length: 0x37 }, (_, i) => Number(machine.mem8[0x2100 + i] !== 0)).reduce((a, b) => a + b, 0),
   player1Round: machine.mem8[0x21fe],
