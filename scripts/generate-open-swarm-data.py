@@ -86,6 +86,17 @@ def generate(output: Path) -> None:
         for row in range(44)
     )
     data[0x1D20:0x1D4C] = shield
+    # Independent scoring and pace choices in the translated routines'
+    # documented table layouts. The five descending fleet thresholds end
+    # with zero so advanceFleetMarchSound's unbounded scan always stops.
+    data[0x1A11:0x1A16] = bytes((40, 24, 12, 6, 0))
+    data[0x1A21:0x1A26] = bytes((18, 15, 12, 9, 6))
+    data[0x1DA0:0x1DA3] = bytes((0x10, 0x20, 0x30))
+    # Four ascending BCD score bands select one of five authored shot-rate
+    # bytes. Hostile-shot records remain skipped, so these are not yet a
+    # claim that shot cadence or difficulty is correct in live gameplay.
+    data[0x1CB8:0x1CBC] = bytes((0x05, 0x20, 0x50, 0x99))
+    data[0x1AA1:0x1AA6] = bytes((7, 6, 5, 4, 3))
 
     def write_text(offset: int, length: int, value: str) -> None:
         assert len(value) <= length
@@ -173,7 +184,9 @@ def generate(output: Path) -> None:
                                "16-frame shot retire timer", "invader-hit explosion descriptor",
                                "player-one 0x21xx field-page selector",
                                "slot-2 descending-shot frames and blowup art",
-                               "slot-2 three-row descriptor"],
+                               "slot-2 three-row descriptor",
+                               "three-tier BCD score table", "fleet tempo bands",
+                               "five alien-shot rate choices"],
         "missingComponents": [
             "remaining work-RAM and object templates", "functional alien-shot records for slots 2-4",
             "score and fire-rate tables", "attract and game-over scripts",
