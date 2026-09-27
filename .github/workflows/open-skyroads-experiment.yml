@@ -1,0 +1,72 @@
+name: Build private Open Skyways experiment
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Generate independent replacement files
+        run: |
+          python3 -m pip install pillow==12.3.0
+          python3 scripts/build-open-skyroads-roads.py /tmp/sky-roads/ROADS.LZS
+          python3 scripts/build-open-skyroads-visuals.py /tmp/sky-visuals
+          python3 scripts/build-open-skyroads-support.py /tmp/sky-support
+      - name: Fetch pinned reconstructed engine and compiler
+        run: |
+          git clone --quiet https://github.com/haroldo-ok/skyroads-32x.git /tmp/skyroads-upstream
+          git -C /tmp/skyroads-upstream checkout --quiet df219e03b854153291b32224593013b60d861d40
+          git clone --quiet --depth 1 https://github.com/emscripten-core/emsdk.git /tmp/emsdk
+          /tmp/emsdk/emsdk install 6.0.1
+          /tmp/emsdk/emsdk activate 6.0.1
+      - name: Compile clean-data browser experiment with no audio device
+        run: |
+          source /tmp/emsdk/emsdk_env.sh
+          python3 scripts/build-open-skyroads-browser.py \
+            /tmp/skyroads-upstream /tmp/open-skyways-build \
+            /tmp/sky-roads /tmp/sky-visuals /tmp/sky-support \
+            >/tmp/open-skyways-build.log 2>&1 || {
+              tail -n 100 /tmp/open-skyways-build.log
+              exit 1
+            }
+          test -s /tmp/open-skyways-build/build/skyroads.wasm
+          test -s /tmp/open-skyways-build/build/skyroads.data
+          if grep -R 'SDL_OpenAudioDevice\|SDL_PauseAudioDevice' \
+             /tmp/open-skyways-build/source/src/platform/sdl; then
+            echo 'Audio device call remains in staged source' >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          root = Path('/tmp/open-skyways-build')
+          record = json.loads((root/'build-record.json').read_text())
+          assert len(record['replacements']) == 25
+          for item in record['replacements']:
+              raw = (root/'source'/item['path']).read_bytes()
+              assert len(raw) == item['bytes']
+              assert hashlib.sha256(raw).hexdigest() == item['sha256']
+          for name in ('skyroads.html', 'skyroads.js', 'skyroads.wasm', 'skyroads.data'):
+              path = root/'build'/name
+              print(name, path.stat().st_size, hashlib.sha256(path.read_bytes()).hexdigest())
+          print('EXPERIMENT ONLY: no gameplay, persistence, or browser verification.')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: open-skyways-private-experiment
+          path: |
+            /tmp/open-skyways-build/build/skyroads.html
+            /tmp/open-skyways-build/build/skyroads.js
+            /tmp/open-skyways-build/build/skyroads.wasm
+            /tmp/open-skyways-build/build/skyroads.data
+            /tmp/open-skyways-build/build-record.json
+          retention-days: 1
