@@ -34,7 +34,7 @@ const bit = { coin: 1, start: 4, fire: 16, left: 32, right: 64 };
 const key = { Digit5: 'coin', KeyC: 'coin', Digit1: 'start', Space: 'fire', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right' };
 const held = new Set();
 let counter = 0, worker;
-window.__openSwarm = { ready: false, frames: 0, error: '', dataSha256: '', audioEnabled: false, probes: [] };
+window.__openSwarm = { ready: false, frames: 0, error: '', dataSha256: '', audioEnabled: false, probes: [], frameHeaderPixels: 0 };
 
 function setInput(name, down) {
   if (down) held.add(name); else held.delete(name);
@@ -74,6 +74,11 @@ function draw() {
       image.data[dest + 3] = 255;
     }
     ctx.putImageData(image, 0, 0);
+    let headerPixels = 0;
+    for (let gy = 0; gy < 224; gy++) for (let gx = 240; gx < 248; gx++) {
+      if (snap[(gy * width + gx) * 3]) headerPixels++;
+    }
+    window.__openSwarm.frameHeaderPixels = headerPixels;
     counter = next;
     window.__openSwarm.frames = next;
   }

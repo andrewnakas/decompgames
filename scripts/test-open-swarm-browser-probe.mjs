@@ -8,7 +8,8 @@ import { createHash } from 'node:crypto';
 
 const checkout = resolve(process.argv[2] || '.cache/arcade-js');
 const dataFile = resolve(process.argv[3] || '.cache/open-swarm-draft/open-swarm-draft.bin');
-const edgeReview = process.argv.includes('--edge-review');
+const headerReview = process.argv.includes('--header-review');
+const edgeReview = process.argv.includes('--edge-review') || headerReview;
 const trailExperiment = process.argv.includes('--trail-experiment');
 const probeFile = resolve('experiments/open-swarm-browser-probe.html');
 const revision = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: checkout, encoding: 'utf8' }).trim();
@@ -43,7 +44,7 @@ const server = createServer(async (request, response) => {
       const source = bytes.toString('utf8').replaceAll('\r\n', '\n');
       const anchor = 'function serviceIdiomaticFrame(machine, frameIndex) {\n  readInputsInto(machine);';
       if (!source.includes(anchor)) throw Error('Upstream worker telemetry anchor changed');
-      bytes = Buffer.from(source.replace(anchor, `${anchor}\n  if (frameIndex % 15 === 0 || (Atomics.load(ctrl, 1) & 5)) postMessage({ type: 'probe', frame: frameIndex, in1: Atomics.load(ctrl, 1), play: machine.mem8[0x20ef], shipX: machine.mem8[0x201b], shot: machine.mem8[0x2025], aliens: machine.mem8[0x2082], fleetDir: machine.mem8[0x200d] });`));
+      bytes = Buffer.from(source.replace(anchor, `${anchor}\n  if (frameIndex % 15 === 0 || (Atomics.load(ctrl, 1) & 5)) { const header = Array.from({ length: 28 }, (_, glyph) => Array.from({ length: 8 }, (_, row) => machine.mem8[0x241e + glyph * 0x100 + row * 0x20])); postMessage({ type: 'probe', frame: frameIndex, in1: Atomics.load(ctrl, 1), play: machine.mem8[0x20ef], shipX: machine.mem8[0x201b], shot: machine.mem8[0x2025], aliens: machine.mem8[0x2082], fleetDir: machine.mem8[0x200d], headerCells: header.filter(bytes => bytes.some(Boolean)).length, headerBits: header.flat().reduce((sum, byte) => { while (byte) { sum += byte & 1; byte >>= 1; } return sum; }, 0) }); }`));
     }
     response.writeHead(200, {
       'content-type': types[extname(file)] || 'application/octet-stream',
@@ -90,6 +91,10 @@ try {
     await page.locator('canvas').screenshot({ path: '.cache/open-swarm-frame670.png' });
     await page.waitForFunction(() => window.__openSwarm.frames >= 1840 || window.__openSwarm.error, null, { timeout: 60_000 });
     await page.locator('canvas').screenshot({ path: '.cache/open-swarm-frame1840.png' });
+    if (headerReview) {
+      await page.waitForFunction(() => window.__openSwarm.frames >= 2200 || window.__openSwarm.error, null, { timeout: 30_000 });
+      await page.locator('canvas').screenshot({ path: '.cache/open-swarm-frame2200.png' });
+    }
   }
   const result = await page.evaluate(() => {
     const canvas = document.querySelector('canvas');
@@ -109,7 +114,7 @@ try {
     shot: probes.some(p => p.shot),
     alienCount: Math.max(...probes.map(p => p.aliens)),
   };
-  const edgeSamples = edgeReview ? probes.filter(p => p.frame >= 1740).map(p => ({ frame: p.frame, aliens: p.aliens, fleetDir: p.fleetDir })) : undefined;
+  const edgeSamples = edgeReview ? probes.filter(p => [675, 1740, 1830, 2190].includes(p.frame)).map(p => ({ frame: p.frame, play: p.play, aliens: p.aliens, fleetDir: p.fleetDir, headerCells: p.headerCells, headerBits: p.headerBits })) : undefined;
   delete result.probes;
   console.log(JSON.stringify({ result, inputProof, probeCount: probes.length, edgeSamples, errors }));
   if (result.error || errors.length || !result.ready || result.frames < 670 || result.nonblack < 10 || result.audioEnabled || !inputProof.coin || !inputProof.start || !inputProof.right || !inputProof.fire || !inputProof.play || !inputProof.moved || !inputProof.shot) process.exitCode = 1;

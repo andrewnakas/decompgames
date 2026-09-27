@@ -199,6 +199,8 @@ console.log(JSON.stringify({
   upstreamRevision: actual,
   sourcePatchSha256,
   trailPatchSha256,
+  trailPositions: trailExperiment ? Array.from(machine._openSwarmAlienPositions || [], ([key, packed]) => ({ key, packed, base: 0x2000 | ((packed >> 3) & 0x1fff) })) : undefined,
+  headerGlyphPixels: Array.from({ length: 28 }, (_, glyph) => Array.from({ length: 8 }, (_, row) => machine.mem8[0x241e + glyph * 0x100 + row * 0x20]).reduce((sum, byte) => sum + Number(byte !== 0), 0)),
   inputData,
   shipHandlerWrites,
   scenario,
