@@ -1,6 +1,6 @@
 // Inspect ROM-data dependencies without possessing or loading the original ROM.
 // This is a feasibility probe, never a gameplay or compatibility test.
-// Usage: node scripts/audit-arcade-js-invaders-feasibility.mjs PATH_TO_PINNED_ARCADE_JS [GENERATED_DIRECTORY] [MAX_FRAMES] [idle|coin-start|coin-start-move-fire|coin-start-repeat-fire|coin-start-sweep-fire|coin-start-sweep-fire-fast]
+// Usage: node scripts/audit-arcade-js-invaders-feasibility.mjs PATH_TO_PINNED_ARCADE_JS [GENERATED_DIRECTORY] [MAX_FRAMES] [idle|coin-start|coin-start-move-fire|coin-start-repeat-fire|coin-start-sweep-fire|coin-start-sweep-fire-fast|coin-start-sweep-fire-fast-restart|coin-start-sweep-fire-fast-edge-clear|coin-start-sweep-fire-fast-edge-clear-restart]
 import { resolve, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { execFileSync } from 'node:child_process';
@@ -12,6 +12,12 @@ if (!process.argv[2]) throw new Error('Pass the pinned arcade-js checkout path')
 const expected = 'e849d086f4168c9a0e1ab501d62efbe3766def8a';
 const actual = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: checkout, encoding: 'utf8' }).trim();
 if (actual !== expected) throw new Error(`Expected arcade-js ${expected}, got ${actual}`);
+const sourceDiff = execFileSync('git', ['diff', '--binary', '--', 'games/invaders/idiomatic/reverseFleetAtEdge.js'], { cwd: checkout });
+const sourcePatchSha256 = sourceDiff.length ? createHash('sha256').update(sourceDiff).digest('hex') : null;
+if (sourcePatchSha256 && sourcePatchSha256 !== 'e1242a57f67d90444be041d9a5f1ea5b6f994b0934bd828f9311e7e73153aad7')
+  throw new Error(`Unexpected edge patch checksum ${sourcePatchSha256}`);
+const otherTrackedChanges = execFileSync('git', ['diff', '--name-only', '--', '.', ':(exclude)games/invaders/idiomatic/reverseFleetAtEdge.js'], { cwd: checkout, encoding: 'utf8' }).trim();
+if (otherTrackedChanges) throw new Error(`Unexpected tracked changes in pinned source: ${otherTrackedChanges}`);
 const moduleAt = (path) => import(pathToFileURL(join(checkout, path)).href);
 const { Machine, resolveAllIdiomatic } = await moduleAt('games/invaders/machine.js');
 const { runIdiomaticGame } = await moduleAt('core/frame-stepped.js');
@@ -28,7 +34,7 @@ const maxFrames = process.argv[4] === undefined ? 200 : Number(process.argv[4]);
 if (!Number.isSafeInteger(maxFrames) || maxFrames < 1 || maxFrames > 20000)
   throw new Error('MAX_FRAMES must be an integer from 1 to 20000');
 const scenario = process.argv[5] || 'idle';
-if (!['idle', 'coin-start', 'coin-start-move-fire', 'coin-start-repeat-fire', 'coin-start-sweep-fire', 'coin-start-sweep-fire-fast'].includes(scenario)) throw new Error('Unknown input scenario');
+if (!['idle', 'coin-start', 'coin-start-move-fire', 'coin-start-repeat-fire', 'coin-start-sweep-fire', 'coin-start-sweep-fire-fast', 'coin-start-sweep-fire-fast-restart', 'coin-start-sweep-fire-fast-edge-clear', 'coin-start-sweep-fire-fast-edge-clear-restart'].includes(scenario)) throw new Error('Unknown input scenario');
 
 let rom = new Uint8Array(8192);
 let inputData = '8,192 zero bytes; no original ROM';
@@ -66,6 +72,10 @@ let firstPlayFrame = null;
 let firstLiveFleetFrame = null;
 let firstAlienHitFrame = null;
 let maxAlienCount = 0;
+let minAlienCountAfterStart = 55;
+let firstRoundAdvanceFrame = null;
+let firstGameOverFrame = null;
+let secondPlayFrame = null;
 let splashResets = 0;
 let lastTimer = null;
 let minShipX = 255;
@@ -82,6 +92,8 @@ const fleetSamples = [];
 let firstBothEdgesFrame = null;
 let sweepRight = true;
 let pressNextReadyFrame = false;
+let lastFleetDir = null;
+let edgeClears = 0;
 const actions = manifest.inputs.actions;
 const result = runIdiomaticGame(machine, {
   nmiReturnPC: manifest.convergence.idiomatic.nmiReturnPC,
@@ -93,6 +105,10 @@ const result = runIdiomaticGame(machine, {
     if (count !== 0 && firstLiveFleetFrame === null) firstLiveFleetFrame = frame;
     if (firstLiveFleetFrame !== null && count > 0 && count < 55 && firstAlienHitFrame === null) firstAlienHitFrame = frame;
     maxAlienCount = Math.max(maxAlienCount, count);
+    if (firstLiveFleetFrame !== null) minAlienCountAfterStart = Math.min(minAlienCountAfterStart, count);
+    if (firstLiveFleetFrame !== null && m.mem8[0x21fe] > 0 && firstRoundAdvanceFrame === null) firstRoundAdvanceFrame = frame;
+    if (firstPlayFrame !== null && m.mem8[GAME_IN_PROGRESS] === 0 && firstGameOverFrame === null) firstGameOverFrame = frame;
+    if (firstGameOverFrame !== null && m.mem8[GAME_IN_PROGRESS] !== 0 && secondPlayFrame === null) secondPlayFrame = frame;
     if (m.mem8[GAME_ACTIVE] && m.mem8[GAME_IN_PROGRESS]) {
       minShipX = Math.min(minShipX, m.mem8[PLAYER_SHIP_X]);
       maxShipX = Math.max(maxShipX, m.mem8[PLAYER_SHIP_X]);
@@ -116,6 +132,15 @@ const result = runIdiomaticGame(machine, {
         if ([537, 1000, 1820, 1821, 1822, 1825, 3000, 5000, 6385, 6400].includes(frame))
           fleetSamples.push({ frame, count, ref: m.mem16[0x2009], dir: m.mem8[FLEET_MOVE_DIR], step: m.mem8[loc_2008], index: m.mem8[ALIEN_DRAW_INDEX], rightEdgeLit, leftEdgeLit, rightPixels: Array.from(right, (v,i) => v ? i : null).filter(v => v !== null), leftPixels: Array.from(left, (v,i) => v ? i : null).filter(v => v !== null) });
       }
+      if (scenario === 'coin-start-sweep-fire-fast-edge-clear' || scenario === 'coin-start-sweep-fire-fast-edge-clear-restart') {
+        const dir = m.mem8[FLEET_MOVE_DIR];
+        if (lastFleetDir !== null && dir !== lastFleetDir) {
+          const leftBehind = dir ? 0x3ea4 : 0x2524;
+          for (let i = 0; i < 0x17; i++) m.mem8[leftBehind + i] = 0;
+          edgeClears++;
+        }
+        lastFleetDir = dir;
+      }
     }
     const timer = m.mem8[FRAME_DELAY_TIMER];
     if (lastTimer !== null && timer === 0xb0 && lastTimer !== 0xb0) splashResets++;
@@ -125,18 +150,22 @@ const result = runIdiomaticGame(machine, {
     const press = (action) => { input[action.port] = (input[action.port] || 0) | action.bit; };
     if (frame >= 300 && frame < 306) press(actions.coin);
     if (frame >= 360 && frame < 366) press(actions.start1);
+    if ((scenario === 'coin-start-sweep-fire-fast-restart' || scenario === 'coin-start-sweep-fire-fast-edge-clear-restart') && firstGameOverFrame !== null) {
+      if (frame >= firstGameOverFrame + 245 && frame < firstGameOverFrame + 251) press(actions.coin);
+      if (frame >= firstGameOverFrame + 305 && frame < firstGameOverFrame + 311) press(actions.start1);
+    }
     if (scenario === 'coin-start-move-fire' || scenario === 'coin-start-repeat-fire') {
       if (frame >= 600 && frame < 660) press(actions.left);
       if (frame >= 700 && frame < 790) press(actions.right);
       if (frame >= 810 && frame < 816) press(actions.fire);
       if (scenario === 'coin-start-repeat-fire' && frame >= 900 && (frame - 900) % 45 < 4) press(actions.fire);
     }
-    if ((scenario === 'coin-start-sweep-fire' || scenario === 'coin-start-sweep-fire-fast') && frame >= 600) {
+    if ((scenario === 'coin-start-sweep-fire' || scenario === 'coin-start-sweep-fire-fast' || scenario === 'coin-start-sweep-fire-fast-restart' || scenario === 'coin-start-sweep-fire-fast-edge-clear' || scenario === 'coin-start-sweep-fire-fast-edge-clear-restart') && frame >= 600) {
       if (m.mem8[PLAYER_SHIP_X] >= 210) sweepRight = false;
       if (m.mem8[PLAYER_SHIP_X] <= 48) sweepRight = true;
       press(sweepRight ? actions.right : actions.left);
       if (scenario === 'coin-start-sweep-fire' && (frame - 610) % 40 < 4) press(actions.fire);
-      if (scenario === 'coin-start-sweep-fire-fast') {
+      if (scenario === 'coin-start-sweep-fire-fast' || scenario === 'coin-start-sweep-fire-fast-restart' || scenario === 'coin-start-sweep-fire-fast-edge-clear' || scenario === 'coin-start-sweep-fire-fast-edge-clear-restart') {
         if (m.mem8[PLAYER_SHOT_STATUS] === 0) {
           if (pressNextReadyFrame) press(actions.fire);
           pressNextReadyFrame = !pressNextReadyFrame;
@@ -160,6 +189,7 @@ for (let i = 0; i < reads.length;) {
 }
 console.log(JSON.stringify({
   upstreamRevision: actual,
+  sourcePatchSha256,
   inputData,
   shipHandlerWrites,
   scenario,
@@ -167,6 +197,10 @@ console.log(JSON.stringify({
   firstLiveFleetFrame,
   firstAlienHitFrame,
   maxAlienCount,
+  minAlienCountAfterStart,
+  firstRoundAdvanceFrame,
+  firstGameOverFrame,
+  secondPlayFrame,
   minShipX: minShipX === 255 ? null : minShipX,
   maxShipX,
   shotFrames,
@@ -179,6 +213,7 @@ console.log(JSON.stringify({
   shotSamples,
   fleetSamples,
   firstBothEdgesFrame,
+  edgeClears,
   splashResets,
   frames: result.frames,
   stop: result.stop,

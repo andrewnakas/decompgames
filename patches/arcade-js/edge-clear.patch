@@ -1,0 +1,33 @@
+diff --git a/games/invaders/idiomatic/reverseFleetAtEdge.js b/games/invaders/idiomatic/reverseFleetAtEdge.js
+index a9dfd498..0628bb29 100644
+--- a/games/invaders/idiomatic/reverseFleetAtEdge.js
++++ b/games/invaders/idiomatic/reverseFleetAtEdge.js
+@@ -26,7 +26,7 @@ import { FLEET_MOVE_DIR, FLEET_STEP_DY, loc_2008, FLEET_DROP_DELTA, FLEET_LEFT_E
+  * LIVE-OUT: RAM only (FLEET_MOVE_DIR / loc_2008 / FLEET_STEP_DY); the caller ignores the result.
+  */
+ export function reverseFleetAtEdge(m) {
+-  let dir, step;
++  let dir, step, departedEdge;
+   // Sweeping left (FLEET_MOVE_DIR nonzero): test the left edge. If not reached, leave everything as is.
+   if (m.mem8[FLEET_MOVE_DIR] !== 0) {
+     if (!fleetReachedEdge(m, FLEET_LEFT_EDGE_VRAM)) return;
+@@ -34,13 +34,19 @@ export function reverseFleetAtEdge(m) {
+     // and clear the heading.
+     step = fleetStepSize(m);
+     dir = 0x00;
++    departedEdge = FLEET_LEFT_EDGE_VRAM;
+   } else {
+     // Sweeping right (FLEET_MOVE_DIR zero): test the right edge. If not reached, leave everything as is.
+     if (!fleetReachedEdge(m, FLEET_RIGHT_EDGE_VRAM)) return;
+     // Reached the right edge: turn to move left with step 0xfe (-2 pixels) and set the heading.
+     step = 0xfe;
+     dir = 0x01;
++    departedEdge = FLEET_RIGHT_EDGE_VRAM;
+   }
++  // Open Swarm adaptation: the original framebuffer edge scan retains a
++  // pixel after a turn with replacement sprites. Clear only the departed
++  // 23-byte probe strip so the opposite edge can arm the next turn.
++  for (let i = 0; i < 0x17; i++) m.mem8[departedEdge + i] = 0;
+   // Publish the new heading and horizontal step...
+   m.mem8[FLEET_MOVE_DIR] = dir;
+   m.mem8[loc_2008] = step;
