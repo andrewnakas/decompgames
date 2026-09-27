@@ -1,0 +1,17 @@
+# SkyRoads clean replacement feasibility (experimental)
+
+Pinned upstream: [`haroldo-ok/skyroads-32x@df219e03b854153291b32224593013b60d861d40`](https://github.com/haroldo-ok/skyroads-32x/tree/df219e03b854153291b32224593013b60d861d40). Its README documents disassembly-based C reconstruction, MIT source license, and Emscripten support. Its game data remains Bluemoon's, outside that license. The upstream Web recipe bundles whichever original files are present; it is **not** eligible to deploy as-is.
+
+## Independent course-data experiment
+
+`scripts/build-open-skyroads-roads.py` generates `ROADS.LZS` from authored geometry and palettes without reading any retail file. It writes a 31-entry directory (one demo course and thirty selectable courses), each with 7-column tile rows, center-safe path, supplies/boosts/shoulder obstacles, and seven tunnel-gate rows. The generator records per-road grid hashes, archive SHA-256, size, format revision, and CC0 provenance in a sidecar JSON. These are experimental layouts, not yet tested in gameplay or claimed as a finished replacement campaign.
+
+Run `python scripts/build-open-skyroads-roads.py .cache/open-skyroads-roads/ROADS.LZS`. This produced a 35,134-byte archive, SHA-256 `a5249198fdd6ccec9d7a8eb70ed3fabcdbddb41a135f43790bc78753e6c132c4`. A second independent invocation produced the same digest. All 31 entries were decoded with the **pinned upstream** `tools/lzs.py` reader; each decompressed to exactly its directory size, had six-bit palette channels and 7-column rows, kept the center nonempty, and ended with seven all-tunnel rows. This validates the wire format and authored content, **not** a playable race or course completion. The generated file is kept in ignored `.cache/`, never uploaded to production.
+
+## Full replacement boundary
+
+The pinned `CMakeLists.txt` lists **27 original-data paths**: 17 base files and `WORLD0.LZS` through `WORLD9.LZS`. `src/core/assets.c` requires seven graphics containers (`MAINMENU`, `SETMENU`, `HELPMENU`, `GOMENU`, `INTRO`, `CARS`, `DASHBRD`), `TREKDAT.LZS`, `OXY_DISP.DAT`, `FUL_DISP.DAT`, `SPEED.DAT`, `DEMO.REC`, `ANIM.LZS`, and `INTRO.SND` at boot. Later play reads `ROADS.LZS` and a world backdrop. The separate audio path reads `MUZAX.LZS` and `SFX.SND`; a release variant must disable or replace its SDL audio device and these reads so browser testing stays silent. None of those missing files can be copied from the upstream browser build.
+
+Menu drawing indexes at least three `MAINMENU` pictures, six `SETMENU` pictures, multiple `HELPMENU` pictures, and two `GOMENU` pictures. Gameplay uses the first 24×2310 `CARS` strip, first `DASHBRD` and world pictures, ten gauge records in each gauge file, speedometer records, and at least eight `TREKDAT` objects. `TREKDAT`'s second-stage expansion in `src/core/render.c` has a 0x270-byte directory and bespoke span records, a larger replacement-art task than the road format. `docs/FORMATS.md` explicitly labels some sprite, object, speedometer, demo, and sound details as unfinished; treat those as blockers until validated.
+
+Next integration step: author a complete original visual package and a null-audio build, then prove an initial course can be selected, steered, completed, and persisted in a muted browser. Keep this as research and generated-data progress; it is **not** addition 4/5.

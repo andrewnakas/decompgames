@@ -2,6 +2,10 @@
 
 ## Active milestone: five additional playable decomps
 
+### Addition 4 lead: SkyRoads clean replacement data
+
+At pinned disassembly-derived port revision `df219e03b854153291b32224593013b60d861d40`, an independent generator now builds a full 31-entry `ROADS.LZS` without original files; the upstream decoder accepted all entries. This is a data-format milestone only. The remaining 26 data paths include menus, intro, vehicles, world backdrops, gauges, speedometer, bespoke `TREKDAT` shapes, and audio; a null-audio browser port and full course-completion/persistence tests have not happened. See `docs/skyroads-replacement-feasibility.md`. Keep uncounted and undeployed.
+
 User explicitly confirmed strict decomps with replacement assets. Track actual releases in `docs/five-playable-decomps.md`; current completion is 3/5 after Open Digger, Open Paths, and Open Junction passed production verification. Do not count released-source games, current hosted titles, editions, or asset prototypes. Open Paths has an immutable runtime, exact-source archive, 14-file CC0 replacement package, null audio backend, completed first-level loop, fresh-start progress, and export/delete/import restoration. Its complete six-level playthrough remains unverified. Open Digger's full eight-level playthrough and high-score-entry flow also remain unverified and are not claimed. Open Junction's uninterrupted 1800-to-2000 span and repeat-level playthrough remain unverified.
 
 ### Addition 3 released: reSL / Open Junction
