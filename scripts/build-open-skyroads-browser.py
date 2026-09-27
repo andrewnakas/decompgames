@@ -107,6 +107,8 @@ def stage(source: Path, output: Path, roads: Path, visuals: Path, support: Path)
     (src / 'open_skyways_pre.js').write_text('''// Mount private browser storage and load prior progress before main().
 Module.preRun = Module.preRun || [];
 Module.preRun.push(function () {
+  // The Decomp Games shell mounts a namespaced IDBFS volume itself.
+  if (Module.openSkywaysManagedSave) return;
   FS.mkdir('/save');
   FS.mount(IDBFS, {}, '/save');
   addRunDependency('open-skyways-saves');
