@@ -35,8 +35,17 @@ def generate(output: Path) -> None:
     for symbol, index in ids.items():
         pattern = font[symbol].split("/")
         assert len(pattern) == 7 and all(len(row) == 5 for row in pattern)
-        rows = [int(row, 2) << 2 for row in pattern] + [0]
-        data[GLYPH_BASE + index * 8:GLYPH_BASE + (index + 1) * 8] = bytes(rows)
+        # The video board is ROT270. Each source byte advances along display
+        # X while its bits run up display Y (bit 7 is the top of a glyph).
+        # Transpose the authored 5x7 upright pattern into that native format.
+        columns = []
+        for x in range(8):
+            value = 0
+            for y in range(7):
+                if 1 <= x <= 5 and pattern[y][x - 1] == "1":
+                    value |= 1 << (7 - y)
+            columns.append(value)
+        data[GLYPH_BASE + index * 8:GLYPH_BASE + (index + 1) * 8] = bytes(columns)
 
     # The translated blitter reads six 16-byte alien frames from 0x1c00,
     # followed by a reserve craft and a two-frame explosion at 0x1c60.
@@ -135,7 +144,7 @@ def generate(output: Path) -> None:
         "originalAssetsRead": False,
         "target": "arcade-js Space Invaders idiomatic translation",
         "upstreamRevision": "e849d086f4168c9a0e1ab501d62efbe3766def8a",
-        "authoredComponents": ["5x7 glyph shapes", "score header", "credit label",
+        "authoredComponents": ["5x7 glyph shapes encoded for ROT270 display", "score header", "credit label",
                                "six alien frames", "reserve craft", "explosion frames",
                                "shield buffer template", "point-table heading",
                                "two empty draw-script terminators",
