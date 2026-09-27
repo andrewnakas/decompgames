@@ -1,6 +1,6 @@
 // Inspect ROM-data dependencies without possessing or loading the original ROM.
 // This is a feasibility probe, never a gameplay or compatibility test.
-// Usage: node scripts/audit-arcade-js-invaders-feasibility.mjs PATH_TO_PINNED_ARCADE_JS [GENERATED_DIRECTORY] [MAX_FRAMES] [idle|coin-start|coin-start-move-fire]
+// Usage: node scripts/audit-arcade-js-invaders-feasibility.mjs PATH_TO_PINNED_ARCADE_JS [GENERATED_DIRECTORY] [MAX_FRAMES] [idle|coin-start|coin-start-move-fire|coin-start-repeat-fire|coin-start-sweep-fire|coin-start-sweep-fire-fast]
 import { resolve, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { execFileSync } from 'node:child_process';
@@ -24,10 +24,10 @@ const {
 } = await moduleAt('games/invaders/idiomatic/names.js');
 const manifest = (await moduleAt('games/invaders/manifest.js')).default;
 const maxFrames = process.argv[4] === undefined ? 200 : Number(process.argv[4]);
-if (!Number.isSafeInteger(maxFrames) || maxFrames < 1 || maxFrames > 5000)
-  throw new Error('MAX_FRAMES must be an integer from 1 to 5000');
+if (!Number.isSafeInteger(maxFrames) || maxFrames < 1 || maxFrames > 20000)
+  throw new Error('MAX_FRAMES must be an integer from 1 to 20000');
 const scenario = process.argv[5] || 'idle';
-if (!['idle', 'coin-start', 'coin-start-move-fire'].includes(scenario)) throw new Error('Unknown input scenario');
+if (!['idle', 'coin-start', 'coin-start-move-fire', 'coin-start-repeat-fire', 'coin-start-sweep-fire', 'coin-start-sweep-fire-fast'].includes(scenario)) throw new Error('Unknown input scenario');
 
 let rom = new Uint8Array(8192);
 let inputData = '8,192 zero bytes; no original ROM';
@@ -46,6 +46,14 @@ if (process.argv[3]) {
 const machine = await Machine.create(rom, {
   overrides: await resolveAllIdiomatic(),
 });
+const shipHandlerWrites = [];
+let currentFrame = 0;
+const rawWrite8 = machine.mem.write8.bind(machine.mem);
+machine.mem.write8 = (address, value, ...rest) => {
+  if (currentFrame > 0 && (address === 0x2013 || address === 0x2014) && shipHandlerWrites.length < 8 && machine.mem8[address] !== (value & 255))
+    shipHandlerWrites.push({ frame: currentFrame, address, value: value & 255, alienDrawCoord: machine.mem16[ALIEN_DRAW_ADDR], fleetRef: machine.mem16[0x2009], alienIndex: machine.mem8[ALIEN_DRAW_INDEX] });
+  return rawWrite8(address, value, ...rest);
+};
 const reads = new Uint32Array(8192);
 const read8 = machine.mem.read8.bind(machine.mem);
 machine.mem.read8 = (address) => {
@@ -69,11 +77,14 @@ let shotHitFrames = 0;
 let minShotY = 255;
 let maxShotY = 0;
 const shotSamples = [];
+let sweepRight = true;
+let pressNextReadyFrame = false;
 const actions = manifest.inputs.actions;
 const result = runIdiomaticGame(machine, {
   nmiReturnPC: manifest.convergence.idiomatic.nmiReturnPC,
   maxFrames,
   onFrame: (m, frame) => {
+    currentFrame = frame;
     if (m.mem8[GAME_IN_PROGRESS] !== 0 && firstPlayFrame === null) firstPlayFrame = frame;
     const count = m.mem8[ALIEN_COUNT];
     if (count !== 0 && firstLiveFleetFrame === null) firstLiveFleetFrame = frame;
@@ -102,10 +113,23 @@ const result = runIdiomaticGame(machine, {
     const press = (action) => { input[action.port] = (input[action.port] || 0) | action.bit; };
     if (frame >= 300 && frame < 306) press(actions.coin);
     if (frame >= 360 && frame < 366) press(actions.start1);
-    if (scenario === 'coin-start-move-fire') {
+    if (scenario === 'coin-start-move-fire' || scenario === 'coin-start-repeat-fire') {
       if (frame >= 600 && frame < 660) press(actions.left);
       if (frame >= 700 && frame < 790) press(actions.right);
       if (frame >= 810 && frame < 816) press(actions.fire);
+      if (scenario === 'coin-start-repeat-fire' && frame >= 900 && (frame - 900) % 45 < 4) press(actions.fire);
+    }
+    if ((scenario === 'coin-start-sweep-fire' || scenario === 'coin-start-sweep-fire-fast') && frame >= 600) {
+      if (m.mem8[PLAYER_SHIP_X] >= 210) sweepRight = false;
+      if (m.mem8[PLAYER_SHIP_X] <= 48) sweepRight = true;
+      press(sweepRight ? actions.right : actions.left);
+      if (scenario === 'coin-start-sweep-fire' && (frame - 610) % 40 < 4) press(actions.fire);
+      if (scenario === 'coin-start-sweep-fire-fast') {
+        if (m.mem8[PLAYER_SHOT_STATUS] === 0) {
+          if (pressNextReadyFrame) press(actions.fire);
+          pressNextReadyFrame = !pressNextReadyFrame;
+        } else pressNextReadyFrame = false;
+      }
     }
     m.io.inputAssert = input;
   },
@@ -125,6 +149,7 @@ for (let i = 0; i < reads.length;) {
 console.log(JSON.stringify({
   upstreamRevision: actual,
   inputData,
+  shipHandlerWrites,
   scenario,
   firstPlayFrame,
   firstLiveFleetFrame,

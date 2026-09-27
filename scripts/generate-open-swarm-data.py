@@ -104,6 +104,11 @@ def generate(output: Path) -> None:
         if slot >= 2:
             data[record] = 0xFE
     data[0x1B60] = 0xFF
+    # The invader-hit path fills the explosion coordinate at 0x2064/65.
+    # Its surrounding descriptor still needs a safe authored bitmap and
+    # finite row count; zeros would blit 256 rows from address zero.
+    data[0x1B62:0x1B64] = (0x1C70).to_bytes(2, "little")
+    data[0x1B66] = 16
     # This is the high address byte, not a player ordinal: 0x21 selects
     # 0x2100, where the translated start flow fills 55 live alien cells.
     data[0x1B67] = 0x21
@@ -116,6 +121,9 @@ def generate(output: Path) -> None:
     # The board's rotated Y coordinate rises toward 0xd8 at the top.
     # A positive four-unit step advances the beam into the fleet.
     data[0x1B27:0x1B29] = (0x1C90).to_bytes(2, "little")
+    # Retiring a missed shot takes a short, visible 16-frame interval;
+    # zero would underflow and hold the single-shot latch for 256 frames.
+    data[0x1B26] = 0x10
     data[0x1B29:0x1B2B] = (0x6820).to_bytes(2, "little")
     data[0x1B2B] = 8
     data[0x1B2C] = 4
@@ -135,6 +143,7 @@ def generate(output: Path) -> None:
                                "armed attract-state sentinel", "object dispatch targets",
                                "video-safe reserve-craft descriptor",
                                "beam sprite and video-safe shot descriptor",
+                               "16-frame shot retire timer", "invader-hit explosion descriptor",
                                "player-one 0x21xx field-page selector"],
         "missingComponents": [
             "work-RAM and object templates", "remaining in-game sprite descriptors",
