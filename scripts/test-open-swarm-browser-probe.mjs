@@ -27,7 +27,15 @@ const server = createServer(async (request, response) => {
     if (!file.startsWith(checkout + sep)) { response.writeHead(403).end(); return; }
   }
   try {
-    const bytes = await readFile(file);
+    let bytes = await readFile(file);
+    if (pathname === '/web/worker.js') {
+      // Private observation only: emit a small state sample without changing
+      // game execution, input, renderer, or the upstream checkout on disk.
+      const source = bytes.toString('utf8').replaceAll('\r\n', '\n');
+      const anchor = 'function serviceIdiomaticFrame(machine, frameIndex) {\n  readInputsInto(machine);';
+      if (!source.includes(anchor)) throw Error('Upstream worker telemetry anchor changed');
+      bytes = Buffer.from(source.replace(anchor, `${anchor}\n  if (frameIndex % 15 === 0 || (Atomics.load(ctrl, 1) & 5)) postMessage({ type: 'probe', frame: frameIndex, in1: Atomics.load(ctrl, 1), play: machine.mem8[0x20ef], shipX: machine.mem8[0x201b], shot: machine.mem8[0x2025], aliens: machine.mem8[0x2082] });`));
+    }
     response.writeHead(200, {
       'content-type': types[extname(file)] || 'application/octet-stream',
       'cross-origin-opener-policy': 'same-origin',
@@ -53,12 +61,20 @@ try {
   await page.waitForFunction(() => window.__openSwarm.ready || window.__openSwarm.error, null, { timeout: 120_000 });
   const initial = await page.evaluate(() => window.__openSwarm);
   if (initial.error) throw Error(initial.error);
-  await page.keyboard.press('Digit5');
-  await page.waitForTimeout(200);
-  await page.keyboard.press('Digit1');
-  await page.keyboard.down('Space');
+  const waitFrame = n => page.waitForFunction(min => window.__openSwarm.frames >= min || window.__openSwarm.error, n, { timeout: 30_000 });
+  await waitFrame(300);
+  await page.keyboard.down('Digit5');
+  await page.waitForTimeout(130);
+  await page.keyboard.up('Digit5');
+  await waitFrame(360);
+  await page.keyboard.down('Digit1');
+  await page.waitForTimeout(130);
+  await page.keyboard.up('Digit1');
+  await waitFrame(600);
   await page.keyboard.down('ArrowRight');
-  await page.waitForFunction(() => window.__openSwarm.frames >= 240 || window.__openSwarm.error, null, { timeout: 30_000 });
+  await waitFrame(640);
+  await page.keyboard.down('Space');
+  await waitFrame(670);
   await page.keyboard.up('ArrowRight');
   await page.keyboard.up('Space');
   const result = await page.evaluate(() => {
@@ -68,8 +84,20 @@ try {
     for (let i = 0; i < pixels.length; i += 4) if (pixels[i] || pixels[i + 1] || pixels[i + 2]) nonblack++;
     return { ...window.__openSwarm, nonblack, canvas: [canvas.width, canvas.height] };
   });
-  console.log(JSON.stringify({ result, errors }));
-  if (result.error || errors.length || !result.ready || result.frames < 240 || result.nonblack < 10 || result.audioEnabled) process.exitCode = 1;
+  const probes = result.probes;
+  const inputProof = {
+    coin: probes.some(p => p.in1 & 1),
+    start: probes.some(p => p.in1 & 4),
+    right: probes.some(p => p.in1 & 64),
+    fire: probes.some(p => p.in1 & 16),
+    play: probes.some(p => p.play),
+    moved: Math.max(...probes.filter(p => p.frame >= 600).map(p => p.shipX)) > Math.min(...probes.filter(p => p.frame >= 600).map(p => p.shipX)),
+    shot: probes.some(p => p.shot),
+    alienCount: Math.max(...probes.map(p => p.aliens)),
+  };
+  delete result.probes;
+  console.log(JSON.stringify({ result, inputProof, probeCount: probes.length, errors }));
+  if (result.error || errors.length || !result.ready || result.frames < 670 || result.nonblack < 10 || result.audioEnabled || !inputProof.coin || !inputProof.start || !inputProof.right || !inputProof.fire || !inputProof.play || !inputProof.moved || !inputProof.shot) process.exitCode = 1;
   await page.close();
 } finally {
   if (browser) await browser.close();

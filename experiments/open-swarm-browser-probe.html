@@ -34,7 +34,7 @@ const bit = { coin: 1, start: 4, fire: 16, left: 32, right: 64 };
 const key = { Digit5: 'coin', KeyC: 'coin', Digit1: 'start', Space: 'fire', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right' };
 const held = new Set();
 let counter = 0, worker;
-window.__openSwarm = { ready: false, frames: 0, error: '', dataSha256: '', audioEnabled: false };
+window.__openSwarm = { ready: false, frames: 0, error: '', dataSha256: '', audioEnabled: false, probes: [] };
 
 function setInput(name, down) {
   if (down) held.add(name); else held.delete(name);
@@ -94,6 +94,7 @@ try {
     if (message.type === 'ready') { window.__openSwarm.ready = true; status.textContent = 'Experimental engine running'; }
     if (message.type === 'error') { window.__openSwarm.error = message.reason; status.textContent = `Engine error: ${message.reason}`; }
     if (message.type === 'restart') status.textContent = `Engine restarted: ${message.reason}`;
+    if (message.type === 'probe') window.__openSwarm.probes.push(message);
   };
   worker.onerror = event => { window.__openSwarm.error = event.message; status.textContent = `Worker error: ${event.message}`; };
   worker.postMessage({ type: 'init', ctrl: ctrl.buffer, fb: fb.buffer, game: 'invaders', images: { maincpu: data } }, [data]);
