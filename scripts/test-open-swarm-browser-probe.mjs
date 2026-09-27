@@ -8,6 +8,7 @@ import { createHash } from 'node:crypto';
 
 const checkout = resolve(process.argv[2] || '.cache/arcade-js');
 const dataFile = resolve(process.argv[3] || '.cache/open-swarm-draft/open-swarm-draft.bin');
+const edgeReview = process.argv.includes('--edge-review');
 const probeFile = resolve('experiments/open-swarm-browser-probe.html');
 const revision = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: checkout, encoding: 'utf8' }).trim();
 if (revision !== 'e849d086f4168c9a0e1ab501d62efbe3766def8a') throw Error(`Unexpected arcade-js revision ${revision}`);
@@ -34,7 +35,7 @@ const server = createServer(async (request, response) => {
       const source = bytes.toString('utf8').replaceAll('\r\n', '\n');
       const anchor = 'function serviceIdiomaticFrame(machine, frameIndex) {\n  readInputsInto(machine);';
       if (!source.includes(anchor)) throw Error('Upstream worker telemetry anchor changed');
-      bytes = Buffer.from(source.replace(anchor, `${anchor}\n  if (frameIndex % 15 === 0 || (Atomics.load(ctrl, 1) & 5)) postMessage({ type: 'probe', frame: frameIndex, in1: Atomics.load(ctrl, 1), play: machine.mem8[0x20ef], shipX: machine.mem8[0x201b], shot: machine.mem8[0x2025], aliens: machine.mem8[0x2082] });`));
+      bytes = Buffer.from(source.replace(anchor, `${anchor}\n  if (frameIndex % 15 === 0 || (Atomics.load(ctrl, 1) & 5)) postMessage({ type: 'probe', frame: frameIndex, in1: Atomics.load(ctrl, 1), play: machine.mem8[0x20ef], shipX: machine.mem8[0x201b], shot: machine.mem8[0x2025], aliens: machine.mem8[0x2082], fleetDir: machine.mem8[0x200d] });`));
     }
     response.writeHead(200, {
       'content-type': types[extname(file)] || 'application/octet-stream',
@@ -77,6 +78,11 @@ try {
   await waitFrame(670);
   await page.keyboard.up('ArrowRight');
   await page.keyboard.up('Space');
+  if (edgeReview) {
+    await page.locator('canvas').screenshot({ path: '.cache/open-swarm-frame670.png' });
+    await page.waitForFunction(() => window.__openSwarm.frames >= 1840 || window.__openSwarm.error, null, { timeout: 60_000 });
+    await page.locator('canvas').screenshot({ path: '.cache/open-swarm-frame1840.png' });
+  }
   const result = await page.evaluate(() => {
     const canvas = document.querySelector('canvas');
     const pixels = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data;
@@ -95,8 +101,9 @@ try {
     shot: probes.some(p => p.shot),
     alienCount: Math.max(...probes.map(p => p.aliens)),
   };
+  const edgeSamples = edgeReview ? probes.filter(p => p.frame >= 1740).map(p => ({ frame: p.frame, aliens: p.aliens, fleetDir: p.fleetDir })) : undefined;
   delete result.probes;
-  console.log(JSON.stringify({ result, inputProof, probeCount: probes.length, errors }));
+  console.log(JSON.stringify({ result, inputProof, probeCount: probes.length, edgeSamples, errors }));
   if (result.error || errors.length || !result.ready || result.frames < 670 || result.nonblack < 10 || result.audioEnabled || !inputProof.coin || !inputProof.start || !inputProof.right || !inputProof.fire || !inputProof.play || !inputProof.moved || !inputProof.shot) process.exitCode = 1;
   await page.close();
 } finally {

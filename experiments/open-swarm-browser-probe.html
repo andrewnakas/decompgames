@@ -66,8 +66,8 @@ function draw() {
   if (next !== counter && snapshotFrame(fb, snap, frameBytes, next, () => Atomics.load(ctrl, 4))) {
     // The translated Invaders video is ROT270: display width 224, height 256.
     for (let y = 0; y < width; y++) for (let x = 0; x < height; x++) {
-      const source = (x * width + y) * 3;
-      const dest = (y * height + (height - 1 - x)) * 4;
+      const source = (x * width + (width - 1 - y)) * 3;
+      const dest = (y * height + x) * 4;
       image.data[dest] = snap[source];
       image.data[dest + 1] = snap[source + 1];
       image.data[dest + 2] = snap[source + 2];
