@@ -165,6 +165,11 @@ def generate(output: Path, shot2_experiment: bool = False) -> None:
     # loop uses work-RAM 0x2015 == 0xff as its armed sentinel. This is an
     # independently chosen state byte, not a copy of the old ROM template.
     data[0x1B15] = 0xFF
+    # The attract demo enters the shared vblank draw tail immediately after
+    # copying this image. That tail paints the current alien cell even before
+    # the march selector runs, so both its reference and queued destination
+    # must start in video-safe coordinates instead of zeroed work RAM.
+    data[0x1B09:0x1B0D] = (0x4078).to_bytes(2, "little") * 2
     # The cold-boot copier also seeds 0x20e9 from this image. Mark the
     # independently authored attract world active so the vblank task runner
     # can actually service its object table after the title sequence.
@@ -238,6 +243,7 @@ def generate(output: Path, shot2_experiment: bool = False) -> None:
                                "three one-tick blank attract transitions",
                                "finite attract reveal object descriptor",
                                "armed attract-state sentinel", "object dispatch targets",
+                               "video-safe attract fleet reference and first draw coordinate",
                                "video-safe reserve-craft descriptor",
                                "beam sprite and video-safe shot descriptor",
                                "16-frame shot retire timer", "invader-hit explosion descriptor",

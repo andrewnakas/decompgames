@@ -46,8 +46,8 @@ const {
 } = await moduleAt('games/invaders/idiomatic/names.js');
 const manifest = (await moduleAt('games/invaders/manifest.js')).default;
 const maxFrames = process.argv[4] === undefined ? 200 : Number(process.argv[4]);
-if (!Number.isSafeInteger(maxFrames) || maxFrames < 1 || maxFrames > 20000)
-  throw new Error('MAX_FRAMES must be an integer from 1 to 20000');
+if (!Number.isSafeInteger(maxFrames) || maxFrames < 1 || maxFrames > 50000)
+  throw new Error('MAX_FRAMES must be an integer from 1 to 50000');
 const scenario = process.argv[5] || 'idle';
 if (!['idle', 'coin-start', 'coin-start-move-fire', 'coin-start-repeat-fire', 'coin-start-sweep-fire', 'coin-start-sweep-fire-fast', 'coin-start-sweep-fire-fast-restart', 'coin-start-sweep-fire-fast-edge-clear', 'coin-start-sweep-fire-fast-edge-clear-restart'].includes(scenario)) throw new Error('Unknown input scenario');
 
@@ -331,3 +331,4 @@ console.log(JSON.stringify({
   touchedRomBytes: reads.reduce((count, value) => count + Number(value !== 0), 0),
   ranges,
 }, null, 2));
+if (result.stopError) process.exitCode = 1;
