@@ -2,6 +2,10 @@
 
 ## Active milestone: five additional playable decomps
 
+### Addition 5 in progress: Open Swarm remains private
+
+The independent 8 KiB replacement image for pinned GPL `qarl/arcade-js` now has correctly indexed decimal glyphs and authored one-/two-player game-over text. The September 28 normal-clock silent Edge test of the experimental hostile-shot image reached alien hit, round advance, game-over, and restart in a 23,000-frame scripted-control loop; its current SHA-256 is `40b8866859a741b46d9f75659231cf2f16072dab569a4891b24875ea4f23d641`. The baseline image is `37f4a73c9558a6a45301bd9d7f980997c5afd28f91d5033c3a88205c9175d019`. The private generator and GPL patches are pinned, but the pack still has incomplete templates and attract scripts; player damage, banner rendering, stable late visuals, and patch fidelity remain unverified. It is **not** eligible for deployment or the fifth count. Next, capture the actual game-over transition in a silent browser run, inspect remaining live data reads, and close the gameplay/art gaps. Tube remains a larger fallback lead. Details and the negative evidence are in `docs/arcade-js-invaders-replacement-feasibility.md`.
+
 ### Addition 4 released: SkyRoads / Open Skyways
 
 At pinned disassembly-derived port revision `df219e03b854153291b32224593013b60d861d40`, independent generators build a full 31-entry `ROADS.LZS`, 17 graphics containers, and seven support/HUD/object files without original files. The silent browser recipe stages 25 replacement files and omits original music/SFX and SDL audio initialization. [Private CI run 36293441485](https://github.com/andrewnakas/decompgames/actions/runs/36293441485) compiled package `df219e03b854-59b1a2a61bd4`. Muted local and production Edge tests completed Road 01, visibly exercised Right steering and Space jump, retained progress, and passed site-player export/delete/import restoration. Source, build, license, input and artifact checksums, controls, and test limits are recorded in `docs/open-skyways-integration.md`. [Open Skyways is live](https://decompgames.com/games/skyways/) and counts as addition 4/5. The minimalist art and other 29 roads remain unverified.

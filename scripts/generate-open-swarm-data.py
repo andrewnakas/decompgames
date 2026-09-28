@@ -118,6 +118,9 @@ def generate(output: Path, shot2_experiment: bool = False) -> None:
 
     write_text(SCORE_HEADER, 28, "OPEN SWARM SCORE1   SCORE2")
     write_text(CREDIT_LABEL, 7, "CREDIT ")
+    # The one-player teardown types the first ten glyphs ("GAME OVER ").
+    # The two-player handoff types all twenty and stamps its own player digit.
+    write_text(0x1AA6, 20, "GAME OVER PLAYER")
     write_text(0x1CA3, 21, "OPEN SWARM POINTS")
     # Empty 4-byte-record draw scripts still need the single-byte 0xff
     # sentinel; otherwise the translated walker reads around all of ROM.
@@ -193,6 +196,7 @@ def generate(output: Path, shot2_experiment: bool = False) -> None:
         "target": "arcade-js Space Invaders idiomatic translation",
         "upstreamRevision": "e849d086f4168c9a0e1ab501d62efbe3766def8a",
         "authoredComponents": ["5x7 glyph shapes encoded for ROT270 display", "score header", "credit label",
+                               "one-player and two-player game-over banner text",
                                "six alien frames", "reserve craft", "explosion frames",
                                "shield buffer template", "point-table heading",
                                "two empty draw-script terminators",

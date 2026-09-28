@@ -15,10 +15,12 @@ const acceleratedLoop = process.argv.includes('--accelerated-loop');
 const realtimeLoop = process.argv.includes('--realtime-loop');
 const shieldReview = process.argv.includes('--shield-review');
 const panelReview = process.argv.includes('--panel-review');
+const lateReview = process.argv.includes('--late-review');
+if (lateReview && !realtimeLoop) throw Error('--late-review requires --realtime-loop');
 if ([acceleratedLoop, realtimeLoop, shieldReview].filter(Boolean).length > 1) throw Error('Choose only one diagnostic mode');
 const shot2Experiment = process.argv.includes('--shot2-experiment');
-const baselineDataSha256 = '7ec2c6a27c042c79315cd212851f29f1a8f4a1fc5f624c98986fce8399cc0cd9';
-const shot2DataSha256 = 'a4237cf9d16dea55cf8a43f1c7fc2b8b1e6e8e35ea656d25e613847611216514';
+const baselineDataSha256 = '37f4a73c9558a6a45301bd9d7f980997c5afd28f91d5033c3a88205c9175d019';
+const shot2DataSha256 = '40b8866859a741b46d9f75659231cf2f16072dab569a4891b24875ea4f23d641';
 const dataSha256 = createHash('sha256').update(await readFile(dataFile)).digest('hex');
 if (dataSha256 !== baselineDataSha256 && !(shot2Experiment && dataSha256 === shot2DataSha256))
   throw Error(`Unexpected independent data image ${dataSha256}`);
@@ -130,6 +132,14 @@ try {
       }
       requestAnimationFrame(tick);
     });
+    if (lateReview) {
+      await waitFrame(9000);
+      await page.locator('canvas').screenshot({ path: '.cache/open-swarm-frame9000.png' });
+      for (let frame = 10000; frame <= 15000; frame += 100) {
+        await waitFrame(frame);
+        await page.locator('canvas').screenshot({ path: `.cache/open-swarm-frame${frame}.png` });
+      }
+    }
     await waitFrame(23_000);
   } else if (shieldReview) {
     await waitFrame(300);
