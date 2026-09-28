@@ -1,6 +1,6 @@
 // Inspect ROM-data dependencies without possessing or loading the original ROM.
 // This is a feasibility probe, never a gameplay or compatibility test.
-// Usage: node scripts/audit-arcade-js-invaders-feasibility.mjs PATH_TO_PINNED_ARCADE_JS [GENERATED_DIRECTORY] [MAX_FRAMES] [SCENARIO] [--trail-experiment]
+// Usage: node scripts/audit-arcade-js-invaders-feasibility.mjs PATH_TO_PINNED_ARCADE_JS [GENERATED_DIRECTORY] [MAX_FRAMES] [SCENARIO] [--trail-experiment] [--shot2-experiment]
 import { resolve, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { execFileSync } from 'node:child_process';
@@ -107,6 +107,8 @@ let alienShot2BlowupFrames = 0;
 let minAlienShotY = 255;
 let maxAlienShotY = 0;
 let maxPlayer1ScoreRaw = 0;
+const shieldSamples = [];
+const shipCountSamples = [];
 const shotSamples = [];
 const fleetSamples = [];
 let firstBothEdgesFrame = null;
@@ -127,6 +129,15 @@ const result = runIdiomaticGame(machine, {
     }
     if (m.mem8[0x2035] & 0x01) alienShot2BlowupFrames++;
     maxPlayer1ScoreRaw = Math.max(maxPlayer1ScoreRaw, m.mem16[0x20f8]);
+    if ([537, 1000, 2000, 3000, 5000, 10000].includes(frame)) {
+      let shieldBits = 0;
+      for (let shield = 0; shield < 4; shield++) for (let row = 0; row < 22; row++) for (let col = 0; col < 2; col++) {
+        let byte = m.mem8[0x2806 + shield * 0x2e0 + row * 0x20 + col];
+        while (byte) { shieldBits += byte & 1; byte >>= 1; }
+      }
+      shieldSamples.push({ frame, bits: shieldBits });
+      shipCountSamples.push({ frame, count: m.mem8[0x21ff], anim: m.mem8[0x2015], ready: m.mem8[0x2069] });
+    }
     if (m.mem8[GAME_IN_PROGRESS] !== 0 && firstPlayFrame === null) firstPlayFrame = frame;
     const count = m.mem8[ALIEN_COUNT];
     if (count !== 0 && firstLiveFleetFrame === null) firstLiveFleetFrame = frame;
@@ -244,6 +255,8 @@ console.log(JSON.stringify({
   minAlienShotY: minAlienShotY === 255 ? null : minAlienShotY,
   maxAlienShotY,
   maxPlayer1ScoreRaw,
+  shieldSamples,
+  shipCountSamples,
   alienShot2Gate: machine.mem16[0x2038],
   shipReadyFlag: machine.mem8[0x2069],
   alienShotRate: machine.mem8[0x20cf],

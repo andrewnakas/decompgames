@@ -13,7 +13,8 @@ const edgeReview = process.argv.includes('--edge-review') || headerReview;
 const trailExperiment = process.argv.includes('--trail-experiment');
 const acceleratedLoop = process.argv.includes('--accelerated-loop');
 const realtimeLoop = process.argv.includes('--realtime-loop');
-if (acceleratedLoop && realtimeLoop) throw Error('Choose only one loop diagnostic');
+const shieldReview = process.argv.includes('--shield-review');
+if ([acceleratedLoop, realtimeLoop, shieldReview].filter(Boolean).length > 1) throw Error('Choose only one diagnostic mode');
 const shot2Experiment = process.argv.includes('--shot2-experiment');
 const baselineDataSha256 = '6aedf2a8f725d05ed882e7e8b744b748ef776fba616f5c6387eb99d967f2f3bb';
 const shot2DataSha256 = 'ed8ce9400aa25582ecb93264a23949f64d3210676fe802874077829dec090a64';
@@ -71,7 +72,7 @@ const server = createServer(async (request, response) => {
         source = source.replace(pace, 'machine._next += 1000 / 1200;');
         source = source.replace(anchor, `${anchor}\n  const auto = machine._openSwarmAuto ||= { right: true, fireNext: false, firstOver: null };\n  if (frameIndex > 600) {\n    if (machine.mem8[0x201b] >= 210) auto.right = false;\n    if (machine.mem8[0x201b] <= 48) auto.right = true;\n  }\n  if (frameIndex > 600 && machine.mem8[0x2025] === 0) auto.fireNext = !auto.fireNext;\n  else auto.fireNext = false;\n  if (frameIndex > 600 && machine.mem8[0x20ef] === 0 && auto.firstOver === null && auto.seenPlay) auto.firstOver = frameIndex;\n  if (machine.mem8[0x20ef]) auto.seenPlay = true;\n  let virtualInput = 0;\n  if (frameIndex >= 300 && frameIndex < 306) virtualInput |= 1;\n  if (frameIndex >= 360 && frameIndex < 366) virtualInput |= 4;\n  if (auto.firstOver !== null) {\n    if (frameIndex >= auto.firstOver + 245 && frameIndex < auto.firstOver + 251) virtualInput |= 1;\n    if (frameIndex >= auto.firstOver + 305 && frameIndex < auto.firstOver + 311) virtualInput |= 4;\n  }\n  if (frameIndex > 600) virtualInput |= auto.right ? 64 : 32;\n  if (frameIndex > 600 && auto.fireNext) virtualInput |= 16;\n  machine.io.inputAssert[PORTS.in1] = virtualInput;`);
       }
-      source = source.replace(anchor, `${anchor}\n  if (frameIndex % 15 === 0 || (Atomics.load(ctrl, 1) & 5)) { const header = Array.from({ length: 28 }, (_, glyph) => Array.from({ length: 8 }, (_, row) => machine.mem8[0x241e + glyph * 0x100 + row * 0x20])); postMessage({ type: 'probe', frame: frameIndex, in1: Atomics.load(ctrl, 1), play: machine.mem8[0x20ef], shipX: machine.mem8[0x201b], shot: machine.mem8[0x2025], alienShot2: machine.mem8[0x2035], alienShot2Y: machine.mem8[0x203d], aliens: machine.mem8[0x2082], round: machine.mem8[0x21fe], score: machine.mem16[0x20f8], fleetDir: machine.mem8[0x200d], headerCells: header.filter(bytes => bytes.some(Boolean)).length, headerBits: header.flat().reduce((sum, byte) => { while (byte) { sum += byte & 1; byte >>= 1; } return sum; }, 0) }); }`);
+      source = source.replace(anchor, `${anchor}\n  if (frameIndex % 15 === 0 || (Atomics.load(ctrl, 1) & 5)) { const header = Array.from({ length: 28 }, (_, glyph) => Array.from({ length: 8 }, (_, row) => machine.mem8[0x241e + glyph * 0x100 + row * 0x20])); let shieldBits = 0; for (let shield = 0; shield < 4; shield++) for (let row = 0; row < 22; row++) for (let col = 0; col < 2; col++) { let byte = machine.mem8[0x2806 + shield * 0x2e0 + row * 0x20 + col]; while (byte) { shieldBits += byte & 1; byte >>= 1; } } postMessage({ type: 'probe', frame: frameIndex, in1: Atomics.load(ctrl, 1), play: machine.mem8[0x20ef], shipX: machine.mem8[0x201b], shot: machine.mem8[0x2025], alienShot2: machine.mem8[0x2035], alienShot2Y: machine.mem8[0x203d], aliens: machine.mem8[0x2082], round: machine.mem8[0x21fe], score: machine.mem16[0x20f8], shieldBits, fleetDir: machine.mem8[0x200d], headerCells: header.filter(bytes => bytes.some(Boolean)).length, headerBits: header.flat().reduce((sum, byte) => { while (byte) { sum += byte & 1; byte >>= 1; } return sum; }, 0) }); }`);
       bytes = Buffer.from(source);
     }
     response.writeHead(200, {
@@ -99,7 +100,7 @@ try {
   await page.waitForFunction(() => window.__openSwarm.ready || window.__openSwarm.error, null, { timeout: 120_000 });
   const initial = await page.evaluate(() => window.__openSwarm);
   if (initial.error) throw Error(initial.error);
-  const waitFrame = n => page.waitForFunction(min => window.__openSwarm.frames >= min || window.__openSwarm.error, n, { timeout: realtimeLoop ? 500_000 : acceleratedLoop ? 180_000 : 30_000 });
+  const waitFrame = n => page.waitForFunction(min => window.__openSwarm.frames >= min || window.__openSwarm.error, n, { timeout: realtimeLoop ? 500_000 : shieldReview ? 120_000 : acceleratedLoop ? 180_000 : 30_000 });
   if (acceleratedLoop) {
     await waitFrame(17_000);
   } else if (realtimeLoop) {
@@ -129,6 +130,16 @@ try {
       requestAnimationFrame(tick);
     });
     await waitFrame(23_000);
+  } else if (shieldReview) {
+    await waitFrame(300);
+    await page.keyboard.down('Digit5');
+    await page.waitForTimeout(130);
+    await page.keyboard.up('Digit5');
+    await waitFrame(360);
+    await page.keyboard.down('Digit1');
+    await page.waitForTimeout(130);
+    await page.keyboard.up('Digit1');
+    await waitFrame(5000);
   } else {
     await waitFrame(300);
     await page.keyboard.down('Digit5');
@@ -182,16 +193,22 @@ try {
     secondPlay: (() => { const first = probes.findIndex(p => p.play); const over = probes.findIndex((p, i) => i > first && !p.play); return probes.slice(over + 1).find(p => p.play)?.frame ?? null; })(),
     maxScore: Math.max(...probes.map(p => p.score)),
   } : undefined;
+  const shieldProof = shieldReview ? probes.filter(p => [540, 1005, 1995, 3000, 4995].includes(p.frame)).map(p => ({ frame: p.frame, bits: p.shieldBits, hostileLive: !!(p.alienShot2 & 0x80) })) : undefined;
   const edgeSamples = edgeReview ? probes.filter(p => [675, 1740, 1830, 2190].includes(p.frame)).map(p => ({ frame: p.frame, play: p.play, aliens: p.aliens, fleetDir: p.fleetDir, headerCells: p.headerCells, headerBits: p.headerBits })) : undefined;
   delete result.probes;
-  console.log(JSON.stringify({ result, inputProof, loopProof, probeCount: probes.length, edgeSamples, errors }));
+  console.log(JSON.stringify({ result, inputProof, loopProof, shieldProof, probeCount: probes.length, edgeSamples, errors }));
   const loopOrderValid = !(acceleratedLoop || realtimeLoop) ||
     (Object.values(loopProof).every(value => Number.isFinite(value) && value > 0) &&
       loopProof.firstPlay < loopProof.firstAlienHit &&
       loopProof.firstAlienHit < loopProof.firstNextRound &&
       loopProof.firstNextRound < loopProof.firstGameOver &&
       loopProof.firstGameOver < loopProof.secondPlay && loopProof.maxScore > 0);
-  if (result.error || errors.length || !result.ready || result.frames < (realtimeLoop ? 23_000 : acceleratedLoop ? 17_000 : 670) || result.nonblack < 10 || result.audioEnabled || (!acceleratedLoop && !realtimeLoop && (!inputProof.coin || !inputProof.start || !inputProof.right || !inputProof.fire || !inputProof.play || !inputProof.moved || !inputProof.shot)) || !loopOrderValid) process.exitCode = 1;
+  const shieldValid = !shieldReview ||
+    (inputProof.coin && inputProof.start && inputProof.play && shieldProof.length === 5 &&
+      (dataSha256 === baselineDataSha256
+        ? shieldProof.every(sample => sample.bits === shieldProof[0].bits) && inputProof.alienShot2LiveSamples === 0
+        : shieldProof[0].bits > Math.min(...shieldProof.slice(1).map(sample => sample.bits)) && inputProof.alienShot2LiveSamples > 0));
+  if (result.error || errors.length || !result.ready || result.frames < (realtimeLoop ? 23_000 : shieldReview ? 5000 : acceleratedLoop ? 17_000 : 670) || result.nonblack < 10 || result.audioEnabled || (!acceleratedLoop && !realtimeLoop && !shieldReview && (!inputProof.coin || !inputProof.start || !inputProof.right || !inputProof.fire || !inputProof.play || !inputProof.moved || !inputProof.shot)) || !loopOrderValid || !shieldValid) process.exitCode = 1;
   await page.close();
 } finally {
   if (browser) await browser.close();
