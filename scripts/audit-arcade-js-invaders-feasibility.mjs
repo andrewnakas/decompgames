@@ -106,9 +106,17 @@ let alienShot2LiveFrames = 0;
 let alienShot2BlowupFrames = 0;
 let minAlienShotY = 255;
 let maxAlienShotY = 0;
+let alienShot2LowFrames = 0;
+let alienShot2NearShipFrames = 0;
+let alienShot2LowCollisionFrames = 0;
+const alienShot2LowCollisionY = new Uint32Array(41);
+const alienShot2LowSamples = [];
 let maxPlayer1ScoreRaw = 0;
 const shieldSamples = [];
 const shipCountSamples = [];
+const shipTransitions = [];
+let lastShipAnim = null;
+let lastShipCount = null;
 const shotSamples = [];
 const fleetSamples = [];
 let firstBothEdgesFrame = null;
@@ -126,8 +134,24 @@ const result = runIdiomaticGame(machine, {
       alienShot2LiveFrames++;
       minAlienShotY = Math.min(minAlienShotY, m.mem8[0x203d]);
       maxAlienShotY = Math.max(maxAlienShotY, m.mem8[0x203d]);
+      if (m.mem8[0x203d] <= 40) {
+        alienShot2LowFrames++;
+        if (Math.abs(m.mem8[0x203e] - m.mem8[PLAYER_SHIP_X]) <= 8) alienShot2NearShipFrames++;
+        if (m.mem8[COLLISION_FLAG]) {
+          alienShot2LowCollisionFrames++;
+          alienShot2LowCollisionY[m.mem8[0x203d]]++;
+        }
+        if (alienShot2LowSamples.length < 24 && (alienShot2LowSamples.length === 0 || frame - alienShot2LowSamples.at(-1).frame >= 30))
+          alienShot2LowSamples.push({ frame, x: m.mem8[0x203e], y: m.mem8[0x203d], shipX: m.mem8[PLAYER_SHIP_X], status: m.mem8[0x2035], shipAnim: m.mem8[0x2015], collision: m.mem8[COLLISION_FLAG] });
+      }
     }
     if (m.mem8[0x2035] & 0x01) alienShot2BlowupFrames++;
+    const shipAnim = m.mem8[0x2015];
+    const shipCount = m.mem8[0x21ff];
+    if ((shipAnim !== lastShipAnim || shipCount !== lastShipCount) && shipTransitions.length < 60)
+      shipTransitions.push({ frame, anim: shipAnim, count: shipCount, play: m.mem8[GAME_IN_PROGRESS], shotX: m.mem8[0x203e], shotY: m.mem8[0x203d] });
+    lastShipAnim = shipAnim;
+    lastShipCount = shipCount;
     maxPlayer1ScoreRaw = Math.max(maxPlayer1ScoreRaw, m.mem16[0x20f8]);
     if ([537, 1000, 2000, 3000, 5000, 10000].includes(frame)) {
       let shieldBits = 0;
@@ -136,7 +160,7 @@ const result = runIdiomaticGame(machine, {
         while (byte) { shieldBits += byte & 1; byte >>= 1; }
       }
       shieldSamples.push({ frame, bits: shieldBits });
-      shipCountSamples.push({ frame, count: m.mem8[0x21ff], anim: m.mem8[0x2015], ready: m.mem8[0x2069] });
+      shipCountSamples.push({ frame, count: m.mem8[0x21ff], anim: m.mem8[0x2015], ready: m.mem8[0x2069], coordY: m.mem8[0x201a], coordX: m.mem8[0x201b] });
     }
     if (m.mem8[GAME_IN_PROGRESS] !== 0 && firstPlayFrame === null) firstPlayFrame = frame;
     const count = m.mem8[ALIEN_COUNT];
@@ -248,6 +272,11 @@ console.log(JSON.stringify({
   shotFrames,
   alienShot2LiveFrames,
   alienShot2BlowupFrames,
+  alienShot2LowFrames,
+  alienShot2NearShipFrames,
+  alienShot2LowCollisionFrames,
+  alienShot2LowCollisionY: Array.from(alienShot2LowCollisionY, (count, y) => count ? { y, count } : null).filter(Boolean),
+  alienShot2LowSamples,
   alienShot2Status: machine.mem8[0x2035],
   alienShotStep: machine.mem8[0x207e],
   alienShotBlowupTimer: machine.mem8[0x2078],
@@ -257,6 +286,7 @@ console.log(JSON.stringify({
   maxPlayer1ScoreRaw,
   shieldSamples,
   shipCountSamples,
+  shipTransitions,
   alienShot2Gate: machine.mem16[0x2038],
   shipReadyFlag: machine.mem8[0x2069],
   alienShotRate: machine.mem8[0x20cf],

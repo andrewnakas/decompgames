@@ -158,9 +158,11 @@ def generate(output: Path, shot2_experiment: bool = False) -> None:
     data[0x1B3D:0x1B3F] = (0x7050).to_bytes(2, "little")
     data[0x1B3F] = 3
     if shot2_experiment:
-        # Private hostile-fire format experiment. It requires the separately
-        # pinned GPL shot-2 state-copyback patch; the baseline remains skipped.
-        data[0x1B30] = 0
+        # Private hostile-fire format experiment. A 0x0400 object timer
+        # spaces launches so a moving player can clear a wave, while a still
+        # player can lose all ships. This requires the pinned GPL copyback
+        # patch; the baseline keeps slot 2 skipped.
+        data[0x1B30] = 4
         data[0x1B3A] = 4  # short terminal blowup countdown
         data[0x1B7E] = 0xFC  # signed -4 descent step in round work template
     data[0x1B60] = 0xFF
@@ -173,18 +175,21 @@ def generate(output: Path, shot2_experiment: bool = False) -> None:
     # 0x2100, where the translated start flow fills 55 live alien cells.
     data[0x1B67] = 0x21
     # The ship record's five-byte blit descriptor must point into video RAM.
-    # 0x6000 >> 3 maps to framebuffer byte 0x2c00; 16 rows remain in bounds.
+    # The translated hostile-hit path arms the ship's death animation only for
+    # collisions in the coordinate band 30..38. An authored low coordinate of
+    # 0x20 seats the 16-row craft in that band; 0x00 made it unreachable.
     data[0x1B18:0x1B1A] = (0x1C60).to_bytes(2, "little")
-    data[0x1B1A:0x1B1C] = (0x6000).to_bytes(2, "little")
+    data[0x1B1A:0x1B1C] = (0x6020).to_bytes(2, "little")
     data[0x1B1C] = 16
-    # A separate eight-row beam starts in the playfield at 0x6820 >> 3.
-    # The board's rotated Y coordinate rises toward 0xd8 at the top.
+    # A separate eight-row beam starts above the raised craft at 0x6838 >> 3.
+    # Launching it at 0x6820, the craft's new Y, immediately collided with
+    # the player; the board's rotated Y rises toward 0xd8 at the top.
     # A positive four-unit step advances the beam into the fleet.
     data[0x1B27:0x1B29] = (0x1C90).to_bytes(2, "little")
     # Retiring a missed shot takes a short, visible 16-frame interval;
     # zero would underflow and hold the single-shot latch for 256 frames.
     data[0x1B26] = 0x10
-    data[0x1B29:0x1B2B] = (0x6820).to_bytes(2, "little")
+    data[0x1B29:0x1B2B] = (0x6838).to_bytes(2, "little")
     data[0x1B2B] = 8
     data[0x1B2C] = 4
     image = bytes(data)
@@ -211,7 +216,7 @@ def generate(output: Path, shot2_experiment: bool = False) -> None:
                                "three-tier BCD score table", "fleet tempo bands",
                                "five alien-shot rate choices"],
         "missingComponents": [
-            "remaining work-RAM and object templates", "functional alien-shot records for slots 2-4",
+            "remaining work-RAM and object templates", "functional alien-shot records for slots 3-4",
             "complete attract and game-over scripts",
             "complete tested gameplay",
         ],
@@ -219,7 +224,7 @@ def generate(output: Path, shot2_experiment: bool = False) -> None:
                  "sha256": hashlib.sha256(image).hexdigest()},
     }
     if shot2_experiment:
-        manifest["experimentalVariation"] = "unskipped slot 2, four-tick blowup, signed -4 descent; requires shot-2 GPL source patch"
+        manifest["experimentalVariation"] = "slot-2 0x0400 launch timer, four-tick blowup, signed -4 descent; requires shot-2 GPL source patch"
     (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
 
 
