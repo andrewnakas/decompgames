@@ -121,6 +121,19 @@ def generate(output: Path, shot2_experiment: bool = False) -> None:
     # The one-player teardown types the first ten glyphs ("GAME OVER ").
     # The two-player handoff types all twenty and stamps its own player digit.
     write_text(0x1AA6, 20, "GAME OVER PLAYER")
+    write_text(0x1ABA, 20, "CHOOSE 1 OR 2 PLAYER")
+    write_text(0x1ACF, 20, "PRESS 1 TO START")
+    write_text(0x1CFA, 4, "OPEN")
+    write_text(0x1DAB, 4, "PLAY")
+    write_text(0x1DAF, 15, "OPEN SWARM")
+    write_text(0x1F80, 10, "OPEN SWARM")
+    write_text(0x1F90, 12, "INSERT COIN")
+    # A safe screen destination and an authored ten-glyph source replace the
+    # otherwise zeroed attract draw record. The following optional script is
+    # intentionally empty and has an explicit terminator.
+    data[0x1F9C:0x1FA0] = (0x2B14).to_bytes(2, "little") + (0x1F80).to_bytes(2, "little")
+    data[0x1FA0] = 0xFF
+    write_text(0x1FF3, 4, "PUSH")
     write_text(0x1CA3, 21, "OPEN SWARM POINTS")
     # Empty 4-byte-record draw scripts still need the single-byte 0xff
     # sentinel; otherwise the translated walker reads around all of ROM.
@@ -133,6 +146,21 @@ def generate(output: Path, shot2_experiment: bool = False) -> None:
     blank_transition = bytes([0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0])
     for offset in (0x1A95, 0x1BB0, 0x1FC9):
         data[offset:offset + 12] = blank_transition
+    # The between-demo reveal walker copies this descriptor to 0x2050. A
+    # zero-filled record dispatches address 0 once its timer drains. Author a
+    # short, finite terminal animation using the translated 0x050e handler:
+    # status bit 0 marks blowup, and the two-tick counter is stored at +10.
+    # The descriptor points to our own safe shot sprite/video coordinates.
+    attract_reveal = bytearray(16)
+    attract_reveal[3:5] = (0x050E).to_bytes(2, "little")
+    attract_reveal[5] = 1
+    attract_reveal[10] = 2
+    attract_reveal[11:13] = (0x1CED).to_bytes(2, "little")
+    # This object is serviced by the vblank-only attract task: bit 7 of the
+    # coordinate's high byte must match DRAW_PHASE_FLAG=0x80.
+    attract_reveal[13:15] = (0x9050).to_bytes(2, "little")
+    attract_reveal[15] = 3
+    data[0x1BC0:0x1BD0] = attract_reveal
     # 0x1b00 is copied to 0x2000 at round setup. The translated attract
     # loop uses work-RAM 0x2015 == 0xff as its armed sentinel. This is an
     # independently chosen state byte, not a copy of the old ROM template.
@@ -141,6 +169,7 @@ def generate(output: Path, shot2_experiment: bool = False) -> None:
     # independently authored attract world active so the vblank task runner
     # can actually service its object table after the title sequence.
     data[0x1BE9] = 1
+    data[0x1B6C] = 10  # typeDrawScriptRecord glyph count
     # The ISR's five-record walker dispatches by function address stored at
     # record+3/4. Supply valid targets from the GPL translation. The shot
     # All secondary slots remain skipped (0xfe). The experimental slot-2
@@ -202,10 +231,12 @@ def generate(output: Path, shot2_experiment: bool = False) -> None:
         "upstreamRevision": "e849d086f4168c9a0e1ab501d62efbe3766def8a",
         "authoredComponents": ["5x7 glyph shapes encoded for ROT270 display", "score header", "credit label",
                                "one-player and two-player game-over banner text",
+                               "attract and credit prompts", "bounded attract draw record",
                                "six alien frames", "reserve craft", "explosion frames",
                                "shield buffer template", "point-table heading",
                                "two empty draw-script terminators",
                                "three one-tick blank attract transitions",
+                               "finite attract reveal object descriptor",
                                "armed attract-state sentinel", "object dispatch targets",
                                "video-safe reserve-craft descriptor",
                                "beam sprite and video-safe shot descriptor",
@@ -217,7 +248,7 @@ def generate(output: Path, shot2_experiment: bool = False) -> None:
                                "five alien-shot rate choices"],
         "missingComponents": [
             "remaining work-RAM and object templates", "functional alien-shot records for slots 3-4",
-            "complete attract and game-over scripts",
+            "remaining attract animation art and scripts",
             "complete tested gameplay",
         ],
         "file": {"name": "open-swarm-draft.bin", "bytes": len(image),
