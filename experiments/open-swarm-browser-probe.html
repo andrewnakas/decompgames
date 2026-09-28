@@ -21,7 +21,7 @@
 <script type="module">
 import { SLOTS, snapshotFrame } from './frame-ring.js';
 
-const expected = 'e2a57af4b03e7d7c653d3ded671002b445204c18789ab5a4158e8bee247051dc';
+const expected = '6aedf2a8f725d05ed882e7e8b744b748ef776fba616f5c6387eb99d967f2f3bb';
 const status = document.getElementById('status');
 const width = 256, height = 224, frameBytes = width * height * 3;
 const ctrl = new Int32Array(new SharedArrayBuffer(16 * 4));
@@ -42,6 +42,7 @@ function setInput(name, down) {
   for (const item of held) value |= bit[item];
   Atomics.store(ctrl, 1, value);
 }
+window.__openSwarm.setInput = setInput;
 function pulse(name) { setInput(name, true); setTimeout(() => setInput(name, false), 130); }
 addEventListener('keydown', e => {
   const action = key[e.code];

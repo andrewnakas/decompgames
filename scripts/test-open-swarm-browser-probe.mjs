@@ -12,7 +12,14 @@ const headerReview = process.argv.includes('--header-review');
 const edgeReview = process.argv.includes('--edge-review') || headerReview;
 const trailExperiment = process.argv.includes('--trail-experiment');
 const acceleratedLoop = process.argv.includes('--accelerated-loop');
+const realtimeLoop = process.argv.includes('--realtime-loop');
+if (acceleratedLoop && realtimeLoop) throw Error('Choose only one loop diagnostic');
 const shot2Experiment = process.argv.includes('--shot2-experiment');
+const baselineDataSha256 = '6aedf2a8f725d05ed882e7e8b744b748ef776fba616f5c6387eb99d967f2f3bb';
+const shot2DataSha256 = 'ed8ce9400aa25582ecb93264a23949f64d3210676fe802874077829dec090a64';
+const dataSha256 = createHash('sha256').update(await readFile(dataFile)).digest('hex');
+if (dataSha256 !== baselineDataSha256 && !(shot2Experiment && dataSha256 === shot2DataSha256))
+  throw Error(`Unexpected independent data image ${dataSha256}`);
 const probeFile = resolve('experiments/open-swarm-browser-probe.html');
 const revision = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: checkout, encoding: 'utf8' }).trim();
 if (revision !== 'e849d086f4168c9a0e1ab501d62efbe3766def8a') throw Error(`Unexpected arcade-js revision ${revision}`);
@@ -46,12 +53,10 @@ const server = createServer(async (request, response) => {
   }
   try {
     let bytes = await readFile(file);
-    if (pathname === '/web/open-swarm-probe.html' && shot2Experiment) {
-      const baseline = 'e2a57af4b03e7d7c653d3ded671002b445204c18789ab5a4158e8bee247051dc';
-      const experimental = 'c6a358501493da752dafa9e2f5cb6488d44625e220093937da255696d88026d8';
+    if (pathname === '/web/open-swarm-probe.html' && dataSha256 !== baselineDataSha256) {
       const html = bytes.toString('utf8');
-      if (!html.includes(baseline)) throw Error('Private probe checksum anchor changed');
-      bytes = Buffer.from(html.replace(baseline, experimental));
+      if (!html.includes(baselineDataSha256)) throw Error('Private probe checksum anchor changed');
+      bytes = Buffer.from(html.replace(baselineDataSha256, dataSha256));
     }
     if (pathname === '/web/worker.js') {
       // Private observation only: emit a small state sample without changing
@@ -94,9 +99,36 @@ try {
   await page.waitForFunction(() => window.__openSwarm.ready || window.__openSwarm.error, null, { timeout: 120_000 });
   const initial = await page.evaluate(() => window.__openSwarm);
   if (initial.error) throw Error(initial.error);
-  const waitFrame = n => page.waitForFunction(min => window.__openSwarm.frames >= min || window.__openSwarm.error, n, { timeout: acceleratedLoop ? 180_000 : 30_000 });
+  const waitFrame = n => page.waitForFunction(min => window.__openSwarm.frames >= min || window.__openSwarm.error, n, { timeout: realtimeLoop ? 500_000 : acceleratedLoop ? 180_000 : 30_000 });
   if (acceleratedLoop) {
     await waitFrame(17_000);
+  } else if (realtimeLoop) {
+    await page.evaluate(() => {
+      const state = window.__openSwarm;
+      let right = true, seenPlay = false, firstOver = null;
+      const held = { coin: false, start: false, left: false, right: false, fire: false };
+      function tick() {
+        const frame = state.frames;
+        const sample = state.probes.at(-1);
+        if (sample?.play) seenPlay = true;
+        if (seenPlay && !sample?.play && firstOver === null) firstOver = frame;
+        if (sample?.shipX >= 210) right = false;
+        if (sample?.shipX <= 48) right = true;
+        const desired = {
+          coin: (frame >= 300 && frame < 310) || (firstOver !== null && frame >= firstOver + 245 && frame < firstOver + 255),
+          start: (frame >= 360 && frame < 370) || (firstOver !== null && frame >= firstOver + 305 && frame < firstOver + 315),
+          left: frame >= 600 && !right,
+          right: frame >= 600 && right,
+          fire: frame >= 600 && frame % 12 < 5,
+        };
+        for (const [action, down] of Object.entries(desired)) {
+          if (held[action] !== down) { state.setInput(action, down); held[action] = down; }
+        }
+        if (!state.error && frame < 23_000) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
+    await waitFrame(23_000);
   } else {
     await waitFrame(300);
     await page.keyboard.down('Digit5');
@@ -142,7 +174,7 @@ try {
     alienCount: Math.max(...probes.map(p => p.aliens)),
     alienShot2LiveSamples: probes.filter(p => p.alienShot2 & 0x80).length,
   };
-  const loopProof = acceleratedLoop ? {
+  const loopProof = (acceleratedLoop || realtimeLoop) ? {
     firstPlay: probes.find(p => p.play)?.frame ?? null,
     firstAlienHit: probes.find(p => p.aliens > 0 && p.aliens < 55)?.frame ?? null,
     firstNextRound: probes.find(p => p.round > 0)?.frame ?? null,
@@ -153,13 +185,13 @@ try {
   const edgeSamples = edgeReview ? probes.filter(p => [675, 1740, 1830, 2190].includes(p.frame)).map(p => ({ frame: p.frame, play: p.play, aliens: p.aliens, fleetDir: p.fleetDir, headerCells: p.headerCells, headerBits: p.headerBits })) : undefined;
   delete result.probes;
   console.log(JSON.stringify({ result, inputProof, loopProof, probeCount: probes.length, edgeSamples, errors }));
-  const loopOrderValid = !acceleratedLoop ||
+  const loopOrderValid = !(acceleratedLoop || realtimeLoop) ||
     (Object.values(loopProof).every(value => Number.isFinite(value) && value > 0) &&
       loopProof.firstPlay < loopProof.firstAlienHit &&
       loopProof.firstAlienHit < loopProof.firstNextRound &&
       loopProof.firstNextRound < loopProof.firstGameOver &&
       loopProof.firstGameOver < loopProof.secondPlay && loopProof.maxScore > 0);
-  if (result.error || errors.length || !result.ready || result.frames < (acceleratedLoop ? 17_000 : 670) || result.nonblack < 10 || result.audioEnabled || (!acceleratedLoop && (!inputProof.coin || !inputProof.start || !inputProof.right || !inputProof.fire || !inputProof.play || !inputProof.moved || !inputProof.shot)) || !loopOrderValid) process.exitCode = 1;
+  if (result.error || errors.length || !result.ready || result.frames < (realtimeLoop ? 23_000 : acceleratedLoop ? 17_000 : 670) || result.nonblack < 10 || result.audioEnabled || (!acceleratedLoop && !realtimeLoop && (!inputProof.coin || !inputProof.start || !inputProof.right || !inputProof.fire || !inputProof.play || !inputProof.moved || !inputProof.shot)) || !loopOrderValid) process.exitCode = 1;
   await page.close();
 } finally {
   if (browser) await browser.close();

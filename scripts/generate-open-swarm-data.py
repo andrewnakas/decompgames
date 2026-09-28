@@ -79,12 +79,22 @@ def generate(output: Path, shot2_experiment: bool = False) -> None:
     data[0x1CED:0x1CF9] = bytes(shot_frames)
     data[0x1CDC:0x1CE2] = bytes((0b01000010, 0b00100100, 0b00011000,
                                 0b00011000, 0b00100100, 0b01000010))
-    # The shield initializer copies exactly 0x2c bytes per bunker. Use an
-    # independent arch with a central opening so the buffer is nonblank.
-    shield = bytes(
-        0b11111111 if row < 22 else (0b11100111 if row < 36 else 0b11000011)
-        for row in range(44)
-    )
+    # The shield initializer copies 22 *two-byte* rows per bunker. Author a
+    # narrower arch with a central opening in that actual interleaved format.
+    shield_rows = []
+    for row in range(22):
+        if row in (0, 21):
+            mask = 0x0FF0
+        elif row in (1, 20):
+            mask = 0x3FFC
+        elif 8 <= row <= 13:
+            mask = 0xF81F
+        elif 2 <= row <= 19:
+            mask = 0x7FFE
+        else:
+            mask = 0
+        shield_rows.extend(mask.to_bytes(2, "little"))
+    shield = bytes(shield_rows)
     data[0x1D20:0x1D4C] = shield
     # Independent scoring and pace choices in the translated routines'
     # documented table layouts. The five descending fleet thresholds end
@@ -104,7 +114,7 @@ def generate(output: Path, shot2_experiment: bool = False) -> None:
         data[offset:offset + length] = encoded
 
     write_text(SCORE_HEADER, 28, "OPEN SWARM SCORE1   SCORE2")
-    write_text(CREDIT_LABEL, 7, "CREDITS")
+    write_text(CREDIT_LABEL, 7, "CREDIT ")
     write_text(0x1CA3, 21, "OPEN SWARM POINTS")
     # Empty 4-byte-record draw scripts still need the single-byte 0xff
     # sentinel; otherwise the translated walker reads around all of ROM.
