@@ -1,6 +1,6 @@
 // Inspect ROM-data dependencies without possessing or loading the original ROM.
 // This is a feasibility probe, never a gameplay or compatibility test.
-// Usage: node scripts/audit-arcade-js-invaders-feasibility.mjs PATH_TO_PINNED_ARCADE_JS [GENERATED_DIRECTORY] [MAX_FRAMES] [SCENARIO] [--trail-experiment] [--shot2-experiment]
+// Usage: node scripts/audit-arcade-js-invaders-feasibility.mjs PATH_TO_PINNED_ARCADE_JS [GENERATED_DIRECTORY] [MAX_FRAMES] [SCENARIO] [--trail-experiment] [--shot2-experiment] [--trace-low-rom]
 import { resolve, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { execFileSync } from 'node:child_process';
@@ -49,6 +49,7 @@ const maxFrames = process.argv[4] === undefined ? 200 : Number(process.argv[4]);
 if (!Number.isSafeInteger(maxFrames) || maxFrames < 1 || maxFrames > 50000)
   throw new Error('MAX_FRAMES must be an integer from 1 to 50000');
 const scenario = process.argv[5] || 'idle';
+const traceLowRom = process.argv.includes('--trace-low-rom');
 if (!['idle', 'coin-start', 'coin-start-move-fire', 'coin-start-repeat-fire', 'coin-start-sweep-fire', 'coin-start-sweep-fire-fast', 'coin-start-sweep-fire-fast-restart', 'coin-start-sweep-fire-fast-edge-clear', 'coin-start-sweep-fire-fast-edge-clear-restart'].includes(scenario)) throw new Error('Unknown input scenario');
 
 let rom = new Uint8Array(8192);
@@ -77,10 +78,17 @@ machine.mem.write8 = (address, value, ...rest) => {
   return rawWrite8(address, value, ...rest);
 };
 const reads = new Uint32Array(8192);
+const lowRomReadSamples = [];
+const lowRomReadKeys = new Set();
 const read8 = machine.mem.read8.bind(machine.mem);
 machine.mem.read8 = (address) => {
   const masked = address & 0x7fff;
   if (masked < reads.length) reads[masked]++;
+  if (traceLowRom && masked < 0x100 && lowRomReadSamples.length < 24) {
+    const stack = new Error().stack.split('\n').slice(2, 6);
+    const key = `${masked}:${stack[0]}`;
+    if (!lowRomReadKeys.has(key)) { lowRomReadKeys.add(key); lowRomReadSamples.push({ frame: currentFrame, address: masked, stack }); }
+  }
   return read8(address);
 };
 let firstPlayFrame = null;
@@ -330,5 +338,6 @@ console.log(JSON.stringify({
     (count, value) => count + Number(value !== 0), 0),
   touchedRomBytes: reads.reduce((count, value) => count + Number(value !== 0), 0),
   ranges,
+  ...(traceLowRom ? { lowRomReadSamples } : {}),
 }, null, 2));
 if (result.stopError) process.exitCode = 1;

@@ -20,8 +20,8 @@ const lateReview = process.argv.includes('--late-review');
 if (lateReview && !realtimeLoop) throw Error('--late-review requires --realtime-loop');
 if ([acceleratedLoop, realtimeLoop, shieldReview, damageReview].filter(Boolean).length > 1) throw Error('Choose only one diagnostic mode');
 const shot2Experiment = process.argv.includes('--shot2-experiment');
-const baselineDataSha256 = 'fa3aaaa8f7bfeb1ae6fc0988c05344aef29adbff22a181a5dae9799425ff921f';
-const shot2DataSha256 = 'aa9637c9a93a9c60ad4e6581f74545d4420ffccb62d3c7086117d1232f25429c';
+const baselineDataSha256 = 'a85a08882f3dc57c09d6d2afef3b0975c2c72ea08850d30b7461022e58c19fc9';
+const shot2DataSha256 = '193e3fa2aebf8b33d884e0ee15a9398680c1f935232172f903060a62c75cfb2d';
 const dataSha256 = createHash('sha256').update(await readFile(dataFile)).digest('hex');
 if (dataSha256 !== baselineDataSha256 && !(shot2Experiment && dataSha256 === shot2DataSha256))
   throw Error(`Unexpected independent data image ${dataSha256}`);

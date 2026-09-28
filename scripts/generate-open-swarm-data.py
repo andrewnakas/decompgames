@@ -105,11 +105,32 @@ def generate(output: Path, shot2_experiment: bool = False) -> None:
     data[0x1A11:0x1A16] = bytes((40, 24, 12, 6, 0))
     data[0x1A21:0x1A26] = bytes((18, 15, 12, 9, 6))
     data[0x1DA0:0x1DA3] = bytes((0x10, 0x20, 0x30))
+    # The bonus-saucer score lookup reads four BCD keys and their leading
+    # three-glyph score digit. Use 100/200/300/400-point awards so the key
+    # multiplied by sixteen matches the displayed first digit plus "00".
+    bonus_keys = (0x10, 0x20, 0x30, 0x40)
+    data[0x1D4C:0x1D50] = bytes(bonus_keys)
+    data[0x1D50:0x1D54] = bytes(ids[str(digit)] for digit in range(1, 5))
+    data[0x1854:0x1863] = bytes(bonus_keys[index % 4] for index in range(15))
     # Four ascending BCD score bands select one of five authored shot-rate
     # bytes. Hostile-shot records remain skipped, so these are not yet a
     # claim that shot cadence or difficulty is correct in live gameplay.
     data[0x1CB8:0x1CBC] = bytes((0x05, 0x20, 0x50, 0x99))
     data[0x1AA1:0x1AA6] = bytes((7, 6, 5, 4, 3))
+    # The retired player-shot handler advances a low-byte pointer and reads
+    # its target's low bit to vary the saucer's horizontal step. Give that
+    # pointer an authored full-page direction pattern rather than letting
+    # its zeroed high byte read untranslated code space at 0x0000..0x00ff.
+    data[0x1900:0x1A00] = bytes(
+        1 if (index // 12) % 3 in (0, 2) else 0 for index in range(256)
+    )
+    # The attract player-ship direction pointer begins on the translated
+    # code page and later wraps through 0x74..0x7d. Those bytes are data to
+    # the translated runtime. Replace the old instruction-byte dependency
+    # with an independently scripted right/hold/left/hold demo pattern.
+    demo_direction = (1, 1, 1, 0, 0, 2, 2, 2, 0, 0)
+    for offset in range(2, 0x7E):
+        data[offset] = demo_direction[(offset - 2) % len(demo_direction)]
 
     def write_text(offset: int, length: int, value: str) -> None:
         assert len(value) <= length
@@ -170,6 +191,9 @@ def generate(output: Path, shot2_experiment: bool = False) -> None:
     # the march selector runs, so both its reference and queued destination
     # must start in video-safe coordinates instead of zeroed work RAM.
     data[0x1B09:0x1B0D] = (0x4078).to_bytes(2, "little") * 2
+    data[0x1B8F:0x1B91] = bytes((0xFF, 0x19))
+    data[0x1B8D:0x1B8F] = bytes((0x53, 0x18))
+    data[0x1B88:0x1B8A] = bytes((ids["0"], ids["0"]))
     # The cold-boot copier also seeds 0x20e9 from this image. Mark the
     # independently authored attract world active so the vblank task runner
     # can actually service its object table after the title sequence.
@@ -251,7 +275,10 @@ def generate(output: Path, shot2_experiment: bool = False) -> None:
                                "slot-2 descending-shot frames and blowup art",
                                "slot-2 three-row descriptor",
                                "three-tier BCD score table", "fleet tempo bands",
-                               "five alien-shot rate choices"],
+                               "five alien-shot rate choices",
+                               "full-page saucer direction sequence and work-RAM pointer",
+                               "attract-demo ship direction script",
+                               "saucer BCD award keys, score glyphs, and key sequence"],
         "missingComponents": [
             "remaining work-RAM and object templates", "functional alien-shot records for slots 3-4",
             "remaining attract animation art and scripts",
