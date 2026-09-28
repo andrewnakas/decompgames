@@ -105,12 +105,21 @@ def generate(output: Path, shot2_experiment: bool = False) -> None:
     data[0x1A11:0x1A16] = bytes((40, 24, 12, 6, 0))
     data[0x1A21:0x1A26] = bytes((18, 15, 12, 9, 6))
     data[0x1DA0:0x1DA3] = bytes((0x10, 0x20, 0x30))
-    # The bonus-saucer score lookup reads four BCD keys and their leading
-    # three-glyph score digit. Use 100/200/300/400-point awards so the key
-    # multiplied by sixteen matches the displayed first digit plus "00".
+    # The bonus-saucer score lookup reads four BCD keys. Its parallel table
+    # supplies the *low byte of a pointer* to a three-glyph sequence, while
+    # the high pointer byte stays in the saucer record. Use 100/200/300/400
+    # so each key multiplied by sixteen matches its displayed digits.
     bonus_keys = (0x10, 0x20, 0x30, 0x40)
     data[0x1D4C:0x1D50] = bytes(bonus_keys)
-    data[0x1D50:0x1D54] = bytes(ids[str(digit)] for digit in range(1, 5))
+    data[0x1D50:0x1D54] = bytes((0x54, 0x57, 0x5A, 0x5D))
+    for digit in range(1, 5):
+        start = 0x1D54 + (digit - 1) * 3
+        data[start:start + 3] = bytes((ids[str(digit)], ids["0"], ids["0"]))
+    # Future saucer sprite records also get independently drawn normal and
+    # hit frames; the optional encounter remains disabled/unverified here.
+    data[0x1D60:0x1D70] = bytes((0x18, 0x3C, 0x7E, 0xFF, 0xDB, 0xFF, 0x66, 0x24,
+                                0x24, 0x66, 0xFF, 0xDB, 0xFF, 0x7E, 0x3C, 0x18))
+    data[0x1D7C:0x1D8C] = bytes((0x81 if row % 2 else 0x42) for row in range(16))
     data[0x1854:0x1863] = bytes(bonus_keys[index % 4] for index in range(15))
     # Four ascending BCD score bands select one of five authored shot-rate
     # bytes. Hostile-shot records remain skipped, so these are not yet a
@@ -192,8 +201,8 @@ def generate(output: Path, shot2_experiment: bool = False) -> None:
     # must start in video-safe coordinates instead of zeroed work RAM.
     data[0x1B09:0x1B0D] = (0x4078).to_bytes(2, "little") * 2
     data[0x1B8F:0x1B91] = bytes((0xFF, 0x19))
+    data[0x1B83:0x1B8D] = bytes((0, 0, 0, 0, 0x60, 0x1D, 0xD0, 0x28, 16, 2))
     data[0x1B8D:0x1B8F] = bytes((0x53, 0x18))
-    data[0x1B88:0x1B8A] = bytes((ids["0"], ids["0"]))
     # The cold-boot copier also seeds 0x20e9 from this image. Mark the
     # independently authored attract world active so the vblank task runner
     # can actually service its object table after the title sequence.
@@ -278,7 +287,8 @@ def generate(output: Path, shot2_experiment: bool = False) -> None:
                                "five alien-shot rate choices",
                                "full-page saucer direction sequence and work-RAM pointer",
                                "attract-demo ship direction script",
-                               "saucer BCD award keys, score glyphs, and key sequence"],
+                               "saucer BCD award keys, score glyph pointers and sequences",
+                               "saucer sprite, hit art, record, and key sequence"],
         "missingComponents": [
             "remaining work-RAM and object templates", "functional alien-shot records for slots 3-4",
             "remaining attract animation art and scripts",

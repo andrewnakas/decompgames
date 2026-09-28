@@ -107,6 +107,9 @@ let shotFrames = 0;
 let marchingFrames = 0;
 let maxDrawIndex = 0;
 let collisionFrames = 0;
+let saucerArmedFrames = 0;
+let saucerActiveFrames = 0;
+let firstSaucerActiveFrame = null;
 let shotHitFrames = 0;
 let minShotY = 255;
 let maxShotY = 0;
@@ -138,6 +141,11 @@ const result = runIdiomaticGame(machine, {
   maxFrames,
   onFrame: (m, frame) => {
     currentFrame = frame;
+    if (m.mem8[0x2083]) saucerArmedFrames++;
+    if (m.mem8[0x2084]) {
+      saucerActiveFrames++;
+      firstSaucerActiveFrame ??= frame;
+    }
     if (m.mem8[0x2035] & 0x80) {
       alienShot2LiveFrames++;
       minAlienShotY = Math.min(minAlienShotY, m.mem8[0x203d]);
@@ -302,6 +310,9 @@ console.log(JSON.stringify({
   marchingFrames,
   maxDrawIndex,
   collisionFrames,
+  saucerArmedFrames,
+  saucerActiveFrames,
+  firstSaucerActiveFrame,
   shotHitFrames,
   minShotY: minShotY === 255 ? null : minShotY,
   maxShotY,
