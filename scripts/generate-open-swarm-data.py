@@ -29,9 +29,12 @@ def generate(output: Path, shot2_experiment: bool = False) -> None:
     # extracted or traced from the historical arcade game.
     font = runpy.run_path(str(Path(__file__).with_name("generate-open-junction-glyphs.py")))["FONT"]
     data = bytearray(ROM_BYTES)
-    symbols = " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-!:?"
+    # The translated drawDigit leaf adds 0x1a to each BCD nibble, so reserve
+    # sprite IDs 0x1a..0x23 for 0..9. Place Z after that fixed numeric band.
+    symbols = " ABCDEFGHIJKLMNOPQRSTUVWXY0123456789Z.-!:?"
     assert len(symbols) <= GLYPH_SLOTS and len(set(symbols)) == len(symbols)
     ids = {symbol: index for index, symbol in enumerate(symbols)}
+    assert [ids[str(digit)] for digit in range(10)] == list(range(0x1A, 0x24))
     for symbol, index in ids.items():
         pattern = font[symbol].split("/")
         assert len(pattern) == 7 and all(len(row) == 5 for row in pattern)

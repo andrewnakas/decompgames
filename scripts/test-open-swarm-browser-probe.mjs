@@ -14,10 +14,11 @@ const trailExperiment = process.argv.includes('--trail-experiment');
 const acceleratedLoop = process.argv.includes('--accelerated-loop');
 const realtimeLoop = process.argv.includes('--realtime-loop');
 const shieldReview = process.argv.includes('--shield-review');
+const panelReview = process.argv.includes('--panel-review');
 if ([acceleratedLoop, realtimeLoop, shieldReview].filter(Boolean).length > 1) throw Error('Choose only one diagnostic mode');
 const shot2Experiment = process.argv.includes('--shot2-experiment');
-const baselineDataSha256 = '6aedf2a8f725d05ed882e7e8b744b748ef776fba616f5c6387eb99d967f2f3bb';
-const shot2DataSha256 = 'ed8ce9400aa25582ecb93264a23949f64d3210676fe802874077829dec090a64';
+const baselineDataSha256 = '7ec2c6a27c042c79315cd212851f29f1a8f4a1fc5f624c98986fce8399cc0cd9';
+const shot2DataSha256 = 'a4237cf9d16dea55cf8a43f1c7fc2b8b1e6e8e35ea656d25e613847611216514';
 const dataSha256 = createHash('sha256').update(await readFile(dataFile)).digest('hex');
 if (dataSha256 !== baselineDataSha256 && !(shot2Experiment && dataSha256 === shot2DataSha256))
   throw Error(`Unexpected independent data image ${dataSha256}`);
@@ -141,6 +142,10 @@ try {
     await page.keyboard.up('Digit1');
     await waitFrame(5000);
   } else {
+    if (panelReview) {
+      await waitFrame(240);
+      await page.locator('canvas').screenshot({ path: '.cache/open-swarm-panel240.png' });
+    }
     await waitFrame(300);
     await page.keyboard.down('Digit5');
     await page.waitForTimeout(130);
@@ -156,6 +161,7 @@ try {
     await waitFrame(670);
     await page.keyboard.up('ArrowRight');
     await page.keyboard.up('Space');
+    if (panelReview) await page.locator('canvas').screenshot({ path: '.cache/open-swarm-panel670.png' });
     if (edgeReview) {
       await page.locator('canvas').screenshot({ path: '.cache/open-swarm-frame670.png' });
       await page.waitForFunction(() => window.__openSwarm.frames >= 1840 || window.__openSwarm.error, null, { timeout: 60_000 });
