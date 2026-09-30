@@ -1,0 +1,36 @@
+diff --git a/games/invaders/idiomatic/saucerHandler.js b/games/invaders/idiomatic/saucerHandler.js
+index 1388409a..23cdca00 100644
+--- a/games/invaders/idiomatic/saucerHandler.js
++++ b/games/invaders/idiomatic/saucerHandler.js
+@@ -48,13 +48,16 @@ export function saucerHandler(m) {
+   if (m.mem8[loc_2080] !== 2) return;
+   // No saucer record armed yet (loc_2083 == 0): nothing saucer-specific to do -> service the record through
+   // the plain alien-shot step leaf.
+-  if (m.mem8[loc_2083] === 0) return alienShotSlot4Handler(m);
++  // Open Swarm experimental variant: omit the second alien-shot lane while
++  // waiting for a mystery ship. Keep this object record active for later
++  // saucer arms instead of reseeding it with a disabled record template.
++  if (m.mem8[loc_2083] === 0) return;
+   // A separate gate cell (loc_2056, role not grounded): when nonzero, suppress the saucer path and delegate.
+-  if (m.mem8[loc_2056] !== 0) return alienShotSlot4Handler(m);
++  if (m.mem8[loc_2056] !== 0) return;
+   // No saucer currently on the field: decide whether to launch one.
+   if (m.mem8[SAUCER_ACTIVE] === 0) {
+     // Too few aliens left (< 8): the mystery ship does not appear this late in the wave -> delegate.
+-    if (m.mem8[ALIEN_COUNT] < 8) return alienShotSlot4Handler(m);
++    if (m.mem8[ALIEN_COUNT] < 8) return;
+     // Otherwise launch it: raise the on-field flag and draw its first frame.
+     m.mem8[SAUCER_ACTIVE] = 1;
+     drawSaucerSprite(m);
+@@ -64,6 +67,11 @@ export function saucerHandler(m) {
+   if (!objectMatchesDrawPhase(m, loc_208a)) return;
+   if (m.mem8[SAUCER_HIT] === 0) {
+     // Alive and flying: advance the horizontal position by the step amount and redraw at the new spot.
++    // Open Swarm replacement sprites are copied into the framebuffer. Erase
++    // the previous footprint before drawing the next column so the saucer
++    // does not leave a continuous line across the top of the playfield.
++    resolveSpriteScreenAddr(m);
++    clearScreenStrip(m);
+     m.mem8[loc_208a] = u8(m.mem8[loc_208a] + m.mem8[SAUCER_STEP_DX]);
+     drawSaucerSprite(m);
+     // While it is still within the visible band [40,225) keep it on screen and stop here; only once it

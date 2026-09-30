@@ -3,7 +3,7 @@
 
 Several gameplay templates remain incomplete. It is an asset-format probe,
 not a complete replacement image or a playable release. No original ROM is read.
-Usage: python scripts/generate-open-swarm-data.py OUTPUT_DIRECTORY [--shot2-experiment]
+Usage: python scripts/generate-open-swarm-data.py OUTPUT_DIRECTORY [--shot2-experiment] [--saucer-experiment]
 """
 from __future__ import annotations
 
@@ -22,7 +22,8 @@ CREDIT_LABEL = 0x1FA9
 IDENTITY = "OPEN SWARM"
 
 
-def generate(output: Path, shot2_experiment: bool = False) -> None:
+def generate(output: Path, shot2_experiment: bool = False,
+             saucer_experiment: bool = False) -> None:
     output.mkdir(parents=True, exist_ok=True)
     # Reuse the five-column drafting alphabet authored for Open Junction.
     # That alphabet and these new table layouts are CC0-1.0; it was not
@@ -232,6 +233,13 @@ def generate(output: Path, shot2_experiment: bool = False) -> None:
         data[0x1B30] = 4
         data[0x1B3A] = 4  # short terminal blowup countdown
         data[0x1B7E] = 0xFC  # signed -4 descent step in round work template
+    if saucer_experiment:
+        # Keep object slot 4 active so the experimental GPL saucer-only
+        # handler can observe later arm events. Source patch required: the
+        # unmodified handler would copy the disabled record template over
+        # this slot at its first no-saucer pass.
+        data[0x1B50:0x1B53] = bytes((0, 0, 0))
+        data[0x1B32] = 2  # the shared vblank mode cell gates saucer service
     data[0x1B60] = 0xFF
     # The invader-hit path fills the explosion coordinate at 0x2064/65.
     # Its surrounding descriptor still needs a safe authored bitmap and
@@ -297,12 +305,21 @@ def generate(output: Path, shot2_experiment: bool = False) -> None:
         "file": {"name": "open-swarm-draft.bin", "bytes": len(image),
                  "sha256": hashlib.sha256(image).hexdigest()},
     }
+    variations = []
     if shot2_experiment:
-        manifest["experimentalVariation"] = "slot-2 0x0400 launch timer, four-tick blowup, signed -4 descent; requires shot-2 GPL source patch"
+        variations.append("slot-2 0x0400 launch timer, four-tick blowup, signed -4 descent; requires shot-2 GPL source patch")
+    if saucer_experiment:
+        variations.append("active slot-4 saucer poll with second alien-shot lane omitted; requires saucer-only GPL source patch")
+    if variations:
+        manifest["experimentalVariations"] = variations
     (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
 
 
 if __name__ == "__main__":
-    if len(sys.argv) not in (2, 3) or (len(sys.argv) == 3 and sys.argv[2] != "--shot2-experiment"):
-        raise SystemExit("Usage: generate-open-swarm-data.py OUTPUT_DIRECTORY [--shot2-experiment]")
-    generate(Path(sys.argv[1]), shot2_experiment=len(sys.argv) == 3)
+    flags = sys.argv[2:]
+    if len(sys.argv) < 2 or len(flags) != len(set(flags)) or any(
+        flag not in ("--shot2-experiment", "--saucer-experiment") for flag in flags
+    ):
+        raise SystemExit("Usage: generate-open-swarm-data.py OUTPUT_DIRECTORY [--shot2-experiment] [--saucer-experiment]")
+    generate(Path(sys.argv[1]), shot2_experiment="--shot2-experiment" in flags,
+             saucer_experiment="--saucer-experiment" in flags)

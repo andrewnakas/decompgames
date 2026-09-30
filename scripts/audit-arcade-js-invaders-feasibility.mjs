@@ -1,6 +1,6 @@
 // Inspect ROM-data dependencies without possessing or loading the original ROM.
 // This is a feasibility probe, never a gameplay or compatibility test.
-// Usage: node scripts/audit-arcade-js-invaders-feasibility.mjs PATH_TO_PINNED_ARCADE_JS [GENERATED_DIRECTORY] [MAX_FRAMES] [SCENARIO] [--trail-experiment] [--shot2-experiment] [--trace-low-rom]
+// Usage: node scripts/audit-arcade-js-invaders-feasibility.mjs PATH_TO_PINNED_ARCADE_JS [GENERATED_DIRECTORY] [MAX_FRAMES] [SCENARIO] [--trail-experiment] [--shot2-experiment] [--saucer-experiment] [--trace-low-rom]
 import { resolve, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { execFileSync } from 'node:child_process';
@@ -28,9 +28,16 @@ const shot2PatchSha256 = shot2Diff.length ? createHash('sha256').update(shot2Dif
 if (shot2Experiment && shot2PatchSha256 !== 'c1a645c39d2482405b8d11bd6949beda576bcf03a6dda76e2f113bdea8cd6ca7')
   throw new Error(`Unexpected shot-2 patch checksum ${shot2PatchSha256}`);
 if (!shot2Experiment && shot2PatchSha256) throw new Error('Unexpected shot-2 patch without --shot2-experiment');
+const saucerExperiment = process.argv.includes('--saucer-experiment');
+const saucerDiff = execFileSync('git', ['diff', '--binary', '--', 'games/invaders/idiomatic/saucerHandler.js'], { cwd: checkout });
+const saucerPatchSha256 = saucerDiff.length ? createHash('sha256').update(saucerDiff).digest('hex') : null;
+if (saucerExperiment && saucerPatchSha256 !== 'a9943e8cf729cdf52ce7458214b6fe9288c896778401adcf4472817b88cfb87f')
+  throw new Error(`Unexpected saucer patch checksum ${saucerPatchSha256}`);
+if (!saucerExperiment && saucerPatchSha256) throw new Error('Unexpected saucer patch without --saucer-experiment');
 const excluded = ['.', ':(exclude)games/invaders/idiomatic/reverseFleetAtEdge.js'];
 if (trailExperiment) excluded.push(':(exclude)games/invaders/idiomatic/drawPendingAlien.js');
 if (shot2Experiment) excluded.push(':(exclude)games/invaders/idiomatic/alienShotSlot2Handler.js');
+if (saucerExperiment) excluded.push(':(exclude)games/invaders/idiomatic/saucerHandler.js');
 const otherTrackedChanges = execFileSync('git', ['diff', '--name-only', '--', ...excluded], { cwd: checkout, encoding: 'utf8' }).trim();
 if (otherTrackedChanges) throw new Error(`Unexpected tracked changes in pinned source: ${otherTrackedChanges}`);
 const moduleAt = (path) => import(pathToFileURL(join(checkout, path)).href);
@@ -108,6 +115,7 @@ let marchingFrames = 0;
 let maxDrawIndex = 0;
 let collisionFrames = 0;
 let saucerArmedFrames = 0;
+let firstSaucerArmedFrame = null;
 let saucerActiveFrames = 0;
 let firstSaucerActiveFrame = null;
 let shotHitFrames = 0;
@@ -141,7 +149,10 @@ const result = runIdiomaticGame(machine, {
   maxFrames,
   onFrame: (m, frame) => {
     currentFrame = frame;
-    if (m.mem8[0x2083]) saucerArmedFrames++;
+    if (m.mem8[0x2083]) {
+      saucerArmedFrames++;
+      firstSaucerArmedFrame ??= frame;
+    }
     if (m.mem8[0x2084]) {
       saucerActiveFrames++;
       firstSaucerActiveFrame ??= frame;
@@ -270,6 +281,7 @@ console.log(JSON.stringify({
   sourcePatchSha256,
   trailPatchSha256,
   shot2PatchSha256,
+  saucerPatchSha256,
   trailPositions: trailExperiment ? Array.from(machine._openSwarmAlienPositions || [], ([key, packed]) => ({ key, packed, base: 0x2000 | ((packed >> 3) & 0x1fff) })) : undefined,
   headerGlyphPixels: Array.from({ length: 28 }, (_, glyph) => Array.from({ length: 8 }, (_, row) => machine.mem8[0x241e + glyph * 0x100 + row * 0x20]).reduce((sum, byte) => sum + Number(byte !== 0), 0)),
   inputData,
@@ -311,6 +323,7 @@ console.log(JSON.stringify({
   maxDrawIndex,
   collisionFrames,
   saucerArmedFrames,
+  firstSaucerArmedFrame,
   saucerActiveFrames,
   firstSaucerActiveFrame,
   shotHitFrames,
