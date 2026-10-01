@@ -21,9 +21,9 @@ if (lateReview && !realtimeLoop) throw Error('--late-review requires --realtime-
 if ([acceleratedLoop, realtimeLoop, shieldReview, damageReview].filter(Boolean).length > 1) throw Error('Choose only one diagnostic mode');
 const shot2Experiment = process.argv.includes('--shot2-experiment');
 const saucerExperiment = process.argv.includes('--saucer-experiment');
-const baselineDataSha256 = '382c2e8c1818353b91aee453c66756357938cacc3645ccea3ffd05228d406563';
-const shot2DataSha256 = 'ee7de3405319c4ea7bc95e0381292161880763220af13ad7c4b2100a5f8fe748';
-const saucerDataSha256 = '0f5abcb7eae41d7d2f418e829382325f5b351fac4fbf8b69d058b44effcb2cdd';
+const baselineDataSha256 = '8549e2e9d9a49cbe9fb52c09bdc90a7306b95f70fa468d1af162d098d62a6628';
+const shot2DataSha256 = '1057aac4eb9520fad6a12dd01b40a696bb90935840391f44a8de800f8005aca8';
+const saucerDataSha256 = 'a13aa2a4fcdf5e9f6b603074b7d3abb888427ff80edc628b3cc65b3ad421eb19';
 const dataSha256 = createHash('sha256').update(await readFile(dataFile)).digest('hex');
 if (dataSha256 !== baselineDataSha256 && !(shot2Experiment && !saucerExperiment && dataSha256 === shot2DataSha256) &&
     !(shot2Experiment && saucerExperiment && dataSha256 === saucerDataSha256))
@@ -115,11 +115,10 @@ try {
   if (initial.error) throw Error(initial.error);
   const waitFrame = n => page.waitForFunction(min => window.__openSwarm.frames >= min || window.__openSwarm.error, n, { timeout: realtimeLoop ? 500_000 : damageReview ? 240_000 : shieldReview ? 120_000 : acceleratedLoop ? 180_000 : 30_000 });
   if (acceleratedLoop) {
-    if (saucerExperiment) {
-      await page.waitForFunction(() => window.__openSwarm.probes.some(probe => probe.saucerActive) || window.__openSwarm.error, null, { timeout: 180_000 });
-      await page.locator('canvas').screenshot({ path: '.cache/open-swarm-saucer-active.png' });
-    }
-    await waitFrame(17_000);
+    await waitFrame(14_000);
+    await page.locator('canvas').screenshot({ path: '.cache/open-swarm-round-review.png' });
+    await waitFrame(40_000);
+    await page.locator('canvas').screenshot({ path: '.cache/open-swarm-accelerated-final.png' });
   } else if (realtimeLoop) {
     await page.evaluate(() => {
       const state = window.__openSwarm;
@@ -251,7 +250,7 @@ try {
         ? shieldProof.every(sample => sample.bits === shieldProof[0].bits) && inputProof.alienShot2LiveSamples === 0
         : shieldProof[0].bits > Math.min(...shieldProof.slice(1).map(sample => sample.bits)) && inputProof.alienShot2LiveSamples > 0));
   const damageValid = !damageReview || (shot2Experiment && inputProof.coin && inputProof.start && Number.isFinite(damageProof.firstHitAnimation) && Number.isFinite(damageProof.firstReserveLoss) && damageProof.minimumReserves < 2 && damageProof.hostileLiveSamples > 0);
-  if (result.error || errors.length || !result.ready || result.frames < (realtimeLoop ? 23_000 : damageReview ? 9000 : shieldReview ? 5000 : acceleratedLoop ? 17_000 : 670) || result.nonblack < 10 || result.audioEnabled || (saucerExperiment && acceleratedLoop && inputProof.saucerActiveSamples === 0) || (!acceleratedLoop && !realtimeLoop && !shieldReview && !damageReview && (!inputProof.coin || !inputProof.start || !inputProof.right || !inputProof.fire || !inputProof.play || !inputProof.moved || !inputProof.shot)) || !loopOrderValid || !shieldValid || !damageValid) process.exitCode = 1;
+  if (result.error || errors.length || !result.ready || result.frames < (realtimeLoop ? 23_000 : damageReview ? 9000 : shieldReview ? 5000 : acceleratedLoop ? 40_000 : 670) || result.nonblack < 10 || result.audioEnabled || (saucerExperiment && acceleratedLoop && inputProof.saucerActiveSamples === 0) || (!acceleratedLoop && !realtimeLoop && !shieldReview && !damageReview && (!inputProof.coin || !inputProof.start || !inputProof.right || !inputProof.fire || !inputProof.play || !inputProof.moved || !inputProof.shot)) || !loopOrderValid || !shieldValid || !damageValid) process.exitCode = 1;
   await page.close();
 } finally {
   if (browser) await browser.close();

@@ -106,6 +106,10 @@ def generate(output: Path, shot2_experiment: bool = False,
     data[0x1A11:0x1A16] = bytes((40, 24, 12, 6, 0))
     data[0x1A21:0x1A26] = bytes((18, 15, 12, 9, 6))
     data[0x1DA0:0x1DA3] = bytes((0x10, 0x20, 0x30))
+    # advanceToNextRound indexes 1..8 after 0x1da2. These independently
+    # chosen heights keep new fleets above the bunkers, with gradual descent.
+    # Zero would start the new fleet over the bottom credit/readout band.
+    data[0x1DA3:0x1DAB] = bytes((120, 116, 112, 108, 104, 100, 96, 92))
     # The bonus-saucer score lookup reads four BCD keys. Its parallel table
     # supplies the *low byte of a pointer* to a three-glyph sequence, while
     # the high pointer byte stays in the saucer record. Use 100/200/300/400
@@ -291,7 +295,7 @@ def generate(output: Path, shot2_experiment: bool = False,
                                "player-one 0x21xx field-page selector",
                                "slot-2 descending-shot frames and blowup art",
                                "slot-2 three-row descriptor",
-                               "three-tier BCD score table", "fleet tempo bands",
+                               "three-tier BCD score table", "eight later-wave start heights", "fleet tempo bands",
                                "five alien-shot rate choices",
                                "full-page saucer direction sequence and work-RAM pointer",
                                "attract-demo ship direction script",
