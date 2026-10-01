@@ -15,7 +15,7 @@ A recompilation translates the original program into code that runs on a differe
 
 ## Engine recreation
 
-A recreation implements compatible behavior with a new engine. [ScummVM](/collections/adventure-games/) reads adventure-game data using its own implementations. Compatibility depends on both the specific game and its edition.
+A recreation implements compatible behavior with a new engine. [ScummVM](/?c=adventure) reads adventure-game data using its own implementations. Compatibility depends on both the specific game and its edition.
 
 ## Released-source port
 

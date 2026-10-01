@@ -1,0 +1,12 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Catalog from '../../components/Catalog.astro';
+import { games, platforms, slug } from '../../lib/catalog';
+export function getStaticPaths() { return platforms.map(platform => ({ params: { slug: slug(platform) }, props: { platform } })); }
+const { platform } = Astro.props;
+const count = games.filter(g => g.platform === platform).length;
+---
+<Layout title={`${platform} games in your browser`} description={`${count} ${platform} games rebuilt from decompilations and open-source engines, free to play in your browser.`}>
+  <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Games</a><span aria-hidden="true">›</span><span>{platform}</span></nav>
+  <Catalog only={slug(platform)} heading={`${platform} games`} />
+</Layout>

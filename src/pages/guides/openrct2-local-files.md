@@ -4,7 +4,7 @@ title: OpenRCT2 required files and browser status
 description: What OpenRCT2 needs from a RollerCoaster Tycoon 2 installation, how park saves differ from game data, and the current browser integration status.
 ---
 
-**Decomp Games does not yet offer a playable OpenRCT2 integration.** The [RollerCoaster Tycoon 2 catalog entry](/games/rollercoaster-tycoon-2/) links to the upstream project. Its browser source provides a useful starting point, but our local-file adapter and gameplay tests are unfinished.
+**Decomp Games does not yet offer a playable OpenRCT2 integration.** The upstream project is [OpenRCT2](https://github.com/OpenRCT2/OpenRCT2). Its browser source provides a useful starting point, but our local-file adapter and gameplay tests are unfinished.
 
 ## Keep the installation folders together
 

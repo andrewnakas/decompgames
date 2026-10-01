@@ -41,4 +41,4 @@ New platform code is licensed under **GPL-2.0-or-later**. Upstream engines, code
 
 ## Privacy
 
-Local WAD and PAK files are read into browser memory, never uploaded. Saves use browser IndexedDB, with export/import controls. No accounts, public uploads, advertising trackers, or cloud-save infrastructure are included.
+Local WAD and PAK files are read into browser memory, never uploaded. Saves use browser IndexedDB, with export/import controls. No accounts, public uploads, advertising, or cloud-save infrastructure are included. Google Analytics is used (override the property with `PUBLIC_GA_ID`); see the privacy page.

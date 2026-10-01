@@ -2,19 +2,80 @@
 import {existsSync,readFileSync} from 'node:fs';
 import Layout from '../../layouts/Layout.astro';
 import GameCard from '../../components/GameCard.astro';
-import { games, labels, playerUrl } from '../../lib/catalog';
+import { games, playerUrl, slug, statusLabel } from '../../lib/catalog';
 export function getStaticPaths(){return games.map(game=>({params:{slug:game.id},props:{game}}));}
 const {game:g}=Astro.props;
+const embed=g.mode==='embed';
 const manifestPath=`public/manifests/${g.id}.json`;
 const runtime=existsSync(manifestPath)?JSON.parse(readFileSync(manifestPath,'utf8')):null;
-const recipePath=runtime?.recipe?.split(' ')[0];
-const related=games.filter(x=>x.id!==g.id&&(x.genre===g.genre||x.kind===g.kind)).slice(0,3);
-const schema={'@context':'https://schema.org','@type':'VideoGame',name:g.title,description:g.description,genre:g.genre,url:new URL(`/games/${g.id}/`,Astro.site),sameAs:g.source};
+const related=games.filter(x=>x.id!==g.id&&x.shelf===g.shelf&&(x.genre===g.genre||x.platform===g.platform)).slice(0,4);
+const tone=g.verification.status==='gameplay-tested'?'good':'warn';
+// Controls are stored as "input — action".
+const controls=g.controls.map(line=>{const at=line.indexOf(' — ');return at<0?['',line]:[line.slice(0,at),line.slice(at+3)];});
+const size=g.downloadMB?`About ${g.downloadMB} MB`:null;
+const url=new URL(`/games/${g.id}/`,Astro.site);
+const schema=[
+ {'@context':'https://schema.org','@type':'VideoGame',name:g.title,description:g.description,genre:g.genre,gamePlatform:'Web browser',url,sameAs:g.source,...(g.image?{image:new URL(g.image,Astro.site)}:{})},
+ {'@context':'https://schema.org','@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:'Games',item:new URL('/',Astro.site)},{'@type':'ListItem',position:2,name:g.platform,item:new URL(`/platform/${slug(g.platform)}/`,Astro.site)},{'@type':'ListItem',position:3,name:g.title,item:url}]},
+];
 ---
-<Layout title={`${g.title} — browser play & project guide`} description={g.description}>
-  <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/games/">Games</a><span aria-hidden="true">/</span><span>{g.title}</span></nav>
-  <div class="game-heading"><div><span class="eyebrow">{g.kind} · {g.year}</span><h1 class="page-title">{g.title}</h1><p class="game-lead">{g.description}</p><div class="game-actions">{g.mode!=='project'?<a class="button primary" href={playerUrl(g.id)}>{g.verification.status==='gameplay-tested'?labels[g.mode]:'Try browser build'} <span aria-hidden="true">▷</span></a>:<a class="button primary" href={g.source} target="_blank" rel="noopener">View source project ↗</a>}<a class="button" href="#requirements">Before you play ↓</a></div></div>{g.image&&<img class="detail-art" src={g.image} alt={`${g.title} gameplay`} width="640" height="400"/>}</div>
-  <div class="detail-grid"><article class="prose"><h2>A classic, rebuilt</h2><p>{g.overview}</p><h2 id="requirements">What you need</h2><p>{g.assetRequirements}</p>{g.mode==='project'&&<p>This is a discovery entry. We do not currently provide a supported browser build. Follow the upstream project for its installation instructions and supported platforms.</p>}<h2>Controls & input</h2><ul>{g.controls.map(c=><li>{c}</li>)}</ul><h2>Saving your progress</h2><p>{g.saveInstructions}</p>{g.mode!=='project'&&<p>Browser data can be cleared by your browser or operating system. Export a backup from the player before clearing site data or moving devices. Private browsing may not retain saves.</p>}<h2>Known limitations</h2><ul>{g.limitations.map(l=><li>{l}</li>)}</ul><h2>Source & assets</h2><p>The engine and game data have separate licenses. A source release does not automatically make the original artwork, music, or levels freely redistributable.</p><p><a href={g.source} target="_blank" rel="noopener">{g.engine} source repository ↗</a></p>{runtime&&<section><h2>Build & corresponding source</h2><p>This versioned package was compiled with {runtime.toolchain} from revision <code>{runtime.sourceRevision}</code>.</p><ul><li><a href={runtime.sourceArchive}>Download corresponding source and patches</a></li><li><a href={`/manifests/${g.id}.json`}>Runtime manifest and checksums</a></li>{recipePath&&<li><a href={`https://github.com/andrewnakas/decompgames/blob/main/${recipePath}`}>Exact build recipe</a></li>}<li><a href="https://github.com/andrewnakas/decompgames/tree/main/provenance">Asset sources and license notices</a></li></ul></section>}</article><aside class="fact-panel"><h2>At a glance</h2><dl><dt>Project</dt><dd>{g.engine}</dd><dt>Category</dt><dd>{g.kind}</dd><dt>Genre</dt><dd>{g.genre}</dd><dt>Engine license</dt><dd>{g.engineLicense}</dd><dt>Asset license</dt><dd>{g.assetLicense}</dd><dt>Download</dt><dd>{g.downloadMB?`Approximately ${g.downloadMB} MB`:'See upstream project'}</dd></dl><h2>Test record</h2><p class="test-status">{g.verification.status.replaceAll('-',' ')}</p><p>{g.verification.scope}</p><dl><dt>Tested browsers</dt><dd>{g.verification.browsers.join(', ')||'No browser claim yet'}</dd><dt>Last test</dt><dd>{g.verification.date||'Pending'}</dd><dt>Full playthrough</dt><dd>{g.verification.playthrough?'Verified':'Not verified'}</dd></dl><a href="/guides/verification/">How we verify games ↗</a></aside></div>
-  <div class="section-heading"><h2>Keep exploring</h2></div><div class="game-grid">{related.map(game=><GameCard game={game}/>)}</div>
-  <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g,'\\u003c')}/>
+<Layout title={`Play ${g.title} in your browser`} description={g.description} image={g.image}>
+  <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Games</a><span aria-hidden="true">›</span><a href={`/platform/${slug(g.platform)}/`}>{g.platform}</a><span aria-hidden="true">›</span><span>{g.title}</span></nav>
+  <section class="card">
+    <div class="game-title"><h1>{g.title}</h1><span class:list={['pill',tone]}>{statusLabel(g)}</span></div>
+    <p class="game-sub">{g.platform} · {g.year} · {g.genre} · {g.kind}</p>
+    <p>{g.description}</p>
+    {embed ? (
+      <Fragment>
+        <div class="stage" id="stage" data-game={g.id} data-url={g.embedUrl} data-launch={g.launch} data-requires={g.requires} data-platform={g.platform} data-shelf={g.shelf}>
+          {g.image && <img class="stage-poster" src={g.image} alt="" />}
+          <div class="stage-overlay" id="stage-overlay">
+            <button type="button" class="play-button" id="play">▶ Play</button>
+            <p id="stage-note">{g.launch==='tab'?'Opens in a new tab. ':''}{size?`${size} on first load. `:''}Sound starts after your first tap or key press in the game.</p>
+          </div>
+          <button type="button" class="stage-close" id="stage-close" aria-label="Close game">✕</button>
+        </div>
+        <div class="stage-tools">
+          <button type="button" class="button" id="fullscreen">Fullscreen</button>
+          <button type="button" class="button" id="stop" disabled>Stop</button>
+          <a class="button" href={g.embedUrl} target="_blank" rel="noopener">Open in its own tab ↗</a>
+        </div>
+      </Fragment>
+    ) : (
+      <Fragment>
+        <a class="stage" href={playerUrl(g.id)} style="display:block">
+          {g.image && <img class="stage-poster" src={g.image} alt="" />}
+          <span class="stage-overlay"><span class="play-button">▶ {g.mode==='files'?'Play with your files':'Play'}</span><span class="muted">{size?`${size}. `:''}{g.assetRequirements}</span></span>
+        </a>
+      </Fragment>
+    )}
+    <details class="fold" open>
+      <summary>Controls</summary>
+      <table class="controls"><tbody>{controls.map(([input,action])=><tr><td>{input&&<kbd>{input}</kbd>}</td><td>{action}</td></tr>)}</tbody></table>
+      {embed&&g.platform==='N64'&&!g.touch&&<p class="muted" style="margin:.75rem 0 0">Touch controls for this game are being rolled out; use a controller or keyboard for now.</p>}
+    </details>
+  </section>
+  <section class="card prose">
+    <h2 style="margin-top:0">About this build</h2>
+    <p>{g.overview}</p>
+    <dl class="game-facts">
+      <dt>Built from</dt><dd>{g.engine}</dd>
+      <dt>Type</dt><dd>{g.kind}</dd>
+      <dt>Game files</dt><dd>{g.assetRequirements}</dd>
+      <dt>Code licence</dt><dd>{g.engineLicense}</dd>
+      <dt>Assets</dt><dd>{g.assetLicense}</dd>
+      <dt>Source</dt><dd><a href={g.source} target="_blank" rel="noopener">{g.source.replace('https://github.com/','')} ↗</a></dd>
+    </dl>
+    <h2>What has been tested</h2>
+    <p>{g.verification.scope}</p>
+    {g.verification.date&&<p class="muted">Last tested {g.verification.date} in {g.verification.browsers.join(', ')}. Full playthrough: {g.verification.playthrough?'verified':'not verified'}. <a href="/guides/verification/">How games are tested</a>.</p>}
+    {embed&&<p class="muted">The build's own test log is in <a href={`${g.source}/blob/main/STATUS.md`} target="_blank" rel="noopener">STATUS.md</a> in its repository.</p>}
+    {g.limitations.length>0&&<Fragment><h2>Known limitations</h2><ul>{g.limitations.map(l=><li>{l}</li>)}</ul></Fragment>}
+    <h2>Saves</h2>
+    <p>{g.saveInstructions}</p>
+    {runtime&&<Fragment><h2>Build and corresponding source</h2><p>Compiled with {runtime.toolchain} from revision <code>{runtime.sourceRevision}</code>.</p><ul><li><a href={runtime.sourceArchive}>Corresponding source and patches</a></li><li><a href={`/manifests/${g.id}.json`}>Runtime manifest and checksums</a></li><li><a href="https://github.com/andrewnakas/decompgames/tree/main/provenance">Asset sources and licence notices</a></li></ul></Fragment>}
+  </section>
+  {related.length>0&&<section class="card"><h2>Play next</h2><ul class="poster-grid">{related.map(game=><GameCard game={game}/>)}</ul></section>}
+  {schema.map(s=><script type="application/ld+json" set:html={JSON.stringify(s).replace(/</g,'\\u003c')}/>)}
+  {embed&&<script>import '../../player/embed';</script>}
 </Layout>

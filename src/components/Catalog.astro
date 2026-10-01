@@ -1,20 +1,79 @@
 ---
 import GameCard from './GameCard.astro';
-import {games,counts} from '../lib/catalog';
-const {featured=false}=Astro.props;
+import { games, cleanroom, classics, genres, platforms, slug } from '../lib/catalog';
+// `only` pre-filters the grid for the crawlable /platform/ pages.
+const { only = '', heading = 'Play in your browser' } = Astro.props as { only?: string; heading?: string };
+const chips: [string, string][] = [
+  ['', 'All'], ['cleanroom', 'Clean room'],
+  ...platforms.map(p => [slug(p), p] as [string, string]),
+  ...genres.map(g => [slug(g), g] as [string, string]),
+];
 ---
-<section class="catalog-intro"><div><span class="eyebrow">REBUILT. REDISCOVERED. REPLAYED.</span><h1>{featured?<>Great games.<br/><span>Another life.</span></>:'Find your next game.'}</h1><p>Decompiled classics and open-source ports.<br class="desktop-break"/> Find a favorite. See how it runs. Get back to playing.</p></div><div class="intro-stats"><strong>{counts.all}<span>games to discover</span></strong><span class="stat-rule"></span><strong>{counts.instant+counts.files}<span>integrations in testing</span></strong></div></section>
-<div class="catalog-toolbar"><div class="search-field"><span aria-hidden="true">⌕</span><input id="game-search" type="search" placeholder="Search games, engines, or a favorite memory…" aria-label="Search games" autocomplete="off"/><kbd>/</kbd></div><label class="select-field"><span class="sr-only">Filter by genre</span><select id="genre-filter"><option value="">All genres</option>{[...new Set(games.map(g=>g.genre))].sort().map(g=><option>{g}</option>)}</select></label></div>
-<div class="filter-line"><div class="filter-buttons" role="group" aria-label="Play availability"><button class="active" data-filter="" aria-pressed="true">All games <span>{counts.all}</span></button><button data-filter="instant" aria-pressed="false">Instant play <span>{counts.instant}</span></button><button data-filter="files" aria-pressed="false">Your files <span>{counts.files}</span></button><button data-filter="project" aria-pressed="false">Projects <span>{counts.project}</span></button></div><span id="result-count" class="result-count" role="status">{counts.all} games</span></div>
-{featured&&<a class="featured-strip" href="/games/open-cadet/"><div><span class="eyebrow">FEATURED PROJECT</span><h2>A familiar table.<br/>An entirely open game.</h2><p>Meet Open Cadet. Original assets, classic pinball.</p><span class="button primary">Explore Open Cadet <span aria-hidden="true">↗</span></span></div><img src="/images/open-cadet.png" alt="Open Cadet’s neon space pinball table" width="640" height="400"/><span class="feature-label">OPEN CADET / 01</span></a>}
-<div class="section-heading"><h2>{featured?'The collection':'All games'}</h2><span>Original projects. Clear requirements.</span></div><div class="game-grid">{games.map((game,index)=><GameCard game={game} index={index}/>)}</div><div id="empty-state" class="empty-state" hidden><h2>No games found.</h2><p>Try a game title, engine, or another genre.</p><button id="reset-filters" class="button">Reset filters</button></div>
+<section class="card" id="catalog" data-only={only}>
+  <div class="catalog-head">
+    <h1>{heading}</h1>
+    <span class="muted" id="gf-count" role="status">{games.length} games</span>
+  </div>
+  <div id="recent" hidden>
+    <p class="muted" style="margin:.75rem 0 0">Continue playing</p>
+    <div class="recent-row" id="recent-row"></div>
+  </div>
+  <input class="gf-search" id="gf-search" type="search" placeholder={`Search ${games.length} games…`} aria-label="Search games" autocomplete="off" />
+  <div class="gf-chips" role="group" aria-label="Filter games">
+    {chips.map(([value, label]) => <button type="button" class:list={['gf-chip', { 'is-on': value === only }]} data-cat={value} aria-pressed={value === only}>{label}</button>)}
+  </div>
+  <div class="shelf" data-shelf>
+    <div class="shelf-title" style="margin-top:0"><h2>Clean-room builds</h2><a class="muted" href="/clean-room/">What is this?</a></div>
+    <ul class="poster-grid">{cleanroom.map((game, i) => <GameCard game={game} eager={i < 4} />)}</ul>
+  </div>
+  <div class="shelf" data-shelf>
+    <div class="shelf-title"><h2>Open-source classics</h2><span class="muted">Free replacement assets, hosted here</span></div>
+    <ul class="poster-grid">{classics.map(game => <GameCard game={game} />)}</ul>
+  </div>
+  <div class="gf-empty" id="gf-empty" hidden>
+    <p>No games match.</p>
+    <button type="button" class="button" id="gf-reset">Show everything</button>
+  </div>
+  <p class="muted" style="margin-top:1.25rem">Browse by platform: {platforms.map((p, i) => <Fragment>{i > 0 && ' · '}<a href={`/platform/${slug(p)}/`}>{p}</a></Fragment>)}</p>
+</section>
 <script>
-const search=document.querySelector<HTMLInputElement>('#game-search')!;
-const genre=document.querySelector<HTMLSelectElement>('#genre-filter')!;
-let mode='';
-const buttons=[...document.querySelectorAll<HTMLButtonElement>('[data-filter]')];
-function filter(){let count=0;for(const card of document.querySelectorAll<HTMLElement>('[data-card]')){const visible=(!mode||card.dataset.mode===mode)&&(!genre.value||card.dataset.genre===genre.value)&&search.value.toLowerCase().trim().split(/\s+/).every(word=>card.dataset.title!.includes(word));card.hidden=!visible;if(visible)count++;}document.querySelector('#result-count')!.textContent=`${count} ${count===1?'game':'games'}`;document.querySelector<HTMLElement>('#empty-state')!.hidden=count>0;const feature=document.querySelector<HTMLElement>('.featured-strip');if(feature)feature.hidden=!!(mode||genre.value||search.value);}
-search.addEventListener('input',filter);genre.addEventListener('change',filter);buttons.forEach(button=>button.addEventListener('click',()=>{mode=button.dataset.filter!;buttons.forEach(b=>{b.classList.toggle('active',b===button);b.setAttribute('aria-pressed',String(b===button));});filter();}));
-document.querySelector('#reset-filters')?.addEventListener('click',()=>{search.value='';genre.value='';buttons[0].click();search.focus();});
-document.addEventListener('keydown',e=>{if(e.key==='/'&&!(e.target instanceof HTMLInputElement)&&!(e.target instanceof HTMLTextAreaElement)){e.preventDefault();search.focus();}});
+import { track } from '../lib/track';
+const root = document.querySelector<HTMLElement>('#catalog')!;
+const search = document.querySelector<HTMLInputElement>('#gf-search')!;
+const chips = [...document.querySelectorAll<HTMLButtonElement>('.gf-chip')];
+const items = [...document.querySelectorAll<HTMLElement>('.pc-item')];
+let cat = new URLSearchParams(location.search).get('c') ?? root.dataset.only ?? '';
+function apply() {
+  const words = search.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+  let count = 0;
+  for (const item of items) {
+    const show = (!cat || item.dataset.cats!.split('|').includes(cat)) && words.every(w => item.dataset.search!.includes(w));
+    item.hidden = !show;
+    if (show) count++;
+  }
+  for (const shelf of document.querySelectorAll<HTMLElement>('[data-shelf]')) shelf.hidden = !shelf.querySelector('.pc-item:not([hidden])');
+  for (const chip of chips) { const on = chip.dataset.cat === cat; chip.classList.toggle('is-on', on); chip.setAttribute('aria-pressed', String(on)); }
+  document.querySelector('#gf-count')!.textContent = `${count} ${count === 1 ? 'game' : 'games'}`;
+  document.querySelector<HTMLElement>('#gf-empty')!.hidden = count > 0;
+}
+let timer: ReturnType<typeof setTimeout>;
+search.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(() => { apply(); if (search.value.trim()) track('search', { search_term: search.value.trim() }); }, 120); });
+search.addEventListener('keydown', e => { if (e.key === 'Escape') { search.value = ''; apply(); } });
+for (const chip of chips) chip.addEventListener('click', () => { cat = chip.dataset.cat!; apply(); if (cat) track('filter', { category: cat }); });
+document.querySelector('#gf-reset')!.addEventListener('click', () => { search.value = ''; cat = ''; apply(); search.focus(); });
+document.addEventListener('keydown', e => { if (e.key === '/' && !(e.target instanceof HTMLInputElement)) { e.preventDefault(); search.focus(); } });
+apply();
+// Continue playing: ids recorded by the players, newest first.
+try {
+  const recent: string[] = JSON.parse(localStorage.getItem('dg:recent') || '[]');
+  const row = document.querySelector('#recent-row')!;
+  for (const id of recent.slice(0, 6)) {
+    const item = items.find(i => i.dataset.id === id);
+    if (!item) continue;
+    const a = document.createElement('a');
+    a.href = `/games/${id}/`; a.textContent = `▶ ${item.dataset.title}`;
+    row.append(a);
+  }
+  document.querySelector<HTMLElement>('#recent')!.hidden = !row.children.length;
+} catch { /* storage unavailable */ }
 </script>

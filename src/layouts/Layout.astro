@@ -1,12 +1,79 @@
 ---
 import '../styles/site.css';
 import '../styles/details.css';
-interface Props { title?:string; description?:string; noindex?:boolean; }
-const { title='Decompiled games. Ready for another life.',description='Discover decompiled games, open-source ports, and classic games you can play in your browser. Explore source projects, controls, and local game-file support.',noindex=false }=Astro.props;
-const canonical=new URL(Astro.url.pathname,Astro.site);
-const path=Astro.url.pathname;
+interface Props { title?: string; description?: string; noindex?: boolean; image?: string; }
+const {
+  title = 'Play decompiled games in your browser',
+  description = 'Clean-room N64 builds, Skate 3 and open-source classics that run in your browser. No downloads, no ROMs, with gamepad and touch controls.',
+  noindex = false,
+  image = '/og.png',
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(image, Astro.site);
+const path = Astro.url.pathname;
+const gaId = import.meta.env.PUBLIC_GA_ID || 'G-GQ6627GN8H';
+const nav = [
+  ['/', 'Games', path === '/' || path.startsWith('/games') || path.startsWith('/platform')],
+  ['/clean-room/', 'Clean room', path.startsWith('/clean-room')],
+  ['/guides/', 'Guides', path.startsWith('/guides')],
+  ['/updates/', 'Updates', path.startsWith('/updates')],
+  ['/about/', 'About', path.startsWith('/about')],
+] as const;
 ---
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>{title} — Decomp Games</title><meta name="description" content={description}/><link rel="canonical" href={canonical}/><link rel="icon" href="/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#11141b"/><meta property="og:title" content={`${title} — Decomp Games`}/><meta property="og:description" content={description}/><meta property="og:type" content="website"/><meta property="og:url" content={canonical}/>{noindex && <meta name="robots" content="noindex,follow"/>}<link rel="alternate" type="application/rss+xml" title="Decomp Games updates" href="/feed.xml"/></head>
-<body><a class="skip" href="#main">Skip to content</a><header class="topbar"><a href="/" class="brand" aria-label="Decomp Games home"><img src="/favicon.svg" width="32" height="32" alt=""/><span>decomp<span class="brand-light">games</span><span class="brand-dot">.</span></span></a><nav aria-label="Main navigation"><a href="/games/" aria-current={path.startsWith('/games')?'page':undefined}>Explore games</a><a href="/collections/" aria-current={path.startsWith('/collections')?'page':undefined}>Collections</a><a href="/guides/" aria-current={path.startsWith('/guides')?'page':undefined}>Field guide</a></nav><a class="source-link" href="https://github.com/andrewnakas/decompgames" target="_blank" rel="noopener">Source on GitHub <span aria-hidden="true">↗</span></a></header>
-<div class="site-shell"><aside class="sidebar"><p class="nav-caption">YOUR NEXT PLAY</p><a class:list={['side-link',{selected:path==='/'||path==='/games/'}]} href="/games/"><span aria-hidden="true">▦</span> All games</a><a class="side-link" href="/collections/instant-play/"><span aria-hidden="true">▷</span> Instant play</a><a class="side-link" href="/collections/bring-your-files/"><span aria-hidden="true">▱</span> Bring your files</a><a class="side-link" href="/collections/decompilations/"><span aria-hidden="true">⌘</span> Decompilations</a><div class="side-divider"></div><p class="nav-caption">THE PROJECT</p><a class="side-link" href="/guides/getting-started/">Getting started</a><a class="side-link" href="/updates/">What’s new</a><a class="side-link" href="/about/">About & principles</a><a class="side-link" href="/contribute/">Add a game <span aria-hidden="true">↗</span></a><div class="sidebar-note"><span class="tiny-code">{'>_'} OPEN BY DESIGN</span><p>Old games.<br/>New possibilities.</p><a href="/about/#open-source">Built in the open ↗</a></div></aside><main id="main"><p class="development-note">Development preview · Game integrations are still being tested. See each game’s test record before playing.</p><slot/></main></div>
-<footer><a class="footer-brand" href="/">decompgames.</a><p>A new home for games with more life in them.</p><nav aria-label="Footer"><a href="/licenses/">Licenses & credits</a><a href="/privacy/">Privacy</a><a href="/contribute/">Contribute</a><a href="https://exebrowser.com/">By the creator of ExeBrowser ↗</a></nav><small>Independent community project. Game names and artwork belong to their respective owners.</small></footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>{title} — Decomp Games</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <meta name="theme-color" content="#0e0d0b" />
+  <meta property="og:site_name" content="Decomp Games" />
+  <meta property="og:title" content={`${title} — Decomp Games`} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={ogImage} />
+  <meta name="twitter:card" content="summary_large_image" />
+  {noindex && <meta name="robots" content="noindex,follow" />}
+  <link rel="alternate" type="application/rss+xml" title="Decomp Games updates" href="/feed.xml" />
+  {gaId && (
+    <Fragment>
+      <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+      <script is:inline define:vars={{ gaId }}>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        window.gtag = gtag;
+        gtag('js', new Date());
+        // Automated browsers are kept out of the data.
+        if (!navigator.webdriver) gtag('config', gaId);
+      </script>
+    </Fragment>
+  )}
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a href="/" class="brand" aria-label="Decomp Games home"><span class="brand-chip" aria-hidden="true">{'{ }'}</span>Decomp Games</a>
+    <p class="tagline">Decompiled games, rebuilt clean, playable in your browser.</p>
+    <nav class="site-nav" aria-label="Main">
+      {nav.map(([href, label, current]) => <a href={href} aria-current={current ? 'page' : undefined}>{label}</a>)}
+      <a href="https://github.com/andrewnakas/decompgames" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </header>
+  <main id="main"><slot /></main>
+  <footer class="site-footer">
+    <nav aria-label="Footer">
+      <a href="/">Games</a>
+      <a href="/clean-room/">Clean room</a>
+      <a href="/licenses/">Licenses &amp; credits</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/contribute/">Contribute</a>
+      <a href="https://exebrowser.com/">ExeBrowser</a>
+    </nav>
+    <small>Independent community project. Game names belong to their respective owners. No retail game data is distributed.</small>
+  </footer>
+</body>
+</html>

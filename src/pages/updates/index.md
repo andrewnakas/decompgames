@@ -3,6 +3,10 @@ layout: ../../layouts/Article.astro
 title: What’s new
 description: Release notes and compatibility changes for Decomp Games.
 ---
+## October 1, 2026 — Clean-room builds and a new design
+
+The catalogue now leads with 17 clean-room builds: 16 Nintendo 64 games and Skate 3. Each runs decompiled or rewritten game code with regenerated assets and plays in place on its game page, with gamepad support. The site has been redesigned around the game grid, and link-only directory entries have been removed. [How the clean room works](/clean-room/).
+
 ## September 27, 2026 — Open Junction is playable
 
 Open Junction pairs the documented reSL decompilation with independently authored CC0 art, interface, and six-station scenario data. The pinned WebAssembly build excludes original game resources and uses a null audio backend. Muted private tests covered player-built rails, switch routing, natural train deliveries, Save/Archive, and six-station cases. The deployed package passed a natural completed-train delivery and a save export/delete/import/restore cycle in an isolated, silent browser test. Uninterrupted 1800–2000 progression and the repeat-level campaign remain unverified. [Play Open Junction](/games/shortline/).
