@@ -717,7 +717,8 @@
    "browsers": [],
    "scope": "Headless test covered the title, name entry and opening dialogue at 60 fps. No on-rails level check is recorded.",
    "playthrough": false
-  }
+  },
+  "image": "/images/pokemon-snap.png"
  },
  {
   "id": "harvest-moon-64",
@@ -764,7 +765,8 @@
    "browsers": [],
    "scope": "Live headless test ran the intro; a local test started a new game and used the menus.",
    "playthrough": false
-  }
+  },
+  "image": "/images/harvest-moon-64.png"
  },
  {
   "id": "skate-3",
@@ -817,10 +819,11 @@
    "status": "gameplay-tested",
    "date": null,
    "browsers": [],
-   "scope": "Played by the author on desktop; StartPark loads on an iPhone.",
+   "scope": "Played by the author on desktop; StartPark loads on an iPhone. On 1 October 2026 it loaded and rendered through this site in Edge on Windows.",
    "playthrough": false
   },
-  "requires": "webgpu"
+  "requires": "webgpu",
+  "image": "/images/skate-3.png"
  },
  {
   "id": "open-cadet",
