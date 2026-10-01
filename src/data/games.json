@@ -85,7 +85,7 @@
   "shelf": "cleanroom",
   "platform": "N64",
   "launch": "embed",
-  "touch": false,
+  "touch": true,
   "embedUrl": "https://andrewnakas.github.io/sm64-cleanroom/",
   "verification": {
    "status": "smoke-tested",
@@ -181,7 +181,7 @@
   "shelf": "cleanroom",
   "platform": "N64",
   "launch": "embed",
-  "touch": false,
+  "touch": true,
   "embedUrl": "https://andrewnakas.github.io/mk64-cleanroom/",
   "verification": {
    "status": "smoke-tested",
@@ -229,7 +229,7 @@
   "shelf": "cleanroom",
   "platform": "N64",
   "launch": "embed",
-  "touch": false,
+  "touch": true,
   "embedUrl": "https://andrewnakas.github.io/ssb64-cleanroom/",
   "verification": {
    "status": "smoke-tested",
@@ -325,7 +325,7 @@
   "shelf": "cleanroom",
   "platform": "N64",
   "launch": "embed",
-  "touch": false,
+  "touch": true,
   "embedUrl": "https://andrewnakas.github.io/bk-cleanroom/",
   "verification": {
    "status": "smoke-tested",
@@ -469,7 +469,7 @@
   "shelf": "cleanroom",
   "platform": "N64",
   "launch": "embed",
-  "touch": false,
+  "touch": true,
   "embedUrl": "https://andrewnakas.github.io/goldeneye-cleanroom/",
   "verification": {
    "status": "gameplay-tested",
@@ -565,7 +565,7 @@
   "shelf": "cleanroom",
   "platform": "N64",
   "launch": "embed",
-  "touch": false,
+  "touch": true,
   "embedUrl": "https://andrewnakas.github.io/drmario64-cleanroom/",
   "verification": {
    "status": "gameplay-tested",
@@ -613,7 +613,7 @@
   "shelf": "cleanroom",
   "platform": "N64",
   "launch": "embed",
-  "touch": false,
+  "touch": true,
   "embedUrl": "https://andrewnakas.github.io/doom64-cleanroom/",
   "verification": {
    "status": "smoke-tested",

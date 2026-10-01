@@ -2,7 +2,7 @@
 // Usage: node scripts/shot-url.mjs <url> <outPrefix> <seconds> [seconds ...]   (MOBILE=1 for a phone in landscape)
 import {chromium} from '@playwright/test';
 const [url,out,...times]=process.argv.slice(2);
-const browser=await chromium.launch({channel:'msedge',args:['--mute-audio','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const browser=await chromium.launch({channel:'msedge',headless:!process.env.HEADED,args:process.env.HEADED?['--mute-audio']:['--mute-audio','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
 const context=await browser.newContext(process.env.MOBILE?{viewport:{width:844,height:390},hasTouch:true,isMobile:true}:{viewport:{width:900,height:600}});
 const page=await context.newPage();
 page.on('response',r=>{if(r.status()>=400)console.log('http',r.status(),r.url());});

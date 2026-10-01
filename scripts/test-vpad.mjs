@@ -4,7 +4,7 @@
 import {chromium} from '@playwright/test';
 import {mkdir} from 'node:fs/promises';
 const [url,out,first,...steps]=process.argv.slice(2);await mkdir(out,{recursive:true});
-const browser=await chromium.launch({channel:'msedge',args:['--mute-audio','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const browser=await chromium.launch({channel:'msedge',headless:!process.env.HEADED,args:process.env.HEADED?['--mute-audio']:['--mute-audio','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
 const context=await browser.newContext({viewport:{width:844,height:390},hasTouch:true,isMobile:true});
 const page=await context.newPage();
 const errors=[];page.on('pageerror',e=>errors.push(e.message));
