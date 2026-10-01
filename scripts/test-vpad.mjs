@@ -5,12 +5,12 @@ import {chromium} from '@playwright/test';
 import {mkdir} from 'node:fs/promises';
 const [url,out,first,...steps]=process.argv.slice(2);await mkdir(out,{recursive:true});
 const browser=await chromium.launch({channel:'msedge',headless:!process.env.HEADED,args:process.env.HEADED?['--mute-audio']:['--mute-audio','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
-const context=await browser.newContext({viewport:{width:844,height:390},hasTouch:true,isMobile:true});
+const context=await browser.newContext(process.env.DESK?{viewport:{width:844,height:480}}:{viewport:{width:844,height:390},hasTouch:true,isMobile:true});
 const page=await context.newPage();
 const errors=[];page.on('pageerror',e=>errors.push(e.message));
 await page.goto(url+(url.includes('?')?'&':'?')+'touch=1',{waitUntil:'load'});
 // Some runtimes wait for a first gesture: tap the game area part-way through the wait.
-await page.waitForTimeout(500*Number(first));await page.touchscreen.tap(422,160).catch(()=>{});await page.waitForTimeout(500*Number(first));
+await page.waitForTimeout(500*Number(first));await (process.env.DESK?page.mouse.click(422,160):page.touchscreen.tap(422,160)).catch(()=>{});await page.waitForTimeout(500*Number(first));
 const pads=await page.evaluate(()=>{const p=navigator.getGamepads()[0];return p?p.id:null;});
 await page.screenshot({path:`${out}/0.png`});
 let n=1;

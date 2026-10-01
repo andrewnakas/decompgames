@@ -17,8 +17,13 @@
   "assetLicense": "Regenerated clean-room assets; no retail data is distributed",
   "assetRequirements": "No original game files needed.",
   "controls": [
-   "Gamepad — any standard controller, detected automatically",
-   "Keyboard — default mapping of the build; see its on-screen help",
+   "Arrow keys — fly, move",
+   "X / C — A / B",
+   "Z / A / S — Z / L / R",
+   "I J K L — C buttons",
+   "T F G H — D-pad",
+   "Enter — Start",
+   "Gamepad — left stick flies, right stick is the C buttons, left trigger is Z",
    "Touch — on-screen N64 pad on phones and tablets when no controller is connected"
   ],
   "saveInstructions": "Progress is stored by the build in this browser, under andrewnakas.github.io. Clearing site data removes it.",
@@ -37,7 +42,7 @@
   "shelf": "cleanroom",
   "platform": "N64",
   "launch": "tab",
-  "touch": false,
+  "touch": true,
   "embedUrl": "https://andrewnakas.github.io/pilotwings64-cleanroom/",
   "verification": {
    "status": "smoke-tested",
@@ -66,8 +71,14 @@
   "assetLicense": "Regenerated clean-room assets; no retail data is distributed",
   "assetRequirements": "No original game files needed.",
   "controls": [
+   "W A S D — move",
+   "L — A (jump)",
+   ", — B (punch)",
+   "K — Z",
+   "Right Shift — R",
+   "Arrow keys — C buttons",
+   "Space — Start",
    "Gamepad — any standard controller, detected automatically",
-   "Keyboard — default mapping of the build; see its on-screen help",
    "Touch — on-screen N64 pad on phones and tablets when no controller is connected"
   ],
   "saveInstructions": "Progress is stored by the build in this browser, under andrewnakas.github.io. Clearing site data removes it.",
@@ -114,9 +125,16 @@
   "assetLicense": "Regenerated clean-room assets; no retail data is distributed",
   "assetRequirements": "No original game files needed.",
   "controls": [
+   "W A S D — stick",
+   "X — A",
+   "C — B",
+   "Z — Z",
+   "Arrow keys — C buttons",
+   "T F G H — D-pad",
+   "Space — Start",
+   "Esc — port menu",
    "Gamepad — any standard controller, detected automatically",
-   "Keyboard — default mapping of the build; see its on-screen help",
-   "Touch — on-screen N64 pad on phones and tablets when no controller is connected"
+   "Touch — on-screen stick and buttons drawn by the port"
   ],
   "saveInstructions": "Progress is stored by the build in this browser, under andrewnakas.github.io. Clearing site data removes it.",
   "limitations": [
@@ -162,8 +180,15 @@
   "assetLicense": "Regenerated clean-room assets; no retail data is distributed",
   "assetRequirements": "No original game files needed.",
   "controls": [
+   "Arrow keys — steer",
+   "X — A (gas)",
+   "C — B (brake)",
+   "Z — Z (item)",
+   "S — R (hop, drift)",
+   "Q — L",
+   "I J K L — C buttons",
+   "Enter — Start",
    "Gamepad — any standard controller, detected automatically",
-   "Keyboard — default mapping of the build; see its on-screen help",
    "Touch — on-screen N64 pad on phones and tablets when no controller is connected"
   ],
   "saveInstructions": "Progress is stored by the build in this browser, under andrewnakas.github.io. Clearing site data removes it.",
@@ -210,8 +235,14 @@
   "assetLicense": "Regenerated clean-room assets; no retail data is distributed",
   "assetRequirements": "No original game files needed.",
   "controls": [
+   "Arrow keys — stick",
+   "D — A",
+   "S — B",
+   "A — Z",
+   "Q / E — L / R",
+   "I J K L — C buttons",
+   "Enter — Start",
    "Gamepad — any standard controller, detected automatically",
-   "Keyboard — default mapping of the build; see its on-screen help",
    "Touch — on-screen N64 pad on phones and tablets when no controller is connected"
   ],
   "saveInstructions": "Progress is stored by the build in this browser, under andrewnakas.github.io. Clearing site data removes it.",
@@ -258,8 +289,16 @@
   "assetLicense": "Regenerated clean-room assets; no retail data is distributed",
   "assetRequirements": "No original game files needed.",
   "controls": [
+   "W A S D — stick",
+   "X — A",
+   "C — B",
+   "Z — Z",
+   "E / R — L / R",
+   "Arrow keys — C buttons",
+   "T F G H — D-pad",
+   "Space — Start",
+   "Esc — port menu",
    "Gamepad — any standard controller, detected automatically",
-   "Keyboard — default mapping of the build; see its on-screen help",
    "Touch — on-screen N64 pad on phones and tablets when no controller is connected"
   ],
   "saveInstructions": "Progress is stored by the build in this browser, under andrewnakas.github.io. Clearing site data removes it.",
@@ -306,8 +345,15 @@
   "assetLicense": "Regenerated clean-room assets; no retail data is distributed",
   "assetRequirements": "No original game files needed.",
   "controls": [
+   "Arrow keys — move",
+   "X — A (jump)",
+   "C — B (attack)",
+   "Z — Z (crouch)",
+   "S — R (camera)",
+   "Q — L",
+   "I J K L — C buttons",
+   "Enter — Start",
    "Gamepad — any standard controller, detected automatically",
-   "Keyboard — default mapping of the build; see its on-screen help",
    "Touch — on-screen N64 pad on phones and tablets when no controller is connected"
   ],
   "saveInstructions": "Progress is stored by the build in this browser, under andrewnakas.github.io. Clearing site data removes it.",
@@ -354,8 +400,15 @@
   "assetLicense": "Regenerated clean-room assets; no retail data is distributed",
   "assetRequirements": "No original game files needed.",
   "controls": [
+   "Arrow keys / W A S D — steer",
+   "X — A (accelerate)",
+   "C — B (brake)",
+   "Z — Z (item)",
+   "Space / Shift — R (hop)",
+   "Q — L",
+   "I J K L — C buttons",
+   "Enter — Start",
    "Gamepad — any standard controller, detected automatically",
-   "Keyboard — default mapping of the build; see its on-screen help",
    "Touch — on-screen N64 pad on phones and tablets when no controller is connected"
   ],
   "saveInstructions": "Progress is stored by the build in this browser, under andrewnakas.github.io. Clearing site data removes it.",
@@ -402,9 +455,18 @@
   "assetLicense": "Regenerated clean-room assets; no retail data is distributed",
   "assetRequirements": "No original game files needed.",
   "controls": [
+   "W A S D — move",
+   "Mouse / arrow keys — look",
+   "Click / Space — fire",
+   "Right click / Z — aim",
+   "E — use",
+   "R — reload",
+   "F — alt fire",
+   "Q — weapon menu",
+   "Tab — pause",
+   "Enter — accept",
    "Gamepad — any standard controller, detected automatically",
-   "Keyboard — default mapping of the build; see its on-screen help",
-   "Touch — on-screen N64 pad on phones and tablets when no controller is connected"
+   "Touch — on-screen pad: left side moves, C buttons look, Z fires"
   ],
   "saveInstructions": "Progress is stored by the build in this browser, under andrewnakas.github.io. Clearing site data removes it.",
   "limitations": [
@@ -421,7 +483,7 @@
   "shelf": "cleanroom",
   "platform": "N64",
   "launch": "embed",
-  "touch": false,
+  "touch": true,
   "embedUrl": "https://andrewnakas.github.io/pd-cleanroom/",
   "verification": {
    "status": "gameplay-tested",
@@ -450,8 +512,14 @@
   "assetLicense": "Regenerated clean-room assets; no retail data is distributed",
   "assetRequirements": "No original game files needed.",
   "controls": [
+   "Arrow keys — stick (move, turn)",
+   "A — Z (fire)",
+   "D — A (use, change weapon)",
+   "S — B",
+   "Q / E — L / R (aim)",
+   "I J K L — C buttons (look, strafe)",
+   "Enter — Start",
    "Gamepad — any standard controller, detected automatically",
-   "Keyboard — default mapping of the build; see its on-screen help",
    "Touch — on-screen N64 pad on phones and tablets when no controller is connected"
   ],
   "saveInstructions": "Progress is stored by the build in this browser, under andrewnakas.github.io. Clearing site data removes it.",
@@ -498,8 +566,15 @@
   "assetLicense": "Regenerated clean-room assets; no retail data is distributed",
   "assetRequirements": "No original game files needed.",
   "controls": [
+   "Arrow keys — stick",
+   "D — A (fire)",
+   "S — B (bomb)",
+   "A / E — Z / R (tilt; tap twice to barrel roll)",
+   "J — C-left (boost)",
+   "K — C-down (brake)",
+   "I — C-up (view)",
+   "Enter — Start",
    "Gamepad — any standard controller, detected automatically",
-   "Keyboard — default mapping of the build; see its on-screen help",
    "Touch — on-screen N64 pad on phones and tablets when no controller is connected"
   ],
   "saveInstructions": "Progress is stored by the build in this browser, under andrewnakas.github.io. Clearing site data removes it.",
@@ -546,8 +621,14 @@
   "assetLicense": "Regenerated clean-room assets; no retail data is distributed",
   "assetRequirements": "No original game files needed.",
   "controls": [
+   "Arrow keys — move, drop",
+   "X — A (rotate)",
+   "Z — B (rotate back)",
+   "Space — Z",
+   "Q / W — L / R",
+   "I J K L — C buttons",
+   "Enter — Start",
    "Gamepad — any standard controller, detected automatically",
-   "Keyboard — default mapping of the build; see its on-screen help",
    "Touch — on-screen N64 pad on phones and tablets when no controller is connected"
   ],
   "saveInstructions": "Progress is stored by the build in this browser, under andrewnakas.github.io. Clearing site data removes it.",
@@ -594,8 +675,14 @@
   "assetLicense": "Regenerated clean-room assets; no retail data is distributed",
   "assetRequirements": "No original game files needed.",
   "controls": [
+   "Arrow keys — stick",
+   "D — A",
+   "S — B",
+   "A — Z",
+   "Q / E — L / R",
+   "I J K L — C buttons",
+   "Enter — Start",
    "Gamepad — any standard controller, detected automatically",
-   "Keyboard — default mapping of the build; see its on-screen help",
    "Touch — on-screen N64 pad on phones and tablets when no controller is connected"
   ],
   "saveInstructions": "Progress is stored by the build in this browser, under andrewnakas.github.io. Clearing site data removes it.",
@@ -642,8 +729,14 @@
   "assetLicense": "Regenerated clean-room assets; no retail data is distributed",
   "assetRequirements": "No original game files needed.",
   "controls": [
+   "Arrow keys — stick (steer)",
+   "D — A (accelerate)",
+   "S — B (brake)",
+   "A / E — Z / R (lean; tap twice for a side attack)",
+   "D + S — boost, from lap 2",
+   "I — C-up (change view)",
+   "Enter — Start",
    "Gamepad — any standard controller, detected automatically",
-   "Keyboard — default mapping of the build; see its on-screen help",
    "Touch — on-screen N64 pad on phones and tablets when no controller is connected"
   ],
   "saveInstructions": "Progress is stored by the build in this browser, under andrewnakas.github.io. Clearing site data removes it.",
@@ -690,8 +783,14 @@
   "assetLicense": "Regenerated clean-room assets; no retail data is distributed",
   "assetRequirements": "No original game files needed.",
   "controls": [
+   "Arrow keys — stick",
+   "D — A",
+   "S — B",
+   "A — Z (take a picture)",
+   "Q / E — L / R",
+   "I J K L — C buttons",
+   "Enter — Start",
    "Gamepad — any standard controller, detected automatically",
-   "Keyboard — default mapping of the build; see its on-screen help",
    "Touch — on-screen N64 pad on phones and tablets when no controller is connected"
   ],
   "saveInstructions": "Progress is stored by the build in this browser, under andrewnakas.github.io. Clearing site data removes it.",
@@ -738,8 +837,14 @@
   "assetLicense": "Regenerated clean-room assets; no retail data is distributed",
   "assetRequirements": "No original game files needed.",
   "controls": [
+   "Arrow keys — stick",
+   "D — A (use tool, talk, pick up)",
+   "S — B (put away, cancel)",
+   "A — Z (item menu)",
+   "Q / E — L / R",
+   "I J K L — C buttons (tool switch, whistles, run)",
+   "Enter — Start (pause, calendar)",
    "Gamepad — any standard controller, detected automatically",
-   "Keyboard — default mapping of the build; see its on-screen help",
    "Touch — on-screen N64 pad on phones and tablets when no controller is connected"
   ],
   "saveInstructions": "Progress is stored by the build in this browser, under andrewnakas.github.io. Clearing site data removes it.",
@@ -1070,7 +1175,8 @@
    "playthrough": false
   },
   "shelf": "classic",
-  "platform": "PC"
+  "platform": "PC",
+  "image": "/images/opentyrian.png"
  },
  {
   "id": "beneath-a-steel-sky",
@@ -1164,7 +1270,8 @@
    "playthrough": false
   },
   "shelf": "classic",
-  "platform": "PC"
+  "platform": "PC",
+  "image": "/images/lure-of-the-temptress.png"
  },
  {
   "id": "flight-of-the-amazon-queen",
@@ -1209,7 +1316,8 @@
    "playthrough": false
   },
   "shelf": "classic",
-  "platform": "PC"
+  "platform": "PC",
+  "image": "/images/flight-of-the-amazon-queen.png"
  },
  {
   "id": "soltys",
@@ -1254,7 +1362,8 @@
    "playthrough": false
   },
   "shelf": "classic",
-  "platform": "PC"
+  "platform": "PC",
+  "image": "/images/soltys.png"
  },
  {
   "id": "doom",
@@ -1444,7 +1553,8 @@
    "playthrough": false
   },
   "shelf": "classic",
-  "platform": "PC"
+  "platform": "PC",
+  "image": "/images/skyways.png"
  },
  {
   "id": "shortline",
@@ -1497,6 +1607,7 @@
    "playthrough": false
   },
   "shelf": "classic",
-  "platform": "PC"
+  "platform": "PC",
+  "image": "/images/shortline.png"
  }
 ]
