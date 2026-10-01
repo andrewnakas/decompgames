@@ -21,9 +21,9 @@ if (lateReview && !realtimeLoop) throw Error('--late-review requires --realtime-
 if ([acceleratedLoop, realtimeLoop, shieldReview, damageReview].filter(Boolean).length > 1) throw Error('Choose only one diagnostic mode');
 const shot2Experiment = process.argv.includes('--shot2-experiment');
 const saucerExperiment = process.argv.includes('--saucer-experiment');
-const baselineDataSha256 = '8549e2e9d9a49cbe9fb52c09bdc90a7306b95f70fa468d1af162d098d62a6628';
-const shot2DataSha256 = '1057aac4eb9520fad6a12dd01b40a696bb90935840391f44a8de800f8005aca8';
-const saucerDataSha256 = 'a13aa2a4fcdf5e9f6b603074b7d3abb888427ff80edc628b3cc65b3ad421eb19';
+const baselineDataSha256 = '5b86e0380723c6ed5cb53e2720d30fe275303255f89fa85b56f861913fcc32ae';
+const shot2DataSha256 = 'c6acaea76d0122d90dc4bafa46159d69e4fc01a9a8095ca8d92301925da4ff97';
+const saucerDataSha256 = '2432f565ad1fa5773b6b3cfa78ef8b6fd8dbec6bf37d2e170be57efc578c09c0';
 const dataSha256 = createHash('sha256').update(await readFile(dataFile)).digest('hex');
 if (dataSha256 !== baselineDataSha256 && !(shot2Experiment && !saucerExperiment && dataSha256 === shot2DataSha256) &&
     !(shot2Experiment && saucerExperiment && dataSha256 === saucerDataSha256))
@@ -85,7 +85,7 @@ const server = createServer(async (request, response) => {
         source = source.replace(pace, 'machine._next += 1000 / 1200;');
         source = source.replace(anchor, `${anchor}\n  const auto = machine._openSwarmAuto ||= { right: true, fireNext: false, firstOver: null };\n  if (frameIndex > 600) {\n    if (machine.mem8[0x201b] >= 210) auto.right = false;\n    if (machine.mem8[0x201b] <= 48) auto.right = true;\n  }\n  if (frameIndex > 600 && machine.mem8[0x2025] === 0) auto.fireNext = !auto.fireNext;\n  else auto.fireNext = false;\n  if (frameIndex > 600 && machine.mem8[0x20ef] === 0 && auto.firstOver === null && auto.seenPlay) auto.firstOver = frameIndex;\n  if (machine.mem8[0x20ef]) auto.seenPlay = true;\n  let virtualInput = 0;\n  if (frameIndex >= 300 && frameIndex < 306) virtualInput |= 1;\n  if (frameIndex >= 360 && frameIndex < 366) virtualInput |= 4;\n  if (auto.firstOver !== null) {\n    if (frameIndex >= auto.firstOver + 245 && frameIndex < auto.firstOver + 251) virtualInput |= 1;\n    if (frameIndex >= auto.firstOver + 305 && frameIndex < auto.firstOver + 311) virtualInput |= 4;\n  }\n  if (frameIndex > 600) virtualInput |= auto.right ? 64 : 32;\n  if (frameIndex > 600 && auto.fireNext) virtualInput |= 16;\n  machine.io.inputAssert[PORTS.in1] = virtualInput;`);
       }
-      source = source.replace(anchor, `${anchor}\n  if (frameIndex % 15 === 0 || (Atomics.load(ctrl, 1) & 5)) { const header = Array.from({ length: 28 }, (_, glyph) => Array.from({ length: 8 }, (_, row) => machine.mem8[0x241e + glyph * 0x100 + row * 0x20])); let shieldBits = 0; for (let shield = 0; shield < 4; shield++) for (let row = 0; row < 22; row++) for (let col = 0; col < 2; col++) { let byte = machine.mem8[0x2806 + shield * 0x2e0 + row * 0x20 + col]; while (byte) { shieldBits += byte & 1; byte >>= 1; } } postMessage({ type: 'probe', frame: frameIndex, in1: Atomics.load(ctrl, 1), play: machine.mem8[0x20ef], shipX: machine.mem8[0x201b], ships: machine.mem8[0x21ff], shipAnim: machine.mem8[0x2015], shot: machine.mem8[0x2025], alienShot2: machine.mem8[0x2035], alienShot2Y: machine.mem8[0x203d], saucerActive: machine.mem8[0x2084], aliens: machine.mem8[0x2082], round: machine.mem8[0x21fe], score: machine.mem16[0x20f8], shieldBits, fleetDir: machine.mem8[0x200d], headerCells: header.filter(bytes => bytes.some(Boolean)).length, headerBits: header.flat().reduce((sum, byte) => { while (byte) { sum += byte & 1; byte >>= 1; } return sum; }, 0) }); }`);
+      source = source.replace(anchor, `${anchor}\n  const encounter = machine._openSwarmEncounter ||= { armed: 0, active: 0, hit: 0, wrongMode: 0, blocked: 0, tooFew: 0 };\n  if (machine.mem8[0x2083]) { encounter.armed++; if (machine.mem8[0x2080] !== 2) encounter.wrongMode++; if (machine.mem8[0x2056]) encounter.blocked++; if (machine.mem8[0x2082] < 8) encounter.tooFew++; }\n  if (machine.mem8[0x2084]) encounter.active++;\n  if (machine.mem8[0x2085]) encounter.hit++;\n  if (frameIndex % 15 === 0 || (Atomics.load(ctrl, 1) & 5)) { const header = Array.from({ length: 28 }, (_, glyph) => Array.from({ length: 8 }, (_, row) => machine.mem8[0x241e + glyph * 0x100 + row * 0x20])); let shieldBits = 0; for (let shield = 0; shield < 4; shield++) for (let row = 0; row < 22; row++) for (let col = 0; col < 2; col++) { let byte = machine.mem8[0x2806 + shield * 0x2e0 + row * 0x20 + col]; while (byte) { shieldBits += byte & 1; byte >>= 1; } } postMessage({ type: 'probe', frame: frameIndex, in1: Atomics.load(ctrl, 1), play: machine.mem8[0x20ef], shipX: machine.mem8[0x201b], ships: machine.mem8[0x21ff], shipAnim: machine.mem8[0x2015], shot: machine.mem8[0x2025], alienShot2: machine.mem8[0x2035], alienShot2Y: machine.mem8[0x203d], saucerActive: machine.mem8[0x2084], encounter: { ...encounter }, aliens: machine.mem8[0x2082], round: machine.mem8[0x21fe], score: machine.mem16[0x20f8], shieldBits, fleetDir: machine.mem8[0x200d], headerCells: header.filter(bytes => bytes.some(Boolean)).length, headerBits: header.flat().reduce((sum, byte) => { while (byte) { sum += byte & 1; byte >>= 1; } return sum; }, 0) }); }`);
       bytes = Buffer.from(source);
     }
     response.writeHead(200, {
@@ -218,6 +218,7 @@ try {
     alienCount: Math.max(...probes.map(p => p.aliens)),
     alienShot2LiveSamples: probes.filter(p => p.alienShot2 & 0x80).length,
     saucerActiveSamples: probes.filter(p => p.saucerActive).length,
+    encounter: probes.at(-1)?.encounter,
   };
   const loopProof = (acceleratedLoop || realtimeLoop) ? {
     firstPlay: probes.find(p => p.play)?.frame ?? null,
