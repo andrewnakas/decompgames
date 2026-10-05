@@ -2145,5 +2145,1580 @@
   "shelf": "classic",
   "platform": "PC",
   "image": "/images/shortline.png"
+ },
+ {
+  "id": "contra",
+  "title": "Contra",
+  "aliases": [
+   "contra",
+   "contra nes",
+   "nes-contra-us",
+   "probotector"
+  ],
+  "year": 1988,
+  "genre": "Run and gun",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "the vermiceli/nes-contra-us disassembly, assembled with cc65 (ca65/ld65) to a byte-identical ROM and run on EmulatorJS 4.2.3 with the fceumm libretro core (WebAssembly)",
+  "description": "Two commandos, one jungle, thirty lives if you know the code.",
+  "overview": "Contra built from the vermiceli/nes-contra-us disassembly. The build is byte-identical to the retail Contra (USA) cartridge — the 131,072-byte ROM body hashes sha1 979494e7869ac7ab4815fdbd1dc99f893f713fbf — and runs in the browser on a WebAssembly build of the fceumm NES core. You supply your own ROM: it is read in your browser with the File API, SHA-1'd to identify the dump, and handed straight to the emulator. The page's Content-Security-Policy permits no remote origin at all, so your file cannot leave the tab even if something on the page tried to send it.",
+  "source": "https://github.com/vermiceli/nes-contra-us",
+  "engineLicense": "vermiceli/nes-contra-us; cc65 zlib; EmulatorJS GPL-3.0; fceumm core GPL-2.0",
+  "assetLicense": "None distributed — the player supplies their own ROM",
+  "assetRequirements": "Your own Contra (USA) ROM. The 131,072-byte ROM body must hash sha1 979494e7869ac7ab4815fdbd1dc99f893f713fbf; a plain iNES or a NES 2.0 header are both accepted and identify the same cartridge. It is read in your browser and never uploaded.",
+  "controls": [
+   "Arrow keys — move and aim",
+   "X — A (jump)",
+   "Z — B (fire)",
+   "Enter — Start",
+   "Shift — Select",
+   "Gamepad — any standard controller, detected automatically (untested)",
+   "Touch — EmulatorJS on-screen NES pad on phones and tablets (untested)"
+  ],
+  "saveInstructions": "Contra has no battery save — the cartridge has no save chip, which is why the game itself has no save feature. This page instead keeps an emulator save state in your browser, under this site's storage, keyed by your ROM's own SHA-1; it is written every 10 seconds and restored when you come back. It is a save state, not a battery save, and clearing site data removes it.",
+  "limitations": [
+   "Not yet playable here: no hosted page has been published for this title.",
+   "Requires your own ROM; none is provided.",
+   "Audio starts muted and was never enabled in any test, so sound is entirely unverified.",
+   "Progress is an emulator save state, not a battery save — Contra's cartridge has no save hardware.",
+   "Gameplay was verified from the game's own RAM in stage 1 only. No level was cleared and no attempt was made: stages 2-8, every boss, the 2-player game and the ending are untested.",
+   "Only the fceumm core is included and only Chrome 151 on Linux was tested; no other browser, no phone, no gamepad and no real keyboard input were exercised.",
+   "Saving was verified across a page reload, not across closing and reopening the browser."
+  ],
+  "inputs": [
+   "Keyboard",
+   "Gamepad",
+   "Touch"
+  ],
+  "downloadMB": null,
+  "complete": false,
+  "color": "#cf3f2e",
+  "shelf": "classic",
+  "platform": "NES",
+  "verification": {
+   "status": "play-tested",
+   "date": "2026-10-05",
+   "browsers": [
+    "Chrome 151 (headless, software GL)"
+   ],
+   "scope": "Byte-exact reassembly: 0 of 131072 ROM body bytes differ from the staged dump, and upstream's own build script reports 'File integrity matches'; the two files differ only in 4 iNES-header bytes (NES 2.0 vs plain iNES). Upstream's documented md5 and sha512 were both confirmed against the ROM body before building. In the browser, audio muted throughout and 33/33 checks passing on three consecutive runs: the ROM is read from a real <input type=file> and identified by a page-computed sha1 that the driver cross-checks against the file on disk; zero off-site requests, zero request bodies and zero HTTP errors observed at the CDP network layer, with a Content-Security-Policy as the enforcing boundary; canvas asserted non-zero; and real gameplay confirmed from the game's own work RAM (GAME_ROUTINE_INDEX 5, LEVEL_ROUTINE_INDEX 4, DEMO_MODE 0, P1_NUM_LIVES 2), at addresses taken from the cc65 .dbg file this build emitted, because Contra's attract demo is screenshot-identical to play. Strongest check: from one save state, holding Right moved the player +1.00 px/frame and restoring the same state and holding Left moved him the other way. A save state survived a page reload and the game resumed at the exact position it was saved at. No level was cleared and none was attempted.",
+   "playthrough": false
+  },
+  "embedUrl": null
+ },
+ {
+  "id": "dragon-warrior",
+  "title": "Dragon Warrior",
+  "aliases": [
+   "dragonwarrior",
+   "dragon-quest",
+   "dragonquest"
+  ],
+  "year": 1989,
+  "genre": "RPG",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "The nmikstas 6502 disassembly, reassembled with Ophis and run on EmulatorJS 4.2.3 with the libretro fceumm core.",
+  "description": "Erdrick's descendant sets out from Tantegel Castle to recover the Ball of Light.",
+  "overview": "Dragon Warrior reassembled byte-for-byte from a complete 6502 disassembly and run in the browser on a wasm NES core. The project ships only source and build tooling: the 64 KB of program ROM is assembled from the disassembly, and the 16 KB of cartridge graphics is read out of the dump you supply, in your own browser. Upstream targets the first US release; the later Rev 1 dump plays identically and differs in three bytes of on-screen text.",
+  "source": "https://github.com/nmikstas/dragon-warrior-disassembly",
+  "engineLicense": "Ophis is MIT. The disassembly carries no licence file and is used as a build input only.",
+  "assetLicense": "No game data is distributed. Graphics, text and music are read from your own cartridge dump at build time and at run time.",
+  "assetRequirements": "You supply your own Dragon Warrior (NES) ROM. It is read in the browser and never uploaded; the page's Content-Security-Policy permits no remote origin.",
+  "controls": [
+   "Arrow keys — walk",
+   "X — A (confirm, open the command window)",
+   "Z — B (cancel)",
+   "Enter — Start",
+   "Shift — Select",
+   "Gamepad — d-pad walks, A/B confirm and cancel"
+  ],
+  "saveInstructions": "Talk to King Lorik in Tantegel Castle to record your deeds, exactly as on the cartridge. The 8 KB battery image is kept in this browser under this site's origin; clearing site data erases it.",
+  "limitations": [
+   "Not yet playable here: no hosted page has been published for this title.",
+   "Audio was never switched on during testing, so sound is unverified.",
+   "Verified on desktop Chrome only. Keyboard and gamepad mappings and the on-screen touch pad are untested.",
+   "Progress is proven to survive reloading the page; surviving a full browser restart was not testable here.",
+   "Play testing reached the overworld outside Tantegel. Combat, towns, dungeons and the ending were not played."
+  ],
+  "inputs": [
+   "Keyboard",
+   "Gamepad",
+   "Touch"
+  ],
+  "downloadMB": null,
+  "complete": false,
+  "color": "#3f7fd4",
+  "shelf": "classic",
+  "platform": "NES",
+  "verification": {
+   "status": "byte-matching; played and verified from the game's own RAM",
+   "date": "2026-10-05",
+   "browsers": [
+    "Chrome 151 (Linux, headless)"
+   ],
+   "scope": "Reassembles byte-for-byte to Dragon Warrior (USA) (body sha1 73f9b88def80756ef29c5aa1a724c3112e5918c1), confirmed against NES Directory's published per-chip hashes. Played from a cold boot to the overworld with every step gated on the game's own variables read out of the save state, including a two-way input proof from one save state. The cartridge battery was written by saving with King Lorik and survived navigating away and back, checked from the decoded save slot.",
+   "playthrough": false
+  },
+  "embedUrl": null
+ },
+ {
+  "id": "fire-emblem-sacred-stones",
+  "title": "Fire Emblem: The Sacred Stones",
+  "aliases": [
+   "fe8",
+   "fireemblem8",
+   "fireemblem8u",
+   "sacred stones",
+   "fire emblem 8"
+  ],
+  "year": 2004,
+  "genre": "Strategy",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "the FireEmblemUniverse/fireemblem8u decompilation, built to a matching ROM and run on a WebAssembly build of mGBA's core",
+  "description": "Lead Eirika and Ephraim's scattered army through the fall of Renais in this turn-based tactical RPG.",
+  "overview": "Fire Emblem: The Sacred Stones built from the FireEmblemUniverse/fireemblem8u decompilation, pinned at ecc6798b. The build is byte-identical to a retail (USA, Australia) cartridge dump, sha1 c25b145e37456171ada4b0d440bf88a19f4d509f, and upstream's own progress script puts the project at 99.76% of code bytes and 99.78% of functions decompiled. The page runs the ROM on a direct WebAssembly build of mGBA's core — about 900 KB, with no emulator frontend in between. You supply your own ROM: it is read in your browser with the File API straight into the emulator's memory, and the page's Content Security Policy forbids every kind of network request, so there is nowhere for it to go.",
+  "source": "https://github.com/andrewnakas/fe8-web",
+  "engineLicense": "FireEmblemUniverse/fireemblem8u (the repository carries no licence file — ask upstream before redistributing); mGBA core MPL-2.0",
+  "assetLicense": "None distributed — the player supplies their own ROM",
+  "assetRequirements": "Your own Fire Emblem: The Sacred Stones (USA, Australia) ROM, 16 MB, sha1 c25b145e37456171ada4b0d440bf88a19f4d509f. It is read in your browser and cannot be uploaded.",
+  "controls": [
+   "Arrow keys — move the map cursor",
+   "X — A (select, confirm)",
+   "Z — B (cancel)",
+   "Enter — Start (map menu)",
+   "Shift — Select",
+   "A / S — L / R",
+   "Gamepad — any standard controller (untested)"
+  ],
+  "saveInstructions": "The cartridge save is mirrored into this browser's storage and restored automatically on reload, so in-game saves and suspends persist. There are also save-state buttons. Clearing site data removes everything, including the cached ROM.",
+  "limitations": [
+   "You must supply your own ROM; none is distributed.",
+   "The (USA, Australia) dump only — European and Japanese builds are untested.",
+   "Verified as far as the Prologue map: the first chapter loads, and a unit can be selected, moved and told to wait. No chapter has been completed, and nothing past the Prologue has been play-tested.",
+   "Saving was verified by running the game's own save checksums over the data before and after a page reload. Nobody has yet chosen Continue on the title screen and landed back in a chapter — the Prologue tutorial disables Suspend, so the test never pressed SAVE itself.",
+   "Sound is implemented but has never been listened to; all testing was muted.",
+   "Keyboard and gamepad only; no on-screen touch controls.",
+   "Tested in headless Chrome only, with software rendering.",
+   "Link arena and trading are not available in the browser."
+  ],
+  "inputs": [
+   "Keyboard",
+   "Gamepad"
+  ],
+  "downloadMB": 1,
+  "complete": false,
+  "color": "#3f6fd8",
+  "shelf": "classic",
+  "platform": "Game Boy Advance",
+  "launch": "embed",
+  "touch": false,
+  "embedUrl": "https://andrewnakas.github.io/fe8-web/",
+  "verification": {
+   "status": "smoke-tested",
+   "date": null,
+   "browsers": [
+    "Chrome (headless)"
+   ],
+   "scope": "Muted headless run: boot through the opening movie and title screen into the Prologue map, with a unit selected, moved and ended, all asserted from the game's own RAM. Cartridge-save validity across a real page reload, checked with FE8's own save checksums. No chapter completed.",
+   "playthrough": false
+  },
+  "image": "/images/fire-emblem-sacred-stones.png"
+ },
+ {
+  "id": "kirby-nightmare-in-dream-land",
+  "title": "Kirby: Nightmare in Dream Land",
+  "aliases": [
+   "knidl",
+   "kirby nightmare in dream land",
+   "kirby nidl",
+   "kirby gba",
+   "AGB KIRBY DX",
+   "A7KE"
+  ],
+  "year": 2002,
+  "genre": "Platformer",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "the overjt/knidl decompilation, built to a matching ROM and run on an emscripten build of mGBA",
+  "description": "Inhale enemies, steal their powers and float through Dream Land.",
+  "overview": "Kirby: Nightmare in Dream Land built from the overjt/knidl decompilation, pinned at ae560313. The build is byte-identical to a retail USA cartridge dump, sha1 37a476567d133c146fee6b5e2eb0b07a215da6b0. All of the game's code is compiled from C in the repository; the game's data is read out of your own ROM at build time rather than committed, so the project distributes no assets — measured by a poisoned-baserom differential, 87.22% of the built image comes verbatim from your dump and 12.78% from committed source. The page runs the result on a direct WebAssembly build of mGBA's core, 663 KB, with no emulator frontend in between. You supply your own ROM: it is read in your browser with the File API straight into the emulator's memory, and the page's Content-Security-Policy blocks connections to every origin but its own.",
+  "source": "https://github.com/andrewnakas/knidl-web",
+  "engineLicense": "overjt/knidl is all-rights-reserved (the pret-style convention); mGBA core MPL-2.0",
+  "assetLicense": "None distributed — the player supplies their own ROM",
+  "assetRequirements": "Your own Kirby: Nightmare in Dream Land ROM, USA (game code A7KE), 8,388,608 bytes, sha1 37a476567d133c146fee6b5e2eb0b07a215da6b0. It is read in your browser and never uploaded.",
+  "controls": [
+   "Arrow keys — D-pad (Up enters a door on the world map)",
+   "X — A (jump, inhale)",
+   "Z — B",
+   "A / S — L / R",
+   "Enter — Start",
+   "Shift — Select",
+   "Gamepad — any standard controller (untested)"
+  ],
+  "saveInstructions": "The cartridge's battery-backed SRAM (32 KB) is mirrored into this browser's storage and restored automatically on reload, so in-game saves persist. There are also save-state buttons. Clearing site data removes everything, including the cached ROM.",
+  "limitations": [
+   "You must supply your own ROM; none is distributed.",
+   "USA release (A7KE) only.",
+   "Verified only as far as moving Kirby around stage 1-1. The stage is not cleared, and bosses, sub-games, ability copying and the ending have not been play-tested.",
+   "The decompilation covers the game's code, not its data: 87% of the built ROM is copied verbatim from your own dump at build time, so a matching build proves the build pipeline more than it proves the data is understood.",
+   "Saving from the in-game menu was never reached. Save persistence is verified at the cartridge-SRAM layer: the game writes its own battery save, a restored image is recognised and kept, a corrupted one is rejected, and the stored record survives a page reload.",
+   "Sound is implemented but has never been listened to — all testing was muted.",
+   "Keyboard and gamepad only; no on-screen touch controls, and the gamepad path is untested.",
+   "Tested in headless Chrome only.",
+   "Link-cable features are not available in the browser."
+  ],
+  "inputs": [
+   "Keyboard",
+   "Gamepad"
+  ],
+  "downloadMB": 1,
+  "complete": false,
+  "color": "#f090b0",
+  "shelf": "classic",
+  "platform": "Game Boy Advance",
+  "launch": "embed",
+  "touch": false,
+  "embedUrl": "https://andrewnakas.github.io/knidl-web/",
+  "verification": {
+   "status": "smoke-tested",
+   "date": null,
+   "browsers": [
+    "Chrome (headless)"
+   ],
+   "scope": "Muted headless run: boot, title, world map, and entering stage 1-1, with Kirby's movement verified against the game's own gGameState and player-task position cells rather than against a screenshot. Cartridge-SRAM persistence across a real page reload, with a corruption control. No play-testing beyond the first level's opening.",
+   "playthrough": false
+  },
+  "image": "/images/kirby-nightmare-in-dream-land.png"
+ },
+ {
+  "id": "links-awakening-dx",
+  "title": "The Legend of Zelda: Link's Awakening DX",
+  "aliases": [
+   "ladx",
+   "linksawakeningdx",
+   "zelda-links-awakening-dx"
+  ],
+  "year": 1998,
+  "genre": "Action-adventure",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "The zladx/LADX-Disassembly build running on the libretro gambatte Game Boy Color core, via EmulatorJS 4.2.3 compiled to WebAssembly.",
+  "description": "Shipwrecked on Koholint Island, Link must wake the Wind Fish.",
+  "overview": "A byte-exact rebuild of Link's Awakening DX from the zladx assembly disassembly, played in the browser on a WebAssembly Game Boy Color core. You supply your own cartridge dump: it is read in the page and handed straight to the emulator, and the page's Content-Security-Policy stops any script on it reaching the network at all. The same source builds all ten retail revisions — English, Japanese, German and French, v1.0 through v1.2 — and every one matches upstream's documented checksum.",
+  "source": "https://github.com/zladx/LADX-Disassembly",
+  "engineLicense": "See the upstream disassembly; it carries no explicit licence file",
+  "assetLicense": "No game data is distributed; everything comes from the ROM you supply",
+  "assetRequirements": "You supply your own ROM. It is read in the browser with FileReader and never uploaded; any of the ten revisions this disassembly builds is recognised, including (USA, Europe) Rev 2, sha1 1c091225688d966928cc74336dbef2e07d12a47c.",
+  "controls": [
+   "Arrow keys — move",
+   "X — A",
+   "Z — B",
+   "Enter — Start",
+   "Shift — Select",
+   "Sound is off by default; use the sound button to turn it on"
+  ],
+  "saveInstructions": "The cartridge's battery save is kept in this browser's IndexedDB, keyed by your ROM's SHA-1, and restored automatically next time you load the same ROM. Export .sav writes it out as a normal 32 KB save file, and Import .sav reads one back in. Clearing site data removes it.",
+  "limitations": [
+   "Not yet playable here: no hosted page has been published for this title.",
+   "Tested only in headless Chrome 151 on software rendering. Firefox, Safari and mobile browsers are untested.",
+   "Only the English v1.2 ROM was actually booted and played; the other nine revisions build and match their checksums but were not run.",
+   "Gameplay was verified as far as leaving the starting house and reaching the overworld with the shield. Nothing past the first overworld screen has been tested.",
+   "Audio was muted throughout testing, so sound output is unverified.",
+   "Touch controls and gamepads are untested."
+  ],
+  "inputs": [
+   "Keyboard"
+  ],
+  "downloadMB": null,
+  "complete": false,
+  "color": "#54c98a",
+  "shelf": "classic",
+  "platform": "Game Boy Color",
+  "launch": "tab",
+  "touch": false,
+  "embedUrl": null,
+  "verification": {
+   "status": "smoke-tested",
+   "date": "2026-10-05",
+   "browsers": [
+    "Chrome 151 headless (SwiftShader)"
+   ],
+   "scope": "Byte-exact build verified against the user's own dump and all 14 upstream artifacts. In the browser: 26/26 automated checks, muted — ROM picked through the real file input, a save file created and named, Link woken, the shield taken from Tarin, and the starting house left for the overworld, gated on wGameplayType/wGameplaySubtype/wIsIndoor read from the build's own symbol table. Battery save proven to survive a reload by decoding the file name out of it on a cold page.",
+   "playthrough": false
+  }
+ },
+ {
+  "id": "metroid",
+  "title": "Metroid",
+  "aliases": [
+   "metroid-nes"
+  ],
+  "year": 1986,
+  "genre": "Action-Adventure",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "EmulatorJS 4.2.3 driving the libretro fceumm core in WebAssembly, running a reassembly of the 6502 disassembly that is byte-identical to the cartridge",
+  "description": "Explore Planet Zebes as Samus Aran, finding the upgrades that open the way deeper in.",
+  "overview": "Metroid rebuilt from the nmikstas disassembly and run in the browser on a WebAssembly NES core. The eight PRG banks reassemble to the same 131,072 bytes as a Metroid (USA) cartridge, with zero differences; only the 16-byte file header differs, because the disassembly emits plain iNES and most dumps carry NES 2.0. The project ships code only. You supply your own cartridge dump, it is read into page memory, and the page's Content-Security-Policy names no remote origin, so the browser itself refuses to let it leave.",
+  "source": "https://github.com/nmikstas/metroid-disassembly",
+  "engineLicense": "EmulatorJS is GPL-3.0; the libretro fceumm and nestopia cores are GPL-2.0; the Ophis assembler is MIT. The disassembly states no licence.",
+  "assetLicense": "No game data is distributed. Nintendo retains all rights in Metroid.",
+  "assetRequirements": "You supply your own Metroid (USA) dump. It is read in the browser and never uploaded. ROM body sha1 fdbfc7871962f72a1ef57e5a7e456164fb93430b, crc32 70080810, 131072 bytes; a plain iNES or a NES 2.0 header both work.",
+  "controls": [
+   "Arrow keys — move, aim up, morph ball",
+   "X — A (jump)",
+   "Z — B (fire)",
+   "Enter — Start",
+   "Shift — Select",
+   "Gamepad — standard mapping"
+  ],
+  "saveInstructions": "Metroid has no battery: the real cartridge continues from a password, not a save file. This build instead keeps an automatic save state in your browser, under this site, keyed to your ROM's own hash, and restores it when you return. It is a save state, not a save file. Clearing site data removes it, and the footer has a button to discard it.",
+  "limitations": [
+   "Not yet playable here: no hosted page has been published for this title.",
+   "Tested only as far as real, verified movement in Brinstar. Nothing deeper in the game was played, nothing was fought, and no item was collected.",
+   "The password system was never exercised: no password was generated or entered.",
+   "Progress is proven to survive a page reload. Whether it survives closing the browser is untested — headless Chrome on the test machine discards browser storage between runs.",
+   "Audio was muted in every test, so nothing is known about sound.",
+   "The keyboard and gamepad mappings are untested: the automated tests drive the emulator's input API directly rather than pressing real keys.",
+   "Touch controls on phones and tablets are untested.",
+   "Tested only in headless Chrome 151 on Linux. No other browser, and no mobile device.",
+   "The alternative nestopia core boots and renders correctly, but the gameplay verification only works on fceumm, so nestopia is smoke-tested only."
+  ],
+  "inputs": [
+   "Keyboard",
+   "Gamepad",
+   "Touch"
+  ],
+  "downloadMB": null,
+  "complete": false,
+  "color": "#f06a28",
+  "shelf": "classic",
+  "platform": "NES",
+  "launch": "tab",
+  "touch": true,
+  "verification": {
+   "status": "byte-exact reassembly; gameplay verified from the game's own RAM",
+   "date": "2026-10-05",
+   "browsers": [
+    "Chrome 151 headless, Linux"
+   ],
+   "scope": "Reassembles to a byte-identical 131072-byte ROM body (0 differences; 5 of 16 header bytes differ because the dump is NES 2.0). In the browser: boots, renders at 256x224, pumps frames at ~60 fps, and reaches real gameplay in Brinstar confirmed from Metroid's own variables (GameMode, MainRoutine, InArea, ObjectX) decoded out of the emulator's save state at addresses parsed from the disassembly's own symbol table. Movement proven by holding Right then restoring the same state and holding Left: +121 and -122 pixels over 90 frames, at a symmetric 1.35 px/frame. A save state survives navigating away and back. Zero off-site requests, asserted at the network layer. 33 of 33 automated checks pass, all with audio muted.",
+   "playthrough": false
+  },
+  "embedUrl": null
+ },
+ {
+  "id": "metroid-fusion",
+  "title": "Metroid Fusion",
+  "aliases": [
+   "metroidfusion",
+   "mf",
+   "metroid4"
+  ],
+  "year": 2002,
+  "genre": "Action",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "mGBA's mCore API compiled to WebAssembly with emscripten, driven by a small C shim; no emulator frontend in between",
+  "description": "Samus wakes on a research station overrun by a parasite wearing her own abilities.",
+  "overview": "Metroid Fusion in the browser on a WebAssembly build of the mGBA core. The matching ROM is produced by the metroidret/mf decompilation, which is 87% decompiled and reconstructs its image partly by extracting data from your own cartridge at build time. You supply the ROM; the page reads it locally and a Content-Security-Policy of connect-src 'none' means the browser refuses every network request it could make.",
+  "source": "https://github.com/metroidret/mf",
+  "engineLicense": "See the upstream decompilation and mGBA (mPL 2.0)",
+  "assetLicense": "No retail data is distributed; every byte comes from the ROM you supply",
+  "assetRequirements": "You supply your own Metroid Fusion (USA) ROM, 8 MB, sha1 ca33f4348c2c05dd330d37b97e2c5a69531dfe87. It is read in the browser and never uploaded.",
+  "controls": [
+   "Arrow keys — move, aim",
+   "X — A (jump)",
+   "Z — B (fire, dash)",
+   "Enter — Start (map screen)",
+   "Shift — Select",
+   "A / S — L / R (diagonal aim, missiles)",
+   "Gamepad — Standard Gamepad mapping (untested)"
+  ],
+  "saveInstructions": "Your cartridge save is kept in this browser under the site's own storage and restored when you come back. Clearing site data removes it. Save states are stored the same way.",
+  "limitations": [
+   "Not yet playable here: no hosted page has been published for this title.",
+   "The upstream decompilation is 87% complete and is not shiftable; the build reproduces the ROM partly by copying data out of the ROM you supply, so a matching build is not the same as a fully decompiled game.",
+   "Tested only in headless Chrome 151 on Linux. No Firefox, Safari or mobile browser.",
+   "Play-tested only as far as the opening room: movement, jumping and one door. Nothing past that was played.",
+   "Saving at one of the game's own save stations was never reached; save persistence is verified on the file the game writes when a new game starts, which the game does load back.",
+   "No touch controls. The gamepad mapping is written but was never tested with a controller.",
+   "Sound is off by default and has never been listened to; every test ran muted."
+  ],
+  "inputs": [
+   "Keyboard",
+   "Gamepad"
+  ],
+  "downloadMB": null,
+  "complete": false,
+  "color": "#f0a01e",
+  "shelf": "classic",
+  "platform": "GBA",
+  "launch": "tab",
+  "touch": false,
+  "runtime": "mgba-wasm",
+  "verification": {
+   "status": "smoke-tested",
+   "date": "2026-10-05",
+   "browsers": [
+    "Chrome 151 headless (Linux)"
+   ],
+   "scope": "Build byte-matches the staged ROM (sha1 ca33f4348c2c05dd330d37b97e2c5a69531dfe87), verified by sha1sum -c, by cmp, and after an audited clean rebuild. Browser: 40/40 automated checks, muted, ROM fed through the real file picker. Reached verified player-controlled movement in the opening room, gated on the game's own gMainGameMode/gSubGameMode1/gSamusData from the build's symbol table. The game loads its own save back across a page reload, with a corrupted-save control arm. CSP connect-src 'none' verified against six egress channels.",
+   "playthrough": false
+  },
+  "embedUrl": null
+ },
+ {
+  "id": "metroid-zero-mission",
+  "title": "Metroid: Zero Mission",
+  "aliases": [
+   "mzm",
+   "zero mission",
+   "metroid zero mission",
+   "metroid 1 remake"
+  ],
+  "year": 2004,
+  "genre": "Action-adventure",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "the metroidret/mzm decompilation, built to a matching ROM and run on a 663 KB WebAssembly build of mGBA's core",
+  "description": "Samus returns to Zebes: explore, find upgrades, and open the way down.",
+  "overview": "Metroid: Zero Mission built from the metroidret/mzm decompilation, pinned at 43b7fd52. The build is byte-identical to a retail (USA, Australia) cartridge dump, sha1 5de8536afe1f0078ee6fe1089f890e8c7aa0a6e8. The page runs it on a direct WebAssembly build of mGBA's core, with no emulator frontend in between. You supply your own ROM: it is read in your browser with the File API straight into the emulator's memory. The page is static files with no server component, and a Content-Security-Policy stops any script on it reaching another origin.",
+  "source": "https://github.com/andrewnakas/mzm-web",
+  "engineLicense": "metroidret/mzm; mGBA core MPL-2.0",
+  "assetLicense": "None distributed — the player supplies their own ROM",
+  "assetRequirements": "Your own Metroid: Zero Mission ROM, (USA, Australia), sha1 5de8536afe1f0078ee6fe1089f890e8c7aa0a6e8. It is read in your browser and never uploaded.",
+  "controls": [
+   "Arrow keys — move",
+   "X — A (jump)",
+   "Z — B (shoot)",
+   "A / S — L / R",
+   "Enter — Start",
+   "Shift — Select",
+   "P — pause",
+   "Gamepad — any standard controller (untested)"
+  ],
+  "saveInstructions": "Save at a save station in the game. The cartridge's 32 KiB SRAM is mirrored into this browser's storage and handed back to the emulator automatically on reload. Clearing site data removes it, along with the cached ROM.",
+  "limitations": [
+   "You must supply your own ROM; none is distributed.",
+   "The USA ROM only — the European, Japanese and beta dumps are different builds and are untested here.",
+   "Verified only as far as the first rooms of Brinstar. No boss, no item, no ending has been play-tested.",
+   "Save persistence is verified by round-tripping the cartridge SRAM through browser storage and having the game's own checksum code accept it; reaching an in-game save station and continuing from it was not tested.",
+   "Sound is implemented but has never been listened to — all testing was muted.",
+   "Keyboard and gamepad only; no on-screen touch controls, and the gamepad path is untested.",
+   "Tested in headless Chrome only.",
+   "Link cable and multiboot features are not available in the browser."
+  ],
+  "inputs": [
+   "Keyboard",
+   "Gamepad"
+  ],
+  "downloadMB": 1,
+  "complete": false,
+  "color": "#d94f3d",
+  "shelf": "classic",
+  "platform": "Game Boy Advance",
+  "launch": "embed",
+  "touch": false,
+  "embedUrl": "https://andrewnakas.github.io/mzm-web/",
+  "verification": {
+   "status": "smoke-tested",
+   "date": null,
+   "browsers": [
+    "Chrome 151 (headless)"
+   ],
+   "scope": "Muted headless run: boot through the intro and file select into Brinstar, with the game's own gMainGameMode/gSubGameMode1/gDemoState confirming real gameplay rather than the attract demo, and Samus's own coordinates confirming movement. Cartridge SRAM round-tripped through browser storage across a real page navigation and accepted by the game's own validation, with blank and scrambled control arms. No play-testing beyond the first rooms.",
+   "playthrough": false
+  },
+  "image": "/images/metroid-zero-mission.png"
+ },
+ {
+  "id": "dr-mario",
+  "title": "Dr. Mario",
+  "aliases": [
+   "drmario",
+   "dr mario"
+  ],
+  "year": 1990,
+  "genre": "Puzzle",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "The ROM reassembled byte-for-byte by asm6f from the Nostaljipi disassembly, run in the browser on EmulatorJS 4.2.3 with the libretro fceumm core.",
+  "description": "Throw coloured pills into a bottle and line up four to wipe out the viruses.",
+  "overview": "Dr. Mario (Japan, USA) (Rev A) rebuilt from its 6502 disassembly: the 32 KB program is assembled from source and matches a real cartridge dump byte for byte. The project ships code only — you bring your own ROM, it is read in the browser, and the page works out which of the two supported cartridges you handed it from the SHA-1 of the ROM body.",
+  "source": "https://github.com/Nostaljipi/dr-mario-disassembly",
+  "engineLicense": "See the upstream disassembly; EmulatorJS is GPL-3.0 and is vendored with its licence.",
+  "assetLicense": "No game data is distributed. Graphics and audio come from the ROM you supply.",
+  "assetRequirements": "You supply your own Dr. Mario (Japan, USA) (Rev A) dump. It is read in the browser and never uploaded. The 65,536-byte ROM body must be sha1 59b43881456c0720e9a35e391b11c4b2c55a8f91; an iNES or a NES 2.0 header are both fine.",
+  "controls": [
+   "Arrow keys — move the pill, Down to drop",
+   "X / Z — rotate",
+   "Enter — Start",
+   "Shift — Select",
+   "Gamepad — d-pad and face buttons"
+  ],
+  "saveInstructions": "The cartridge has no battery, so there is nothing for the game itself to save. The page keeps an automatic save state in this browser's IndexedDB, keyed by your ROM's SHA-1, and resumes from it next time. Clearing site data removes it.",
+  "limitations": [
+   "Not yet playable here: no hosted page has been published for this title.",
+   "Verified on Chrome on Linux only. Firefox, Safari and mobile are untested.",
+   "The keyboard map and gamepad support are untested — the automated tests drive the core directly.",
+   "No level was ever cleared, and two-player mode was never run.",
+   "Audio was muted for every test, so nothing is known about sound.",
+   "Progress is a save state, not a battery save, and it is only verified to survive a page reload — not closing the browser."
+  ],
+  "inputs": [
+   "Keyboard",
+   "Gamepad"
+  ],
+  "downloadMB": null,
+  "complete": false,
+  "color": "#4a8fd0",
+  "shelf": "classic",
+  "platform": "NES",
+  "runtime": "EmulatorJS 4.2.3 + fceumm",
+  "verification": {
+   "status": "byte-exact reassembly; gameplay verified from the game's own RAM",
+   "date": "2026-10-05",
+   "browsers": [
+    "Chrome 151 (headless, Linux)"
+   ],
+   "scope": "0 of 65,536 ROM body bytes differ from a real dump. In the browser: boots, frames advance continuously, and from one save state holding Left vs Right moves p1_fallingPillX ($0305) in opposite directions with mode ($0046) = mode_mainLoop_level and flag_demo ($0741) = 0, which an attract demo cannot do. A save state survives a page reload and the restored machine is still in the game. Also boots and draws on the nestopia core, where the RAM oracle does not work.",
+   "playthrough": false
+  },
+  "embedUrl": null
+ },
+ {
+  "id": "excitebike",
+  "title": "Excitebike",
+  "aliases": [
+   "excite bike"
+  ],
+  "year": 1984,
+  "genre": "Racing",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "The ROM reassembled byte-for-byte by ca65/ld65 from cyneprepou4uk's disassembly, run in the browser on EmulatorJS 4.2.3 with the libretro fceumm core.",
+  "description": "Race a motocross bike over jumps and ramps without overheating the engine.",
+  "overview": "Excitebike (Japan, USA) rebuilt from its 6502 disassembly: the 16 KB program is assembled from source and matches a real cartridge dump byte for byte — including the whole-file hash the upstream project documents for its own output. The project ships code only; you bring your own ROM, it is read in the browser, and the same page also runs Dr. Mario, picking between them by hash.",
+  "source": "https://github.com/cyneprepou4uk/NES-Games-Disassembly",
+  "engineLicense": "See the upstream disassembly; EmulatorJS is GPL-3.0 and is vendored with its licence.",
+  "assetLicense": "No game data is distributed. Graphics and audio come from the ROM you supply.",
+  "assetRequirements": "You supply your own Excitebike (Japan, USA) dump. It is read in the browser and never uploaded. The 24,576-byte ROM body must be sha1 ba8d9227a0d02b62ee6cb9e691fa5a5134c303a8; an iNES or a NES 2.0 header are both fine.",
+  "controls": [
+   "X — accelerate",
+   "Z — turbo (watch the temperature gauge)",
+   "Up / Down — change lane",
+   "Left / Right — lean the bike in the air",
+   "Enter — Start",
+   "Shift — Select",
+   "Gamepad — d-pad and face buttons"
+  ],
+  "saveInstructions": "The cartridge has no battery, so there is nothing for the game itself to save and track designs are lost when the page closes. The page keeps an automatic save state in this browser's IndexedDB, keyed by your ROM's SHA-1, and resumes from it next time. Clearing site data removes it.",
+  "limitations": [
+   "Not yet playable here: no hosted page has been published for this title.",
+   "Verified on Chrome on Linux only. Firefox, Safari and mobile are untested.",
+   "The keyboard map and gamepad support are untested — the automated tests drive the core directly.",
+   "No track was ever completed, and SELECTION B and the DESIGN track editor were never run.",
+   "Audio was muted for every test, so nothing is known about sound.",
+   "Progress is a save state, not a battery save, and it is only verified to survive a page reload — not closing the browser."
+  ],
+  "inputs": [
+   "Keyboard",
+   "Gamepad"
+  ],
+  "downloadMB": null,
+  "complete": false,
+  "color": "#d08a3a",
+  "shelf": "classic",
+  "platform": "NES",
+  "runtime": "EmulatorJS 4.2.3 + fceumm",
+  "verification": {
+   "status": "byte-exact reassembly; gameplay verified from the game's own RAM",
+   "date": "2026-10-05",
+   "browsers": [
+    "Chrome 151 (headless, Linux)"
+   ],
+   "scope": "0 of 24,576 ROM body bytes differ from a real dump, and the whole built file matches the sha1 upstream documents (2e9897846e54a4a9865e87de7517c6710bdec255). In the browser: boots, frames advance continuously, the bike's own X ($00C8) advances while the accelerator is held, and from one save state holding Up vs Down moves ram_obj_pos_Y_lo+0 ($00B8) +12 and -24 over the same frames — which the title's attract demo cannot do. A save state survives a page reload and the restored machine is still mid-race. Also boots and draws on the nestopia core, where the RAM oracle does not work.",
+   "playthrough": false
+  },
+  "embedUrl": null
+ },
+ {
+  "id": "oracle-of-ages",
+  "title": "The Legend of Zelda: Oracle of Ages",
+  "aliases": [
+   "oracles",
+   "oracle of ages",
+   "zelda oracle of ages",
+   "oracles-disasm"
+  ],
+  "year": 2001,
+  "genre": "Action-adventure",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "oracles-disasm build on the libretro gambatte core via EmulatorJS 4.2.3 (WebAssembly)",
+  "description": "Travel between past and present to undo Veran's rewriting of Labrynna.",
+  "overview": "Oracle of Ages assembled from the Stewmath/oracles-disasm disassembly with WLA-DX v10.6 and run in the browser on a Game Boy Color core. The build is byte-identical to the US cartridge. You supply your own ROM; it is read in the page and never uploaded, and no game data ships with this project.",
+  "source": "https://github.com/Stewmath/oracles-disasm",
+  "engineLicense": "See the upstream disassembly; its reverse-engineered code belongs largely to Nintendo and Capcom and the author disavows commercial use",
+  "assetLicense": "No game data is distributed; everything comes from the ROM you supply",
+  "assetRequirements": "You supply your own Oracle of Ages ROM (US release, 1,048,576 bytes, sha1 880374fb978b18af4aa529e2e32f7ffb4d7dd2f4). It is read in the browser and never uploaded.",
+  "controls": [
+   "Arrow keys — move",
+   "X — A",
+   "Z — B",
+   "Enter — Start",
+   "Shift — Select",
+   "Gamepad — standard mapping"
+  ],
+  "saveInstructions": "The cartridge battery save is kept in this browser's IndexedDB, keyed by your ROM's SHA-1, so Ages and Seasons never overwrite each other. Export and import it as a .sav from the toolbar. Clearing site data removes it.",
+  "limitations": [
+   "Not hosted: the upstream disassembly disavows commercial use.",
+   "Not yet playable here: no hosted page has been published for this title.",
+   "Tested only as far as the first overworld screen: file creation, the opening and a few steps. Nothing past that is verified.",
+   "Saving from the in-game menu was never tested; only the save the game writes when a file is created.",
+   "Linked games, passwords and secrets between Ages and Seasons are untested.",
+   "Checked in headless Chrome 151 on Linux only. No touch controls and no on-screen gamepad.",
+   "Audio was muted throughout testing, so sound is unverified."
+  ],
+  "inputs": [
+   "Gamepad",
+   "Keyboard"
+  ],
+  "downloadMB": null,
+  "complete": false,
+  "color": "#5f9ea0",
+  "shelf": "classic",
+  "platform": "Game Boy Color",
+  "verification": {
+   "status": "gameplay-tested",
+   "date": "2026-10-05",
+   "browsers": [
+    "Chrome 151 (headless, Linux)"
+   ],
+   "scope": "Built byte-identical to the US cartridge (sha1 880374fb978b18af4aa529e2e32f7ffb4d7dd2f4). In the browser: created a file, reached the first overworld screen, and moved Link on command — verified by decoding the game's own save file and work RAM with the symbol table this build emitted, not from a screenshot. The battery save survived leaving the page byte-identically.",
+   "playthrough": false
+  },
+  "embedUrl": null
+ },
+ {
+  "id": "oracle-of-seasons",
+  "title": "The Legend of Zelda: Oracle of Seasons",
+  "aliases": [
+   "oracles",
+   "oracle of seasons",
+   "zelda oracle of seasons",
+   "oracles-disasm"
+  ],
+  "year": 2001,
+  "genre": "Action-adventure",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "oracles-disasm build on the libretro gambatte core via EmulatorJS 4.2.3 (WebAssembly)",
+  "description": "Turn the seasons with the Rod of Seasons to put Holodrum back in order.",
+  "overview": "Oracle of Seasons assembled from the Stewmath/oracles-disasm disassembly with WLA-DX v10.6 and run in the browser on a Game Boy Color core. Code and data match the US cartridge, but the build is not byte-identical: WLA pads unused space with 0x00 where the cartridge pads it with the bank number, which upstream documents and ships an expected hash for. You supply your own ROM; it is read in the page and never uploaded.",
+  "source": "https://github.com/Stewmath/oracles-disasm",
+  "engineLicense": "See the upstream disassembly; its reverse-engineered code belongs largely to Nintendo and Capcom and the author disavows commercial use",
+  "assetLicense": "No game data is distributed; everything comes from the ROM you supply",
+  "assetRequirements": "You supply your own Oracle of Seasons ROM (US release, 1,048,576 bytes, sha1 ba1268290fb2b1b70505d2d7b5825fc8a4816a4b). It is read in the browser and never uploaded.",
+  "controls": [
+   "Arrow keys — move",
+   "X — A",
+   "Z — B",
+   "Enter — Start",
+   "Shift — Select",
+   "Gamepad — standard mapping"
+  ],
+  "saveInstructions": "The cartridge battery save is kept in this browser's IndexedDB, keyed by your ROM's SHA-1, so Ages and Seasons never overwrite each other. Export and import it as a .sav from the toolbar. Clearing site data removes it.",
+  "limitations": [
+   "Not hosted: the upstream disassembly disavows commercial use.",
+   "Not yet playable here: no hosted page has been published for this title.",
+   "The build is NOT byte-identical to the cartridge: 35,112 of 1,048,576 bytes differ. All but two are unused padding (0x00 here, the bank number on the cartridge); the other two are the global checksum that follows from it. Upstream documents this and ships the expected hash for it.",
+   "Tested only as far as the first overworld screen: file creation, the opening and a few steps. Nothing past that is verified.",
+   "Saving from the in-game menu was never tested; only the save the game writes when a file is created.",
+   "Linked games, passwords and secrets between Ages and Seasons are untested.",
+   "Checked in headless Chrome 151 on Linux only. No touch controls and no on-screen gamepad.",
+   "Audio was muted throughout testing, so sound is unverified."
+  ],
+  "inputs": [
+   "Gamepad",
+   "Keyboard"
+  ],
+  "downloadMB": null,
+  "complete": false,
+  "color": "#c4663c",
+  "shelf": "classic",
+  "platform": "Game Boy Color",
+  "verification": {
+   "status": "gameplay-tested",
+   "date": "2026-10-05",
+   "browsers": [
+    "Chrome 151 (headless, Linux)"
+   ],
+   "scope": "Builds and matches upstream's documented seasons_emptyfill_0 hash (md5 d109f98637a19c57af16c5e5396a8d51) but NOT the cartridge: only unused padding and the derived global checksum differ. In the browser: created a file, reached the first overworld screen, and moved Link on command — verified by decoding the game's own save file and work RAM with the symbol table this build emitted, not from a screenshot. The battery save survived leaving the page byte-identically. The retail dump was also run through the same page and played.",
+   "playthrough": false
+  },
+  "embedUrl": null
+ },
+ {
+  "id": "pokemon-mystery-dungeon-red-rescue-team",
+  "title": "Pokémon Mystery Dungeon: Red Rescue Team",
+  "aliases": [
+   "pmd-red",
+   "pmdred",
+   "red rescue team",
+   "mystery dungeon red",
+   "pmd rrt"
+  ],
+  "year": 2005,
+  "genre": "Roguelike RPG",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "the pret/pmd-red decompilation, built to a matching ROM and run on a WebAssembly build of mGBA's core",
+  "description": "Wake up as a Pokémon and run randomly generated dungeons with your partner.",
+  "overview": "Pokémon Mystery Dungeon: Red Rescue Team built from the pret/pmd-red decompilation, pinned at 6bcbec4f. The build is byte-identical to a retail (USA, Australia) cartridge dump, sha1 9f4cfc5b5f4859d17169a485462e977c7aac2b89, and the decompilation genuinely needs your cartridge: 745 byte ranges of the 32 MB image are still read straight out of it at build time. The page runs the game on a direct WebAssembly build of mGBA's core with the wasm inlined, so it never makes a network request at all — its Content-Security-Policy sets connect-src 'none', which means the browser itself refuses every outbound channel. You supply your own ROM; it is read in your browser with the File API straight into the emulator's memory.",
+  "source": "https://github.com/andrewnakas/pmdred-web",
+  "engineLicense": "pret/pmd-red (no licence file upstream); mGBA core MPL-2.0",
+  "assetLicense": "None distributed — the player supplies their own ROM",
+  "assetRequirements": "Your own Pokémon Mystery Dungeon: Red Rescue Team ROM, (USA, Australia), 32 MB, sha1 9f4cfc5b5f4859d17169a485462e977c7aac2b89. It is read in the browser and never uploaded.",
+  "controls": [
+   "Arrow keys — move",
+   "X — A",
+   "Z — B (also opens the dungeon menu)",
+   "A / S — L / R",
+   "Enter — Start",
+   "Shift — Select",
+   "Gamepad — any standard controller (untested)"
+  ],
+  "saveInstructions": "Save in a dungeon with the Others → Quicksave menu. The cartridge save is mirrored into this browser's storage and restored automatically on reload, so a Quicksave resumes you back into the dungeon. There are also save-state buttons. Clearing site data removes everything, including the cached ROM.",
+  "limitations": [
+   "Not yet playable here: the build is published but its hosted page is still deploying.",
+   "You must supply your own ROM; none is distributed.",
+   "Verified only as far as the first floor of the first dungeon: the opening quiz, Tiny Woods B1, one fight won, and an in-game Quicksave that survives a reload. Nothing past that floor has been play-tested.",
+   "The normal (non-Quicksave) save, rescue missions, recruiting and the adventure log were not tested.",
+   "Sound is implemented but has never been listened to — all testing was muted.",
+   "Keyboard and gamepad only; no on-screen touch controls. The gamepad mapping is untested.",
+   "Tested in headless Chrome only; no Firefox, Safari or mobile browser.",
+   "Link play, Friend Rescue and Wonder Mail are not available in the browser.",
+   "The 32 MB ROM is cached in browser storage, which some browsers may evict under quota pressure."
+  ],
+  "inputs": [
+   "Keyboard",
+   "Gamepad"
+  ],
+  "downloadMB": 1,
+  "complete": false,
+  "color": "#e04a4a",
+  "shelf": "classic",
+  "platform": "Game Boy Advance",
+  "launch": "embed",
+  "touch": false,
+  "embedUrl": null,
+  "verification": {
+   "status": "smoke-tested",
+   "date": null,
+   "browsers": [
+    "Chrome (headless)"
+   ],
+   "scope": "Muted headless run: boot through the personality quiz into Tiny Woods B1, party leader walked 12 squares, one wild Pokémon defeated, in-game Quicksave driven through the dungeon menus, cartridge save and savestate persistence across a real page reload, and the save resumed back into the dungeon without the quiz reappearing. No play beyond the first dungeon floor.",
+   "playthrough": false
+  },
+  "image": "/images/pokemon-mystery-dungeon-red-rescue-team.png"
+ },
+ {
+  "id": "pokemon-firered",
+  "title": "Pokémon FireRed",
+  "aliases": [
+   "pokefirered",
+   "pokemon firered",
+   "firered",
+   "fire red"
+  ],
+  "year": 2004,
+  "genre": "RPG",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "the pret/pokefirered decompilation, built to a matching ROM and run on EmulatorJS (mGBA, WebAssembly)",
+  "description": "Return to Kanto: catch, train and battle through the original 151.",
+  "overview": "Pokémon FireRed built from the pret/pokefirered decompilation. The build is byte-identical to a retail (USA, Europe) (Rev 1) cartridge dump — sha1 dd5945db9b930750cb39d00c84da8571feebf417 — and runs in the browser on an emscripten build of mGBA. You supply your own ROM: it is read in your browser with the File API, checked against the hashes the decompilation documents, and handed straight to the emulator. The page blocks every cross-origin request before the emulator loads, so your file cannot leave the tab.",
+  "source": "https://github.com/andrewnakas/pokefirered-web",
+  "engineLicense": "pret/pokefirered; EmulatorJS GPL-3.0; mGBA core MPL-2.0",
+  "assetLicense": "None distributed — the player supplies their own ROM",
+  "assetRequirements": "Your own Pokémon FireRed ROM (USA, Europe) (Rev 1), sha1 dd5945db9b930750cb39d00c84da8571feebf417. Nothing is uploaded.",
+  "controls": [
+   "Arrow keys — D-pad",
+   "Z — A",
+   "X — B",
+   "A / S — L / R",
+   "Enter — Start",
+   "Shift — Select",
+   "Gamepad — any standard controller, detected automatically",
+   "Touch — on-screen Game Boy Advance pad on phones and tablets"
+  ],
+  "saveInstructions": "Save from the in-game menu (Start, SAVE). The save is kept in this browser's storage; clearing site data removes it. Your ROM is not kept — the page asks for it again after a reload.",
+  "limitations": [
+   "Not yet playable here: the build is published but its hosted page is still deploying.",
+   "You must supply your own ROM; none is distributed.",
+   "Link cable, wireless trading and battles are not available in the browser.",
+   "LeafGreen is untested.",
+   "Verified as far as the first room and the in-game save menu; battles and the wider overworld have not been play-tested."
+  ],
+  "inputs": [
+   "Gamepad",
+   "Keyboard",
+   "Touch"
+  ],
+  "downloadMB": 4,
+  "complete": false,
+  "color": "#d2492f",
+  "shelf": "classic",
+  "platform": "Game Boy Advance",
+  "launch": "embed",
+  "touch": true,
+  "embedUrl": null,
+  "verification": {
+   "status": "smoke-tested",
+   "date": "2026-10-05",
+   "browsers": [
+    "Chrome 151 (headless, software GL)"
+   ],
+   "scope": "19/19 headless checks plus a scripted playthrough, audio muted throughout: ROM read in-page (sha1 match), no cross-origin request, core boots, screen draws, scripted input reaches the title screen, main menu, NEW GAME, Oak's opening and the overworld, and a save made from the game's own SAVE menu survives a page reload (the game shows CONTINUE on return).",
+   "playthrough": false
+  },
+  "image": "/images/pokemon-firered.png"
+ },
+ {
+  "id": "pokemon-gold-silver",
+  "title": "Pokémon Gold & Silver",
+  "aliases": [
+   "pokegold",
+   "pokesilver",
+   "Pokemon Gold",
+   "Pokemon Silver",
+   "Pokémon Gold and Silver"
+  ],
+  "year": 1999,
+  "genre": "RPG",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "The real ROM, built byte-for-byte from the pret/pokegold disassembly, running on the libretro Gambatte core (EmulatorJS 4.2.3, WebAssembly)",
+  "description": "Johto, Kanto, day and night, and 100 new Pokémon.",
+  "overview": "Pokémon Gold and Silver built from the pret/pokegold disassembly with rgbds 1.0.4, byte-identical to the retail cartridges, running in the browser on a WebAssembly Game Boy Color core. You supply your own ROM: it is read with FileReader, kept in the tab's memory and never uploaded, and the page recognises Gold or Silver by its SHA-1. Battery saves persist in this browser.",
+  "source": "https://github.com/andrewnakas/pokegold-web",
+  "engineLicense": "EmulatorJS is GPL-3.0 and the Gambatte core is GPL-2.0; the pret/pokegold disassembly is unlicensed research. See web/THIRD_PARTY.md.",
+  "assetLicense": "No game data is distributed. Everything comes from the ROM you load.",
+  "assetRequirements": "You supply your own Pokémon Gold or Silver ROM (2,097,152 bytes). It is read in the browser and never uploaded. Gold sha1 d8b8a3600a465308c9953dfa04f0081c05bdcb94, Silver sha1 49b163f7e57702bc939d642a18f591de55d92dae — the same ROMs this project's build produces.",
+  "controls": [
+   "Arrow keys — D-pad",
+   "X — A",
+   "Z — B",
+   "Enter — Start",
+   "Shift — Select",
+   "Gamepad — standard mapping",
+   "Touch — on-screen Game Boy pad on phones and tablets"
+  ],
+  "saveInstructions": "Save in game the normal way (START → SAVE). The battery save is kept in this browser's storage, per game, and survives a reload. Clearing site data removes it.",
+  "limitations": [
+   "Only the opening was play-tested — up to the bedroom in New Bark Town, an in-game save, a reload and a resume. Nothing after that has been exercised.",
+   "Audio is unverified: every test ran muted.",
+   "Only tested in headless Chrome on Linux. Firefox, Safari, iOS, Android and the on-screen controls are untested.",
+   "Real-time-clock behaviour over days — day/night, the Bug-Catching Contest, the lottery — is untested.",
+   "Link trading and battling are not possible in a single browser tab."
+  ],
+  "inputs": [
+   "Gamepad",
+   "Keyboard",
+   "Touch"
+  ],
+  "downloadMB": null,
+  "complete": false,
+  "color": "#d4a23a",
+  "shelf": "classic",
+  "platform": "Game Boy Color",
+  "launch": "embed",
+  "touch": true,
+  "embedUrl": "https://andrewnakas.github.io/pokegold-web/",
+  "verification": {
+   "status": "smoke-tested",
+   "date": "2026-10-05",
+   "browsers": [
+    "Chrome 151 (headless, Linux)"
+   ],
+   "scope": "Both ROMs build byte-identical to the retail cartridges (sha1 verified against pret's roms.sha1 and against the staged dumps). In the browser: loaded through the page's own file picker, ran at 60 fps, played the opening through to the bedroom in New Bark Town, walked, saved in game, reloaded the page and resumed from the save — the restored save decodes with the game's own SAVE_CHECK_VALUE_1/2 and the player name that was typed, read using the symbol table of the build under test. Nothing past the first house was played; audio was muted throughout.",
+   "playthrough": false
+  }
+ },
+ {
+  "id": "pokemon-leafgreen",
+  "title": "Pokémon LeafGreen",
+  "aliases": [
+   "pokeleafgreen",
+   "pokemon leafgreen",
+   "leafgreen",
+   "leaf green"
+  ],
+  "year": 2004,
+  "genre": "RPG",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "the pret/pokefirered decompilation, built to a matching ROM and run on a direct WebAssembly build of mGBA's core",
+  "description": "Return to Kanto: catch, train and battle through the original 151.",
+  "overview": "Pokémon LeafGreen built from the pret/pokefirered decompilation, pinned at 037335f4. The build is byte-identical to a retail (USA, Europe) (Rev 1) cartridge dump — sha1 7862c67bdecbe21d1d69ce082ce34327e1c6ed5e — and runs in the browser on a direct WebAssembly build of mGBA's core, with no emulator frontend in between. You supply your own ROM: it is read in your browser with the File API, checked against the hashes the decompilation documents, and handed straight to the emulator. The page is static files with no server, and its Content-Security-Policy sets connect-src 'none', so the browser itself refuses to let the page make any network request at all.",
+  "source": "https://github.com/andrewnakas/pokeleafgreen-web",
+  "engineLicense": "pret/pokefirered; mGBA core MPL-2.0",
+  "assetLicense": "None distributed — the player supplies their own ROM",
+  "assetRequirements": "Your own Pokémon LeafGreen ROM (USA, Europe) (Rev 1), sha1 7862c67bdecbe21d1d69ce082ce34327e1c6ed5e. It is read in your browser and never uploaded.",
+  "controls": [
+   "Arrow keys — D-pad",
+   "Z — A",
+   "X — B",
+   "A / S — L / R",
+   "Enter — Start",
+   "Shift — Select",
+   "Gamepad — any standard controller (untested)"
+  ],
+  "saveInstructions": "Save from the in-game menu (Start, SAVE). The cartridge save is mirrored into this browser's storage and restored automatically on reload, so the game offers CONTINUE when you come back. There are also save-state buttons. Clearing site data removes everything, including the cached ROM.",
+  "limitations": [
+   "You must supply your own ROM; none is distributed.",
+   "Revision 1 only — the rev 0 and Switch Online dumps are a different build and are untested here.",
+   "FireRed is not accepted by this page, only LeafGreen.",
+   "Verified as far as the bedroom in Pallet Town, walking, and an in-game save that survives a reload. Battles, the wider overworld and the rest of the game have not been play-tested.",
+   "Sound is implemented but has never been listened to — all testing was muted.",
+   "Keyboard and gamepad only; there are no on-screen touch controls, so phones and tablets are not usable.",
+   "Tested in headless Chrome 151 only, with software rendering.",
+   "Link cable, trading and link battles are not available in the browser."
+  ],
+  "inputs": [
+   "Keyboard",
+   "Gamepad"
+  ],
+  "downloadMB": 1,
+  "complete": false,
+  "color": "#4caf50",
+  "shelf": "classic",
+  "platform": "Game Boy Advance",
+  "launch": "embed",
+  "touch": false,
+  "embedUrl": "https://andrewnakas.github.io/pokeleafgreen-web/",
+  "verification": {
+   "status": "smoke-tested",
+   "date": "2026-10-05",
+   "browsers": [
+    "Chrome 151 (headless, software GL)"
+   ],
+   "scope": "Byte-identical build verified by cmp against a retail dump and reproduced from a clean tree. Muted headless run: ROM read in-page (sha1 match), CSP connect-src 'none' proven by five refused egress attempts and corroborated at the network layer, core boots, and the game's own gMain.callback2 walks title -> main menu -> naming -> overworld with sLockFieldControls clear and the player walking on the game's own tile grid. A save made from the game's SAVE menu survives a reload: the game reports SAVE_STATUS_OK and continues onto the exact saved tile. No play-testing beyond the first room.",
+   "playthrough": false
+  },
+  "image": "/images/pokemon-leafgreen.png"
+ },
+ {
+  "id": "pokemon-ruby-sapphire",
+  "title": "Pokémon Ruby & Sapphire",
+  "aliases": [
+   "pokeruby",
+   "pokesapphire",
+   "pokemon ruby",
+   "pokemon sapphire",
+   "ruby",
+   "sapphire",
+   "hoenn"
+  ],
+  "year": 2002,
+  "genre": "RPG",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "the pret/pokeruby decompilation, built to matching ROMs and run on an emscripten build of mGBA",
+  "description": "Travel Hoenn: catch, train and battle through Ruby or Sapphire.",
+  "overview": "Pokémon Ruby and Sapphire built from the pret/pokeruby decompilation, pinned at 5784633c. Both builds are byte-identical to retail (USA, Europe) (Rev 2) cartridge dumps — sha1 5b64eacf892920518db4ec664e62a086dd5f5bc8 for Ruby and 89b45fb172e6b55d51fc0e61989775187f6fe63c for Sapphire. The page runs them on a direct WebAssembly build of mGBA's core, 663 KB, with no emulator frontend in between. You supply your own ROM: it is read in your browser with the File API straight into the emulator's memory. The page is static files with no server component, and makes no network request after its own two files load.",
+  "source": "https://github.com/andrewnakas/pokeruby-web",
+  "engineLicense": "pret/pokeruby; mGBA core MPL-2.0",
+  "assetLicense": "None distributed — the player supplies their own ROM",
+  "assetRequirements": "Your own Pokémon Ruby or Sapphire ROM, (USA, Europe) (Rev 2) / game version 1.2. Ruby sha1 5b64eacf892920518db4ec664e62a086dd5f5bc8, Sapphire sha1 89b45fb172e6b55d51fc0e61989775187f6fe63c. Nothing is uploaded.",
+  "controls": [
+   "Arrow keys — D-pad",
+   "X — A",
+   "Z — B",
+   "A / S — L / R",
+   "Enter — Start",
+   "Shift — Select",
+   "Gamepad — any standard controller (untested)"
+  ],
+  "saveInstructions": "Save from the in-game menu (Start, SAVE). The cartridge save is mirrored into this browser's storage and restored automatically on reload; Ruby and Sapphire keep separate saves. There are also save-state buttons. Clearing site data removes everything, including the cached ROM.",
+  "limitations": [
+   "Not yet playable here: the build is published but its hosted page is still deploying.",
+   "You must supply your own ROM; none is distributed.",
+   "Revision 2 (game v1.2) only — the v1.0 and v1.1 dumps are a different build and are untested here.",
+   "Verified only as far as Professor Birch's opening speech. The overworld, battles and the rest of the game have not been play-tested.",
+   "Reaching an in-game save was not tested; save persistence is verified at the cartridge-flash layer only.",
+   "Sound is implemented but has never been listened to — all testing was muted.",
+   "Keyboard and gamepad only; no on-screen touch controls.",
+   "Tested in headless Chrome only.",
+   "Link cable, trading and link battles are not available in the browser."
+  ],
+  "inputs": [
+   "Keyboard",
+   "Gamepad"
+  ],
+  "downloadMB": 1,
+  "complete": false,
+  "color": "#c8402f",
+  "shelf": "classic",
+  "platform": "Game Boy Advance",
+  "launch": "embed",
+  "touch": false,
+  "embedUrl": null,
+  "verification": {
+   "status": "smoke-tested",
+   "date": null,
+   "browsers": [
+    "Chrome (headless)"
+   ],
+   "scope": "Muted headless run of both versions: boot, title screen, and Professor Birch's intro speech. Cartridge-save and savestate persistence across a real page reload. No play-testing beyond the intro.",
+   "playthrough": false
+  },
+  "image": "/images/pokemon-ruby-sapphire.png"
+ },
+ {
+  "id": "pokemon-trading-card-game",
+  "title": "Pokémon Trading Card Game",
+  "aliases": [
+   "poketcg",
+   "Pokemon Trading Card Game",
+   "Pokémon TCG",
+   "Pokemon Card GB"
+  ],
+  "year": 2000,
+  "genre": "Card Battler",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "The real ROM, built byte-for-byte from the pret/poketcg disassembly, running on the libretro Gambatte core (EmulatorJS 4.2.3, WebAssembly)",
+  "description": "Collect cards, build decks and duel your way to the Grand Masters.",
+  "overview": "Pokémon Trading Card Game built from the pret/poketcg disassembly with rgbds 1.0.4, byte-identical to the retail cartridge, running in the browser on a WebAssembly Game Boy Color core. You supply your own ROM: it is read with FileReader, kept in the tab's memory and never uploaded, and the page recognises the cartridge by its SHA-1. Your collection, your decks and a duel in progress are kept in this browser's storage and survive a reload.",
+  "source": "https://github.com/andrewnakas/poketcg-web",
+  "engineLicense": "EmulatorJS is GPL-3.0 and the Gambatte core is GPL-2.0; the pret/poketcg disassembly is unlicensed research. See web/THIRD_PARTY.md.",
+  "assetLicense": "No game data is distributed. Everything comes from the ROM you load.",
+  "assetRequirements": "You supply your own Pokémon Trading Card Game ROM (1,048,576 bytes, sha1 0f8670a583255cff3e5b7ca71b5d7454d928fc48 — the same ROM this project's build produces). It is read in the browser and never uploaded.",
+  "controls": [
+   "Arrow keys — D-pad",
+   "X — A",
+   "Z — B",
+   "Enter — Start",
+   "Shift — Select",
+   "Gamepad — standard mapping",
+   "Touch — on-screen Game Boy pad on phones and tablets"
+  ],
+  "saveInstructions": "The game saves by itself as you play — your name, your collection, your decks and a duel in progress are written to the cartridge's battery save, which is kept in this browser's storage and survives a reload. Clearing site data removes it.",
+  "limitations": [
+   "Not yet playable here: the build is published but its hosted page is still deploying.",
+   "Only the opening was play-tested: the intro, naming, the starter deck and the first turn of the tutorial duel against Sam. No duel was won and no opponent duel was ever started, so nothing past Dr. Mason's laboratory has been exercised.",
+   "Saving was verified at the storage level — the battery save survives a reload byte for byte — but the test never played far enough for the game itself to offer a CONTINUE, so resuming from the title screen is untested.",
+   "Audio is unverified: every test ran muted.",
+   "Only tested in headless Chrome on Linux. Firefox, Safari, iOS, Android, gamepads and the on-screen controls are untested.",
+   "EmulatorJS's own quick-save states are switched off so the ROM is never copied into browser storage; the cartridge's battery save is what persists.",
+   "Link play — trading and link duels — is not possible in a single browser tab."
+  ],
+  "inputs": [
+   "Gamepad",
+   "Keyboard",
+   "Touch"
+  ],
+  "downloadMB": null,
+  "complete": false,
+  "color": "#e8b923",
+  "shelf": "classic",
+  "platform": "Game Boy Color",
+  "launch": "embed",
+  "touch": true,
+  "embedUrl": null,
+  "verification": {
+   "status": "smoke-tested",
+   "date": "2026-10-05",
+   "browsers": [
+    "Chrome 151 (headless, Linux)"
+   ],
+   "scope": "The ROM builds byte-identical to the retail cartridge (sha1 verified against pret's rom.sha1 and against the staged dump). In the browser: loaded through the page's own file picker, ran at 60 fps, played the opening through naming and the starter deck into the tutorial duel in Dr. Mason's laboratory, then reloaded the page and read the battery save back. The duel was confirmed from the game's own checksummed duel record in SRAM, decoded with the symbol table of the build under test and cross-checked against live work RAM. Nothing past the first turn of that duel was played; audio was muted throughout.",
+   "playthrough": false
+  }
+ },
+ {
+  "id": "pokemon-yellow",
+  "title": "Pokémon Yellow",
+  "aliases": [
+   "pokeyellow",
+   "Pokemon Yellow",
+   "Pokémon Yellow Version: Special Pikachu Edition"
+  ],
+  "year": 1998,
+  "genre": "RPG",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "The real ROM, built byte-for-byte from the pret/pokeyellow disassembly, running on the libretro Gambatte core (EmulatorJS 4.2.3, WebAssembly)",
+  "description": "Kanto with a Pikachu that follows you everywhere.",
+  "overview": "Pokémon Yellow built from the pret/pokeyellow disassembly with rgbds 1.0.3, byte-identical to the retail cartridge, running in the browser on a WebAssembly Game Boy core. You supply your own ROM: it is read with FileReader, kept in the tab's memory and never uploaded, and the page recognises the ROM by its SHA-1. Battery saves persist in this browser.",
+  "source": "https://github.com/andrewnakas/pokeyellow-web",
+  "engineLicense": "EmulatorJS is GPL-3.0 and the Gambatte core is GPL-2.0; the pret/pokeyellow disassembly is unlicensed research. See web/THIRD_PARTY.md.",
+  "assetLicense": "No game data is distributed. Everything comes from the ROM you load.",
+  "assetRequirements": "You supply your own Pokémon Yellow ROM (1,048,576 bytes, sha1 cc7d03262ebfaf2f06772c1a480c7d9d5f4a38e1 — the same ROM this project's build produces). It is read in the browser and never uploaded.",
+  "controls": [
+   "Arrow keys — D-pad",
+   "X — A",
+   "Z — B",
+   "Enter — Start",
+   "Shift — Select",
+   "Gamepad — standard mapping",
+   "Touch — on-screen Game Boy pad on phones and tablets"
+  ],
+  "saveInstructions": "Save in game the normal way (START → SAVE). The battery save is kept in this browser's storage and survives a reload. Clearing site data removes it.",
+  "limitations": [
+   "Not yet playable here: the build is published but its hosted page is still deploying.",
+   "Only the opening was play-tested — through Oak's speech and the naming screens to the bedroom in Pallet Town, an in-game save, a page reload and a resume. Nothing after that has been exercised, including getting Pikachu.",
+   "Audio is unverified: every test ran muted.",
+   "Only tested in headless Chrome on Linux. Firefox, Safari, iOS, Android and the on-screen controls are untested.",
+   "EmulatorJS's own save states are untested; the battery save is the one that was verified.",
+   "Link trading and battling are not possible in a single browser tab."
+  ],
+  "inputs": [
+   "Gamepad",
+   "Keyboard",
+   "Touch"
+  ],
+  "downloadMB": null,
+  "complete": false,
+  "color": "#f2c744",
+  "shelf": "classic",
+  "platform": "Game Boy",
+  "launch": "embed",
+  "touch": true,
+  "embedUrl": null,
+  "verification": {
+   "status": "smoke-tested",
+   "date": "2026-10-05",
+   "browsers": [
+    "Chrome 151 (headless, Linux)"
+   ],
+   "scope": "All three upstream targets build byte-identical to upstream's documented hashes, and pokeyellow.gbc is cmp-identical to the staged dump. In the browser: loaded through the page's own file picker, ran at ~59 fps, played the opening through Oak's speech and both naming screens to the bedroom in Pallet Town, walked, saved in game, reloaded the page and resumed — the restored save reproduces the game's own CalcCheckSum and carries the player name that was typed, decoded using the symbol table of the build under test. Nothing past the bedroom was played; Pikachu was never obtained; audio was muted throughout.",
+   "playthrough": false
+  }
+ },
+ {
+  "id": "smb2",
+  "title": "Super Mario Bros. 2",
+  "aliases": [
+   "smb2",
+   "super-mario-bros-2",
+   "super-mario-usa"
+  ],
+  "year": 1988,
+  "genre": "Platformer",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "The Xkeeper0 6502 disassembly, reassembled with asm6f, run on EmulatorJS 4.2.3 with the libretro fceumm core (nestopia selectable).",
+  "description": "Pull up vegetables and throw them at Shyguys across seven dream worlds.",
+  "overview": "Super Mario Bros. 2 reassembled byte-for-byte from the Xkeeper0 disassembly and run in the browser. The project ships only 6502 source and a loader page: you supply your own cartridge dump, which is read in the page and never uploaded. The build reproduces the (USA) (Rev 1) ROM body exactly — 0 of 262,144 bytes differ — and can also produce the earlier US revision and the Japanese Super Mario USA.",
+  "source": "https://github.com/Xkeeper0/smb2",
+  "engineLicense": "The upstream disassembly carries no licence file. The vendored EmulatorJS is GPL-3.0 and the libretro fceumm and nestopia cores are GPL-2.0.",
+  "assetLicense": "No game assets are distributed. Super Mario Bros. 2 is © Nintendo.",
+  "assetRequirements": "You supply your own Super Mario Bros. 2 (USA) (Rev 1) ROM; it is read in the browser and never uploaded. ROM body sha1 ff5bcacf7417b4de1c49f9e54c2905d91391455b (262,144 bytes; a 16-byte iNES or NES 2.0 header on top is fine). The earlier (USA) revision and Super Mario USA (Japan) are recognised and will run too.",
+  "controls": [
+   "Arrow keys — move, duck, climb",
+   "X — A (jump)",
+   "Z — B (run, pick up, throw)",
+   "Enter — Start",
+   "Shift — Select",
+   "Gamepad — supported through EmulatorJS"
+  ],
+  "saveInstructions": "The cartridge has no battery, so there is nothing for the game itself to save. The page keeps an automatic save state in this browser's storage, keyed by your ROM's SHA-1, written every 15 seconds and when you leave the page, and restores it next time. Clearing site data removes it; there is a button in the footer to discard it.",
+  "limitations": [
+   "Not hosted: the upstream repository carries no licence file.",
+   "Not yet playable here: no hosted page has been published for this title.",
+   "Progress is a save state, not a battery save — Super Mario Bros. 2 has no save feature of its own.",
+   "Verified to survive a page reload. Surviving a full browser restart was not verified.",
+   "Gameplay was verified from the game's own RAM on the fceumm core only; nestopia was verified to boot and render, nothing more.",
+   "No level was cleared during testing, and only World 1-1 was reached. Later worlds, bosses and the ending are untested.",
+   "Only Mario was played; the other three characters are untested.",
+   "All testing was done muted, so nothing is known about audio.",
+   "Keyboard and gamepad mappings are untested: the tests drive the emulator's input API directly.",
+   "Tested only in headless Chrome on Linux. No headed browser, no mobile, no touch controls."
+  ],
+  "inputs": [
+   "Keyboard",
+   "Gamepad"
+  ],
+  "downloadMB": null,
+  "complete": false,
+  "color": "#e05a7a",
+  "shelf": "classic",
+  "platform": "NES",
+  "runtime": "emulatorjs",
+  "verification": {
+   "status": "byte-matching, gameplay verified from RAM",
+   "date": "2026-10-05",
+   "browsers": [
+    "Chrome (headless, Linux)"
+   ],
+   "scope": "Reassembly byte-matches the (USA) (Rev 1) ROM body (0 of 262,144 bytes differ; the 3 differing file bytes are all iNES vs NES 2.0 header). In the browser: boots from a user-picked ROM with zero off-site requests, reaches actual level play rather than the character-select screen (StackArea = $C0), and the controller demonstrably drives the player — from one save state, holding Right and holding Left move PlayerX in opposite directions from byte-identical work RAM. A save state survives a page reload with position, hearts and lives intact. All runs muted.",
+   "playthrough": false
+  },
+  "embedUrl": null
+ },
+ {
+  "id": "sonic-the-hedgehog",
+  "title": "Sonic the Hedgehog",
+  "aliases": [
+   "sonic1",
+   "sonic 1",
+   "s1disasm",
+   "sonic the hedgehog"
+  ],
+  "year": 1991,
+  "genre": "Platformer",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "the sonicretro/s1disasm disassembly, assembled with AS to a matching ROM and run on EmulatorJS (genesis_plus_gx, WebAssembly)",
+  "description": "The one that started it: Green Hill to Scrap Brain, at speed.",
+  "overview": "Sonic the Hedgehog built from the sonicretro/s1disasm disassembly. The build is byte-identical to a retail REV00 (USA, Europe) cartridge — sha1 6ddb7de1e17e7f6cdb88927bd906352030daa194 — and runs in the browser on a WebAssembly build of genesis_plus_gx. You supply your own ROM: it is read in your browser with the File API, SHA-1'd against the revisions the disassembly documents, and handed straight to the emulator. The page blocks every cross-origin request before the emulator loads, so your file cannot leave the tab.",
+  "source": "https://github.com/sonicretro/s1disasm",
+  "engineLicense": "sonicretro/s1disasm; EmulatorJS GPL-3.0; genesis_plus_gx core (Genesis Plus GX licence, NON-COMMERCIAL — redistributions may not be sold or used in a commercial product or activity)",
+  "assetLicense": "None distributed — the player supplies their own ROM",
+  "assetRequirements": "Your own Sonic the Hedgehog ROM, No-Intro '(USA, Europe)' REV00, sha1 6ddb7de1e17e7f6cdb88927bd906352030daa194. REV01 is recognised and runs, and the disassembly reproduces it too with Revision = 1. Nothing is uploaded.",
+  "controls": [
+   "Arrow keys — D-pad",
+   "Z / X / C — A / B / C (any of them jumps)",
+   "Enter — Start",
+   "Gamepad — any standard controller, detected automatically (untested)",
+   "Touch — EmulatorJS on-screen Mega Drive pad on phones and tablets (untested)"
+  ],
+  "saveInstructions": "Sonic 1 has no battery save, and this page keeps nothing in browser storage on purpose — your ROM is asked for again after a reload.",
+  "limitations": [
+   "Not hosted: both available Mega Drive WebAssembly cores carry a non-commercial clause, and no OSI-clean alternative exists.",
+   "Not yet playable here: no hosted page has been published for this title.",
+   "Requires your own ROM; none is provided.",
+   "Audio starts muted; unmute from the emulator's volume control.",
+   "The only Mega Drive cores available to this stack (genesis_plus_gx, picodrive) are non-commercial-licensed, which blocks hosting under the current policy.",
+   "Verified as far as clearing Green Hill Zone Act 1 under automation; later zones, bosses and special stages have not been play-tested."
+  ],
+  "inputs": [
+   "Keyboard",
+   "Gamepad",
+   "Touch"
+  ],
+  "downloadMB": 5,
+  "complete": false,
+  "color": "#2f7fe0",
+  "shelf": "classic",
+  "platform": "Mega Drive",
+  "launch": "embed",
+  "touch": true,
+  "verification": {
+   "status": "play-tested",
+   "date": "2026-10-05",
+   "browsers": [
+    "Chrome 151 (headless, software GL)"
+   ],
+   "scope": "Byte-exact reassembly (cmp against the staged ROM: 0 differing bytes; upstream chkbitperfect reports bit-perfect REV00). In the browser, audio muted throughout: the ROM is read from a real <input type=file> with a matching sha1, zero off-origin and zero uploading requests observed at the CDP network layer, canvas asserted non-zero, and Green Hill Zone Act 1 cleared at 59.8 fps — confirmed from the game's own work RAM (v_gamemode 0x0C, f_demo 0, v_act 0 -> 1), not from a screenshot, because Sonic 1's attract demo is screenshot-identical to play.",
+   "playthrough": false
+  },
+  "image": "/images/sonic-the-hedgehog.png",
+  "embedUrl": null
+ },
+ {
+  "id": "sotn",
+  "title": "Castlevania: Symphony of the Night",
+  "aliases": [
+   "symphony-of-the-night",
+   "castlevania-sotn",
+   "sotn"
+  ],
+  "year": 1997,
+  "genre": "Action",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "sotn-decomp matching build; in the browser the disc runs on the libretro PCSX-ReARMed core compiled to WebAssembly by EmulatorJS 4.2.3",
+  "description": "Explore Dracula's castle as Alucard in the game that named the metroidvania.",
+  "overview": "A matching decompilation of the US PlayStation release, SLUS-00067. Built from source at a pinned upstream revision, every one of the 115 produced binaries is byte-identical to the originals on the disc. You supply your own disc: it is read in the browser, written straight into the emulator's in-memory filesystem, and never uploaded. No game data is distributed.",
+  "source": "https://github.com/Xeeynamo/sotn-decomp",
+  "engineLicense": "Decompilation sources per the upstream repository; the PCSX-ReARMed core is GPLv2 with no non-commercial clause",
+  "assetLicense": "No game data is distributed; every byte comes from the disc you supply",
+  "assetRequirements": "You supply your own Symphony of the Night (USA) disc image — a .chd, the data-track .bin, or a .cue with its .bin tracks. It is read in the browser and never uploaded.",
+  "controls": [
+   "Arrow keys — D-pad",
+   "X — Cross, S — Square, Z — Triangle, A — Circle",
+   "Q — L1, E — R1, 1 — L2, 3 — R2",
+   "Enter — Start, Shift — Select",
+   "Gamepad — a connected controller maps to the PlayStation pad"
+  ],
+  "saveInstructions": "Memory card 1 is kept in this browser as a 131,072-byte image and restored on reload. Save in the game's own save rooms. Clearing site data erases it.",
+  "limitations": [
+   "Not yet playable here: no hosted page has been published for this title.",
+   "Runs the disc on a WebAssembly PlayStation core, not a native port; upstream has no web target.",
+   "Tested in headless Chrome 151 on Linux only — no Firefox, Safari, mobile or touch controls.",
+   "An in-game save was never performed in testing. What is verified is that the memory card image survives a page reload byte-identically.",
+   "Persistence across a full browser restart was not tested; it could not be, in this harness.",
+   "Only the data track was exercised. CD audio (track 2) is untested, and every test ran muted.",
+   ".chd input, the multi-track .cue + .bin path and the optional BIOS picker are implemented but have no passing automated test.",
+   "A raw 513 MB data track needs roughly a gigabyte of browser memory; a .chd is smaller but untested.",
+   "The decompilation itself is a work in progress — a byte match proves the build pipeline, not that every function has been decompiled."
+  ],
+  "inputs": [
+   "Gamepad",
+   "Keyboard"
+  ],
+  "downloadMB": null,
+  "complete": false,
+  "color": "#8c1c2b",
+  "shelf": "classic",
+  "platform": "PS1",
+  "launch": "tab",
+  "touch": false,
+  "runtime": "EmulatorJS 4.2.3 + pcsx_rearmed",
+  "verification": {
+   "status": "tested",
+   "date": "2026-10-05",
+   "browsers": [
+    "Chrome 151 headless (Linux)"
+   ],
+   "scope": "Build verified 115/115 artifacts byte-identical to the originals on the user's disc. Browser target: 25/25 automated checks, including reaching Game_Play decoded from the game's own symbols, player movement under held input, zero off-origin network requests at the CDP layer, and a memory card image that survives a page reload byte-identically. No in-game save was performed; audio was muted throughout.",
+   "playthrough": false
+  },
+  "embedUrl": null
+ },
+ {
+  "id": "super-metroid",
+  "title": "Super Metroid",
+  "aliases": [
+   "supermetroid",
+   "metroid3",
+   "sm"
+  ],
+  "year": 1994,
+  "genre": "Action-adventure",
+  "kind": "Engine recreation",
+  "mode": "files",
+  "engine": "snesrev/sm C reimplementation compiled to WebAssembly with Emscripten + Asyncify, rendering through SDL2",
+  "description": "Hunt the last Metroid through the caverns of planet Zebes.",
+  "overview": "The snesrev/sm reimplementation of Super Metroid compiled to WebAssembly. You supply your own ROM; the page checks its SHA-1, keeps it in the tab and runs the C engine against it. Upstream's own frame-by-frame comparison against the original machine code was run first: 15510 frames, zero divergences, with a negative control proving the comparison fires.",
+  "source": "https://github.com/andrewnakas/supermetroid-web",
+  "engineLicense": "See snesrev/sm",
+  "assetLicense": "None distributed; the game data is read from your own ROM in your browser",
+  "assetRequirements": "You supply your own Super Metroid ROM, 3145728 bytes, sha1 da957f0d63d14cb441d215462904c4fa8519c613 (Japan/USA). It is read in the tab and never uploaded.",
+  "controls": [
+   "Arrow keys — move",
+   "A — jump (SNES A)",
+   "Z — dash (SNES B)",
+   "S — shoot (SNES X)",
+   "X — item cancel (SNES Y)",
+   "C / V — aim down / up (L / R)",
+   "Enter — Start, Right Shift — Select"
+  ],
+  "saveInstructions": "The game's battery save is stored in this browser via IndexedDB and survives a reload. Clearing site data erases it.",
+  "limitations": [
+   "Upstream calls the port an early version. 15510 frames were compared against the original machine code with no divergence, but nothing past the first room of Ceres was played, so later areas are unverified here.",
+   "Audio is off by default and has not been tested; ?audio=1 enables it at your own risk.",
+   "Verified in Chrome only. Keyboard only: no gamepad or touch support yet.",
+   "A save station was never reached, so a real saved game has not been round-tripped; only the battery-save region the game writes on boot and file selection."
+  ],
+  "inputs": [
+   "Keyboard"
+  ],
+  "downloadMB": 3,
+  "complete": false,
+  "color": "#d8552f",
+  "shelf": "classic",
+  "platform": "SNES",
+  "launch": "embed",
+  "touch": false,
+  "embedUrl": "https://andrewnakas.github.io/supermetroid-web/",
+  "verification": {
+   "status": "played",
+   "date": "2026-10-05",
+   "browsers": [
+    "Chrome 151 headless (SwiftShader)"
+   ],
+   "scope": "New file started, the full opening cinematic cleared, and Samus walked, jumped and fired under scripted control in main gameplay on Ceres (game_state 0x08, loading_game_state 0x1F, area 0x06, room 0xDF45 — explicitly not the 0x2A attract demo), muted. The battery save survives a page reload. 15510 frames were co-simulated against the original machine code natively with zero divergences, plus a negative control. Nothing past the first Ceres room was played; audio untested.",
+   "playthrough": false
+  }
+ },
+ {
+  "id": "zelda-minish-cap",
+  "title": "The Legend of Zelda: The Minish Cap",
+  "aliases": [
+   "tmc",
+   "minish cap",
+   "minishcap",
+   "zelda minish cap",
+   "the minish cap"
+  ],
+  "year": 2004,
+  "genre": "Action-adventure",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "the zeldaret/tmc decompilation, built to a matching ROM and run on a WebAssembly build of mGBA",
+  "description": "Shrink to Minish size and grow again to cross Hyrule with a talking cap.",
+  "overview": "The Legend of Zelda: The Minish Cap built from the zeldaret/tmc decompilation, pinned at 6fb6dfb4. The build is byte-identical to a retail USA cartridge dump, sha1 b4bd50e4131b027c334547b4524e2dbbd4227130. Worth being precise about what that means: tmc's code is 100% decompiled, but only 1.71% of its data is, so roughly 94% of the cartridge's real content is extracted from your own ROM at build time and linked back in unchanged. The page runs the result on a direct 663 KB WebAssembly build of mGBA's core, with no emulator frontend in between. You supply your own ROM: it is read in your browser with the File API straight into the emulator's memory. The page is static files with no server component, and makes no network request after its own two files load.",
+  "source": "https://github.com/andrewnakas/tmc-web",
+  "engineLicense": "zeldaret/tmc; mGBA core MPL-2.0",
+  "assetLicense": "None distributed — the player supplies their own ROM",
+  "assetRequirements": "Your own The Legend of Zelda: The Minish Cap ROM, USA, sha1 b4bd50e4131b027c334547b4524e2dbbd4227130. It is read in your browser and never uploaded.",
+  "controls": [
+   "Arrow keys — move",
+   "X — A (sword, talk)",
+   "Z — B",
+   "A / S — L / R (R rolls)",
+   "Enter — Start",
+   "Shift — Select",
+   "Gamepad — any standard controller (untested)"
+  ],
+  "saveInstructions": "The cartridge EEPROM is mirrored into this browser's storage and restored automatically on reload, so a file you start is still there next time. Save from the in-game menu as usual. There are also save-state buttons. Clearing site data removes everything, including the cached ROM.",
+  "limitations": [
+   "Not yet playable here: the build is published but its hosted page is still deploying.",
+   "You must supply your own ROM; none is distributed.",
+   "USA version only — the EU, JP and demo cartridges are different builds and are untested here.",
+   "Verified only as far as leaving Link's bedroom for the room upstairs. Hyrule Town, the overworld, combat and every dungeon are not play-tested.",
+   "Saving from the in-game pause menu was never reached. Save persistence is verified by the game's own loader accepting the file it wrote at file-creation, across a real page reload.",
+   "Sound is implemented but has never been listened to — all testing was muted.",
+   "Keyboard and gamepad only; no on-screen touch controls.",
+   "Tested in headless Chrome only."
+  ],
+  "inputs": [
+   "Keyboard",
+   "Gamepad"
+  ],
+  "downloadMB": null,
+  "complete": false,
+  "color": "#3f9d55",
+  "shelf": "classic",
+  "platform": "Game Boy Advance",
+  "launch": "embed",
+  "touch": false,
+  "embedUrl": null,
+  "verification": {
+   "status": "smoke-tested",
+   "date": null,
+   "browsers": [
+    "Chrome (headless)"
+   ],
+   "scope": "Muted headless run: boot, file creation through the real name-entry keyboard, the opening cutscene, player control in Link's house and a room change up the staircase, all gated on the game's own variables read from this build's symbol table. Cartridge-EEPROM persistence across a real same-tab navigation, validated by the game's own save loader with blank and corrupted control arms. No play-testing beyond Link's house.",
+   "playthrough": false
+  },
+  "image": "/images/zelda-minish-cap.png"
+ },
+ {
+  "id": "wario-land-4",
+  "title": "Wario Land 4",
+  "aliases": [
+   "warioland4",
+   "wario land 4",
+   "wl4"
+  ],
+  "year": 2001,
+  "genre": "Platformer",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "the TsilaAllaoui/warioland4 decompilation, built to a matching ROM and run on a WebAssembly build of mGBA",
+  "description": "Raid a cursed pyramid as Wario: smash, dash and transform through five passages against the clock.",
+  "overview": "Wario Land 4 built from the TsilaAllaoui/warioland4 decompilation, pinned at bfbbb8f4. The build is byte-identical to a retail (USA, Europe) cartridge dump — sha1 b9fe05a8080e124b67bce6a623234ee3b518a2c1, md5 5fe47355a33e3fabec2a1607af88a404. The page runs it on a direct WebAssembly build of mGBA's core, 664 KB, with no emulator frontend in between. You supply your own ROM: it is read in your browser with the File API straight into the emulator's memory. The page is static files with no server component, and its Content-Security-Policy forbids any connection to another origin, so the ROM cannot leave the device.",
+  "source": "https://github.com/andrewnakas/warioland4-web",
+  "engineLicense": "TsilaAllaoui/warioland4 (fork of lilDavid/warioland4); mGBA core MPL-2.0",
+  "assetLicense": "None distributed — the player supplies their own ROM",
+  "assetRequirements": "Your own Wario Land 4 ROM, (USA, Europe), 8 MB, sha1 b9fe05a8080e124b67bce6a623234ee3b518a2c1. It is read in your browser and never uploaded.",
+  "controls": [
+   "Arrow keys — D-pad",
+   "X — A",
+   "Z — B",
+   "A / S — L / R",
+   "Enter — Start",
+   "Shift — Select",
+   "Gamepad — any standard controller (untested)"
+  ],
+  "saveInstructions": "Wario Land 4 has a battery save. The cartridge SRAM is mirrored into this browser's storage and restored automatically on reload, keyed by the ROM's game code. There are also save-state buttons. Clearing site data removes everything, including the cached ROM.",
+  "limitations": [
+   "Not yet playable here: the build is published but its hosted page is still deploying.",
+   "You must supply your own ROM; none is distributed.",
+   "A matching build is not a finished decompilation: about a third of the ROM image is still copied verbatim out of your own ROM at build time, and much of the rest is machine-transcribed data tables. The project's own README calls itself work-in-progress.",
+   "Verified only as far as moving and jumping in the first level, Hall of Hieroglyphs. No level was completed and nothing beyond the first level has been play-tested.",
+   "Reaching an in-game save was not tested. Save persistence is verified at the cartridge-SRAM layer — the game's own save image survives a page reload byte-for-byte — but not by reloading a saved game.",
+   "Sound is implemented but has never been listened to; all testing was muted.",
+   "Keyboard and gamepad only; no on-screen touch controls, and the gamepad path is untested.",
+   "Tested in headless Chrome only.",
+   "US/EU version only; the Japanese ROM was not built or tested."
+  ],
+  "inputs": [
+   "Keyboard",
+   "Gamepad"
+  ],
+  "downloadMB": 1,
+  "complete": false,
+  "color": "#e8b22e",
+  "shelf": "classic",
+  "platform": "Game Boy Advance",
+  "launch": "embed",
+  "touch": false,
+  "embedUrl": null,
+  "verification": {
+   "status": "smoke-tested",
+   "date": null,
+   "browsers": [
+    "Chrome 151 (headless)"
+   ],
+   "scope": "Muted headless run: boot through the file-select and map screens into Hall of Hieroglyphs, with gameplay confirmed from the game's own gMainGameMode and gWarioData rather than from a screenshot. Cartridge-SRAM persistence across a real page reload, with the save detector validated against a deliberately broken control arm. No level completed and no in-game save reached.",
+   "playthrough": false
+  },
+  "image": "/images/wario-land-4.png"
+ },
+ {
+  "id": "zelda3",
+  "title": "The Legend of Zelda: A Link to the Past",
+  "aliases": [
+   "alttp",
+   "zelda3",
+   "a-link-to-the-past"
+  ],
+  "year": 1991,
+  "genre": "Action-adventure",
+  "kind": "Engine recreation",
+  "mode": "files",
+  "engine": "snesrev/zelda3 C reimplementation built to WebAssembly with Emscripten + Asyncify",
+  "description": "Rescue Zelda and break Ganon's hold on Hyrule across a light and dark world.",
+  "overview": "The snesrev/zelda3 reimplementation compiled to WebAssembly. You supply your own US ROM; the page runs the project's own Python extractor in your browser under Pyodide to build zelda3_assets.dat, caches it, and never sends anything anywhere.",
+  "source": "https://github.com/andrewnakas/zelda3-web",
+  "engineLicense": "See snesrev/zelda3",
+  "assetLicense": "None distributed; assets are extracted from your own ROM in your browser",
+  "assetRequirements": "Your own US 'Legend of Zelda, The - A Link to the Past (USA)' ROM, 1 MiB, sha1 6d4f10a8b10e10dbe624cb23cf03b88bb8252973. Read in the tab and never uploaded; needed once, then cached.",
+  "controls": [
+   "Arrow keys — move",
+   "Z — B, X — A",
+   "A — Y, S — X",
+   "C / V — L / R",
+   "Enter — Start, Right Shift — Select"
+  ],
+  "saveInstructions": "The game's SRAM is stored in this browser via IndexedDB and survives a reload. Clearing site data erases it, along with the cached asset file.",
+  "limitations": [
+   "Not yet playable here: the build is published but its hosted page is still deploying.",
+   "Audio is off by default and has not been tested; ?audio=1 enables it at your own risk.",
+   "First run downloads a ~13 MB Python runtime to extract the game data from your ROM; later runs skip it.",
+   "Verified in Chrome only. Keyboard only: no gamepad or touch support yet."
+  ],
+  "inputs": [
+   "Keyboard"
+  ],
+  "downloadMB": 15,
+  "complete": false,
+  "color": "#3f7d3a",
+  "shelf": "classic",
+  "platform": "SNES",
+  "launch": "embed",
+  "touch": false,
+  "embedUrl": null,
+  "verification": {
+   "status": "played",
+   "date": "2026-10-05",
+   "browsers": [
+    "Chrome 151 headless (SwiftShader)"
+   ],
+   "scope": "New file created, opening cutscene cleared, Link walked out of his house and across an overworld screen boundary (area 0x2C to 0x2B), 4215 frames, muted. Save survives a page reload and reloads into the game. Nothing past that screen was played; audio untested.",
+   "playthrough": false
+  }
  }
 ]
