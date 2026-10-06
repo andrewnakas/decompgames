@@ -2894,7 +2894,6 @@
   ],
   "saveInstructions": "Save in a dungeon with the Others → Quicksave menu. The cartridge save is mirrored into this browser's storage and restored automatically on reload, so a Quicksave resumes you back into the dungeon. There are also save-state buttons. Clearing site data removes everything, including the cached ROM.",
   "limitations": [
-   "Not yet playable here: the build is published but its hosted page is still deploying.",
    "You must supply your own ROM; none is distributed.",
    "Verified only as far as the first floor of the first dungeon: the opening quiz, Tiny Woods B1, one fight won, and an in-game Quicksave that survives a reload. Nothing past that floor has been play-tested.",
    "The normal (non-Quicksave) save, rescue missions, recruiting and the adventure log were not tested.",
@@ -2915,7 +2914,7 @@
   "platform": "Game Boy Advance",
   "launch": "embed",
   "touch": false,
-  "embedUrl": null,
+  "embedUrl": "https://andrewnakas.github.io/pmdred-web/",
   "verification": {
    "status": "smoke-tested",
    "date": null,
@@ -2959,7 +2958,6 @@
   ],
   "saveInstructions": "Save from the in-game menu (Start, SAVE). The save is kept in this browser's storage; clearing site data removes it. Your ROM is not kept — the page asks for it again after a reload.",
   "limitations": [
-   "Not yet playable here: the build is published but its hosted page is still deploying.",
    "You must supply your own ROM; none is distributed.",
    "Link cable, wireless trading and battles are not available in the browser.",
    "LeafGreen is untested.",
@@ -2977,7 +2975,7 @@
   "platform": "Game Boy Advance",
   "launch": "embed",
   "touch": true,
-  "embedUrl": null,
+  "embedUrl": "https://andrewnakas.github.io/pokefirered-web/",
   "verification": {
    "status": "smoke-tested",
    "date": "2026-10-05",
@@ -3147,7 +3145,6 @@
   ],
   "saveInstructions": "Save from the in-game menu (Start, SAVE). The cartridge save is mirrored into this browser's storage and restored automatically on reload; Ruby and Sapphire keep separate saves. There are also save-state buttons. Clearing site data removes everything, including the cached ROM.",
   "limitations": [
-   "Not yet playable here: the build is published but its hosted page is still deploying.",
    "You must supply your own ROM; none is distributed.",
    "Revision 2 (game v1.2) only — the v1.0 and v1.1 dumps are a different build and are untested here.",
    "Verified only as far as Professor Birch's opening speech. The overworld, battles and the rest of the game have not been play-tested.",
@@ -3168,7 +3165,7 @@
   "platform": "Game Boy Advance",
   "launch": "embed",
   "touch": false,
-  "embedUrl": null,
+  "embedUrl": "https://andrewnakas.github.io/pokeruby-web/",
   "verification": {
    "status": "smoke-tested",
    "date": null,
@@ -3211,7 +3208,6 @@
   ],
   "saveInstructions": "The game saves by itself as you play — your name, your collection, your decks and a duel in progress are written to the cartridge's battery save, which is kept in this browser's storage and survives a reload. Clearing site data removes it.",
   "limitations": [
-   "Not yet playable here: the build is published but its hosted page is still deploying.",
    "Only the opening was play-tested: the intro, naming, the starter deck and the first turn of the tutorial duel against Sam. No duel was won and no opponent duel was ever started, so nothing past Dr. Mason's laboratory has been exercised.",
    "Saving was verified at the storage level — the battery save survives a reload byte for byte — but the test never played far enough for the game itself to offer a CONTINUE, so resuming from the title screen is untested.",
    "Audio is unverified: every test ran muted.",
@@ -3231,7 +3227,7 @@
   "platform": "Game Boy Color",
   "launch": "embed",
   "touch": true,
-  "embedUrl": null,
+  "embedUrl": "https://andrewnakas.github.io/poketcg-web/",
   "verification": {
    "status": "smoke-tested",
    "date": "2026-10-05",
@@ -3272,7 +3268,6 @@
   ],
   "saveInstructions": "Save in game the normal way (START → SAVE). The battery save is kept in this browser's storage and survives a reload. Clearing site data removes it.",
   "limitations": [
-   "Not yet playable here: the build is published but its hosted page is still deploying.",
    "Only the opening was play-tested — through Oak's speech and the naming screens to the bedroom in Pallet Town, an in-game save, a page reload and a resume. Nothing after that has been exercised, including getting Pikachu.",
    "Audio is unverified: every test ran muted.",
    "Only tested in headless Chrome on Linux. Firefox, Safari, iOS, Android and the on-screen controls are untested.",
@@ -3291,7 +3286,7 @@
   "platform": "Game Boy",
   "launch": "embed",
   "touch": true,
-  "embedUrl": null,
+  "embedUrl": "https://andrewnakas.github.io/pokeyellow-web/",
   "verification": {
    "status": "smoke-tested",
    "date": "2026-10-05",
@@ -3572,7 +3567,6 @@
   ],
   "saveInstructions": "The cartridge EEPROM is mirrored into this browser's storage and restored automatically on reload, so a file you start is still there next time. Save from the in-game menu as usual. There are also save-state buttons. Clearing site data removes everything, including the cached ROM.",
   "limitations": [
-   "Not yet playable here: the build is published but its hosted page is still deploying.",
    "You must supply your own ROM; none is distributed.",
    "USA version only — the EU, JP and demo cartridges are different builds and are untested here.",
    "Verified only as far as leaving Link's bedroom for the room upstairs. Hyrule Town, the overworld, combat and every dungeon are not play-tested.",
@@ -3592,7 +3586,7 @@
   "platform": "Game Boy Advance",
   "launch": "embed",
   "touch": false,
-  "embedUrl": null,
+  "embedUrl": "https://andrewnakas.github.io/tmc-web/",
   "verification": {
    "status": "smoke-tested",
    "date": null,
@@ -3634,7 +3628,6 @@
   ],
   "saveInstructions": "Wario Land 4 has a battery save. The cartridge SRAM is mirrored into this browser's storage and restored automatically on reload, keyed by the ROM's game code. There are also save-state buttons. Clearing site data removes everything, including the cached ROM.",
   "limitations": [
-   "Not yet playable here: the build is published but its hosted page is still deploying.",
    "You must supply your own ROM; none is distributed.",
    "A matching build is not a finished decompilation: about a third of the ROM image is still copied verbatim out of your own ROM at build time, and much of the rest is machine-transcribed data tables. The project's own README calls itself work-in-progress.",
    "Verified only as far as moving and jumping in the first level, Hall of Hieroglyphs. No level was completed and nothing beyond the first level has been play-tested.",
@@ -3655,7 +3648,7 @@
   "platform": "Game Boy Advance",
   "launch": "embed",
   "touch": false,
-  "embedUrl": null,
+  "embedUrl": "https://andrewnakas.github.io/warioland4-web/",
   "verification": {
    "status": "smoke-tested",
    "date": null,
@@ -3695,7 +3688,6 @@
   ],
   "saveInstructions": "The game's SRAM is stored in this browser via IndexedDB and survives a reload. Clearing site data erases it, along with the cached asset file.",
   "limitations": [
-   "Not yet playable here: the build is published but its hosted page is still deploying.",
    "Audio is off by default and has not been tested; ?audio=1 enables it at your own risk.",
    "First run downloads a ~13 MB Python runtime to extract the game data from your ROM; later runs skip it.",
    "Verified in Chrome only. Keyboard only: no gamepad or touch support yet."
@@ -3710,7 +3702,7 @@
   "platform": "SNES",
   "launch": "embed",
   "touch": false,
-  "embedUrl": null,
+  "embedUrl": "https://andrewnakas.github.io/zelda3-web/",
   "verification": {
    "status": "played",
    "date": "2026-10-05",
