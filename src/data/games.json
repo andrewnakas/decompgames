@@ -3712,5 +3712,65 @@
    "scope": "New file created, opening cutscene cleared, Link walked out of his house and across an overworld screen boundary (area 0x2C to 0x2B), 4215 frames, muted. Save survives a page reload and reloads into the game. Nothing past that screen was played; audio untested.",
    "playthrough": false
   }
+ },
+ {
+  "id": "zelda1",
+  "title": "The Legend of Zelda",
+  "aliases": [
+   "zelda1",
+   "legend-of-zelda",
+   "loz",
+   "the-legend-of-zelda"
+  ],
+  "year": 1986,
+  "genre": "Action-adventure",
+  "kind": "Decompilation",
+  "mode": "files",
+  "engine": "ca65/ld65 reassembly of the aldonunez 6502 disassembly, played in the browser on EmulatorJS 4.2.3 with the libretro fceumm core",
+  "description": "Explore Hyrule, find the sword, and clear nine dungeons in the original open-world action-adventure.",
+  "overview": "A complete 6502 disassembly of The Legend of Zelda that reassembles to a byte-exact copy of the USA Rev 0 (PRG0) cart — all 131072 PRG bytes, verified with cmp against the dump. Two thirds of the image is rebuilt from checked-in assembly source; the remaining third is lifted from your own ROM at build time and placed back at exactly the right offsets. The browser page runs whatever NES ROM you pick from your own disk; it is read in memory and never uploaded, and no ROM or ROM-derived byte is distributed.",
+  "source": "https://github.com/andrewnakas/zelda1-web",
+  "engineLicense": "The upstream disassembly states no licence (no LICENSE file, no terms in its README). The browser runtime is GPL-3.0 EmulatorJS 4.2.3 with the GPL-2.0 libretro fceumm core; every vendored component is itemised in THIRD-PARTY-NOTICES.txt.",
+  "assetLicense": "No game assets are distributed. Nintendo retains all rights to the game data, which stays on your machine.",
+  "assetRequirements": "You supply your own Legend of Zelda (NES) ROM. It is read in the browser and never uploaded. A byte-exact rebuild additionally requires the USA Rev 0 (PRG0) dump — headerless PRG sha1 a12d74c73a0481599a5d832361d168f4737bbcf6, crc32 3FE272FB; the Rev 1 (PRG1) dump plays fine but will not byte-match.",
+  "controls": [
+   "Arrow keys — move",
+   "X — A (sword)",
+   "Z — B (selected item)",
+   "Enter — Start",
+   "Shift — Select",
+   "Audio is muted by default"
+  ],
+  "saveInstructions": "The cart's battery save is kept in this browser's IndexedDB, keyed to your ROM's PRG hash, so two revisions of the cart cannot overwrite each other. Verified to survive a page reload. Clearing site data erases it. There are also explicit \"Flush save now\" and \"Erase battery save\" buttons.",
+  "limitations": [
+   "You supply your own ROM; nothing playable ships here.",
+   "Never reached Level 1 in testing — Link dies to octoroks on the way north with three hearts. The overworld, the sword cave and the Wooden Sword pickup were played and confirmed; the dungeons were not.",
+   "Audio was muted in every test, so nothing is known about sound.",
+   "Only tested in headless Chrome with the fceumm core. Never tried in a normal headed browser, on a phone, or on any other core.",
+   "Battery saves are verified across a page reload but not across closing the browser — an environment limit of the test box, which discards IndexedDB between processes.",
+   "Second quest, save-on-death, and the \"name a file ZELDA\" second-quest trick were not exercised.",
+   "The byte-exact image itself was never booted; the match is a byte comparison, not a play test of that build."
+  ],
+  "inputs": [
+   "Keyboard"
+  ],
+  "downloadMB": null,
+  "complete": false,
+  "color": "#2f9e68",
+  "shelf": "classic",
+  "platform": "NES",
+  "launch": "tab",
+  "touch": false,
+  "embedUrl": "https://andrewnakas.github.io/zelda1-web/",
+  "runtime": "EmulatorJS 4.2.3 + libretro fceumm",
+  "verification": {
+   "status": "byte-exact",
+   "date": "2026-10-05",
+   "browsers": [
+    "Headless Chrome (CDP-driven)"
+   ],
+   "scope": "Reassembly is byte-identical to the USA Rev 0 (PRG0) dump — all 131072 PRG bytes and all 131088 file bytes, confirmed by cmp and by sha1. In the browser: boots, 60 fps sustained, name registration, overworld movement, sword cave, Wooden Sword acquired, and battery save verified across a reload by reading the save data back. No dungeon was entered and audio was never enabled.",
+   "playthrough": false
+  }
  }
 ]
