@@ -149,7 +149,42 @@ if (process.argv.includes('--award-table-diagnostic')) {
     if (machine.mem8[0x2085]) collisionHits.push(x);
   }
   if (!collisionHits.length) throw Error('Independent beam never collided with stationary saucer');
+  const movingHits = [];
+  for (const direction of [-2, 2]) for (let x = 48; x <= 208; x++) {
+    seedWorkRamImage(machine);
+    for (let address = 0x2400; address < 0x4000; address++) machine.mem8[address] = 0;
+    machine.mem8[0x2080] = 2;
+    machine.mem8[0x2082] = 55;
+    machine.mem8[0x2083] = 1;
+    machine.mem8[0x2084] = 1;
+    machine.mem8[0x208a] = 112;
+    machine.mem8[0x208c] = direction & 255;
+    machine.mem16[0x208d] = 0x1854;
+    machine.mem8[0x20f1] = 0;
+    drawSaucerSprite(machine);
+    machine.mem8[0x2025] = 2;
+    machine.mem8[0x2029] = 0x38;
+    machine.mem8[0x202a] = x;
+    machine.mem8[0x2002] = 0;
+    machine.mem8[0x2061] = 0;
+    let hitStep = null, awardStep = null;
+    for (let step = 1; step <= 90; step++) {
+      machine.mem8[0x2072] = machine.mem8[0x208a] & 0x80;
+      saucerHandler(machine);
+      if (machine.mem8[0x2025] === 2) {
+        machine.mem8[0x2072] = x & 0x80;
+        playerShotHandler(machine);
+        resolvePlayerShotHit(machine);
+      }
+      if (machine.mem8[0x2085] && hitStep === null) hitStep = step;
+      if (machine.mem8[0x20f1]) { awardStep = step; break; }
+    }
+    if (hitStep !== null) movingHits.push({ direction, x, hitStep, awardStep });
+  }
+  if (!movingHits.some(hit => hit.awardStep !== null))
+    throw Error('Synthetic moving-target sweep never reached a saucer award');
   console.log(JSON.stringify({ diagnostic: 'synthetic-award-and-lifecycle', inputData, awards,
+    movingSpriteCollision: { targetStartX: 112, shotStartY: 0x38, testedX: [48, 208], movingHits },
     stationarySpriteCollision: { targetX: 112, testedX: [96, 128], collisionHits },
     syntheticLifecycle: { initialCountdown, awardTick, retireTick },
     naturalHitVerified: false, browserGameplayVerified: false }));
