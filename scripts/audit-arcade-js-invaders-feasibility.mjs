@@ -76,6 +76,34 @@ if (process.argv[3]) {
 const machine = await Machine.create(rom, {
   overrides: await resolveAllIdiomatic(),
 });
+if (process.argv.includes('--award-table-diagnostic')) {
+  // Synthetic state fixture, not a played hit or release-gameplay claim.
+  const { seedWorkRamImage } = await moduleAt('games/invaders/idiomatic/seedWorkRamImage.js');
+  const { awardSaucerScore } = await moduleAt('games/invaders/idiomatic/awardSaucerScore.js');
+  const { applyPendingScoreAdd } = await moduleAt('games/invaders/idiomatic/applyPendingScoreAdd.js');
+  const awards = [];
+  for (let index = 0; index < 4; index++) {
+    seedWorkRamImage(machine);
+    machine.mem8[0x2067] = 0x21;
+    machine.mem16[0x208d] = 0x1854 + index;
+    machine.mem16[0x20f8] = 0;
+    machine.mem16[0x20fa] = 0x281c;
+    for (let address = 0x2400; address < 0x4000; address++) machine.mem8[address] = 0;
+    awardSaucerScore(machine);
+    const delta = machine.mem16[0x20f2];
+    const glyphPointer = machine.mem16[0x2087];
+    const renderedBytes = Array.from({ length: 0x1c00 }, (_, i) => machine.mem8[0x2400 + i]).filter(Boolean).length;
+    applyPendingScoreAdd(machine);
+    const score = machine.mem16[0x20f8];
+    if (delta !== (index + 1) * 0x100 || score !== delta ||
+        glyphPointer !== 0x1d54 + index * 3 || renderedBytes === 0 || machine.mem8[0x20f1])
+      throw Error(`Saucer award fixture failed for key ${index}`);
+    awards.push({ index, delta, score, glyphPointer, renderedBytes });
+  }
+  console.log(JSON.stringify({ diagnostic: 'synthetic-award-table-only', inputData, awards,
+    naturalHitVerified: false, browserGameplayVerified: false }));
+  process.exit(0);
+}
 const shipHandlerWrites = [];
 let currentFrame = 0;
 const rawWrite8 = machine.mem.write8.bind(machine.mem);
