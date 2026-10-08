@@ -56,10 +56,10 @@ def generate(output: Path, shot2_experiment: bool = False,
     # These silhouettes were drawn for Open Swarm; the bytes are not taken
     # from a game image. Keep this probe's gameplay tables blank.
     craft = (
-        0b00011000, 0b00111100, 0b01111110, 0b11111111,
+        0b00001100, 0b00111100, 0b01111110, 0b11111111,
         0b11011011, 0b11111111, 0b00100100, 0b01000010,
         0b01000010, 0b00100100, 0b11111111, 0b11011011,
-        0b11111111, 0b01111110, 0b00111100, 0b00011000,
+        0b11111111, 0b01111110, 0b00111100, 0b00001100,
     )
     for frame in range(6):
         mask = frame % 3
@@ -68,21 +68,21 @@ def generate(output: Path, shot2_experiment: bool = False,
         data[start:start + 16] = pattern
     data[0x1C60:0x1C70] = bytes(craft)
     data[0x1C70:0x1C90] = bytes(
-        (0b00011000 if row % 3 else 0b10100101) for row in range(32)
+        (0b00001100 if row % 3 else 0b10100101) for row in range(32)
     )
-    data[0x1C90:0x1C98] = bytes((0b00011000,) * 8)
+    data[0x1C90:0x1C98] = bytes((0b00001100,) * 8)
     # Three-byte frames for an experimental descending-shot data format.
     # Its translated stepper adds three to the pointer and wraps at
     # low byte 0xf9, so four frames must fill 0x1ced..0x1cf8.
     shot_frames = (
-        0b00011000, 0b00111100, 0b00011000,
+        0b00001100, 0b00111100, 0b00001100,
         0b00001000, 0b00011100, 0b00001000,
-        0b00100100, 0b00011000, 0b00100100,
+        0b00100100, 0b00001100, 0b00100100,
         0b00010000, 0b00111000, 0b00010000,
     )
     data[0x1CED:0x1CF9] = bytes(shot_frames)
-    data[0x1CDC:0x1CE2] = bytes((0b01000010, 0b00100100, 0b00011000,
-                                0b00011000, 0b00100100, 0b01000010))
+    data[0x1CDC:0x1CE2] = bytes((0b01000010, 0b00100100, 0b00001100,
+                                0b00001100, 0b00100100, 0b01000010))
     # The shield initializer copies 22 *two-byte* rows per bunker. Author a
     # narrower arch with a central opening in that actual interleaved format.
     shield_rows = []
