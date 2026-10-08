@@ -83,6 +83,8 @@ if (process.argv.includes('--award-table-diagnostic')) {
   const { applyPendingScoreAdd } = await moduleAt('games/invaders/idiomatic/applyPendingScoreAdd.js');
   const { resolvePlayerShotHit } = await moduleAt('games/invaders/idiomatic/resolvePlayerShotHit.js');
   const { saucerHandler } = await moduleAt('games/invaders/idiomatic/saucerHandler.js');
+  const { drawSaucerSprite } = await moduleAt('games/invaders/idiomatic/drawSaucerSprite.js');
+  const { playerShotHandler } = await moduleAt('games/invaders/idiomatic/playerShotHandler.js');
   const awards = [];
   for (let index = 0; index < 4; index++) {
     seedWorkRamImage(machine);
@@ -125,7 +127,30 @@ if (process.argv.includes('--award-table-diagnostic')) {
   }
   if (awardTick === null || retireTick === null || machine.mem16[0x20f2] !== 0x100)
     throw Error('Synthetic saucer lifecycle did not award and retire');
+  // Exercise the real sprite collision blitter with a stationary target;
+  // unlike the lifecycle fixture above, do not inject a collision latch.
+  const collisionHits = [];
+  for (let x = 96; x <= 128; x++) {
+    seedWorkRamImage(machine);
+    for (let address = 0x2400; address < 0x4000; address++) machine.mem8[address] = 0;
+    machine.mem8[0x208a] = 112;
+    machine.mem8[0x2084] = 1;
+    drawSaucerSprite(machine);
+    machine.mem8[0x2025] = 2;
+    machine.mem8[0x2029] = 0xc8;
+    machine.mem8[0x202a] = x;
+    machine.mem8[0x2072] = x & 0x80;
+    machine.mem8[0x2002] = 0;
+    machine.mem8[0x2061] = 0;
+    for (let step = 0; step < 4 && machine.mem8[0x2025] === 2; step++) {
+      playerShotHandler(machine);
+      resolvePlayerShotHit(machine);
+    }
+    if (machine.mem8[0x2085]) collisionHits.push(x);
+  }
+  if (!collisionHits.length) throw Error('Independent beam never collided with stationary saucer');
   console.log(JSON.stringify({ diagnostic: 'synthetic-award-and-lifecycle', inputData, awards,
+    stationarySpriteCollision: { targetX: 112, testedX: [96, 128], collisionHits },
     syntheticLifecycle: { initialCountdown, awardTick, retireTick },
     naturalHitVerified: false, browserGameplayVerified: false }));
   process.exit(0);
