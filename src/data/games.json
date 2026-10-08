@@ -3505,7 +3505,7 @@
   "saveInstructions": "Sonic 2 has no battery save, and this page keeps nothing in browser storage — your ROM is asked for again after a reload.",
   "limitations": [
    "Requires your own ROM; none is provided.",
-   "Sound starts off; turn it on with the Sound button under the game.",
+   "Sound is on by default (the Sound button under the game turns it off); it was measured, not listened to.",
    "Verified only as far as running through the start of Emerald Hill Zone. Later zones, bosses, special stages and two-player mode have not been play-tested.",
    "mdcore was tuned against Sonic 1; small timing differences from real hardware are possible.",
    "No on-screen touch pad."
