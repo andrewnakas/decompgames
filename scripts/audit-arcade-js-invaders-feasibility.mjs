@@ -150,6 +150,7 @@ if (process.argv.includes('--award-table-diagnostic')) {
   }
   if (!collisionHits.length) throw Error('Independent beam never collided with stationary saucer');
   const movingHits = [];
+  const movingCollisions = [];
   for (const direction of [-2, 2]) for (let x = 48; x <= 208; x++) {
     seedWorkRamImage(machine);
     for (let address = 0x2400; address < 0x4000; address++) machine.mem8[address] = 0;
@@ -167,24 +168,26 @@ if (process.argv.includes('--award-table-diagnostic')) {
     machine.mem8[0x202a] = x;
     machine.mem8[0x2002] = 0;
     machine.mem8[0x2061] = 0;
-    let hitStep = null, awardStep = null;
+    let hitStep = null, awardStep = null, firstCollision = null;
     for (let step = 1; step <= 90; step++) {
       machine.mem8[0x2072] = machine.mem8[0x208a] & 0x80;
       saucerHandler(machine);
       if (machine.mem8[0x2025] === 2) {
         machine.mem8[0x2072] = x & 0x80;
         playerShotHandler(machine);
+        if (machine.mem8[0x2002] && firstCollision === null) firstCollision = { step, y: machine.mem8[0x2029], targetX: machine.mem8[0x208a] };
         resolvePlayerShotHit(machine);
       }
       if (machine.mem8[0x2085] && hitStep === null) hitStep = step;
       if (machine.mem8[0x20f1]) { awardStep = step; break; }
     }
+    if (firstCollision) movingCollisions.push({ direction, x, ...firstCollision, hit: hitStep !== null });
     if (hitStep !== null) movingHits.push({ direction, x, hitStep, awardStep });
   }
   if (!movingHits.some(hit => hit.awardStep !== null))
     throw Error('Synthetic moving-target sweep never reached a saucer award');
   console.log(JSON.stringify({ diagnostic: 'synthetic-award-and-lifecycle', inputData, awards,
-    movingSpriteCollision: { targetStartX: 112, shotStartY: 0x38, testedX: [48, 208], movingHits },
+    movingSpriteCollision: { targetStartX: 112, shotStartY: 0x38, testedX: [48, 208], movingHits, movingCollisions },
     stationarySpriteCollision: { targetX: 112, testedX: [96, 128], collisionHits },
     syntheticLifecycle: { initialCountdown, awardTick, retireTick },
     naturalHitVerified: false, browserGameplayVerified: false }));
