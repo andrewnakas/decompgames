@@ -4,6 +4,8 @@
 
 ### Addition 5 in progress: Open Swarm remains private
 
+Latest October 8 checkpoint: fixed the replacement saucer countdown from zero (wraparound delay) to 32. Synthetic collision/resolver/handler checks now award at tick 8 and retire at 32. New saucer-image SHA-256 `9b0486e2462de5bd425753fd5104d4ebae4889ea7e5d59655c8baadde0ae2197` rebuilt identically and passed a muted 40,056-frame accelerated browser loop with 905 active-saucer frames, zero hit frames, and no errors. Natural saucer hits and normal-clock later-wave review remain outstanding, along with the release packaging/data review. No release or deployment; 4/5 remains accurate.
+
 October 8: the new synthetic `--award-table-diagnostic` passes all four saucer key/glyph-pointer/BCD-score cases on the unchanged October 1 image. This validates table encoding only; a played saucer hit, countdown, and displayed award are still unverified. Next pursue that collision path and normal-clock later-wave visuals. Full test recipe and limits are appended to the feasibility log; milestone remains 4/5.
 
 October 1 checkpoint supersedes the encounter gap below: the first later-wave height 120 froze tickSaucerSpawnTimer at its >=0x78 gate. Independent heights now range 116 down to 88. Saucer image SHA-256 `2432f565ad1fa5773b6b3cfa78ef8b6fd8dbec6bf37d2e170be57efc578c09c0` passed 40,000 headless frames and a 40,068-frame accelerated muted browser wave/game-over/restart diagnostic, with 905 cumulative active-saucer frames and zero hit frames. Next verify normal-clock later-wave/encounter visuals and the saucer award path; finish data coverage and release packaging. No fifth release or deployment yet. Prior checkpoints below retain the investigation history.

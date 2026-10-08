@@ -207,7 +207,7 @@ def generate(output: Path, shot2_experiment: bool = False,
     # must start in video-safe coordinates instead of zeroed work RAM.
     data[0x1B09:0x1B0D] = (0x4078).to_bytes(2, "little") * 2
     data[0x1B8F:0x1B91] = bytes((0xFF, 0x19))
-    data[0x1B83:0x1B8D] = bytes((0, 0, 0, 0, 0x60, 0x1D, 0xD0, 0x28, 16, 2))
+    data[0x1B83:0x1B8D] = bytes((0, 0, 0, 32, 0x60, 0x1D, 0xD0, 0x28, 16, 2))
     data[0x1B8D:0x1B8F] = bytes((0x53, 0x18))
     # The cold-boot copier also seeds 0x20e9 from this image. Mark the
     # independently authored attract world active so the vblank task runner

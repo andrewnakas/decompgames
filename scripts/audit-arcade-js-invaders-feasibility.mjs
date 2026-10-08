@@ -81,6 +81,8 @@ if (process.argv.includes('--award-table-diagnostic')) {
   const { seedWorkRamImage } = await moduleAt('games/invaders/idiomatic/seedWorkRamImage.js');
   const { awardSaucerScore } = await moduleAt('games/invaders/idiomatic/awardSaucerScore.js');
   const { applyPendingScoreAdd } = await moduleAt('games/invaders/idiomatic/applyPendingScoreAdd.js');
+  const { resolvePlayerShotHit } = await moduleAt('games/invaders/idiomatic/resolvePlayerShotHit.js');
+  const { saucerHandler } = await moduleAt('games/invaders/idiomatic/saucerHandler.js');
   const awards = [];
   for (let index = 0; index < 4; index++) {
     seedWorkRamImage(machine);
@@ -100,7 +102,31 @@ if (process.argv.includes('--award-table-diagnostic')) {
       throw Error(`Saucer award fixture failed for key ${index}`);
     awards.push({ index, delta, score, glyphPointer, renderedBytes });
   }
-  console.log(JSON.stringify({ diagnostic: 'synthetic-award-table-only', inputData, awards,
+  seedWorkRamImage(machine);
+  machine.mem8[0x2080] = 2;
+  machine.mem8[0x2082] = 55;
+  machine.mem8[0x2083] = 1;
+  machine.mem8[0x2084] = 1;
+  machine.mem8[0x2025] = 2;
+  machine.mem8[0x2029] = 0xd0;
+  machine.mem8[0x2002] = 1;
+  machine.mem16[0x208d] = 0x1854;
+  machine.mem8[0x20f1] = 0;
+  const initialCountdown = machine.mem8[0x2086];
+  resolvePlayerShotHit(machine);
+  if (machine.mem8[0x2085] !== 1 || machine.mem8[0x2025] !== 4 || machine.mem8[0x2002])
+    throw Error('Synthetic saucer collision did not retire the player shot');
+  let awardTick = null, retireTick = null;
+  for (let tick = 1; tick <= 256; tick++) {
+    machine.mem8[0x2072] = machine.mem8[0x208a] & 0x80;
+    saucerHandler(machine);
+    if (machine.mem8[0x20f1] && awardTick === null) awardTick = tick;
+    if (!machine.mem8[0x2084]) { retireTick = tick; break; }
+  }
+  if (awardTick === null || retireTick === null || machine.mem16[0x20f2] !== 0x100)
+    throw Error('Synthetic saucer lifecycle did not award and retire');
+  console.log(JSON.stringify({ diagnostic: 'synthetic-award-and-lifecycle', inputData, awards,
+    syntheticLifecycle: { initialCountdown, awardTick, retireTick },
     naturalHitVerified: false, browserGameplayVerified: false }));
   process.exit(0);
 }

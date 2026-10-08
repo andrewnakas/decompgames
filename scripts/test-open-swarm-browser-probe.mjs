@@ -21,9 +21,9 @@ if (lateReview && !realtimeLoop) throw Error('--late-review requires --realtime-
 if ([acceleratedLoop, realtimeLoop, shieldReview, damageReview].filter(Boolean).length > 1) throw Error('Choose only one diagnostic mode');
 const shot2Experiment = process.argv.includes('--shot2-experiment');
 const saucerExperiment = process.argv.includes('--saucer-experiment');
-const baselineDataSha256 = '5b86e0380723c6ed5cb53e2720d30fe275303255f89fa85b56f861913fcc32ae';
-const shot2DataSha256 = 'c6acaea76d0122d90dc4bafa46159d69e4fc01a9a8095ca8d92301925da4ff97';
-const saucerDataSha256 = '2432f565ad1fa5773b6b3cfa78ef8b6fd8dbec6bf37d2e170be57efc578c09c0';
+const baselineDataSha256 = 'bd3cbeab0022a378a9380e81477f2dd33b521043cb39d60d0e42a946e1978349';
+const shot2DataSha256 = '00f4d56436da0397cce59585c2b55626f36a819f902723b751d6cc72674bb3d0';
+const saucerDataSha256 = '9b0486e2462de5bd425753fd5104d4ebae4889ea7e5d59655c8baadde0ae2197';
 const dataSha256 = createHash('sha256').update(await readFile(dataFile)).digest('hex');
 if (dataSha256 !== baselineDataSha256 && !(shot2Experiment && !saucerExperiment && dataSha256 === shot2DataSha256) &&
     !(shot2Experiment && saucerExperiment && dataSha256 === saucerDataSha256))
