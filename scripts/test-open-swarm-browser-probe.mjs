@@ -85,6 +85,15 @@ const server = createServer(async (request, response) => {
       if (!source.includes(entry)) throw Error('Award observation anchor changed');
       bytes = Buffer.from(source.replace(entry, entry + '\n  const observations = m._openSwarmAwards ||= []; if (observations.length < 32) observations.push({ active: m.mem8[0x2084], hit: m.mem8[0x2085], phase: m.mem8[0x2086], key: m.mem8[m.mem16[0x208d]], scoreBefore: m.mem16[0x20f8] });'));
     }
+    if (pathname === '/games/invaders/idiomatic/applyPendingScoreAdd.js') {
+      let source = bytes.toString('utf8');
+      const anchor = 'const delta = m.mem16[SCORE_ADD_VALUE];';
+      const end = 'const screen = (m.mem8[rec + 3] << 8) | m.mem8[rec + 2];';
+      if (!source.includes(anchor) || !source.includes(end)) throw Error('Score observation anchor changed');
+      source = source.replace(anchor, anchor + '\n  const observedBefore = m.mem16[rec];');
+      source = source.replace(end, 'const award = m._openSwarmAwards?.at(-1); if (award && !award.consumed && delta === (award.key << 4)) award.consumed = { before: observedBefore, delta, after: m.mem16[rec] };\n  ' + end);
+      bytes = Buffer.from(source);
+    }
     if (pathname === '/web/worker.js') {
       // Private observation only: emit a small state sample without changing
       // game execution, input, renderer, or the upstream checkout on disk.
