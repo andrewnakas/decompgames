@@ -272,7 +272,7 @@ try {
   const lifeTransitions = [];
   let previousLifeSample;
   for (const p of probes) {
-    if (previousLifeSample && previousLifeSample.play && p.play && p.ships !== previousLifeSample.ships && lifeTransitions.length < 32)
+    if (previousLifeSample && previousLifeSample.epoch === p.epoch && previousLifeSample.play && p.play && p.ships !== previousLifeSample.ships && lifeTransitions.length < 32)
       lifeTransitions.push({ frame: p.frame, before: previousLifeSample.ships, after: p.ships,
         shipX: p.shipX, shotY: p.alienShot2Y, height: p.fleetHeight, fleetX: p.fleetX, liveCells: p.liveCells });
     previousLifeSample = p;

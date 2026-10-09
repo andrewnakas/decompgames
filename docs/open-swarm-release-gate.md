@@ -12,6 +12,8 @@ Status: **not released, not counted**. The strict milestone remains 4/5.
 
 ## Required before deployment
 
+- Fix the descending-variant engine restart caused by handler target0xe0bb at record2020. The former browser harness ignored restart messages; use the corrected harness and revalidate stability. See open-swarm-restart-trace.json.
+
 - Correct and test the zero fleet edge-drop default at replacement offset1b0e. The current image turns without descending; see open-swarm-fleet-drop.json. Verify descent, bunker interaction and invasion/loss on the resulting artifact.
 
 - Resolve the generator's `missingComponents` list through a source/data audit. Do not simply relabel the draft complete. Document intentional omissions (including the second hostile-shot lane) and the playable scope.
