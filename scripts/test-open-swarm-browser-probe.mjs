@@ -28,12 +28,15 @@ if (lateReview && !realtimeLoop) throw Error('--late-review requires --realtime-
 if ([acceleratedLoop, realtimeLoop, shieldReview, damageReview].filter(Boolean).length > 1) throw Error('Choose only one diagnostic mode');
 const shot2Experiment = process.argv.includes('--shot2-experiment');
 const saucerExperiment = process.argv.includes('--saucer-experiment');
+const descentExperiment = process.argv.includes('--descent-experiment');
+const descentDataSha256 = 'bb863745f53c59cea1b40f371eca223d5dc99233acb3463613e3f3abe684297f';
 const baselineDataSha256 = 'e87564c001bac746677cf8b2d6529d193e8062fec6905d79dd62aae792850d9e';
 const shot2DataSha256 = '369c963e6ebed2052f9307c25c808a0517d5a205031e37b816d1efab594e9cc0';
 const saucerDataSha256 = '05a65651e4aabaf1af47554cd946214db2f404441eefb1d8ee966ce4642c0913';
 const dataSha256 = createHash('sha256').update(await readFile(dataFile)).digest('hex');
 if (dataSha256 !== baselineDataSha256 && !(shot2Experiment && !saucerExperiment && dataSha256 === shot2DataSha256) &&
-    !(shot2Experiment && saucerExperiment && dataSha256 === saucerDataSha256))
+    !(shot2Experiment && saucerExperiment && dataSha256 === saucerDataSha256) &&
+    !(descentExperiment && shot2Experiment && saucerExperiment && dataSha256 === descentDataSha256))
   throw Error(`Unexpected independent data image ${dataSha256}`);
 const probeFile = resolve('experiments/open-swarm-browser-probe.html');
 const revision = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: checkout, encoding: 'utf8' }).trim();

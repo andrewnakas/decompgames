@@ -3,7 +3,7 @@
 
 Several gameplay templates remain incomplete. It is an asset-format probe,
 not a complete replacement image or a playable release. No original ROM is read.
-Usage: python scripts/generate-open-swarm-data.py OUTPUT_DIRECTORY [--shot2-experiment] [--saucer-experiment]
+Usage: python scripts/generate-open-swarm-data.py OUTPUT_DIRECTORY [--shot2-experiment] [--saucer-experiment] [--descent-experiment]
 """
 from __future__ import annotations
 
@@ -23,7 +23,7 @@ IDENTITY = "OPEN SWARM"
 
 
 def generate(output: Path, shot2_experiment: bool = False,
-             saucer_experiment: bool = False) -> None:
+             saucer_experiment: bool = False, descent_experiment: bool = False) -> None:
     output.mkdir(parents=True, exist_ok=True)
     # Reuse the five-column drafting alphabet authored for Open Junction.
     # That alphabet and these new table layouts are CC0-1.0; it was not
@@ -272,6 +272,10 @@ def generate(output: Path, shot2_experiment: bool = False,
     data[0x1B29:0x1B2B] = (0x6838).to_bytes(2, "little")
     data[0x1B2B] = 8
     data[0x1B2C] = 4
+    if descent_experiment:
+        # Independent four-pixel descent at each edge. Experimental gameplay
+        # balance; the rotated coordinate decreases toward the player.
+        data[0x1B0E] = 0xFC
     image = bytes(data)
     (output / "open-swarm-draft.bin").write_bytes(image)
     manifest = {
@@ -315,6 +319,8 @@ def generate(output: Path, shot2_experiment: bool = False,
                  "sha256": hashlib.sha256(image).hexdigest()},
     }
     variations = []
+    if descent_experiment:
+        variations.append("four-pixel fleet descent at each edge; unverified gameplay balance")
     if shot2_experiment:
         variations.append("slot-2 0x0400 launch timer, four-tick blowup, signed -4 descent; requires shot-2 GPL source patch")
     if saucer_experiment:
@@ -327,8 +333,9 @@ def generate(output: Path, shot2_experiment: bool = False,
 if __name__ == "__main__":
     flags = sys.argv[2:]
     if len(sys.argv) < 2 or len(flags) != len(set(flags)) or any(
-        flag not in ("--shot2-experiment", "--saucer-experiment") for flag in flags
+        flag not in ("--shot2-experiment", "--saucer-experiment", "--descent-experiment") for flag in flags
     ):
-        raise SystemExit("Usage: generate-open-swarm-data.py OUTPUT_DIRECTORY [--shot2-experiment] [--saucer-experiment]")
+        raise SystemExit("Usage: generate-open-swarm-data.py OUTPUT_DIRECTORY [--shot2-experiment] [--saucer-experiment] [--descent-experiment]")
     generate(Path(sys.argv[1]), shot2_experiment="--shot2-experiment" in flags,
-             saucer_experiment="--saucer-experiment" in flags)
+             saucer_experiment="--saucer-experiment" in flags,
+             descent_experiment="--descent-experiment" in flags)
