@@ -12,6 +12,8 @@ Status: **not released, not counted**. The strict milestone remains 4/5.
 
 ## Required before deployment
 
+- Correct and test the zero fleet edge-drop default at replacement offset1b0e. The current image turns without descending; see open-swarm-fleet-drop.json. Verify descent, bunker interaction and invasion/loss on the resulting artifact.
+
 - Resolve the generator's `missingComponents` list through a source/data audit. Do not simply relabel the draft complete. Document intentional omissions (including the second hostile-shot lane) and the playable scope.
 - Review inactive saucer-hit flags and determine whether unrelated collisions cause incorrect later awards. Cumulative hit flags are not unique kills.
 - Verify normal-clock launch, actual controls, representative play, wave completion, loss/restart, and visible scoring on the exact final artifact. Accelerated worker-injected controls and synthetic collision fixtures remain separate diagnostics.

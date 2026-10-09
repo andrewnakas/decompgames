@@ -1,0 +1,19 @@
+{
+  "diagnostic": "synthetic-edge-drop-not-gameplay",
+  "upstream": "e849d086f4168c9a0e1ab501d62efbe3766def8a",
+  "inputData": "independent incomplete draft 05a65651e4aabaf1af47554cd946214db2f404441eefb1d8ee966ce4642c0913",
+  "cases": [
+    {
+      "delta": 0,
+      "before": 120,
+      "stagedDrop": 0,
+      "after": 120
+    },
+    {
+      "delta": 252,
+      "before": 120,
+      "stagedDrop": 252,
+      "after": 116
+    }
+  ]
+}

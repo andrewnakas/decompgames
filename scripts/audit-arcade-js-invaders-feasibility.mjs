@@ -76,6 +76,28 @@ if (process.argv[3]) {
 const machine = await Machine.create(rom, {
   overrides: await resolveAllIdiomatic(),
 });
+if (process.argv.includes('--fleet-drop-diagnostic')) {
+  const { seedWorkRamImage } = await moduleAt('games/invaders/idiomatic/seedWorkRamImage.js');
+  const { reverseFleetAtEdge } = await moduleAt('games/invaders/idiomatic/reverseFleetAtEdge.js');
+  const { advanceRecordTotals } = await moduleAt('games/invaders/idiomatic/advanceRecordTotals.js');
+  const cases = [];
+  for (const delta of [rom[0x1b0e], 0xfc]) {
+    seedWorkRamImage(machine);
+    machine.mem8[0x200e] = delta; // Second case is explicitly synthetic candidate data.
+    machine.mem8[0x200d] = 0;
+    machine.mem8[0x3ea4] = 1; // Synthetic right-edge pixel, not natural gameplay.
+    const before = machine.mem8[0x2009];
+    reverseFleetAtEdge(machine);
+    const stagedDrop = machine.mem8[0x2007];
+    machine.mem8[0x2007] = 0;
+    advanceRecordTotals(machine, 0x2007, stagedDrop);
+    const after = machine.mem8[0x2009];
+    if (stagedDrop !== delta || after !== ((before + delta) & 255)) throw new Error('Fleet drop fixture mismatch');
+    cases.push({ delta, before, stagedDrop, after });
+  }
+  console.log(JSON.stringify({ diagnostic: 'synthetic-edge-drop-not-gameplay', upstream: actual, inputData, cases }, null, 2));
+  process.exit(0);
+}
 if (process.argv.includes('--round-table-diagnostic')) {
   // Controlled handoffs, not played waves. No browser/audio output is created.
   const { seedWorkRamImage } = await moduleAt('games/invaders/idiomatic/seedWorkRamImage.js');
