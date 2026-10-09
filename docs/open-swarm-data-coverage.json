@@ -1,0 +1,159 @@
+{
+  "upstreamRevision": "e849d086f4168c9a0e1ab501d62efbe3766def8a",
+  "saucerPatchSha256": "6feec22d227f5b725221ce7bd9ee3b38b10d3ef6e005b59d492a526d97cc7e22",
+  "inputData": "independent incomplete draft 05a65651e4aabaf1af47554cd946214db2f404441eefb1d8ee966ce4642c0913",
+  "frames": 40000,
+  "stop": "reached maxFrames",
+  "stopError": null,
+  "touchedRomBytes": 1188,
+  "ranges": [
+    {
+      "start": "0x0000",
+      "end": "0x0078",
+      "reads": 122
+    },
+    {
+      "start": "0x1900",
+      "end": "0x197f",
+      "reads": 420
+    },
+    {
+      "start": "0x1a11",
+      "end": "0x1a15",
+      "reads": 3628
+    },
+    {
+      "start": "0x1a21",
+      "end": "0x1a25",
+      "reads": 1064
+    },
+    {
+      "start": "0x1a95",
+      "end": "0x1aa2",
+      "reads": 21142
+    },
+    {
+      "start": "0x1aa6",
+      "end": "0x1aaf",
+      "reads": 20
+    },
+    {
+      "start": "0x1acf",
+      "end": "0x1ae2",
+      "reads": 2440
+    },
+    {
+      "start": "0x1ae4",
+      "end": "0x1c98",
+      "reads": 927801
+    },
+    {
+      "start": "0x1ca3",
+      "end": "0x1cb9",
+      "reads": 34086
+    },
+    {
+      "start": "0x1cdc",
+      "end": "0x1ce1",
+      "reads": 252
+    },
+    {
+      "start": "0x1ced",
+      "end": "0x1cf8",
+      "reads": 2796
+    },
+    {
+      "start": "0x1cfa",
+      "end": "0x1cfd",
+      "reads": 16
+    },
+    {
+      "start": "0x1d20",
+      "end": "0x1d4b",
+      "reads": 2112
+    },
+    {
+      "start": "0x1d60",
+      "end": "0x1d6f",
+      "reads": 7504
+    },
+    {
+      "start": "0x1da0",
+      "end": "0x1da3",
+      "reads": 155
+    },
+    {
+      "start": "0x1dab",
+      "end": "0x1dbe",
+      "reads": 124
+    },
+    {
+      "start": "0x1dcf",
+      "end": "0x1dcf",
+      "reads": 7
+    },
+    {
+      "start": "0x1e00",
+      "end": "0x1e2f",
+      "reads": 10936
+    },
+    {
+      "start": "0x1e38",
+      "end": "0x1e4f",
+      "reads": 240
+    },
+    {
+      "start": "0x1e60",
+      "end": "0x1e87",
+      "reads": 3296
+    },
+    {
+      "start": "0x1e90",
+      "end": "0x1ebf",
+      "reads": 8904
+    },
+    {
+      "start": "0x1ec8",
+      "end": "0x1f1f",
+      "reads": 12240
+    },
+    {
+      "start": "0x1f30",
+      "end": "0x1f37",
+      "reads": 24
+    },
+    {
+      "start": "0x1f80",
+      "end": "0x1f89",
+      "reads": 70
+    },
+    {
+      "start": "0x1f90",
+      "end": "0x1fa0",
+      "reads": 119
+    },
+    {
+      "start": "0x1fa9",
+      "end": "0x1faf",
+      "reads": 35
+    },
+    {
+      "start": "0x1fc9",
+      "end": "0x1fe0",
+      "reads": 72
+    },
+    {
+      "start": "0x1ff3",
+      "end": "0x1ff6",
+      "reads": 8
+    }
+  ],
+  "scope": "One headless scripted gameplay/restart path; not exhaustive asset coverage or release evidence.",
+  "uncoveredRequiredPaths": [
+    "Saucer award keys/glyph-pointer tables 0x1d4c..0x1d5f and key sequence 0x1854..0x1862",
+    "Later-wave start entries beyond 0x1da3",
+    "Two-player paths",
+    "Disabled hostile-shot slots and intentionally empty attract scripts"
+  ],
+  "interpretation": "Read coverage is observational; zero/unread bytes are not thereby valid, unnecessary, or cleared for release."
+}
