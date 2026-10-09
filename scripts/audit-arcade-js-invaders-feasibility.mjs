@@ -76,6 +76,44 @@ if (process.argv[3]) {
 const machine = await Machine.create(rom, {
   overrides: await resolveAllIdiomatic(),
 });
+if (process.argv.includes('--round-table-diagnostic')) {
+  // Controlled handoffs, not played waves. No browser/audio output is created.
+  const { seedWorkRamImage } = await moduleAt('games/invaders/idiomatic/seedWorkRamImage.js');
+  const { advanceToNextRound } = await moduleAt('games/invaders/idiomatic/advanceToNextRound.js');
+  const { alienIndexToScreenCoords } = await moduleAt('games/invaders/idiomatic/alienIndexToScreenCoords.js');
+  const rounds = [];
+  for (const page of [0x21, 0x22]) for (let previous = 0; previous <= 8; previous++) {
+    seedWorkRamImage(machine);
+    machine.mem8[ACTIVE_PLAYER_PAGE] = page;
+    machine.mem8[(page << 8) | 0xfe] = previous;
+    machine.mem8[loc_2015] = 0xff;
+    machine.mem8[GAME_ACTIVE] = 0;
+    const flow = advanceToNextRound(machine);
+    let steps = 0;
+    while (!machine.mem8[GAME_ACTIVE] && steps++ < 60) {
+      flow.next();
+      // Drain the synthetic handoff delay; no interrupt/gameplay simulation.
+      machine.mem8[FRAME_DELAY_TIMER] = 0;
+    }
+    flow.return();
+    const index = (previous & 7) + 1;
+    const height = rom[0x1da2 + index];
+    const live = Array.from({ length: 55 }, (_, i) => machine.mem8[(page << 8) + i]).filter(Boolean).length;
+    const coords = Array.from({ length: 55 }, (_, i) => alienIndexToScreenCoords(machine, i));
+    const row = { page, previous, index, height, live, active: machine.mem8[GAME_ACTIVE],
+      rowAxis: [Math.min(...coords.map(c => c[0])), Math.max(...coords.map(c => c[0]))],
+      columnAxis: [Math.min(...coords.map(c => c[1])), Math.max(...coords.map(c => c[1]))] };
+    if (!row.active || live !== 55 || machine.mem8[ACTIVE_PLAYER_PAGE] !== page ||
+        machine.mem8[(page << 8) | 0xfe] !== index || machine.mem8[0x2009] !== height ||
+        row.rowAxis[0] !== height || row.rowAxis[1] !== height + 64 ||
+        row.columnAxis[0] !== 56 || row.columnAxis[1] !== 216)
+      throw new Error(`Round handoff failed: ${JSON.stringify(row)}`);
+    rounds.push(row);
+  }
+  console.log(JSON.stringify({ diagnostic: 'synthetic-round-handoffs-not-gameplay', upstream: actual,
+    inputData, saucerPatchSha256, rounds }, null, 2));
+  process.exit(0);
+}
 if (process.argv.includes('--award-table-diagnostic')) {
   // Synthetic state fixture, not a played hit or release-gameplay claim.
   const { seedWorkRamImage } = await moduleAt('games/invaders/idiomatic/seedWorkRamImage.js');

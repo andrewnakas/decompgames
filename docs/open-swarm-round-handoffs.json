@@ -1,0 +1,296 @@
+{
+  "diagnostic": "synthetic-round-handoffs-not-gameplay",
+  "upstream": "e849d086f4168c9a0e1ab501d62efbe3766def8a",
+  "inputData": "independent incomplete draft 05a65651e4aabaf1af47554cd946214db2f404441eefb1d8ee966ce4642c0913",
+  "saucerPatchSha256": "6feec22d227f5b725221ce7bd9ee3b38b10d3ef6e005b59d492a526d97cc7e22",
+  "rounds": [
+    {
+      "page": 33,
+      "previous": 0,
+      "index": 1,
+      "height": 116,
+      "live": 55,
+      "active": 1,
+      "rowAxis": [
+        116,
+        180
+      ],
+      "columnAxis": [
+        56,
+        216
+      ]
+    },
+    {
+      "page": 33,
+      "previous": 1,
+      "index": 2,
+      "height": 112,
+      "live": 55,
+      "active": 1,
+      "rowAxis": [
+        112,
+        176
+      ],
+      "columnAxis": [
+        56,
+        216
+      ]
+    },
+    {
+      "page": 33,
+      "previous": 2,
+      "index": 3,
+      "height": 108,
+      "live": 55,
+      "active": 1,
+      "rowAxis": [
+        108,
+        172
+      ],
+      "columnAxis": [
+        56,
+        216
+      ]
+    },
+    {
+      "page": 33,
+      "previous": 3,
+      "index": 4,
+      "height": 104,
+      "live": 55,
+      "active": 1,
+      "rowAxis": [
+        104,
+        168
+      ],
+      "columnAxis": [
+        56,
+        216
+      ]
+    },
+    {
+      "page": 33,
+      "previous": 4,
+      "index": 5,
+      "height": 100,
+      "live": 55,
+      "active": 1,
+      "rowAxis": [
+        100,
+        164
+      ],
+      "columnAxis": [
+        56,
+        216
+      ]
+    },
+    {
+      "page": 33,
+      "previous": 5,
+      "index": 6,
+      "height": 96,
+      "live": 55,
+      "active": 1,
+      "rowAxis": [
+        96,
+        160
+      ],
+      "columnAxis": [
+        56,
+        216
+      ]
+    },
+    {
+      "page": 33,
+      "previous": 6,
+      "index": 7,
+      "height": 92,
+      "live": 55,
+      "active": 1,
+      "rowAxis": [
+        92,
+        156
+      ],
+      "columnAxis": [
+        56,
+        216
+      ]
+    },
+    {
+      "page": 33,
+      "previous": 7,
+      "index": 8,
+      "height": 88,
+      "live": 55,
+      "active": 1,
+      "rowAxis": [
+        88,
+        152
+      ],
+      "columnAxis": [
+        56,
+        216
+      ]
+    },
+    {
+      "page": 33,
+      "previous": 8,
+      "index": 1,
+      "height": 116,
+      "live": 55,
+      "active": 1,
+      "rowAxis": [
+        116,
+        180
+      ],
+      "columnAxis": [
+        56,
+        216
+      ]
+    },
+    {
+      "page": 34,
+      "previous": 0,
+      "index": 1,
+      "height": 116,
+      "live": 55,
+      "active": 1,
+      "rowAxis": [
+        116,
+        180
+      ],
+      "columnAxis": [
+        56,
+        216
+      ]
+    },
+    {
+      "page": 34,
+      "previous": 1,
+      "index": 2,
+      "height": 112,
+      "live": 55,
+      "active": 1,
+      "rowAxis": [
+        112,
+        176
+      ],
+      "columnAxis": [
+        56,
+        216
+      ]
+    },
+    {
+      "page": 34,
+      "previous": 2,
+      "index": 3,
+      "height": 108,
+      "live": 55,
+      "active": 1,
+      "rowAxis": [
+        108,
+        172
+      ],
+      "columnAxis": [
+        56,
+        216
+      ]
+    },
+    {
+      "page": 34,
+      "previous": 3,
+      "index": 4,
+      "height": 104,
+      "live": 55,
+      "active": 1,
+      "rowAxis": [
+        104,
+        168
+      ],
+      "columnAxis": [
+        56,
+        216
+      ]
+    },
+    {
+      "page": 34,
+      "previous": 4,
+      "index": 5,
+      "height": 100,
+      "live": 55,
+      "active": 1,
+      "rowAxis": [
+        100,
+        164
+      ],
+      "columnAxis": [
+        56,
+        216
+      ]
+    },
+    {
+      "page": 34,
+      "previous": 5,
+      "index": 6,
+      "height": 96,
+      "live": 55,
+      "active": 1,
+      "rowAxis": [
+        96,
+        160
+      ],
+      "columnAxis": [
+        56,
+        216
+      ]
+    },
+    {
+      "page": 34,
+      "previous": 6,
+      "index": 7,
+      "height": 92,
+      "live": 55,
+      "active": 1,
+      "rowAxis": [
+        92,
+        156
+      ],
+      "columnAxis": [
+        56,
+        216
+      ]
+    },
+    {
+      "page": 34,
+      "previous": 7,
+      "index": 8,
+      "height": 88,
+      "live": 55,
+      "active": 1,
+      "rowAxis": [
+        88,
+        152
+      ],
+      "columnAxis": [
+        56,
+        216
+      ]
+    },
+    {
+      "page": 34,
+      "previous": 8,
+      "index": 1,
+      "height": 116,
+      "live": 55,
+      "active": 1,
+      "rowAxis": [
+        116,
+        180
+      ],
+      "columnAxis": [
+        56,
+        216
+      ]
+    }
+  ]
+}
