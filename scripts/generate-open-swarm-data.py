@@ -215,10 +215,10 @@ def generate(output: Path, shot2_experiment: bool = False,
     data[0x1BE9] = 1
     data[0x1B6C] = 10  # typeDrawScriptRecord glyph count
     # The ISR's five-record walker dispatches by function address stored at
-    # record+3/4. Supply valid targets from the GPL translation. The shot
-    # All secondary slots remain skipped (0xfe). The experimental slot-2
-    # descriptor below is drafted but not enabled: a headless dispatch probe
-    # reset its live status each pass and fired no sustained shot.
+    # record+3/4. Supply valid targets from the GPL translation. Baseline
+    # secondary slots are skipped (0xfe). The options below enable slot 2
+    # with its copyback patch and slot 4 for saucer-only polling. Slot 3
+    # stays skipped; slot 4's hostile-shot delegation is removed by its patch.
     handlers = (0x028E, 0x03BB, 0x0476, 0x04B6, 0x0682)
     for slot, handler in enumerate(handlers):
         record = 0x1B10 + slot * 16
@@ -307,6 +307,10 @@ def generate(output: Path, shot2_experiment: bool = False,
             "remaining attract animation art and scripts",
             "complete tested gameplay",
         ],
+        "intentionalOmissions": [
+            "slot-3 hostile-shot record remains skipped by the 0xfe dispatcher sentinel",
+            "full attract choreography is replaced by three blank transitions and two empty scripts",
+        ],
         "file": {"name": "open-swarm-draft.bin", "bytes": len(image),
                  "sha256": hashlib.sha256(image).hexdigest()},
     }
@@ -314,7 +318,7 @@ def generate(output: Path, shot2_experiment: bool = False,
     if shot2_experiment:
         variations.append("slot-2 0x0400 launch timer, four-tick blowup, signed -4 descent; requires shot-2 GPL source patch")
     if saucer_experiment:
-        variations.append("active slot-4 saucer poll with second alien-shot lane omitted; requires saucer-only GPL source patch")
+        variations.append("active slot-4 saucer poll with slot-4 hostile-shot delegation omitted; slot 3 also stays skipped; requires saucer-only GPL source patch")
     if variations:
         manifest["experimentalVariations"] = variations
     (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
