@@ -31,7 +31,7 @@ if (!shot2Experiment && shot2PatchSha256) throw new Error('Unexpected shot-2 pat
 const saucerExperiment = process.argv.includes('--saucer-experiment');
 const saucerDiff = execFileSync('git', ['diff', '--binary', '--', 'games/invaders/idiomatic/saucerHandler.js'], { cwd: checkout });
 const saucerPatchSha256 = saucerDiff.length ? createHash('sha256').update(saucerDiff).digest('hex') : null;
-if (saucerExperiment && saucerPatchSha256 !== 'a9943e8cf729cdf52ce7458214b6fe9288c896778401adcf4472817b88cfb87f')
+if (saucerExperiment && saucerPatchSha256 !== '6feec22d227f5b725221ce7bd9ee3b38b10d3ef6e005b59d492a526d97cc7e22')
   throw new Error(`Unexpected saucer patch checksum ${saucerPatchSha256}`);
 if (!saucerExperiment && saucerPatchSha256) throw new Error('Unexpected saucer patch without --saucer-experiment');
 const excluded = ['.', ':(exclude)games/invaders/idiomatic/reverseFleetAtEdge.js'];
@@ -186,10 +186,31 @@ if (process.argv.includes('--award-table-diagnostic')) {
   }
   if (!movingHits.some(hit => hit.awardStep !== null))
     throw Error('Synthetic moving-target sweep never reached a saucer award');
+  // Negative fixture: an altitude collision while no saucer exists must
+  // not be mistaken for a demonstrated hit on a later encounter.
+  seedWorkRamImage(machine);
+  machine.mem8[0x2080] = 2;
+  machine.mem8[0x2082] = 55;
+  machine.mem8[0x2025] = 2;
+  machine.mem8[0x2029] = 0xd0;
+  machine.mem8[0x2002] = 1;
+  machine.mem16[0x208d] = 0x1854;
+  machine.mem8[0x20f1] = 0;
+  resolvePlayerShotHit(machine);
+  const inactiveCollisionFlag = machine.mem8[0x2085];
+  machine.mem8[0x2083] = 1;
+  let staleAwardTick = null;
+  for (let tick = 1; tick <= 40; tick++) {
+    machine.mem8[0x2072] = machine.mem8[0x208a] & 0x80;
+    saucerHandler(machine);
+    if (machine.mem8[0x20f1]) { staleAwardTick = tick; break; }
+  }
+  if (staleAwardTick !== null) throw Error('Inactive collision awarded a later saucer');
   console.log(JSON.stringify({ diagnostic: 'synthetic-award-and-lifecycle', inputData, awards,
     movingSpriteCollision: { targetStartX: 112, shotStartY: 0x38, testedX: [48, 208], movingHits, movingCollisions },
     stationarySpriteCollision: { targetX: 112, testedX: [96, 128], collisionHits },
     syntheticLifecycle: { initialCountdown, awardTick, retireTick },
+    inactiveCollisionDiagnostic: { inactiveCollisionFlag, staleAwardTick, unexpectedAward: staleAwardTick !== null },
     naturalHitVerified: false, browserGameplayVerified: false }));
   process.exit(0);
 }

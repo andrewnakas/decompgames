@@ -54,7 +54,7 @@ if (shot2Experiment) {
 if (saucerExperiment) {
   const saucerDiff = execFileSync('git', ['diff', '--binary', '--', 'games/invaders/idiomatic/saucerHandler.js'], { cwd: checkout });
   const saucerSha256 = createHash('sha256').update(saucerDiff).digest('hex');
-  if (saucerSha256 !== 'a9943e8cf729cdf52ce7458214b6fe9288c896778401adcf4472817b88cfb87f') throw Error(`Unexpected saucer experiment patch ${saucerSha256}`);
+  if (saucerSha256 !== '6feec22d227f5b725221ce7bd9ee3b38b10d3ef6e005b59d492a526d97cc7e22') throw Error(`Unexpected saucer experiment patch ${saucerSha256}`);
 }
 const excluded = ['.', ':(exclude)games/invaders/idiomatic/reverseFleetAtEdge.js'];
 if (trailExperiment) excluded.push(':(exclude)games/invaders/idiomatic/drawPendingAlien.js');

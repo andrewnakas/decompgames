@@ -1,8 +1,8 @@
 diff --git a/games/invaders/idiomatic/saucerHandler.js b/games/invaders/idiomatic/saucerHandler.js
-index 1388409a..23cdca00 100644
+index 1388409a..b9c758f1 100644
 --- a/games/invaders/idiomatic/saucerHandler.js
 +++ b/games/invaders/idiomatic/saucerHandler.js
-@@ -48,13 +48,16 @@ export function saucerHandler(m) {
+@@ -48,14 +48,19 @@ export function saucerHandler(m) {
    if (m.mem8[loc_2080] !== 2) return;
    // No saucer record armed yet (loc_2083 == 0): nothing saucer-specific to do -> service the record through
    // the plain alien-shot step leaf.
@@ -20,9 +20,12 @@ index 1388409a..23cdca00 100644
 -    if (m.mem8[ALIEN_COUNT] < 8) return alienShotSlot4Handler(m);
 +    if (m.mem8[ALIEN_COUNT] < 8) return;
      // Otherwise launch it: raise the on-field flag and draw its first frame.
++    // A collision while no saucer existed must not score this new encounter.
++    m.mem8[SAUCER_HIT] = 0;
      m.mem8[SAUCER_ACTIVE] = 1;
      drawSaucerSprite(m);
-@@ -64,6 +67,11 @@ export function saucerHandler(m) {
+   }
+@@ -64,6 +69,11 @@ export function saucerHandler(m) {
    if (!objectMatchesDrawPhase(m, loc_208a)) return;
    if (m.mem8[SAUCER_HIT] === 0) {
      // Alive and flying: advance the horizontal position by the step amount and redraw at the new spot.
