@@ -1,0 +1,56 @@
+{
+  "result": {
+    "ready": true,
+    "frames": 40096,
+    "error": "",
+    "dataSha256": "bb863745f53c59cea1b40f371eca223d5dc99233acb3463613e3f3abe684297f",
+    "audioEnabled": false,
+    "frameHeaderPixels": 336,
+    "nonblack": 2593,
+    "canvas": [
+      224,
+      256
+    ]
+  },
+  "inputProof": {
+    "coin": false,
+    "start": false,
+    "right": false,
+    "fire": false,
+    "play": true,
+    "moved": true,
+    "shot": true,
+    "alienCount": 55,
+    "alienShot2LiveSamples": 120,
+    "saucerActiveSamples": 109,
+    "encounter": {
+      "armed": 287,
+      "active": 283,
+      "hit": 0,
+      "activeHit": 0,
+      "inactiveHit": 0,
+      "wrongMode": 13,
+      "blocked": 0,
+      "tooFew": 0
+    },
+    "awardCalls": []
+  },
+  "loopProof": {
+    "firstPlay": 375,
+    "firstAlienHit": 660,
+    "firstNextRound": null,
+    "firstGameOver": 9840,
+    "secondPlay": 10140,
+    "maxScore": 2416
+  },
+  "fleetReview": {
+    "minimumAliens": 0,
+    "minimumHeight": 0,
+    "maximumHeight": 252,
+    "descendingSamples": 112,
+    "lastHeight": 88,
+    "lastRound": 0
+  },
+  "probeCount": 2675,
+  "errors": []
+}
