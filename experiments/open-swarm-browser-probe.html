@@ -34,7 +34,7 @@ const bit = { coin: 1, start: 4, fire: 16, left: 32, right: 64 };
 const key = { Digit5: 'coin', KeyC: 'coin', Digit1: 'start', Space: 'fire', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right' };
 const held = new Set();
 let counter = 0, worker;
-window.__openSwarm = { ready: false, frames: 0, error: '', dataSha256: '', audioEnabled: false, probes: [], engineRestarts: [], epoch: 0, frameHeaderPixels: 0 };
+window.__openSwarm = { ready: false, frames: 0, error: '', dataSha256: '', audioEnabled: false, probes: [], engineRestarts: [], handlerWrites: [], epoch: 0, frameHeaderPixels: 0 };
 
 function setInput(name, down) {
   if (down) held.add(name); else held.delete(name);
@@ -105,6 +105,7 @@ try {
       window.__openSwarm.error = `Unexpected engine ${message.type}: ${message.reason || 'reset'}`;
       status.textContent = window.__openSwarm.error;
     }
+    if (message.type === 'handler-write' && window.__openSwarm.handlerWrites.length < 16) window.__openSwarm.handlerWrites.push(message);
     if (message.type === 'probe') window.__openSwarm.probes.push({ ...message, epoch: window.__openSwarm.epoch });
   };
   worker.onerror = event => { window.__openSwarm.error = event.message; status.textContent = `Worker error: ${event.message}`; };
