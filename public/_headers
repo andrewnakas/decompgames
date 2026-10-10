@@ -8,5 +8,9 @@
 /runtime/*
   X-Robots-Tag: noindex
   Cross-Origin-Resource-Policy: same-site
+/games/craft/*
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: require-corp
+  Cross-Origin-Resource-Policy: same-origin
 https://play.decompgames.com/*
   X-Robots-Tag: noindex, follow

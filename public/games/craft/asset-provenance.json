@@ -1,0 +1,31 @@
+{
+  "scope": "original geometric replacement pack; lowercase renders as uppercase, uncommon symbols use visible placeholders",
+  "generator": "generate-assets.py",
+  "no_original_images_read": true,
+  "files": [
+    {
+      "path": "assets\\textures\\font.png",
+      "sha256": "447002115072287cde3cafc257da6421087aaead0eec6c223b78826057c33646",
+      "origin": "independently authored procedural generator",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "assets\\textures\\sign.png",
+      "sha256": "b5acd0968eb3038be86e2f0962fc1a52874af54fda716589e09b2f62fbdc980c",
+      "origin": "independently authored procedural generator",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "assets\\textures\\sky.png",
+      "sha256": "cecc3400f4b9c95a602247326b2b01141efe5ccadafc2eb928895f520119c62d",
+      "origin": "independently authored procedural generator",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "assets\\textures\\texture.png",
+      "sha256": "4fc9c7e590a42980831c5123c3cd886a0af23fed10be7fd833bf13b8e76dad67",
+      "origin": "independently authored procedural generator",
+      "license": "CC0-1.0"
+    }
+  ]
+}

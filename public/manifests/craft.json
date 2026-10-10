@@ -1,0 +1,53 @@
+{
+  "sourceRevision": "d6888a6e1e54340358ce25b1220f410541360b6b",
+  "classification": "Independent voxel game; MIT code, CC0 replacements",
+  "archive": "craft-d6888a6e-browser-source.tar.gz",
+  "archiveSha256": "83a9db1b214881010c58103afe878c685596946de9ea30ac12175cb5cb4b1d09",
+  "files": [
+    {
+      "path": "ASSET-LICENSE-CC0.txt",
+      "bytes": 7169,
+      "sha256": "f4e7f373b9b996950337e8d41a4a2939c2d90b7725e9baf3d5084a22717ad328"
+    },
+    {
+      "path": "asset-provenance.json",
+      "bytes": 1172,
+      "sha256": "f80df83296142d7a9db05c48e4718a1767229dec262e93e39c82cc50d545d9f6"
+    },
+    {
+      "path": "LICENSE.md",
+      "bytes": 1079,
+      "sha256": "49f5a1837666ae2a7aa4c9e27a6a006123881a323e23efac4c229eb4d629b5b6"
+    },
+    {
+      "path": "player.data",
+      "bytes": 26856,
+      "sha256": "d25348bc643efecea44a3c7fa06bc57dca88d6c691cba0f0db98bc9b898e57cf"
+    },
+    {
+      "path": "player.html",
+      "bytes": 1377,
+      "sha256": "9660b3e9ea003ab23f1d2ef2311186d21a84554bfc67571ad24a1dd582b5de22"
+    },
+    {
+      "path": "player.js",
+      "bytes": 185955,
+      "sha256": "1e38c784238f24184176fbfb690437235db7ef9fb8dc387f22c865853e4c87ff"
+    },
+    {
+      "path": "player.wasm",
+      "bytes": 1388430,
+      "sha256": "7699e8fd63890b53d59175d9cefba6708efdcb76acba272d2f51faef54cd4722"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "bytes": 16350,
+      "sha256": "2e9d89931f0f1c1a7a870767409e971a6e406274b741150c7ace76cc99e898d6"
+    }
+  ],
+  "id": "craft",
+  "repository": "https://github.com/fogleman/Craft",
+  "sourceArchive": "/sources/craft-d6888a6e-browser-source.tar.gz",
+  "sourceArchiveSha256": "83a9db1b214881010c58103afe878c685596946de9ea30ac12175cb5cb4b1d09",
+  "base": "/games/craft/"
+}

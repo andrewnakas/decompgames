@@ -1207,6 +1207,110 @@
   "image": "/images/mario-party-3.png"
  },
  {
+  "id": "tennis-sdl",
+  "title": "Tennis",
+  "aliases": [
+   "tennis-sdl",
+   "Pong-style Tennis"
+  ],
+  "year": 2015,
+  "genre": "Arcade",
+  "kind": "Original implementation",
+  "mode": "embed",
+  "launch": "embed",
+  "embedUrl": "https://decompgames.com/games/tennis-sdl/player.html",
+  "engine": "tennis-sdl",
+  "description": "A small two-player Pong-style game with open code and procedural graphics.",
+  "overview": "Tennis is catsocks’ original CC0 C game, compiled to WebAssembly with SDL2. This silent edition draws its paddles, ball and score directly and requires no ROM or commercial asset pack. It is an original implementation, not a decompilation.",
+  "source": "https://github.com/catsocks/tennis-sdl",
+  "engineLicense": "CC0-1.0 game code; separately licensed SDL2 and Emscripten dependencies",
+  "assetLicense": "CC0-1.0 procedural game graphics; third-party notices retained",
+  "assetRequirements": "No ROM or original game files needed.",
+  "controls": [
+   "W/S — left paddle",
+   "Up/Down — right paddle",
+   "P — pause or resume",
+   "R — restart"
+  ],
+  "saveInstructions": "No persistent saves. Reloading starts a new round.",
+  "limitations": [
+   "Silent edition; audio fidelity unverified.",
+   "Touch and controller input are unverified.",
+   "Complete-match playthrough is unverified."
+  ],
+  "inputs": [
+   "Keyboard"
+  ],
+  "downloadMB": 0.9,
+  "complete": true,
+  "color": "#416f67",
+  "verification": {
+   "status": "gameplay-tested",
+   "date": "2026-10-09",
+   "browsers": [
+    "Edge (headless, muted)"
+   ],
+   "scope": "Local WASM: both keyboard paddles, live ball progression, a scored point, pause/resume, restart clears score, mute key stays silent; zero page errors. Production verification pending.",
+   "playthrough": false
+  },
+  "image": "/images/tennis-sdl.png",
+  "shelf": "classic",
+  "platform": "PC"
+ },
+ {
+  "id": "craft",
+  "title": "Craft",
+  "aliases": [
+   "fogleman Craft"
+  ],
+  "year": 2013,
+  "genre": "Sandbox",
+  "kind": "Engine recreation",
+  "mode": "embed",
+  "launch": "tab",
+  "embedUrl": "https://decompgames.com/games/craft/player.html",
+  "engine": "Craft",
+  "description": "Explore and build in a procedural voxel world with original geometric graphics.",
+  "overview": "Michael Fogleman’s MIT voxel sandbox runs as native C compiled to WebAssembly, with independently authored CC0 textures and lettering. This is an independent game implementation, not a retail decompilation or certified clean-room reconstruction. It opens in a separate tab for browser thread isolation.",
+  "source": "https://github.com/fogleman/Craft",
+  "engineLicense": "MIT game code; permissive dependencies retain separate notices",
+  "assetLicense": "CC0-1.0 replacement textures and geometric lettering; MIT shaders",
+  "assetRequirements": "No ROM or original game assets needed.",
+  "controls": [
+   "Click — capture mouse; Esc — release",
+   "W/A/S/D — move; Space — jump",
+   "Left click — remove; right click — place",
+   "E/R — select blocks"
+  ],
+  "saveInstructions": "Position and world edits save periodically in this browser. Wait at least five seconds before leaving. Clearing site storage removes saves; no portable save export.",
+  "limitations": [
+   "Keyboard and mouse required; touch unverified.",
+   "Lowercase displays as uppercase; uncommon symbols use placeholders.",
+   "Offline play only; multiplayer unverified.",
+   "Rapid-close save durability and cross-device transfer unverified.",
+   "Audio unimplemented."
+  ],
+  "inputs": [
+   "Keyboard",
+   "Mouse"
+  ],
+  "downloadMB": 1.7,
+  "complete": true,
+  "color": "#416b59",
+  "verification": {
+   "status": "gameplay-tested",
+   "date": "2026-10-09",
+   "browsers": [
+    "Edge (headless, muted)"
+   ],
+   "scope": "Diagnostic build measured movement, jump/landing, block removal/placement and same-origin fresh-page position/world-edit restoration. Corresponding uninstrumented release passed rendering/startup/input dispatch with zero errors and no probe exports. Production pending.",
+   "playthrough": false
+  },
+  "image": "/images/craft.png",
+  "shelf": "classic",
+  "platform": "PC"
+ },
+ {
   "id": "yoshis-story",
   "title": "Yoshi’s Story",
   "aliases": [
@@ -2689,7 +2793,7 @@
   "year": 2004,
   "genre": "Strategy",
   "kind": "Decompilation",
-  "mode": "files",
+  "mode": "embed",
   "engine": "the FireEmblemUniverse/fireemblem8u decompilation, built to a matching ROM and run on a WebAssembly build of mGBA's core",
   "description": "Lead Eirika and Ephraim's scattered army through the fall of Renais in this turn-based tactical RPG.",
   "overview": "Fire Emblem: The Sacred Stones built from the FireEmblemUniverse/fireemblem8u decompilation, pinned at ecc6798b. The build is byte-identical to a retail (USA, Australia) cartridge dump, sha1 c25b145e37456171ada4b0d440bf88a19f4d509f, and upstream's own progress script puts the project at 99.76% of code bytes and 99.78% of functions decompiled. The page runs the ROM on a direct WebAssembly build of mGBA's core — about 900 KB, with no emulator frontend in between. You supply your own ROM: it is read in your browser with the File API straight into the emulator's memory, and the page's Content Security Policy forbids every kind of network request, so there is nowhere for it to go.",
@@ -2737,8 +2841,7 @@
    ],
    "scope": "Muted headless run: boot through the opening movie and title screen into the Prologue map, with a unit selected, moved and ended, all asserted from the game's own RAM. Cartridge-save validity across a real page reload, checked with FE8's own save checksums. No chapter completed.",
    "playthrough": false
-  },
-  "image": "/images/fire-emblem-sacred-stones.png"
+  }
  },
  {
   "id": "kirby-nightmare-in-dream-land",
@@ -2754,7 +2857,7 @@
   "year": 2002,
   "genre": "Platformer",
   "kind": "Decompilation",
-  "mode": "files",
+  "mode": "embed",
   "engine": "the overjt/knidl decompilation, built to a matching ROM and run on an emscripten build of mGBA",
   "description": "Inhale enemies, steal their powers and float through Dream Land.",
   "overview": "Kirby: Nightmare in Dream Land built from the overjt/knidl decompilation, pinned at ae560313. The build is byte-identical to a retail USA cartridge dump, sha1 37a476567d133c146fee6b5e2eb0b07a215da6b0. All of the game's code is compiled from C in the repository; the game's data is read out of your own ROM at build time rather than committed, so the project distributes no assets — measured by a poisoned-baserom differential, 87.22% of the built image comes verbatim from your dump and 12.78% from committed source. The page runs the result on a direct WebAssembly build of mGBA's core, 663 KB, with no emulator frontend in between. You supply your own ROM: it is read in your browser with the File API straight into the emulator's memory, and the page's Content-Security-Policy blocks connections to every origin but its own.",
@@ -2803,8 +2906,7 @@
    ],
    "scope": "Muted headless run: boot, title, world map, and entering stage 1-1, with Kirby's movement verified against the game's own gGameState and player-task position cells rather than against a screenshot. Cartridge-SRAM persistence across a real page reload, with a corruption control. No play-testing beyond the first level's opening.",
    "playthrough": false
-  },
-  "image": "/images/kirby-nightmare-in-dream-land.png"
+  }
  },
  {
   "id": "links-awakening-dx",
@@ -2996,7 +3098,7 @@
   "year": 2004,
   "genre": "Action-adventure",
   "kind": "Decompilation",
-  "mode": "files",
+  "mode": "embed",
   "engine": "the metroidret/mzm decompilation, built to a matching ROM and run on a 663 KB WebAssembly build of mGBA's core",
   "description": "Samus returns to Zebes: explore, find upgrades, and open the way down.",
   "overview": "Metroid: Zero Mission built from the metroidret/mzm decompilation, pinned at 43b7fd52. The build is byte-identical to a retail (USA, Australia) cartridge dump, sha1 5de8536afe1f0078ee6fe1089f890e8c7aa0a6e8. The page runs it on a direct WebAssembly build of mGBA's core, with no emulator frontend in between. You supply your own ROM: it is read in your browser with the File API straight into the emulator's memory. The page is static files with no server component, and a Content-Security-Policy stops any script on it reaching another origin.",
@@ -3045,8 +3147,7 @@
    ],
    "scope": "Muted headless run: boot through the intro and file select into Brinstar, with the game's own gMainGameMode/gSubGameMode1/gDemoState confirming real gameplay rather than the attract demo, and Samus's own coordinates confirming movement. Cartridge SRAM round-tripped through browser storage across a real page navigation and accepted by the game's own validation, with blank and scrambled control arms. No play-testing beyond the first rooms.",
    "playthrough": false
-  },
-  "image": "/images/metroid-zero-mission.png"
+  }
  },
  {
   "id": "dr-mario",
@@ -3289,7 +3390,7 @@
   "year": 2005,
   "genre": "Roguelike RPG",
   "kind": "Decompilation",
-  "mode": "files",
+  "mode": "embed",
   "engine": "the pret/pmd-red decompilation, built to a matching ROM and run on a WebAssembly build of mGBA's core",
   "description": "Wake up as a Pokémon and run randomly generated dungeons with your partner.",
   "overview": "Pokémon Mystery Dungeon: Red Rescue Team built from the pret/pmd-red decompilation, pinned at 6bcbec4f. The build is byte-identical to a retail (USA, Australia) cartridge dump, sha1 9f4cfc5b5f4859d17169a485462e977c7aac2b89, and the decompilation genuinely needs your cartridge: 745 byte ranges of the 32 MB image are still read straight out of it at build time. The page runs the game on a direct WebAssembly build of mGBA's core with the wasm inlined, so it never makes a network request at all — its Content-Security-Policy sets connect-src 'none', which means the browser itself refuses every outbound channel. You supply your own ROM; it is read in your browser with the File API straight into the emulator's memory.",
@@ -3337,8 +3438,7 @@
    ],
    "scope": "Muted headless run: boot through the personality quiz into Tiny Woods B1, party leader walked 12 squares, one wild Pokémon defeated, in-game Quicksave driven through the dungeon menus, cartridge save and savestate persistence across a real page reload, and the save resumed back into the dungeon without the quiz reappearing. No play beyond the first dungeon floor.",
    "playthrough": false
-  },
-  "image": "/images/pokemon-mystery-dungeon-red-rescue-team.png"
+  }
  },
  {
   "id": "pokemon-firered",
@@ -3398,8 +3498,7 @@
    ],
    "scope": "19/19 headless checks plus a scripted playthrough, audio muted throughout: ROM read in-page (sha1 match), no cross-origin request, core boots, screen draws, scripted input reaches the title screen, main menu, NEW GAME, Oak's opening and the overworld, and a save made from the game's own SAVE menu survives a page reload (the game shows CONTINUE on return).",
    "playthrough": false
-  },
-  "image": "/images/pokemon-firered.png"
+  }
  },
  {
   "id": "pokemon-gold-silver",
@@ -3581,8 +3680,7 @@
    ],
    "scope": "Byte-identical build verified by cmp against a retail dump and reproduced from a clean tree. Muted headless run: ROM read in-page (sha1 match), CSP connect-src 'none' proven by five refused egress attempts and corroborated at the network layer, core boots, and the game's own gMain.callback2 walks title -> main menu -> naming -> overworld with sLockFieldControls clear and the player walking on the game's own tile grid. A save made from the game's SAVE menu survives a reload: the game reports SAVE_STATUS_OK and continues onto the exact saved tile. No play-testing beyond the first room.",
    "playthrough": false
-  },
-  "image": "/images/pokemon-leafgreen.png"
+  }
  },
  {
   "id": "pokemon-ruby-sapphire",
@@ -3599,7 +3697,7 @@
   "year": 2002,
   "genre": "RPG",
   "kind": "Decompilation",
-  "mode": "files",
+  "mode": "embed",
   "engine": "the pret/pokeruby decompilation, built to matching ROMs and run on an emscripten build of mGBA",
   "description": "Travel Hoenn: catch, train and battle through Ruby or Sapphire.",
   "overview": "Pokémon Ruby and Sapphire built from the pret/pokeruby decompilation, pinned at 5784633c. Both builds are byte-identical to retail (USA, Europe) (Rev 2) cartridge dumps — sha1 5b64eacf892920518db4ec664e62a086dd5f5bc8 for Ruby and 89b45fb172e6b55d51fc0e61989775187f6fe63c for Sapphire. The page runs them on a direct WebAssembly build of mGBA's core, 663 KB, with no emulator frontend in between. You supply your own ROM: it is read in your browser with the File API straight into the emulator's memory. The page is static files with no server component, and makes no network request after its own two files load.",
@@ -3647,8 +3745,7 @@
    ],
    "scope": "Muted headless run of both versions: boot, title screen, and Professor Birch's intro speech. Cartridge-save and savestate persistence across a real page reload. No play-testing beyond the intro.",
    "playthrough": false
-  },
-  "image": "/images/pokemon-ruby-sapphire.png"
+  }
  },
  {
   "id": "pokemon-trading-card-game",
@@ -3888,7 +3985,6 @@
    "scope": "Byte-exact reassembly (cmp against the staged ROM: 0 differing bytes; upstream chkbitperfect reports bit-perfect REV00). In the browser, audio muted throughout: the ROM is read from a real <input type=file> with a matching sha1, zero off-origin and zero uploading requests observed at the CDP network layer, canvas asserted non-zero, and Green Hill Zone Act 1 cleared at 59.8 fps — confirmed from the game's own work RAM (v_gamemode 0x0C, f_demo 0, v_act 0 -> 1), not from a screenshot, because Sonic 1's attract demo is screenshot-identical to play.",
    "playthrough": false
   },
-  "image": "/images/sonic-the-hedgehog.png",
   "embedUrl": null
  },
  {
@@ -4076,7 +4172,7 @@
   "year": 2004,
   "genre": "Action-adventure",
   "kind": "Decompilation",
-  "mode": "files",
+  "mode": "embed",
   "engine": "the zeldaret/tmc decompilation, built to a matching ROM and run on a WebAssembly build of mGBA",
   "description": "Shrink to Minish size and grow again to cross Hyrule with a talking cap.",
   "overview": "The Legend of Zelda: The Minish Cap built from the zeldaret/tmc decompilation, pinned at 6fb6dfb4. The build is byte-identical to a retail USA cartridge dump, sha1 b4bd50e4131b027c334547b4524e2dbbd4227130. Worth being precise about what that means: tmc's code is 100% decompiled, but only 1.71% of its data is, so roughly 94% of the cartridge's real content is extracted from your own ROM at build time and linked back in unchanged. The page runs the result on a direct 663 KB WebAssembly build of mGBA's core, with no emulator frontend in between. You supply your own ROM: it is read in your browser with the File API straight into the emulator's memory. The page is static files with no server component, and makes no network request after its own two files load.",
@@ -4123,8 +4219,7 @@
    ],
    "scope": "Muted headless run: boot, file creation through the real name-entry keyboard, the opening cutscene, player control in Link's house and a room change up the staircase, all gated on the game's own variables read from this build's symbol table. Cartridge-EEPROM persistence across a real same-tab navigation, validated by the game's own save loader with blank and corrupted control arms. No play-testing beyond Link's house.",
    "playthrough": false
-  },
-  "image": "/images/zelda-minish-cap.png"
+  }
  },
  {
   "id": "wario-land-4",
@@ -4137,7 +4232,7 @@
   "year": 2001,
   "genre": "Platformer",
   "kind": "Decompilation",
-  "mode": "files",
+  "mode": "embed",
   "engine": "the TsilaAllaoui/warioland4 decompilation, built to a matching ROM and run on a WebAssembly build of mGBA",
   "description": "Raid a cursed pyramid as Wario: smash, dash and transform through five passages against the clock.",
   "overview": "Wario Land 4 built from the TsilaAllaoui/warioland4 decompilation, pinned at bfbbb8f4. The build is byte-identical to a retail (USA, Europe) cartridge dump — sha1 b9fe05a8080e124b67bce6a623234ee3b518a2c1, md5 5fe47355a33e3fabec2a1607af88a404. The page runs it on a direct WebAssembly build of mGBA's core, 664 KB, with no emulator frontend in between. You supply your own ROM: it is read in your browser with the File API straight into the emulator's memory. The page is static files with no server component, and its Content-Security-Policy forbids any connection to another origin, so the ROM cannot leave the device.",
@@ -4185,8 +4280,7 @@
    ],
    "scope": "Muted headless run: boot through the file-select and map screens into Hall of Hieroglyphs, with gameplay confirmed from the game's own gMainGameMode and gWarioData rather than from a screenshot. Cartridge-SRAM persistence across a real page reload, with the save detector validated against a deliberately broken control arm. No level completed and no in-game save reached.",
    "playthrough": false
-  },
-  "image": "/images/wario-land-4.png"
+  }
  },
  {
   "id": "zelda3",

@@ -1,0 +1,65 @@
+{
+  "id": "tennis-sdl",
+  "repository": "https://github.com/catsocks/tennis-sdl",
+  "sourceRevision": "0338d21bc13994ffa440ce70375e1369ef2a64e8",
+  "classification": "Original Pong-style C implementation compiled to WASM",
+  "gameLicense": "CC0-1.0 except third-party notices",
+  "base": "/games/tennis-sdl/",
+  "sourceArchive": "/sources/tennis-sdl-0338d21bc139-silent.tar.gz",
+  "sourceArchiveSha256": "f26ed8d09f3c36c050439a9269d04baeb6edbd842a7f66fa78733d2ff397c16a",
+  "romRequired": false,
+  "audio": "structurally silent edition",
+  "files": [
+    {
+      "path": "player.html",
+      "bytes": 1066,
+      "sha256": "c91ca7cc2361dc423d5052f5fa0c8be658de7f9c8a8ff8f743413f281475fdfe"
+    },
+    {
+      "path": "game.js",
+      "bytes": 173897,
+      "sha256": "8982f71c5b3d81e1889fbfb983757a32a2f2ae046421ff949a4ae5c01b759043"
+    },
+    {
+      "path": "game.wasm",
+      "bytes": 675561,
+      "sha256": "dfa17a4168a6a69e64304535240e3ed29e2a09f10799c7ad6f96c11311984c89"
+    },
+    {
+      "path": "LICENSE.md",
+      "bytes": 7169,
+      "sha256": "f4e7f373b9b996950337e8d41a4a2939c2d90b7725e9baf3d5084a22717ad328"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "bytes": 3144,
+      "sha256": "2fd581d92af4c32e794aca7902befff82ffc29b2ae57c48585bc4dd02e83f255"
+    },
+    {
+      "path": "SDL2-LICENSE.txt",
+      "bytes": 884,
+      "sha256": "97f35b302b361680ec1e891e95d2d52097bb95abff361434916d99dc1305f127"
+    },
+    {
+      "path": "EMSCRIPTEN-LICENSE.txt",
+      "bytes": 5093,
+      "sha256": "620a78084fc7ca97c0b5dea9abf891f3ffcadfdbf305276f099c9c4e12fc1d86"
+    },
+    {
+      "path": "silent-edition.patch",
+      "bytes": 2696,
+      "sha256": "ea5b21bcb7e215d018ae34f43684b4aeda64e48b358ab10a130fb28658309aaf"
+    },
+    {
+      "path": "BUILD-NOTES.md",
+      "bytes": 1163,
+      "sha256": "3a29e1bddc0db5a0d24e1c6d3ce0920805d7a7ef3ea543f0a9cc2a6d5221967c"
+    }
+  ],
+  "verification": {
+    "date": "2026-10-09",
+    "scope": "Both keyboard paddles, live ball, scored point, pause/resume, score reset, mute key remains silent",
+    "playthrough": false,
+    "save": "not implemented"
+  }
+}

@@ -1,6 +1,6 @@
 export type PlayMode = 'instant' | 'files' | 'embed';
 export type Shelf = 'cleanroom' | 'classic';
-export type ProjectKind = 'Decompilation' | 'Recompilation' | 'Engine recreation' | 'Source port';
+export type ProjectKind = 'Decompilation' | 'Recompilation' | 'Engine recreation' | 'Source port' | 'Original implementation';
 export interface Verification { status: 'unverified' | 'smoke-tested' | 'gameplay-tested'; date: string | null; browsers: string[]; scope: string; playthrough: boolean; }
 export interface GameEntry {
   id: string; title: string; aliases: string[]; year: number; genre: string; kind: ProjectKind;
