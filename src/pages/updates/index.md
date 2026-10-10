@@ -3,6 +3,10 @@ layout: ../../layouts/Article.astro
 title: What’s new
 description: Release notes and compatibility changes for Decomp Games.
 ---
+## October 10, 2026 — Skate 3: online rooms, community maps, regenerated geometry
+
+The Skate 3 clean-room build now has multiplayer: open a private room and send the invite link, or a public room that anyone can join from the Multiplayer menu, for up to ten skaters on the same map. The map picker lists community maps published on skatemods.com and opens `.skate` files from your own disk. The visual geometry of every park and the skater is now regenerated like the textures and sounds, and a ninth park, built from Kenney's CC0 Mini Skate kit, has been added. Multiplayer has only been checked between two test browsers so far. [Play Skate 3](/games/skate-3/).
+
 ## October 1, 2026 — Clean-room builds and a new design
 
 The catalogue now leads with 17 clean-room builds: 16 Nintendo 64 games and Skate 3. Each runs decompiled or rewritten game code with regenerated assets and plays in place on its game page, with gamepad support. The site has been redesigned around the game grid, and link-only directory entries have been removed. [How the clean room works](/clean-room/).

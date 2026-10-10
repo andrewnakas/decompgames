@@ -39,7 +39,8 @@ play.addEventListener('click', () => {
   play.disabled = true;
   frame = document.createElement('iframe');
   frame.title = document.querySelector('h1')!.textContent || 'Game';
-  frame.allow = 'gamepad; fullscreen; autoplay; cross-origin-isolated; screen-wake-lock';
+  // clipboard-write: a framed game can copy an invite link (Skate 3 multiplayer rooms).
+  frame.allow = 'gamepad; fullscreen; autoplay; cross-origin-isolated; screen-wake-lock; clipboard-write';
   const bar = document.createElement('div'); bar.className = 'stage-loading';
   frame.addEventListener('load', () => {
     bar.remove();
