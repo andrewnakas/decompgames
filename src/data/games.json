@@ -163,61 +163,6 @@
   "image": "/images/ocarina-of-time.png"
  },
  {
-  "id": "mario-kart-64",
-  "title": "Mario Kart 64",
-  "aliases": [
-   "mk64"
-  ],
-  "year": 1996,
-  "genre": "Racing",
-  "kind": "Decompilation",
-  "mode": "embed",
-  "engine": "EmulatorJS emulating a ROM built from n64decomp/mk64",
-  "description": "Kart racing through N64 emulation with selected regenerated media.",
-  "overview": "Mario Kart 64 runs through N64 emulation using a ROM with selected regenerated media. Regenerated selected media; retained geometry/data, music sequences and boot/microcode remain uncleared. Complete independent asset provenance and clean-room isolation have not been verified.",
-  "source": "https://github.com/andrewnakas/mk64-cleanroom",
-  "engineLicense": "Inherited game-code licensing unverified. Upstream identifies EmulatorJS as GPL-3.0 and mupen64plus-next as GPL-2.0; full dependency audit remains incomplete.",
-  "assetLicense": "Regenerated selected media; retained geometry/data, music sequences and boot/microcode remain uncleared.",
-  "assetRequirements": "External player supplies a built ROM. Retained game content is outside the current audited ROM-free intake.",
-  "controls": [
-   "Arrow keys â€” steer",
-   "X â€” A (gas)",
-   "C â€” B (brake)",
-   "Z â€” Z (item)",
-   "S â€” R (hop, drift)",
-   "Q â€” L",
-   "I J K L â€” C buttons",
-   "Enter â€” Start",
-   "Gamepad â€” any standard controller, detected automatically",
-   "Touch â€” on-screen N64 pad on phones and tablets when no controller is connected"
-  ],
-  "saveInstructions": "Progress is stored by the build in this browser, under andrewnakas.github.io. Clearing site data removes it.",
-  "limitations": [
-   "Regenerated textures and audio differ from the retail game by design."
-  ],
-  "inputs": [
-   "Gamepad",
-   "Keyboard",
-   "Touch"
-  ],
-  "downloadMB": null,
-  "complete": false,
-  "color": "#e0a030",
-  "shelf": "classic",
-  "platform": "N64",
-  "launch": "embed",
-  "touch": true,
-  "embedUrl": "https://andrewnakas.github.io/mk64-cleanroom/",
-  "verification": {
-   "status": "smoke-tested",
-   "date": null,
-   "browsers": [],
-   "scope": "Headless Edge test on 1 October 2026 booted the published build and reached a race. Not yet played by hand in a browser.",
-   "playthrough": false
-  },
-  "image": "/images/mario-kart-64.png"
- },
- {
   "id": "super-smash-bros",
   "title": "Super Smash Bros.",
   "aliases": [
@@ -326,61 +271,6 @@
    "playthrough": false
   },
   "image": "/images/majoras-mask.png"
- },
- {
-  "id": "banjo-kazooie",
-  "title": "Banjo-Kazooie",
-  "aliases": [
-   "bk"
-  ],
-  "year": 1998,
-  "genre": "Platformer",
-  "kind": "Decompilation",
-  "mode": "embed",
-  "engine": "EmulatorJS emulating a ROM built from n64decomp/banjo-kazooie",
-  "description": "Collect-a-thon platforming with a bear and a bird.",
-  "overview": "Banjo-Kazooie runs through N64 emulation using a ROM with selected regenerated media. Regenerated selected media; retained geometry, collision, animations, setups, dialogue, quiz text, music and boot/microcode remain uncleared. Complete independent asset provenance and clean-room isolation have not been verified.",
-  "source": "https://github.com/andrewnakas/bk-cleanroom",
-  "engineLicense": "Inherited game-code licensing unverified. Upstream identifies EmulatorJS as GPL-3.0 and mupen64plus-next as GPL-2.0; full dependency audit remains incomplete.",
-  "assetLicense": "Regenerated selected media; retained geometry, collision, animations, setups, dialogue, quiz text, music and boot/microcode remain uncleared.",
-  "assetRequirements": "External player supplies a built ROM. Retained game content is outside the current audited ROM-free intake.",
-  "controls": [
-   "Arrow keys â€” move",
-   "X â€” A (jump)",
-   "C â€” B (attack)",
-   "Z â€” Z (crouch)",
-   "S â€” R (camera)",
-   "Q â€” L",
-   "I J K L â€” C buttons",
-   "Enter â€” Start",
-   "Gamepad â€” any standard controller, detected automatically",
-   "Touch â€” on-screen N64 pad on phones and tablets when no controller is connected"
-  ],
-  "saveInstructions": "Progress is stored by the build in this browser, under andrewnakas.github.io. Clearing site data removes it.",
-  "limitations": [
-   "Work in progress: browser play past the intro is not yet verified."
-  ],
-  "inputs": [
-   "Gamepad",
-   "Keyboard",
-   "Touch"
-  ],
-  "downloadMB": null,
-  "complete": false,
-  "color": "#e0a030",
-  "shelf": "classic",
-  "platform": "N64",
-  "launch": "embed",
-  "touch": true,
-  "embedUrl": "https://andrewnakas.github.io/bk-cleanroom/",
-  "verification": {
-   "status": "smoke-tested",
-   "date": null,
-   "browsers": [],
-   "scope": "Work in progress. Headless Edge test on 1 October 2026 booted through the intro to the title screen; a native run reaches Spiral Mountain.",
-   "playthrough": false
-  },
-  "image": "/images/banjo-kazooie.png"
  },
  {
   "id": "diddy-kong-racing",
@@ -1524,60 +1414,6 @@
   "image": "/images/duke-nukem-zero-hour.png"
  },
  {
-  "id": "pokemon-red-blue",
-  "title": "PokÃ©mon Red and Blue",
-  "aliases": [
-   "pokered",
-   "pokemon red",
-   "pokemon blue"
-  ],
-  "year": 1996,
-  "genre": "RPG",
-  "kind": "Decompilation",
-  "mode": "embed",
-  "engine": "the pret/pokered disassembly on EmulatorJS (gambatte)",
-  "description": "Catch, train and battle across Kanto.",
-  "overview": "PokÃ©mon Red and Blue running in the browser, built from the pret/pokered disassembly on EmulatorJS (gambatte). Every picture â€” tilesets, sprites, all 151 PokÃ©mon, trainers, font and menus â€” has been redrawn by the clean-room pipeline from coarse facts, so the build ships no original ROM or artwork. Switch between Red and Blue on the game page.",
-  "source": "https://github.com/andrewnakas/pokered-cleanroom",
-  "engineLicense": "See the upstream project and the clean-room repository",
-  "assetLicense": "Regenerated clean-room assets; no retail data is distributed",
-  "assetRequirements": "No original game files needed.",
-  "controls": [
-   "Arrow keys â€” move",
-   "X â€” A",
-   "Z â€” B",
-   "Enter â€” Start",
-   "Shift â€” Select",
-   "Gamepad â€” any standard controller, detected automatically",
-   "Touch â€” on-screen Game Boy pad on phones and tablets"
-  ],
-  "saveInstructions": "Saving in the game is kept in this browser, under andrewnakas.github.io. Clearing site data removes it.",
-  "limitations": [
-   "Work in progress: redrawn pictures differ from the retail game by design."
-  ],
-  "inputs": [
-   "Gamepad",
-   "Keyboard",
-   "Touch"
-  ],
-  "downloadMB": null,
-  "complete": false,
-  "color": "#e0a030",
-  "shelf": "cleanroom",
-  "platform": "Game Boy",
-  "launch": "embed",
-  "touch": true,
-  "embedUrl": "https://andrewnakas.github.io/pokered-cleanroom/",
-  "verification": {
-   "status": "smoke-tested",
-   "date": null,
-   "browsers": [],
-   "scope": "Headless Edge test of the live build: boots, picture, sound, input. A local run went through the intro and naming screens into Redâ€™s house.",
-   "playthrough": false
-  },
-  "image": "/images/pokemon-red-blue.png"
- },
- {
   "id": "wave-race-64",
   "title": "Wave Race 64",
   "aliases": [
@@ -1632,64 +1468,6 @@
    "playthrough": false
   },
   "image": "/images/wave-race-64.png"
- },
- {
-  "id": "halo-combat-evolved",
-  "title": "Halo: Combat Evolved",
-  "aliases": [
-   "halo",
-   "halo ce",
-   "halo 1",
-   "halo combat evolved",
-   "blood gulch"
-  ],
-  "year": 2001,
-  "genre": "Shooter",
-  "kind": "Decompilation",
-  "mode": "embed",
-  "engine": "the OpenCE decompilation of the Xbox game, compiled to WebAssembly (WebGL2)",
-  "description": "The original Xbox shooter in the browser, with a clean-room campaign and multiplayer maps.",
-  "overview": "Halo: Combat Evolved running in the browser from the CC0 OpenCE decompilation of the Xbox game, compiled to WebAssembly and drawn with WebGL2. The menu, the 10 campaign levels and all 13 multiplayer maps are rebuilt by the clean-room pipeline: map geometry and scripts are kept, and every texture, sound and font is regenerated or replaced with CC0 material, so no retail data is distributed. You can also import your own Xbox disc image to play the retail game locally.",
-  "source": "https://github.com/andrewnakas/halo-cleanroom",
-  "engineLicense": "CC0-1.0 (OpenCommunityEdition/OpenCE and the fqlx web port)",
-  "assetLicense": "Regenerated clean-room maps with CC0 textures and sounds; no retail data is distributed",
-  "assetRequirements": "No original game files needed. Optional: import your own Xbox disc image, which is read in the browser and never uploaded.",
-  "controls": [
-   "W A S D â€” move",
-   "Mouse â€” look, left button fires, right button throws a grenade",
-   "Space â€” jump, Ctrl â€” crouch",
-   "E â€” action, R â€” reload, Tab â€” switch weapon",
-   "Gamepad â€” original Xbox layout"
-  ],
-  "saveInstructions": "Downloaded maps and settings are kept in this browser's storage. Clearing site data removes them.",
-  "limitations": [
-   "Opens in its own tab: the build needs cross-origin isolation for threads.",
-   "Desktop Chrome or Edge recommended; phones are not supported.",
-   "Maps download as you reach them: Blood Gulch is 30 MB, and the full set is several hundred MB.",
-   "Work in progress: regenerated textures and sounds differ from the retail game by design, and most levels have only been checked by automated runs."
-  ],
-  "inputs": [
-   "Gamepad",
-   "Keyboard"
-  ],
-  "downloadMB": 30,
-  "complete": false,
-  "color": "#e0a030",
-  "shelf": "cleanroom",
-  "platform": "Xbox",
-  "launch": "tab",
-  "touch": false,
-  "embedUrl": "https://andrewnakas.github.io/halo-cleanroom/",
-  "verification": {
-   "status": "smoke-tested",
-   "date": "2026-10-09",
-   "browsers": [
-    "Chrome (headless, muted)"
-   ],
-   "scope": "Headless Chrome boots the main menu and loads Blood Gulch, Beaver Creek and Sidewinder from the clean maps (first person, HUD, walking). Nobody has played a match by hand yet.",
-   "playthrough": false
-  },
-  "image": "/images/halo-combat-evolved.png"
  },
  {
   "id": "graveshift",
@@ -1802,61 +1580,6 @@
    "playthrough": false
   },
   "image": "/images/open-road.png",
-  "mode": "embed",
-  "launch": "embed",
-  "shelf": "cleanroom",
-  "color": "#e0a030",
-  "complete": false,
-  "downloadMB": null,
-  "assetLicense": "Regenerated clean-room assets; no retail data is distributed",
-  "assetRequirements": "No original game files needed."
- },
- {
-  "id": "super-mario-bros",
-  "title": "Super Mario Bros.",
-  "aliases": [
-   "smb",
-   "smb1",
-   "mario 1",
-   "super mario brothers"
-  ],
-  "year": 1985,
-  "genre": "Platformer",
-  "kind": "Decompilation",
-  "engine": "the retail program on EmulatorJS (FCEUmm)",
-  "description": "The 1985 side-scroller, with every tile and sound regenerated.",
-  "overview": "Super Mario Bros. running in the browser from the retail program, rebuilt from its disassembly, on EmulatorJS (FCEUmm). Every tile, sprite and sound has been regenerated by the clean-room pipeline from coarse facts, so the build ships no original ROM, graphics or audio.",
-  "source": "https://github.com/andrewnakas/smb-cleanroom",
-  "engineLicense": "See the upstream project and the clean-room repository",
-  "controls": [
-   "Arrow keys â€” move",
-   "X â€” A (jump)",
-   "Z â€” B (run, fire)",
-   "Enter â€” Start",
-   "Shift â€” Select",
-   "Gamepad â€” any standard controller, detected automatically"
-  ],
-  "saveInstructions": "The game has no save. Save states are available from the emulator menu.",
-  "limitations": [
-   "Work in progress: regenerated graphics and audio differ from the retail game by design."
-  ],
-  "inputs": [
-   "Gamepad",
-   "Keyboard"
-  ],
-  "platform": "NES",
-  "touch": false,
-  "embedUrl": "https://andrewnakas.github.io/smb-cleanroom/",
-  "verification": {
-   "status": "smoke-tested",
-   "date": "2026-10-10",
-   "browsers": [
-    "Edge (headless, muted)"
-   ],
-   "scope": "Headless Edge: boots to the title, Start begins a 1 player game, runs and jumps through World 1-1; audio buffers carry signal.",
-   "playthrough": false
-  },
-  "image": "/images/super-mario-bros.png",
   "mode": "embed",
   "launch": "embed",
   "shelf": "cleanroom",
