@@ -3,6 +3,10 @@ layout: ../../layouts/Article.astro
 title: What’s new
 description: Release notes and compatibility changes for Decomp Games.
 ---
+## October 19, 2026 — Five builds paused for an originality rebuild
+
+Banjo-Kazooie, Mario Kart 64, Pokémon Red and Blue, Super Mario Bros. and Halo: Combat Evolved are offline. An audit found they still carry original game content (level data, program data, music or palettes). They return once that content is replaced with new work. Open Road keeps only its three original circuits.
+
 ## October 14, 2026 — Source classifications and permission scope clarified
 
 Open Skyways is now labeled Engine recreation, following upstream’s description of new C rewritten from disassembly. Open Junction now discloses upstream’s statement that original-author permission was not obtained. Open Digger records Andrew Jenner’s reported permission for Digger Remastered, separately from original retail distribution rights. Existing replacement campaigns, runtime packages and gameplay evidence remain. Historical milestone counts are not a current permission certificate. [Source review](https://github.com/andrewnakas/decompgames/blob/main/docs/milestone-source-provenance-2026-10-14.md).

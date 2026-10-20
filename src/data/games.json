@@ -50,8 +50,7 @@
    "browsers": [],
    "scope": "Reported ROM-free and playable on desktop and web in the project notes.",
    "playthrough": false
-  },
-  "image": "/images/pilotwings-64.png"
+  }
  },
  {
   "id": "super-mario-64",
@@ -104,8 +103,7 @@
    "browsers": [],
    "scope": "Published with a taint scan reporting 0 failing files. No written gameplay record in the repository.",
    "playthrough": false
-  },
-  "image": "/images/super-mario-64.png"
+  }
  },
  {
   "id": "ocarina-of-time",
@@ -159,63 +157,7 @@
    "browsers": [],
    "scope": "Headless test booted through to Hyrule Field. The intro is slow without a GPU.",
    "playthrough": false
-  },
-  "image": "/images/ocarina-of-time.png"
- },
- {
-  "id": "mario-kart-64",
-  "title": "Mario Kart 64",
-  "aliases": [
-   "mk64"
-  ],
-  "year": 1996,
-  "genre": "Racing",
-  "kind": "Decompilation",
-  "mode": "embed",
-  "engine": "EmulatorJS emulating a ROM built from n64decomp/mk64",
-  "description": "Kart racing through N64 emulation with selected regenerated media.",
-  "overview": "Mario Kart 64 runs through N64 emulation using a ROM with selected regenerated media. Regenerated selected media; retained geometry/data, music sequences and boot/microcode remain uncleared. Complete independent asset provenance and clean-room isolation have not been verified.",
-  "source": "https://github.com/andrewnakas/mk64-cleanroom",
-  "engineLicense": "Inherited game-code licensing unverified. Upstream identifies EmulatorJS as GPL-3.0 and mupen64plus-next as GPL-2.0; full dependency audit remains incomplete.",
-  "assetLicense": "Regenerated selected media; retained geometry/data, music sequences and boot/microcode remain uncleared.",
-  "assetRequirements": "External player supplies a built ROM. Retained game content is outside the current audited ROM-free intake.",
-  "controls": [
-   "Arrow keys â€” steer",
-   "X â€” A (gas)",
-   "C â€” B (brake)",
-   "Z â€” Z (item)",
-   "S â€” R (hop, drift)",
-   "Q â€” L",
-   "I J K L â€” C buttons",
-   "Enter â€” Start",
-   "Gamepad â€” any standard controller, detected automatically",
-   "Touch â€” on-screen N64 pad on phones and tablets when no controller is connected"
-  ],
-  "saveInstructions": "Progress is stored by the build in this browser, under andrewnakas.github.io. Clearing site data removes it.",
-  "limitations": [
-   "Regenerated textures and audio differ from the retail game by design."
-  ],
-  "inputs": [
-   "Gamepad",
-   "Keyboard",
-   "Touch"
-  ],
-  "downloadMB": null,
-  "complete": false,
-  "color": "#e0a030",
-  "shelf": "classic",
-  "platform": "N64",
-  "launch": "embed",
-  "touch": true,
-  "embedUrl": "https://andrewnakas.github.io/mk64-cleanroom/",
-  "verification": {
-   "status": "smoke-tested",
-   "date": null,
-   "browsers": [],
-   "scope": "Headless Edge test on 1 October 2026 booted the published build and reached a race. Not yet played by hand in a browser.",
-   "playthrough": false
-  },
-  "image": "/images/mario-kart-64.png"
+  }
  },
  {
   "id": "super-smash-bros",
@@ -268,8 +210,7 @@
    "browsers": [],
    "scope": "Menus, character select and attract demos ran at 60 fps in a headless test.",
    "playthrough": false
-  },
-  "image": "/images/super-smash-bros.png"
+  }
  },
  {
   "id": "majoras-mask",
@@ -324,63 +265,7 @@
    "browsers": [],
    "scope": "Live headless test ran from the title screen to Clock Town.",
    "playthrough": false
-  },
-  "image": "/images/majoras-mask.png"
- },
- {
-  "id": "banjo-kazooie",
-  "title": "Banjo-Kazooie",
-  "aliases": [
-   "bk"
-  ],
-  "year": 1998,
-  "genre": "Platformer",
-  "kind": "Decompilation",
-  "mode": "embed",
-  "engine": "EmulatorJS emulating a ROM built from n64decomp/banjo-kazooie",
-  "description": "Collect-a-thon platforming with a bear and a bird.",
-  "overview": "Banjo-Kazooie runs through N64 emulation using a ROM with selected regenerated media. Regenerated selected media; retained geometry, collision, animations, setups, dialogue, quiz text, music and boot/microcode remain uncleared. Complete independent asset provenance and clean-room isolation have not been verified.",
-  "source": "https://github.com/andrewnakas/bk-cleanroom",
-  "engineLicense": "Inherited game-code licensing unverified. Upstream identifies EmulatorJS as GPL-3.0 and mupen64plus-next as GPL-2.0; full dependency audit remains incomplete.",
-  "assetLicense": "Regenerated selected media; retained geometry, collision, animations, setups, dialogue, quiz text, music and boot/microcode remain uncleared.",
-  "assetRequirements": "External player supplies a built ROM. Retained game content is outside the current audited ROM-free intake.",
-  "controls": [
-   "Arrow keys â€” move",
-   "X â€” A (jump)",
-   "C â€” B (attack)",
-   "Z â€” Z (crouch)",
-   "S â€” R (camera)",
-   "Q â€” L",
-   "I J K L â€” C buttons",
-   "Enter â€” Start",
-   "Gamepad â€” any standard controller, detected automatically",
-   "Touch â€” on-screen N64 pad on phones and tablets when no controller is connected"
-  ],
-  "saveInstructions": "Progress is stored by the build in this browser, under andrewnakas.github.io. Clearing site data removes it.",
-  "limitations": [
-   "Work in progress: browser play past the intro is not yet verified."
-  ],
-  "inputs": [
-   "Gamepad",
-   "Keyboard",
-   "Touch"
-  ],
-  "downloadMB": null,
-  "complete": false,
-  "color": "#e0a030",
-  "shelf": "classic",
-  "platform": "N64",
-  "launch": "embed",
-  "touch": true,
-  "embedUrl": "https://andrewnakas.github.io/bk-cleanroom/",
-  "verification": {
-   "status": "smoke-tested",
-   "date": null,
-   "browsers": [],
-   "scope": "Work in progress. Headless Edge test on 1 October 2026 booted through the intro to the title screen; a native run reaches Spiral Mountain.",
-   "playthrough": false
-  },
-  "image": "/images/banjo-kazooie.png"
+  }
  },
  {
   "id": "diddy-kong-racing",
@@ -434,8 +319,7 @@
    "browsers": [],
    "scope": "Headless test ran races with HUD and audio.",
    "playthrough": false
-  },
-  "image": "/images/diddy-kong-racing.png"
+  }
  },
  {
   "id": "perfect-dark",
@@ -491,8 +375,7 @@
    "browsers": [],
    "scope": "Headless test played the Defection mission.",
    "playthrough": false
-  },
-  "image": "/images/perfect-dark.png"
+  }
  },
  {
   "id": "goldeneye-007",
@@ -547,8 +430,7 @@
    "browsers": [],
    "scope": "Headless test played the Dam mission.",
    "playthrough": false
-  },
-  "image": "/images/goldeneye-007.png"
+  }
  },
  {
   "id": "star-fox-64",
@@ -602,62 +484,180 @@
    "browsers": [],
    "scope": "Headless test played through to Corneria.",
    "playthrough": false
-  },
-  "image": "/images/star-fox-64.png"
+  }
  },
  {
-  "id": "dr-mario-64",
-  "title": "Dr. Mario 64",
+  "id": "tonic-tumble",
+  "title": "Tonic Tumble",
   "aliases": [
-   "drmario64"
+   "drmario64-cleanroom",
+   "built on the drmario64 decomp",
+   "capsule puzzle"
   ],
-  "year": 2001,
+  "year": 2026,
   "genre": "Puzzle",
   "kind": "Decompilation",
   "mode": "embed",
-  "engine": "the drmario64 decompilation on EmulatorJS",
-  "description": "Match capsules to clear viruses.",
-  "overview": "Dr. Mario 64 running in the browser from the drmario64 decompilation on EmulatorJS. Every retail asset has been regenerated by the clean-room pipeline from coarse facts, so the build ships no original ROM, textures or audio.",
-  "source": "https://github.com/andrewnakas/drmario64-cleanroom",
-  "engineLicense": "See the upstream project and the clean-room repository",
-  "assetLicense": "Regenerated clean-room assets; no retail data is distributed",
+  "engine": "the AngheloAlf/drmario64 decomp, compiled for N64 and played on EmulatorJS (patched mupen64plus-next)",
+  "description": "Dr. Fenna drops two-tone tonic capsules to clear the germs from her bottles, solo or against Grudge.",
+  "overview": "Tonic Tumble is an original falling-capsule puzzle game built on the AngheloAlf/drmario64 decomp. The program is compiled from the decompilation's C sources with a modern GCC; every picture, 3D shape, tune, sound effect, sample and line of text was generated for this project, with a new cast led by Dr. Fenna and her rival Grudge. The ROM carries small tagged placeholders instead of RSP microcode, so it runs on the patched emulator core bundled with the page (not on real hardware).",
+  "source": "https://github.com/andrewnakas/tonic-tumble",
+  "engineLicense": "MIT (AngheloAlf/drmario64 decomp); EmulatorJS GPL-3.0, mupen64plus-next GPL-2.0 (see the site's THIRD_PARTY.md)",
+  "assetLicense": "Original content generated for this project; program built from the drmario64 decomposition",
   "assetRequirements": "No original game files needed.",
   "controls": [
-   "Arrow keys â€” move, drop",
-   "X â€” A (rotate)",
-   "Z â€” B (rotate back)",
-   "Space â€” Z",
-   "Q / W â€” L / R",
-   "I J K L â€” C buttons",
-   "Enter â€” Start",
-   "Gamepad â€” any standard controller, detected automatically",
-   "Touch â€” on-screen N64 pad on phones and tablets when no controller is connected"
+   "Arrow keys — move, drop",
+   "X — A (rotate)",
+   "Z — B (rotate back)",
+   "Space — Z",
+   "Q / W — L / R",
+   "I J K L — C buttons",
+   "Enter — Start",
+   "Gamepad — any standard controller, detected automatically",
+   "Touch — on-screen N64 pad on phones and tablets when no controller is connected"
   ],
   "saveInstructions": "Progress is stored by the build in this browser, under andrewnakas.github.io. Clearing site data removes it.",
   "limitations": [
-   "Regenerated textures and audio differ from the retail game by design."
+   "A different game by design: new cast, art, music and wording.",
+   "Runs only on the bundled patched emulator core (WebGL2 browsers); no real-hardware ROM."
   ],
   "inputs": [
    "Gamepad",
    "Keyboard",
    "Touch"
   ],
-  "downloadMB": null,
+  "downloadMB": 6,
   "complete": false,
-  "color": "#e0a030",
+  "color": "#e23b3b",
   "shelf": "cleanroom",
   "platform": "N64",
   "launch": "embed",
   "touch": true,
-  "embedUrl": "https://andrewnakas.github.io/drmario64-cleanroom/",
+  "embedUrl": "https://andrewnakas.github.io/tonic-tumble/",
   "verification": {
    "status": "gameplay-tested",
-   "date": null,
-   "browsers": [],
-   "scope": "Headless test played a one-player game.",
+   "date": "2026-10-20",
+   "browsers": [
+    "Edge (headless)"
+   ],
+   "scope": "Headless Edge on the local release build: title, mode select, game setup and a one-player game played to a full bottle; originality and taint gates 0 failing. Owner controller playtest pending.",
    "playthrough": false
   },
-  "image": "/images/dr-mario-64.png"
+  "image": "/images/tonic-tumble.png"
+ },
+ {
+  "id": "bramble-run",
+  "title": "Bramble Run",
+  "aliases": [
+   "smb-cleanroom",
+   "built on the smb1 disassembly"
+  ],
+  "year": 2026,
+  "genre": "Platformer",
+  "kind": "Decompilation",
+  "mode": "embed",
+  "engine": "the community SMB disassembly, assembled for NES and played on EmulatorJS (FCEUmm)",
+  "description": "Fenn the fox-hooded courier runs, hops and stomps through eight routes of new stages to reach Queen Wren.",
+  "overview": "Bramble Run is an original side-scroller built on the community Xkeeper0/smb1 disassembly, assembled unchanged and played on EmulatorJS (FCEUmm). Everything you see and hear is new: all 34 stage layouts come from a seeded level generator (checked by a headless bot), every tile, the title board and the font are redrawn for a new cast, the music and sound effects are new compositions, and all wording and names are rewritten.",
+  "source": "https://github.com/andrewnakas/bramble-run",
+  "engineLicense": "Disassembly: see the upstream project; EmulatorJS GPL-3.0, FCEUmm GPL-2.0 (see the site's THIRD_PARTY.md)",
+  "assetLicense": "Original content generated for this project; program built from the smb1 disassembly",
+  "assetRequirements": "No original game files needed.",
+  "controls": [
+   "Arrow keys — D-pad",
+   "X — A (jump)",
+   "Z — B (run, fireball)",
+   "Enter — Start",
+   "Shift — Select",
+   "Gamepad — any standard controller, detected automatically",
+   "Touch — on-screen NES pad on phones and tablets when no controller is connected"
+  ],
+  "saveInstructions": "The game has no save. Save states from the emulator menu are stored in this browser, under andrewnakas.github.io. Clearing site data removes them.",
+  "limitations": [
+   "A different game by design: new stages, cast, music and wording."
+  ],
+  "inputs": [
+   "Gamepad",
+   "Keyboard",
+   "Touch"
+  ],
+  "downloadMB": 2,
+  "complete": false,
+  "color": "#3f8f4a",
+  "shelf": "cleanroom",
+  "platform": "NES",
+  "launch": "embed",
+  "touch": true,
+  "embedUrl": "https://andrewnakas.github.io/bramble-run/",
+  "verification": {
+   "status": "gameplay-tested",
+   "date": "2026-10-20",
+   "browsers": [
+    "Edge (headless)"
+   ],
+   "scope": "A headless bot cleared all 32 main-path stages; the local release build was played headlessly in Edge; originality and taint gates 0 failing. Owner controller playtest pending.",
+   "playthrough": false
+  },
+  "image": "/images/bramble-run.png"
+ },
+ {
+  "id": "kithbound",
+  "title": "KITHBOUND Dawn and Dusk",
+  "aliases": [
+   "kithbound",
+   "kithbound dawn",
+   "kithbound dusk",
+   "pokered-cleanroom",
+   "built on the pret/pokered disassembly"
+  ],
+  "year": 2026,
+  "genre": "RPG",
+  "kind": "Decompilation",
+  "mode": "embed",
+  "engine": "the pret/pokered disassembly, assembled for Game Boy and played on EmulatorJS (gambatte)",
+  "description": "Befriend and battle new creatures across an all-new region, in two versions: Dawn and Dusk.",
+  "overview": "KITHBOUND Dawn and Dusk is an original creature-collecting RPG built on the pret/pokered disassembly: the engine code is assembled from it and played on EmulatorJS (gambatte). Every creature, trainer, map, tileset, tune, sound, table and line of text was made for this project, with a new type chart, new names and a new region; a headless player reached the first badge in both versions.",
+  "source": "https://github.com/andrewnakas/kithbound",
+  "engineLicense": "Disassembly: see the upstream project; EmulatorJS GPL-3.0, gambatte GPL-2.0 (see the site's THIRD_PARTY.md)",
+  "assetLicense": "Original content generated for this project; program built from the pokered decomposition",
+  "assetRequirements": "No original game files needed.",
+  "controls": [
+   "Arrow keys — D-pad",
+   "X — A",
+   "Z — B",
+   "Enter — Start",
+   "Shift — Select",
+   "Gamepad — any standard controller, detected automatically",
+   "Touch — on-screen Game Boy pad on phones and tablets when no controller is connected"
+  ],
+  "saveInstructions": "Save from the in-game menu (Start, SAVE). The save is stored by the build in this browser, under andrewnakas.github.io. Clearing site data removes it. Dawn and Dusk keep separate saves; pick the version with the buttons under the game.",
+  "limitations": [
+   "A different game by design: new creatures, region, music and wording.",
+   "Link cable trading and battles are not available in the browser."
+  ],
+  "inputs": [
+   "Gamepad",
+   "Keyboard",
+   "Touch"
+  ],
+  "downloadMB": 3,
+  "complete": false,
+  "color": "#d8743a",
+  "shelf": "cleanroom",
+  "platform": "Game Boy",
+  "launch": "embed",
+  "touch": true,
+  "embedUrl": "https://andrewnakas.github.io/kithbound/",
+  "verification": {
+   "status": "gameplay-tested",
+   "date": "2026-10-20",
+   "browsers": [
+    "Edge (headless)"
+   ],
+   "scope": "A headless player reached the first badge in both versions; the local release build was played headlessly in Edge; originality, taint and map-bot gates 0 failing. Owner controller playtest pending.",
+   "playthrough": false
+  },
+  "image": "/images/kithbound.png"
  },
  {
   "id": "doom-64",
@@ -710,8 +710,7 @@
    "browsers": [],
    "scope": "Headless Edge test on 1 October 2026 booted the published build to the title and demo. No level has been played through.",
    "playthrough": false
-  },
-  "image": "/images/doom-64.png"
+  }
  },
  {
   "id": "f-zero-x",
@@ -764,8 +763,7 @@
    "browsers": [],
    "scope": "Headless test ran a full race loop.",
    "playthrough": false
-  },
-  "image": "/images/f-zero-x.png"
+  }
  },
  {
   "id": "pokemon-snap",
@@ -818,8 +816,7 @@
    "browsers": [],
    "scope": "Headless test covered the title, name entry and opening dialogue at 60 fps. No on-rails level check is recorded.",
    "playthrough": false
-  },
-  "image": "/images/pokemon-snap.png"
+  }
  },
  {
   "id": "harvest-moon-64",
@@ -872,8 +869,7 @@
    "browsers": [],
    "scope": "Live headless test ran the intro; a local test started a new game and used the menus.",
    "playthrough": false
-  },
-  "image": "/images/harvest-moon-64.png"
+  }
  },
  {
   "id": "donkey-kong-64",
@@ -925,8 +921,7 @@
    "browsers": [],
    "scope": "Headless Edge test booted the live build; press Enter to skip the rap, then pick Adventure.",
    "playthrough": false
-  },
-  "image": "/images/donkey-kong-64.png"
+  }
  },
  {
   "id": "conkers-bad-fur-day",
@@ -979,8 +974,7 @@
    "browsers": [],
    "scope": "Headless Edge test booted the live build to the save-select menu; menus verified in game.",
    "playthrough": false
-  },
-  "image": "/images/conkers-bad-fur-day.png"
+  }
  },
  {
   "id": "banjo-tooie",
@@ -1033,8 +1027,7 @@
    "browsers": [],
    "scope": "Headless Edge test loaded the live build to the title; a local run went from file select into the game. The first load takes about a minute.",
    "playthrough": false
-  },
-  "image": "/images/banjo-tooie.png"
+  }
  },
  {
   "id": "mario-party",
@@ -1087,8 +1080,7 @@
    "browsers": [],
    "scope": "Headless Edge test of the live build: boots, intro, title, sound. A local run played Mushroom Village and the rules-tour board.",
    "playthrough": false
-  },
-  "image": "/images/mario-party.png"
+  }
  },
  {
   "id": "mario-party-2",
@@ -1146,8 +1138,7 @@
    ],
    "scope": "Headless test of the clean ROM, muted: boots, logos, title, Mario Land. A board (dice, turns, HUD) was walked on a development build.",
    "playthrough": false
-  },
-  "image": "/images/mario-party-2.png"
+  }
  },
  {
   "id": "mario-party-3",
@@ -1205,8 +1196,7 @@
    ],
    "scope": "Headless Edge test, muted: boot, intro, title, file select, mode select, the Party Mode hub, board turns on Chilly Waters and a mini-game instruction screen.",
    "playthrough": false
-  },
-  "image": "/images/mario-party-3.png"
+  }
  },
  {
   "id": "tennis-sdl",
@@ -1362,8 +1352,7 @@
    "browsers": [],
    "scope": "Headless Edge test: boots and level 1 plays. Not checked by ear.",
    "playthrough": false
-  },
-  "image": "/images/yoshis-story.png"
+  }
  },
  {
   "id": "1080-snowboarding",
@@ -1416,8 +1405,7 @@
    "browsers": [],
    "scope": "Headless Edge test: boots, menus readable, a race plays start to finish.",
    "playthrough": false
-  },
-  "image": "/images/1080-snowboarding.png"
+  }
  },
  {
   "id": "pokemon-stadium-2",
@@ -1472,8 +1460,7 @@
    "browsers": [],
    "scope": "Headless Edge test: intro, title, menus and cup entry screens.",
    "playthrough": false
-  },
-  "image": "/images/pokemon-stadium-2.png"
+  }
  },
  {
   "id": "duke-nukem-zero-hour",
@@ -1499,6 +1486,7 @@
   ],
   "saveInstructions": "Progress is stored by the build in this browser, under andrewnakas.github.io. Clearing site data removes it.",
   "limitations": [
+   "In progress: an earlier first pass of the rebuild; faces, signs and voices are still being replaced.",
    "Work in progress: regenerated textures and audio differ from the retail game by design.",
    "First pass: models, signs and faces are not yet reworked, and voices are missing."
   ],
@@ -1520,62 +1508,7 @@
    "browsers": [],
    "scope": "First pass. A headless test reached the legal screen and menus; gameplay is not yet verified.",
    "playthrough": false
-  },
-  "image": "/images/duke-nukem-zero-hour.png"
- },
- {
-  "id": "pokemon-red-blue",
-  "title": "PokÃ©mon Red and Blue",
-  "aliases": [
-   "pokered",
-   "pokemon red",
-   "pokemon blue"
-  ],
-  "year": 1996,
-  "genre": "RPG",
-  "kind": "Decompilation",
-  "mode": "embed",
-  "engine": "the pret/pokered disassembly on EmulatorJS (gambatte)",
-  "description": "Catch, train and battle across Kanto.",
-  "overview": "PokÃ©mon Red and Blue running in the browser, built from the pret/pokered disassembly on EmulatorJS (gambatte). Every picture â€” tilesets, sprites, all 151 PokÃ©mon, trainers, font and menus â€” has been redrawn by the clean-room pipeline from coarse facts, so the build ships no original ROM or artwork. Switch between Red and Blue on the game page.",
-  "source": "https://github.com/andrewnakas/pokered-cleanroom",
-  "engineLicense": "See the upstream project and the clean-room repository",
-  "assetLicense": "Regenerated clean-room assets; no retail data is distributed",
-  "assetRequirements": "No original game files needed.",
-  "controls": [
-   "Arrow keys â€” move",
-   "X â€” A",
-   "Z â€” B",
-   "Enter â€” Start",
-   "Shift â€” Select",
-   "Gamepad â€” any standard controller, detected automatically",
-   "Touch â€” on-screen Game Boy pad on phones and tablets"
-  ],
-  "saveInstructions": "Saving in the game is kept in this browser, under andrewnakas.github.io. Clearing site data removes it.",
-  "limitations": [
-   "Work in progress: redrawn pictures differ from the retail game by design."
-  ],
-  "inputs": [
-   "Gamepad",
-   "Keyboard",
-   "Touch"
-  ],
-  "downloadMB": null,
-  "complete": false,
-  "color": "#e0a030",
-  "shelf": "cleanroom",
-  "platform": "Game Boy",
-  "launch": "embed",
-  "touch": true,
-  "embedUrl": "https://andrewnakas.github.io/pokered-cleanroom/",
-  "verification": {
-   "status": "smoke-tested",
-   "date": null,
-   "browsers": [],
-   "scope": "Headless Edge test of the live build: boots, picture, sound, input. A local run went through the intro and naming screens into Redâ€™s house.",
-   "playthrough": false
-  },
-  "image": "/images/pokemon-red-blue.png"
+  }
  },
  {
   "id": "wave-race-64",
@@ -1630,66 +1563,7 @@
    "browsers": [],
    "scope": "Headless Edge test: boots, menus readable, a championship race starts.",
    "playthrough": false
-  },
-  "image": "/images/wave-race-64.png"
- },
- {
-  "id": "halo-combat-evolved",
-  "title": "Halo: Combat Evolved",
-  "aliases": [
-   "halo",
-   "halo ce",
-   "halo 1",
-   "halo combat evolved",
-   "blood gulch"
-  ],
-  "year": 2001,
-  "genre": "Shooter",
-  "kind": "Decompilation",
-  "mode": "embed",
-  "engine": "the OpenCE decompilation of the Xbox game, compiled to WebAssembly (WebGL2)",
-  "description": "The original Xbox shooter in the browser, with a clean-room campaign and multiplayer maps.",
-  "overview": "Halo: Combat Evolved running in the browser from the CC0 OpenCE decompilation of the Xbox game, compiled to WebAssembly and drawn with WebGL2. The menu, the 10 campaign levels and all 13 multiplayer maps are rebuilt by the clean-room pipeline: map geometry and scripts are kept, and every texture, sound and font is regenerated or replaced with CC0 material, so no retail data is distributed. You can also import your own Xbox disc image to play the retail game locally.",
-  "source": "https://github.com/andrewnakas/halo-cleanroom",
-  "engineLicense": "CC0-1.0 (OpenCommunityEdition/OpenCE and the fqlx web port)",
-  "assetLicense": "Regenerated clean-room maps with CC0 textures and sounds; no retail data is distributed",
-  "assetRequirements": "No original game files needed. Optional: import your own Xbox disc image, which is read in the browser and never uploaded.",
-  "controls": [
-   "W A S D â€” move",
-   "Mouse â€” look, left button fires, right button throws a grenade",
-   "Space â€” jump, Ctrl â€” crouch",
-   "E â€” action, R â€” reload, Tab â€” switch weapon",
-   "Gamepad â€” original Xbox layout"
-  ],
-  "saveInstructions": "Downloaded maps and settings are kept in this browser's storage. Clearing site data removes them.",
-  "limitations": [
-   "Opens in its own tab: the build needs cross-origin isolation for threads.",
-   "Desktop Chrome or Edge recommended; phones are not supported.",
-   "Maps download as you reach them: Blood Gulch is 30 MB, and the full set is several hundred MB.",
-   "Work in progress: regenerated textures and sounds differ from the retail game by design, and most levels have only been checked by automated runs."
-  ],
-  "inputs": [
-   "Gamepad",
-   "Keyboard"
-  ],
-  "downloadMB": 30,
-  "complete": false,
-  "color": "#e0a030",
-  "shelf": "cleanroom",
-  "platform": "Xbox",
-  "launch": "tab",
-  "touch": false,
-  "embedUrl": "https://andrewnakas.github.io/halo-cleanroom/",
-  "verification": {
-   "status": "smoke-tested",
-   "date": "2026-10-09",
-   "browsers": [
-    "Chrome (headless, muted)"
-   ],
-   "scope": "Headless Chrome boots the main menu and loads Blood Gulch, Beaver Creek and Sidewinder from the clean maps (first person, HUD, walking). Nobody has played a match by hand yet.",
-   "playthrough": false
-  },
-  "image": "/images/halo-combat-evolved.png"
+  }
  },
  {
   "id": "graveshift",
@@ -1764,8 +1638,8 @@
   "genre": "Racing",
   "kind": "Engine recreation",
   "engine": "the OpenNFS engine (MIT, C++), compiled to WebAssembly (WebGL2)",
-  "description": "A late-90s arcade racer on the OpenNFS engine: nine classic circuits and three new ones.",
-  "overview": "Open Road runs on OpenNFS, the open-source rewrite of the classic 1990s road-racing engine, compiled to WebAssembly and drawn with WebGL2. Nine classic circuits keep their track geometry while every texture is regenerated by the clean-room pipeline; three more circuits and the three cars are original. Car and brand names are generic, and sound is synthesised in the page.",
+  "description": "A late-90s arcade racer on the OpenNFS engine with three original circuits.",
+  "overview": "Open Road runs on OpenNFS, the open-source rewrite of the classic 1990s road-racing engine, compiled to WebAssembly and drawn with WebGL2. The three circuits and the three cars are original, generated for this project. Car and brand names are generic, and sound is synthesised in the page.",
   "source": "https://github.com/andrewnakas/opennfs-cleanroom",
   "engineLicense": "MIT (OpenNFS/OpenNFS)",
   "controls": [
@@ -1812,89 +1686,38 @@
   "assetRequirements": "No original game files needed."
  },
  {
-  "id": "super-mario-bros",
-  "title": "Super Mario Bros.",
+  "id": "bramble-isles",
+  "title": "Bramble Isles",
   "aliases": [
-   "smb",
-   "smb1",
-   "mario 1",
-   "super mario brothers"
+   "smw-cleanroom",
+   "built on the snesrev/smw decomp"
   ],
-  "year": 1985,
+  "year": 2026,
   "genre": "Platformer",
   "kind": "Decompilation",
-  "engine": "the retail program on EmulatorJS (FCEUmm)",
-  "description": "The 1985 side-scroller, with every tile and sound regenerated.",
-  "overview": "Super Mario Bros. running in the browser from the retail program, rebuilt from its disassembly, on EmulatorJS (FCEUmm). Every tile, sprite and sound has been regenerated by the clean-room pipeline from coarse facts, so the build ships no original ROM, graphics or audio.",
-  "source": "https://github.com/andrewnakas/smb-cleanroom",
-  "engineLicense": "See the upstream project and the clean-room repository",
-  "controls": [
-   "Arrow keys â€” move",
-   "X â€” A (jump)",
-   "Z â€” B (run, fire)",
-   "Enter â€” Start",
-   "Shift â€” Select",
-   "Gamepad â€” any standard controller, detected automatically"
-  ],
-  "saveInstructions": "The game has no save. Save states are available from the emulator menu.",
-  "limitations": [
-   "Work in progress: regenerated graphics and audio differ from the retail game by design."
-  ],
-  "inputs": [
-   "Gamepad",
-   "Keyboard"
-  ],
-  "platform": "NES",
-  "touch": false,
-  "embedUrl": "https://andrewnakas.github.io/smb-cleanroom/",
-  "verification": {
-   "status": "smoke-tested",
-   "date": "2026-10-10",
-   "browsers": [
-    "Edge (headless, muted)"
-   ],
-   "scope": "Headless Edge: boots to the title, Start begins a 1 player game, runs and jumps through World 1-1; audio buffers carry signal.",
-   "playthrough": false
-  },
-  "image": "/images/super-mario-bros.png",
   "mode": "embed",
-  "launch": "embed",
-  "shelf": "cleanroom",
-  "color": "#e0a030",
-  "complete": false,
-  "downloadMB": null,
-  "assetLicense": "Regenerated clean-room assets; no retail data is distributed",
-  "assetRequirements": "No original game files needed."
- },
- {
-  "id": "super-mario-world",
-  "title": "Super Mario World",
-  "aliases": [
-   "smw",
-   "mario world",
-   "super mario world snes"
-  ],
-  "year": 1990,
-  "genre": "Platformer",
-  "kind": "Decompilation",
-  "engine": "the snesrev/smw C port (MIT), compiled to WebAssembly with SDL2",
-  "description": "Dinosaur Land on a native C port, with every asset regenerated.",
-  "overview": "Super Mario World running in the browser on the snesrev/smw C reimplementation, compiled to WebAssembly. It runs natively from a clean asset file with no ROM at run time: every graphic and sound has been regenerated by the clean-room pipeline from coarse facts.",
-  "source": "https://github.com/andrewnakas/smw-cleanroom",
-  "engineLicense": "MIT (snesrev/smw)",
+  "engine": "the snesrev/smw C reimplementation (MIT), compiled to WebAssembly with SDL2",
+  "description": "Tobi and the gecko Zeep cross a sea of islets to free Queen Marla from King Grumbolt.",
+  "overview": "Bramble Isles is an original 16-bit side-scroller built on the snesrev/smw decomp, the community C reimplementation, compiled to WebAssembly. Only the game code and structural facts (sizes, counts, timing, entrance and warp anchors) come from the decomp; every course, the overworld, all graphics, palettes, music, sound effects, instrument samples and text are new, generated for this project. It runs natively with no ROM at run time.",
+  "source": "https://github.com/andrewnakas/bramble-isles",
+  "engineLicense": "MIT (snesrev/smw); SDL2 zlib, Emscripten MIT (see the site's THIRD_PARTY.md)",
+  "assetLicense": "Original content generated for this project; program built from the smw decomposition",
+  "assetRequirements": "No original game files needed.",
   "controls": [
-   "Arrow keys â€” move",
-   "Z â€” jump",
-   "X â€” spin jump",
-   "A â€” run",
-   "Enter â€” Start",
-   "Gamepad â€” any standard controller",
-   "Touch â€” on-screen SNES pad on phones"
+   "Arrow keys — move",
+   "Z — B (jump)",
+   "X — A (spin jump)",
+   "A / S — Y / X (run, grab)",
+   "C / V — L / R (scroll)",
+   "Enter — Start",
+   "Right Shift — Select",
+   "Gamepad — any standard controller, detected automatically",
+   "Touch — on-screen SNES pad on phones and tablets when no controller is connected"
   ],
-  "saveInstructions": "Save files are kept in this browser's storage (IndexedDB). Clearing site data removes them.",
+  "saveInstructions": "Save files are kept in this browser's storage (IndexedDB), under andrewnakas.github.io. Clearing site data removes them.",
   "limitations": [
-   "Work in progress: regenerated graphics and audio differ from the retail game by design.",
-   "Only the opening of the game has been checked."
+   "A different game by design: new courses, cast, music and wording.",
+   "Castles, ghost houses, credits and the cast roll have not been checked in the browser yet."
   ],
   "inputs": [
    "Gamepad",
@@ -1903,25 +1726,22 @@
   ],
   "platform": "SNES",
   "touch": true,
-  "embedUrl": "https://andrewnakas.github.io/smw-cleanroom/",
+  "embedUrl": "https://andrewnakas.github.io/bramble-isles/",
   "verification": {
    "status": "smoke-tested",
-   "date": "2026-10-10",
+   "date": "2026-10-20",
    "browsers": [
-    "Edge (headless, muted)"
+    "Edge (headless)"
    ],
-   "scope": "Headless keyboard script: title, file select, intro message, overworld and Yoshi's Island 1; the audio level log shows music.",
+   "scope": "Headless Edge on the local release build: title, file select, intro message, overworld and a first course with running and jumping; reachability check over every generated course; originality and taint gates 0 failing. Owner controller playtest pending.",
    "playthrough": false
   },
-  "image": "/images/super-mario-world.png",
-  "mode": "embed",
   "launch": "embed",
   "shelf": "cleanroom",
-  "color": "#e0a030",
+  "color": "#f2c14e",
   "complete": false,
-  "downloadMB": null,
-  "assetLicense": "Regenerated clean-room assets; no retail data is distributed",
-  "assetRequirements": "No original game files needed."
+  "downloadMB": 3,
+  "image": "/images/bramble-isles.png"
  },
  {
   "id": "open-cadet",
@@ -2124,55 +1944,6 @@
   "image": "/images/freedoom.png",
   "shelf": "classic",
   "platform": "PC"
- },
- {
-  "id": "opentyrian",
-  "title": "OpenTyrian",
-  "aliases": [
-   "OpenTyrian"
-  ],
-  "year": 1995,
-  "genre": "Shooter",
-  "kind": "Engine recreation",
-  "mode": "instant",
-  "engine": "OpenTyrian",
-  "description": "A vertical shooter with branching routes, ship upgrades, and a galaxy worth saving.",
-  "overview": "OpenTyrian recreates the Tyrian 2.1 engine, using the freeware release of the original data. Campaign progress includes your ship equipment and upgrades. This is the classic Tyrian content, not a claim to include every Tyrian 2000 addition.",
-  "source": "https://github.com/opentyrian/opentyrian",
-  "engineLicense": "GPL-2.0-or-later",
-  "assetLicense": "Tyrian 2.1 freeware; original assets retain their license",
-  "assetRequirements": "No original game files needed.",
-  "controls": [
-   "Arrow keys â€” move",
-   "Space â€” fire",
-   "Enter â€” confirm",
-   "Esc â€” back; exits the game at the title menu"
-  ],
-  "saveInstructions": "Between missions, choose Options, then Save, select an empty slot, type a name, and press Enter. Export a backup from the player toolbar before closing. The saved slot persists after restart; restoring the full gameplay state is still being tested.",
-  "limitations": [
-   "Browser integration remains under test. A completed level and full save/backup round trip are not yet verified.",
-   "Sound starts off; use the Sound control to enable it."
-  ],
-  "inputs": [
-   "Keyboard",
-   "Mouse"
-  ],
-  "downloadMB": 15,
-  "complete": true,
-  "color": "#ac7ee6",
-  "runtime": "tyrian",
-  "verification": {
-   "status": "smoke-tested",
-   "date": "2026-09-20",
-   "browsers": [
-    "Chromium-based in-app browser on Windows"
-   ],
-   "scope": "Campaign menus, first-mission rendering, named save creation, backup export, and a persisted save slot after restart observed. The quit-to-black issue was traced to missing exit notification and corrected. Returning from the loaded slot to gameplay, sustained controls, and audible audio remain unverified.",
-   "playthrough": false
-  },
-  "shelf": "classic",
-  "platform": "PC",
-  "image": "/images/opentyrian.png"
  },
  {
   "id": "beneath-a-steel-sky",
