@@ -50,8 +50,7 @@
    "browsers": [],
    "scope": "Reported ROM-free and playable on desktop and web in the project notes.",
    "playthrough": false
-  },
-  "image": "/images/pilotwings-64.png"
+  }
  },
  {
   "id": "super-mario-64",
@@ -104,8 +103,7 @@
    "browsers": [],
    "scope": "Published with a taint scan reporting 0 failing files. No written gameplay record in the repository.",
    "playthrough": false
-  },
-  "image": "/images/super-mario-64.png"
+  }
  },
  {
   "id": "ocarina-of-time",
@@ -159,8 +157,7 @@
    "browsers": [],
    "scope": "Headless test booted through to Hyrule Field. The intro is slow without a GPU.",
    "playthrough": false
-  },
-  "image": "/images/ocarina-of-time.png"
+  }
  },
  {
   "id": "super-smash-bros",
@@ -213,8 +210,7 @@
    "browsers": [],
    "scope": "Menus, character select and attract demos ran at 60 fps in a headless test.",
    "playthrough": false
-  },
-  "image": "/images/super-smash-bros.png"
+  }
  },
  {
   "id": "majoras-mask",
@@ -269,8 +265,7 @@
    "browsers": [],
    "scope": "Live headless test ran from the title screen to Clock Town.",
    "playthrough": false
-  },
-  "image": "/images/majoras-mask.png"
+  }
  },
  {
   "id": "diddy-kong-racing",
@@ -324,8 +319,7 @@
    "browsers": [],
    "scope": "Headless test ran races with HUD and audio.",
    "playthrough": false
-  },
-  "image": "/images/diddy-kong-racing.png"
+  }
  },
  {
   "id": "perfect-dark",
@@ -381,8 +375,7 @@
    "browsers": [],
    "scope": "Headless test played the Defection mission.",
    "playthrough": false
-  },
-  "image": "/images/perfect-dark.png"
+  }
  },
  {
   "id": "goldeneye-007",
@@ -437,8 +430,7 @@
    "browsers": [],
    "scope": "Headless test played the Dam mission.",
    "playthrough": false
-  },
-  "image": "/images/goldeneye-007.png"
+  }
  },
  {
   "id": "star-fox-64",
@@ -492,8 +484,7 @@
    "browsers": [],
    "scope": "Headless test played through to Corneria.",
    "playthrough": false
-  },
-  "image": "/images/star-fox-64.png"
+  }
  },
  {
   "id": "dr-mario-64",
@@ -546,8 +537,7 @@
    "browsers": [],
    "scope": "Headless test played a one-player game.",
    "playthrough": false
-  },
-  "image": "/images/dr-mario-64.png"
+  }
  },
  {
   "id": "doom-64",
@@ -600,8 +590,7 @@
    "browsers": [],
    "scope": "Headless Edge test on 1 October 2026 booted the published build to the title and demo. No level has been played through.",
    "playthrough": false
-  },
-  "image": "/images/doom-64.png"
+  }
  },
  {
   "id": "f-zero-x",
@@ -654,8 +643,7 @@
    "browsers": [],
    "scope": "Headless test ran a full race loop.",
    "playthrough": false
-  },
-  "image": "/images/f-zero-x.png"
+  }
  },
  {
   "id": "pokemon-snap",
@@ -708,8 +696,7 @@
    "browsers": [],
    "scope": "Headless test covered the title, name entry and opening dialogue at 60 fps. No on-rails level check is recorded.",
    "playthrough": false
-  },
-  "image": "/images/pokemon-snap.png"
+  }
  },
  {
   "id": "harvest-moon-64",
@@ -762,8 +749,7 @@
    "browsers": [],
    "scope": "Live headless test ran the intro; a local test started a new game and used the menus.",
    "playthrough": false
-  },
-  "image": "/images/harvest-moon-64.png"
+  }
  },
  {
   "id": "donkey-kong-64",
@@ -815,8 +801,7 @@
    "browsers": [],
    "scope": "Headless Edge test booted the live build; press Enter to skip the rap, then pick Adventure.",
    "playthrough": false
-  },
-  "image": "/images/donkey-kong-64.png"
+  }
  },
  {
   "id": "conkers-bad-fur-day",
@@ -869,8 +854,7 @@
    "browsers": [],
    "scope": "Headless Edge test booted the live build to the save-select menu; menus verified in game.",
    "playthrough": false
-  },
-  "image": "/images/conkers-bad-fur-day.png"
+  }
  },
  {
   "id": "banjo-tooie",
@@ -923,8 +907,7 @@
    "browsers": [],
    "scope": "Headless Edge test loaded the live build to the title; a local run went from file select into the game. The first load takes about a minute.",
    "playthrough": false
-  },
-  "image": "/images/banjo-tooie.png"
+  }
  },
  {
   "id": "mario-party",
@@ -977,8 +960,7 @@
    "browsers": [],
    "scope": "Headless Edge test of the live build: boots, intro, title, sound. A local run played Mushroom Village and the rules-tour board.",
    "playthrough": false
-  },
-  "image": "/images/mario-party.png"
+  }
  },
  {
   "id": "mario-party-2",
@@ -1036,8 +1018,7 @@
    ],
    "scope": "Headless test of the clean ROM, muted: boots, logos, title, Mario Land. A board (dice, turns, HUD) was walked on a development build.",
    "playthrough": false
-  },
-  "image": "/images/mario-party-2.png"
+  }
  },
  {
   "id": "mario-party-3",
@@ -1095,8 +1076,7 @@
    ],
    "scope": "Headless Edge test, muted: boot, intro, title, file select, mode select, the Party Mode hub, board turns on Chilly Waters and a mini-game instruction screen.",
    "playthrough": false
-  },
-  "image": "/images/mario-party-3.png"
+  }
  },
  {
   "id": "tennis-sdl",
@@ -1252,8 +1232,7 @@
    "browsers": [],
    "scope": "Headless Edge test: boots and level 1 plays. Not checked by ear.",
    "playthrough": false
-  },
-  "image": "/images/yoshis-story.png"
+  }
  },
  {
   "id": "1080-snowboarding",
@@ -1306,8 +1285,7 @@
    "browsers": [],
    "scope": "Headless Edge test: boots, menus readable, a race plays start to finish.",
    "playthrough": false
-  },
-  "image": "/images/1080-snowboarding.png"
+  }
  },
  {
   "id": "pokemon-stadium-2",
@@ -1362,8 +1340,7 @@
    "browsers": [],
    "scope": "Headless Edge test: intro, title, menus and cup entry screens.",
    "playthrough": false
-  },
-  "image": "/images/pokemon-stadium-2.png"
+  }
  },
  {
   "id": "duke-nukem-zero-hour",
@@ -1389,6 +1366,7 @@
   ],
   "saveInstructions": "Progress is stored by the build in this browser, under andrewnakas.github.io. Clearing site data removes it.",
   "limitations": [
+   "In progress: an earlier first pass of the rebuild; faces, signs and voices are still being replaced.",
    "Work in progress: regenerated textures and audio differ from the retail game by design.",
    "First pass: models, signs and faces are not yet reworked, and voices are missing."
   ],
@@ -1410,8 +1388,7 @@
    "browsers": [],
    "scope": "First pass. A headless test reached the legal screen and menus; gameplay is not yet verified.",
    "playthrough": false
-  },
-  "image": "/images/duke-nukem-zero-hour.png"
+  }
  },
  {
   "id": "wave-race-64",
@@ -1466,8 +1443,7 @@
    "browsers": [],
    "scope": "Headless Edge test: boots, menus readable, a championship race starts.",
    "playthrough": false
-  },
-  "image": "/images/wave-race-64.png"
+  }
  },
  {
   "id": "graveshift",
@@ -1636,7 +1612,6 @@
    "scope": "Headless keyboard script: title, file select, intro message, overworld and Yoshi's Island 1; the audio level log shows music.",
    "playthrough": false
   },
-  "image": "/images/super-mario-world.png",
   "mode": "embed",
   "launch": "embed",
   "shelf": "cleanroom",
@@ -1847,55 +1822,6 @@
   "image": "/images/freedoom.png",
   "shelf": "classic",
   "platform": "PC"
- },
- {
-  "id": "opentyrian",
-  "title": "OpenTyrian",
-  "aliases": [
-   "OpenTyrian"
-  ],
-  "year": 1995,
-  "genre": "Shooter",
-  "kind": "Engine recreation",
-  "mode": "instant",
-  "engine": "OpenTyrian",
-  "description": "A vertical shooter with branching routes, ship upgrades, and a galaxy worth saving.",
-  "overview": "OpenTyrian recreates the Tyrian 2.1 engine, using the freeware release of the original data. Campaign progress includes your ship equipment and upgrades. This is the classic Tyrian content, not a claim to include every Tyrian 2000 addition.",
-  "source": "https://github.com/opentyrian/opentyrian",
-  "engineLicense": "GPL-2.0-or-later",
-  "assetLicense": "Tyrian 2.1 freeware; original assets retain their license",
-  "assetRequirements": "No original game files needed.",
-  "controls": [
-   "Arrow keys â€” move",
-   "Space â€” fire",
-   "Enter â€” confirm",
-   "Esc â€” back; exits the game at the title menu"
-  ],
-  "saveInstructions": "Between missions, choose Options, then Save, select an empty slot, type a name, and press Enter. Export a backup from the player toolbar before closing. The saved slot persists after restart; restoring the full gameplay state is still being tested.",
-  "limitations": [
-   "Browser integration remains under test. A completed level and full save/backup round trip are not yet verified.",
-   "Sound starts off; use the Sound control to enable it."
-  ],
-  "inputs": [
-   "Keyboard",
-   "Mouse"
-  ],
-  "downloadMB": 15,
-  "complete": true,
-  "color": "#ac7ee6",
-  "runtime": "tyrian",
-  "verification": {
-   "status": "smoke-tested",
-   "date": "2026-09-20",
-   "browsers": [
-    "Chromium-based in-app browser on Windows"
-   ],
-   "scope": "Campaign menus, first-mission rendering, named save creation, backup export, and a persisted save slot after restart observed. The quit-to-black issue was traced to missing exit notification and corrected. Returning from the loaded slot to gameplay, sustained controls, and audible audio remain unverified.",
-   "playthrough": false
-  },
-  "shelf": "classic",
-  "platform": "PC",
-  "image": "/images/opentyrian.png"
  },
  {
   "id": "beneath-a-steel-sky",
