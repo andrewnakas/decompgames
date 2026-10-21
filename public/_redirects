@@ -31,3 +31,7 @@ https://play.decompgames.com/games/* https://decompgames.com/games/:splat 302
 /games/opentyrian/ / 302
 /games/opentyrian / 302
 /play/opentyrian/ / 302
+/games/f-zero-x/ /games/glidewire/ 301
+/games/f-zero-x /games/glidewire/ 301
+/play/f-zero-x/ /play/glidewire/ 301
+/play/f-zero-x /play/glidewire/ 301
