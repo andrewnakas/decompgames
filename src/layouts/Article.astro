@@ -1,5 +1,8 @@
 ---
 import Layout from './Layout.astro';
-const {title,description}=Astro.props;
+// Markdown pages hand their frontmatter to a layout as `frontmatter`, not as
+// top-level props. Reading Astro.props directly left every .md page with an
+// empty <h1> and the site-wide default <title> and description.
+const {title,description}=Astro.props.frontmatter ?? Astro.props;
 ---
 <Layout title={title} description={description}><article class="card prose"><h1 class="page-title">{title}</h1><slot/></article></Layout>
